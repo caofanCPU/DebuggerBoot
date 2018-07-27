@@ -30,6 +30,27 @@ public class InitContextProperty {
     @Autowired
     private transient SysDictService sysDictService;
     
+    
+    /**
+     * 配置变量说明
+     * spring boot指定了配置变量的访问优先级，【变量组】访问由高至低如下:
+     *
+     * [1] server.ports
+     * [2] servletConfigInitParams
+     * [3] servletContextInitParams
+     * [4] systemProperties
+     * [5] systemEnvironment
+     * [6] random
+     * [7] applicationConfig: [classpath:/application-{环境：dev/alpha/beta/product}.properties]
+     * [8] applicationConfig: [classpath:/application.properties]
+     * [9] springCloudClientHostInfo
+     * [10] {自定义属性配置文件:加载为@Bean}
+     * [11] defaultProperties
+     *
+     * 为方便调试，采用配置文件覆盖数据库，因而：
+     * [12] {自定义数据库配置变量}
+     *
+     * */
     @Resource
     private transient ConfigurableEnvironment configurableEnvironment;
     
