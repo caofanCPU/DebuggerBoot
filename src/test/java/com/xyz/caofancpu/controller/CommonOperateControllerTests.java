@@ -2,6 +2,7 @@ package com.xyz.caofancpu.controller;
 
 import com.xyz.caofancpu.DebuggerKingApplication;
 import com.xyz.caofancpu.controller.util.TestUtil;
+import com.xyz.caofancpu.utils.JSONUtil;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -46,7 +47,7 @@ public class CommonOperateControllerTests {
         params.put("demo", "this is demo");
         MultiValueMap<String, String> requestParams = testUtil.convertRequestParam(params);
         String responseStr = testUtil.handleParamExecute(requestParams, "/sysDict/listByPage");
-        testUtil.output(responseStr);
+        JSONUtil.output(responseStr);
     }
     
 }
