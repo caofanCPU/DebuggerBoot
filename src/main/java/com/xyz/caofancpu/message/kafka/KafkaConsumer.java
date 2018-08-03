@@ -13,9 +13,9 @@ public class KafkaConsumer {
     
     private static final Logger logger = LoggerFactory.getLogger(KafkaConsumer.class);
     
-    @HandleKafka(classFullName = "com.xyz.caofancpu.service.kafka.impl.KafkaTestServiceImpl",
-            methodName = "handleTestMessage")
-    @KafkaListener(topics = "handleTestMessage")
+//    @HandleKafka(classFullName = "com.xyz.caofancpu.service.kafka.impl.KafkaTestServiceImpl",
+//            methodName = "handleTestMessage")
+//    @KafkaListener(topics = "handleTestMessage")
     public void handleTestMessage(String data) {
     }
 
