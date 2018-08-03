@@ -27,7 +27,7 @@ public class CheckParamAspect {
     
     private static final String SEPARATOR = ":";
     
-    @Around("execution(* com.ovfintech..*.service.*.*(..))")
+    @Around("execution(* com.xyz..*.service.*.*(..))")
     public Object check(ProceedingJoinPoint point)
             throws Throwable {
         Object obj;
