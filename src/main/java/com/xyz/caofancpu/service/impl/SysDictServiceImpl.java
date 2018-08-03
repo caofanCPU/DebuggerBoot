@@ -1,4 +1,4 @@
-package com.xyz.caofancpu.service.imp;
+package com.xyz.caofancpu.service.impl;
 
 
 import com.github.pagehelper.PageHelper;

@@ -2,6 +2,7 @@ package com.xyz.caofancpu.validator;
 
 import com.xyz.caofancpu.result.CustomerErrorInfo;
 import com.xyz.caofancpu.result.GlobalErrorInfoException;
+import com.xyz.caofancpu.utils.ReflectionUtil;
 import org.apache.commons.lang3.StringUtils;
 import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.annotation.Around;
@@ -80,6 +81,23 @@ public class CheckParamAspect {
             }
         }
         return msg;
+    }
+    
+    private Method getMethod(ProceedingJoinPoint joinPoint) {
+        MethodSignature signature = (MethodSignature) joinPoint.getSignature();
+        Method method = signature.getMethod();
+        if (method.getDeclaringClass().isInterface()) {
+            try {
+                method = joinPoint
+                        .getTarget()
+                        .getClass()
+                        .getDeclaredMethod(joinPoint.getSignature().getName(),
+                                method.getParameterTypes());
+            } catch (SecurityException | NoSuchMethodException e) {
+                LOG.error("反射获取方法失败，{}" + e.getMessage());
+            }
+        }
+        return method;
     }
     
     /**
@@ -388,22 +406,7 @@ public class CheckParamAspect {
      * @param joinPoint ProceedingJoinPoint
      * @return 方法
      */
-    private Method getMethod(ProceedingJoinPoint joinPoint) {
-        MethodSignature signature = (MethodSignature) joinPoint.getSignature();
-        Method method = signature.getMethod();
-        if (method.getDeclaringClass().isInterface()) {
-            try {
-                method = joinPoint
-                        .getTarget()
-                        .getClass()
-                        .getDeclaredMethod(joinPoint.getSignature().getName(),
-                                method.getParameterTypes());
-            } catch (SecurityException | NoSuchMethodException e) {
-                LOG.error("" + e);
-            }
-        }
-        return method;
-    }
+    
     
     /**
      * 字段信息

@@ -8,9 +8,12 @@ public class KafkaMessage {
     
     private String topic;
     
-    private String data;
+    /**
+     * 数据对象
+     */
+    private Object data;
     
-    public KafkaMessage(String topic, String data) {
+    public KafkaMessage(String topic, Object data) {
         this.topic = topic;
         this.data = data;
     }
@@ -23,7 +26,7 @@ public class KafkaMessage {
         this.topic = topic;
     }
     
-    public String getData() {
+    public Object getData() {
         return data;
     }
     

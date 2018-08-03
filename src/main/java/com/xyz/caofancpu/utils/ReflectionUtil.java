@@ -1,4 +1,4 @@
-package com.xyz.caofancpu.validator;
+package com.xyz.caofancpu.utils;
 
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.Validate;
