@@ -29,7 +29,7 @@ public class KafkaConsumerAspect {
         logger.info("转换kafka消息");
         doHandle(point);
 //        // 通过校验，继续执行原有方法
-        point.proceed();
+//        point.proceed();
         logger.info("处理完毕");
     }
     
