@@ -12,17 +12,16 @@ import org.springframework.stereotype.Component;
  */
 @Component
 @Order(value = 1)
-public class InitStartupRunner implements CommandLineRunner {
+public class DatabaseRunner implements CommandLineRunner {
     
-    private final Logger LOGGER = LoggerFactory.getLogger(InitStartupRunner.class);
+    private final Logger logger = LoggerFactory.getLogger(DatabaseRunner.class);
     
     @Autowired
     private InitContextProperty initContextProperty;
     
     @Override
-    public void run(String... strings)
-            throws Exception {
-        LOGGER.info("帝八哥已就绪[Debugger].K.I.N.G");
+    public void run(String... strings) {
+        logger.info("帝八哥已就绪[Debugger].K.I.N.G");
         initContextProperty.excute();
     }
 }

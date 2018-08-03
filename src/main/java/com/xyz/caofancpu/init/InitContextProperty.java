@@ -15,6 +15,8 @@ import java.util.Properties;
 
 /**
  * 数据库读取配置变量
+ * @author caofanCPU
+ * @date 2018-08-03
  */
 @Component
 public class InitContextProperty {
