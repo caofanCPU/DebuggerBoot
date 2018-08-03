@@ -44,7 +44,7 @@ public class KafkaRunner implements CommandLineRunner {
      * @param message
      */
     @KafkaListener(topics = TEST_TOPIC)
-    public void handleMessage(String message){
+    public void handleMessage(String message) {
         logger.info("已接收kafka消息，[{}]", message);
         logger.info("kafka连接完成，配置成功！");
     }
