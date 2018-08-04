@@ -1,6 +1,7 @@
-package com.xyz.caofancpu.message.kafka;
+package com.xyz.caofancpu.message.kafka.backup;
 
 import com.alibaba.fastjson.JSONObject;
+import com.xyz.caofancpu.message.kafka.KafkaMessage;
 import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.annotation.Around;
 import org.aspectj.lang.annotation.Aspect;
