@@ -1,4 +1,4 @@
-package com.xyz.caofancpu.service.kafka;
+package com.xyz.caofancpu.message.kafka.backup;
 
 import com.xyz.caofancpu.message.kafka.KafkaMessage;
 

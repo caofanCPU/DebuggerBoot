@@ -1,7 +1,6 @@
-package com.xyz.caofancpu.service.kafka.impl;
+package com.xyz.caofancpu.message.kafka.backup;
 
 import com.xyz.caofancpu.message.kafka.KafkaMessage;
-import com.xyz.caofancpu.service.kafka.KafkaTestService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;

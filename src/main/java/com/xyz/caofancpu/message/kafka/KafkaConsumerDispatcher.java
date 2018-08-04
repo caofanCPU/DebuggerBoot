@@ -8,6 +8,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.BeansException;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.kafka.annotation.KafkaListener;
 import org.springframework.stereotype.Component;
 
@@ -25,8 +26,27 @@ public class KafkaConsumerDispatcher {
     @Autowired
     private KafkaProperty kafkaProperty;
     
-    @KafkaListener(topics = "testDemo")
+    /**
+     * 测试SpEL表达式
+     */
+    @Value("#{'${test.spring.kafka.topics}'.split(',')}")
+    private String[] kafkaTopics;
+    
+    /**
+     * 蛋疼！！！：org.springframework.kafka 1.1.8不支持SpEL表达式！！！！！！！！！！！！！！！！
+     *
+     * 关于topics的配置
+     * 初衷：只用一个监听器，监听所有的topic，即topics模糊全匹配，类似于*的功能
+     * 1.从配置文件中引入变量的值：@KafkaListener(topics = "${kafka.topicMap.testDemo}")
+     * 2.从bean中取得某属性值：@KafkaListener(topics = "#{kafkaProperty.topics}")
+     * 即可通过SpEL表达式实现
+     * 参考：https://docs.spring.io/spring-kafka/reference/htmlsingle/#kafka-listener-annotation
+     * @param data
+     */
+    
+    @KafkaListener(topics = {"testDemo", "testDemo2", "testDemo3"})
     public void dispatcher(String data) {
+        /** 从当前线程的堆栈中获取当前执行方法，也可获取执行类 */
         StackTraceElement[] stack = Thread.currentThread().getStackTrace();
         final String currentMethodName = stack[1].getMethodName();
         final String topic = parseTopic(currentMethodName);

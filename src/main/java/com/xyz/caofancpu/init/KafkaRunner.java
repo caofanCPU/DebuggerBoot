@@ -1,7 +1,8 @@
 package com.xyz.caofancpu.init;
 
-import com.xyz.caofancpu.message.kafka.KafkaProperty;
+import com.xyz.caofancpu.message.kafka.KafkaConsumerDispatcher;
 import com.xyz.caofancpu.message.kafka.KafkaMessage;
+import com.xyz.caofancpu.message.kafka.KafkaProperty;
 import com.xyz.caofancpu.message.kafka.KafkaSender;
 import com.xyz.caofancpu.model.Area;
 import com.xyz.caofancpu.service.kafka.impl.TestKafkaServiceImpl;
@@ -12,6 +13,8 @@ import org.springframework.boot.CommandLineRunner;
 import org.springframework.context.ApplicationContext;
 import org.springframework.core.annotation.Order;
 import org.springframework.stereotype.Component;
+
+import java.util.Map;
 
 /**
  *
@@ -24,32 +27,58 @@ public class KafkaRunner implements CommandLineRunner {
     
     private final Logger logger = LoggerFactory.getLogger(KafkaRunner.class);
     
+    private final String testTopic = "testDemo";
+    
+//    private final String testConsumer = "testKafkaServiceImpl";
+    
+//    @Autowired
+//    private ApplicationContext applicationContext;
+    
     @Autowired
     private KafkaSender kafkaSender;
     
     @Autowired
     private KafkaProperty kafkaProperty;
     
-    private final String testTopic = "testDemo";
-    
-    private final String testConsumer = "testKafkaServiceImpl";
-    
-    @Autowired
-    private ApplicationContext applicationContext;
+//    @Autowired
+//    private KafkaConsumerDispatcher kafkaConsumerDispatcher;
     
     @Override
     public void run(String... strings) {
+        initKafkaProperty();
         logger.info(kafkaProperty.getTopicMap().toString());
-        sendMessage(testTopic, new Area(100, "oh,mykafka", 2));
-        Object obj = applicationContext.getAutowireCapableBeanFactory().getBean(testConsumer);
-        TestKafkaServiceImpl bean = (TestKafkaServiceImpl) obj;
-        bean.handle(new KafkaMessage("haha", "OK"));
+        logger.info(kafkaProperty.getTopics().toString());
+        sendMessage(testTopic, new Area(100, "oh, mykafka", 2));
+//        kafkaConsumerDispatcher.dispatcher("{\"id\":\"12\"}");
     }
+    
+    /**
+     * 初始化kafka监听主题
+     * 必要性：强
+     * 原因：kafkaProperty单例对象初始化与属性文件赋值操作不在一起，因而采用项目启动时再次初始化
+     * 优化：先前苟且，后续优化
+     */
+    private void initKafkaProperty() {
+        Map<String, String> topicMap = kafkaProperty.getTopicMap();
+        if (!topicMap.isEmpty()) {
+            kafkaProperty.setTopics(topicMap.keySet().toArray(kafkaProperty.getTopics()));
+        }
+    }
+    
+    /**
+     * 启动测试
+     * 从SpringFactory中根据beanName获取Bean实例
+     */
+//    private void testGetBeanFromSpringFactory() {
+//        Object obj = applicationContext.getAutowireCapableBeanFactory().getBean(testConsumer);
+//        TestKafkaServiceImpl bean = (TestKafkaServiceImpl) obj;
+//        bean.handle(new KafkaMessage("haha", "OK"));
+//    }
     
     /**
      * 发送消息到kafka
      */
-    public void sendMessage(String topic, Object data){
+    private void sendMessage(String topic, Object data){
         kafkaSender.sendMessage(new KafkaMessage(topic, data));
     }
     
