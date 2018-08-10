@@ -1,16 +1,13 @@
 package com.xyz.caofancpu.init;
 
-import com.xyz.caofancpu.message.kafka.KafkaConsumerDispatcher;
 import com.xyz.caofancpu.message.kafka.KafkaMessage;
 import com.xyz.caofancpu.message.kafka.KafkaProperty;
 import com.xyz.caofancpu.message.kafka.KafkaSender;
 import com.xyz.caofancpu.model.Area;
-import com.xyz.caofancpu.service.kafka.impl.TestKafkaServiceImpl;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
-import org.springframework.context.ApplicationContext;
 import org.springframework.core.annotation.Order;
 import org.springframework.stereotype.Component;
 

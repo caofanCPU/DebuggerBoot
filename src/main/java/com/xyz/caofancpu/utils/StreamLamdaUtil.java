@@ -101,7 +101,7 @@ public class StreamLamdaUtil {
 //        return areaList.parallelStream().collect(Collectors.groupingBy(Area::getPid));
     }
     
-    public Map<Integer, Area> concertToMap(List<Area> areaList) {
+    public Map<Integer, Area> convertToMap(List<Area> areaList) {
         Map<Integer, Area> resultMap = areaList.stream().collect(Collectors.toMap(Area::getId, Function.identity()));
         return resultMap;
     }

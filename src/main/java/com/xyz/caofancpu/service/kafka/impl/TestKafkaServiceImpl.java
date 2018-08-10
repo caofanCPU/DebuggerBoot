@@ -4,6 +4,8 @@ import com.xyz.caofancpu.message.kafka.KafkaMessage;
 import com.xyz.caofancpu.service.kafka.KafkaConsumerService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Service;
 
 /**
@@ -13,6 +15,10 @@ import org.springframework.stereotype.Service;
 public class TestKafkaServiceImpl implements KafkaConsumerService {
     
     private static final Logger logger = LoggerFactory.getLogger(TestKafkaServiceImpl.class);
+    
+//    @Value("${wx.domain}")
+//    @Lazy(value = true)
+//    private String wxDomain;
     
     @Override
     public Boolean handle(KafkaMessage kafkaMessage) {
