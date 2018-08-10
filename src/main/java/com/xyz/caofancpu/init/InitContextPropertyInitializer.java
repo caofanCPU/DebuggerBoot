@@ -4,10 +4,11 @@ import com.xyz.caofancpu.service.SysDictService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Configuration;
 import org.springframework.core.env.ConfigurableEnvironment;
 import org.springframework.core.env.PropertiesPropertySource;
-import org.springframework.stereotype.Component;
 
+import javax.annotation.PostConstruct;
 import javax.annotation.Resource;
 import java.util.List;
 import java.util.Map;
@@ -18,10 +19,10 @@ import java.util.Properties;
  * @author caofanCPU
  * @date 2018-08-03
  */
-@Component
-public class InitContextProperty {
+@Configuration("initContextPropertyInitializer")
+public class InitContextPropertyInitializer {
     
-    private static final Logger LOGGER = LoggerFactory.getLogger(InitContextProperty.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(InitContextPropertyInitializer.class);
     
     public static final String PROPERTY_KEY = "name";
     
@@ -55,6 +56,7 @@ public class InitContextProperty {
     @Resource
     private transient ConfigurableEnvironment configurableEnvironment;
     
+    @PostConstruct
     public void excute() {
         readDbProperty();
     }
@@ -69,8 +71,8 @@ public class InitContextProperty {
             LOGGER.info("读取初始化数据库配置变量");
             List<Map<String, Object>> initDbPropertyList = sysDictService.getInitSysDictList();
             initDbPropertyList.forEach(item -> dbProperty.put(item.get(PROPERTY_KEY), item.get(PROPERTY_VALUE)));
-            // 在队首添加数据库的配置属性，即优先使用数据库配置属性
-            configurableEnvironment.getPropertySources().addFirst(dbPropertySource);
+            // 在队尾添加数据库的配置属性，即最后使用数据库配置属性
+            configurableEnvironment.getPropertySources().addLast(dbPropertySource);
         } catch (Exception e) {
             LOGGER.error(e.getMessage());
         }
