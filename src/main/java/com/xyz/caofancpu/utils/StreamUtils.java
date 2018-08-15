@@ -7,6 +7,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 /**
  * Created by caofanCPU on 2018/8/7.
@@ -54,7 +56,34 @@ public class StreamUtils {
         return target;
     }
     
-    public static void main(String[] args) {
+    /**
+     * 剔除请求中值为null的参数
+     *
+     * @param paramsMap
+     * @return
+     */
+    public static Map<String, Object> removeNullElement(Map<String, Object> paramsMap) {
+        if (paramsMap == null || paramsMap.isEmpty()) {
+            return new HashMap<>(1, 0.5f);
+        }
+        /** 一般请求参数不会太多，故而使用单向顺序流即可 */
+        
+        // 1.首先构建流，剔除值为空的元素
+        Stream<Map.Entry<String, Object>> tempStream = paramsMap.entrySet().stream()
+                .filter((entry) -> entry.getValue() != null);
+        // 2.从流中恢复map
+        Map<String, Object> resultMap = tempStream.collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue));
+        return resultMap;
+    }
     
+    public static void main(String[] args) {
+        Map<String, Object> paramsMap = new HashMap<String, Object>(4, 0.5f){
+            {
+                put("name", null);
+                put("age", 12L);
+            }
+        };
+        Map<String, Object> resultMap = removeNullElement(paramsMap);
+        System.out.println(resultMap);
     }
 }

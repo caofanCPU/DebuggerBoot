@@ -49,7 +49,6 @@ public class DataHelper {
                         obj = sdf.parse(obj.toString());
                     }
                     
-                    
                     //根据获取的方法名称及当前field的类型获取method对象
                     Method method = entity.getClass().getDeclaredMethod(methodName, field.getType());
                     method.setAccessible(true);

@@ -1,9 +1,9 @@
 package com.xyz.caofancpu.utils;
 
 import com.alibaba.fastjson.JSONObject;
-import com.xyz.caofancpu.result.GlobalErrorInfoEnum;
-import com.xyz.caofancpu.result.GlobalErrorInfoException;
-import com.xyz.caofancpu.result.ResultBody;
+import com.ovfintech.bynz.result.GlobalErrorInfoEnum;
+import com.ovfintech.bynz.result.GlobalErrorInfoException;
+import com.ovfintech.bynz.result.ResultBody;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -46,6 +46,7 @@ public class RestTemplateUtil {
     
     /**
      * 剔除请求中值为null的参数
+     *
      * @param paramsMap
      * @return
      */
@@ -120,6 +121,7 @@ public class RestTemplateUtil {
     /**
      * GET请求，把参数拼接到URL之后
      * 示例： http://xxx/{3}/name=debugger&age=20&money=100.25
+     *
      * @param url
      * @param paramsMap
      * @return
@@ -153,6 +155,7 @@ public class RestTemplateUtil {
     
     /**
      * POST方式调用，传body对象
+     *
      * @param url
      * @param paramMap
      * @return
@@ -182,6 +185,7 @@ public class RestTemplateUtil {
     
     /**
      * 封装请求对象HttpEntity，主要是token、请求参数
+     *
      * @param paramMap
      * @param token
      * @return
@@ -196,6 +200,7 @@ public class RestTemplateUtil {
     
     /**
      * 打印请求参数
+     *
      * @param url
      * @param paramMap
      * @param token
@@ -216,6 +221,7 @@ public class RestTemplateUtil {
     
     /**
      * 打印响应结果
+     *
      * @param jsonString
      */
     public void showResponseLog(String jsonString) {

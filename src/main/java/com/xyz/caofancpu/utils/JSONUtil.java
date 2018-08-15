@@ -1,26 +1,24 @@
 package com.xyz.caofancpu.utils;
 
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
+
 /**
- * @author CY_XYZ
- * @date 2018/7/30
+ * Created by caofanCPU on 2018/8/6.
  */
 public class JSONUtil {
     
-    /**
-     * 控制台打印输出测试结果
-     *
-     * @param str
-     */
-    public static void output(String str) {
-        System.out.println("测试结果 : \n" + outputJson(str));
+    public static List<Map<String, Object>> parseList(Object source) {
+        List<Map> tempList = new ArrayList();
+        if (source instanceof ArrayList) {
+            tempList = (ArrayList) source;
+        }
+        final List<Map<String, Object>> resultList = new ArrayList<>();
+        tempList.forEach((item -> resultList.add(item)));
+        return resultList;
     }
     
-    /**
-     * 将Json字符串格式化，用于控制台输出
-     *
-     * @param jsonStr
-     * @return
-     */
     public static String outputJson(String jsonStr) {
         String start = "    ";
         // 用户标记层级
@@ -64,4 +62,5 @@ public class JSONUtil {
         }
         return jsonResultStr.toString().replaceAll("\n\n", "\n");
     }
+    
 }
