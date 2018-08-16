@@ -1,9 +1,9 @@
 package com.xyz.caofancpu.utils;
 
 import com.alibaba.fastjson.JSONObject;
-import com.ovfintech.bynz.result.GlobalErrorInfoEnum;
-import com.ovfintech.bynz.result.GlobalErrorInfoException;
-import com.ovfintech.bynz.result.ResultBody;
+import com.xyz.caofancpu.result.GlobalErrorInfoEnum;
+import com.xyz.caofancpu.result.GlobalErrorInfoException;
+import com.xyz.caofancpu.result.ResultBody;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

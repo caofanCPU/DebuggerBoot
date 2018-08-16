@@ -1,6 +1,6 @@
 package com.xyz.caofancpu.init;
 
-import com.xyz.caofancpu.service.SysDictService;
+import com.xyz.caofancpu.mapper.SysDictMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -31,7 +31,7 @@ public class InitContextPropertyInitializer {
     public static final String DB_PROPERTY_SOURCE = "dbPropertySource";
     
     @Autowired
-    private transient SysDictService sysDictService;
+    private transient SysDictMapper sysDictMapper;
     
     
     /**
@@ -69,7 +69,7 @@ public class InitContextPropertyInitializer {
         PropertiesPropertySource dbPropertySource = new PropertiesPropertySource(DB_PROPERTY_SOURCE, dbProperty);
         try {
             LOGGER.info("读取初始化数据库配置变量");
-            List<Map<String, Object>> initDbPropertyList = sysDictService.getInitSysDictList();
+            List<Map<String, Object>> initDbPropertyList = sysDictMapper.getInitSysDictList();
             initDbPropertyList.forEach(item -> dbProperty.put(item.get(PROPERTY_KEY), item.get(PROPERTY_VALUE)));
             // 在队尾添加数据库的配置属性，即最后使用数据库配置属性
             configurableEnvironment.getPropertySources().addLast(dbPropertySource);

@@ -1,7 +1,7 @@
 package com.xyz.caofancpu.utils;
 
-import com.bynz.utils.common.Assert;
 import org.apache.commons.lang3.StringUtils;
+import org.springframework.util.Assert;
 
 import java.io.UnsupportedEncodingException;
 import java.net.URLDecoder;
@@ -62,7 +62,7 @@ public class UrlUtil {
         System.out.println(encodeUrlByUTF);
         String decodeUrlByUTF = decodeUrl(encodeUrlByUTF, UTF_TYPE);
         System.out.println(decodeUrlByUTF);
-        Assert.isTrue(originUrl.equals(decodeUrlByUTF));
+        Assert.isTrue(originUrl.equals(decodeUrlByUTF), "测试失败！");
     }
     
 }

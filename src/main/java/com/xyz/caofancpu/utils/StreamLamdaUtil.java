@@ -74,7 +74,7 @@ public class StreamLamdaUtil {
         handleData(provinceList, cityClassfiedMap);
         handleData(cityList, countyClassfiedMap);
         String jsonString = JSONObject.toJSONString(provinceList);
-        JSONUtil.output(jsonString);
+        JSONUtil.outputJson(jsonString);
     }
     
     /**
