@@ -1,0 +1,44 @@
+#自定义token键名
+authorization:
+  user-profile:
+    key: Authorization
+#客户端配置
+eureka:
+  client:
+    fetch-registry: false
+    register-with-eureka: false
+#日志级别配置，不同环境不一致
+logging:
+  level:
+    com:
+      ovfintech:
+        bynz:
+          #DTO数据库操作日志级别
+          mapper: debug
+    org:
+      springframework:
+        #Spring框架日志级别
+        web: debug
+#服务所在网关路由配置
+server:
+  context-path: /debuggerking
+#数据库配置
+spring:
+  datasource:
+    connection-test-query: select 1
+    driverClassName: com.mysql.jdbc.Driver
+    password: root
+    url: jdbc:mysql://localhost:3306/debuggerking?useSSL=false&useUnicode=true&characterEncoding=utf-8
+    username: root
+  http:
+    #文件上传大小限制
+    multipart:
+      max-file-size: 10MB
+      max-request-size: 10MB
+  #Kafka配置
+  kafka:
+    #Kafka消息中心访问URL
+    bootstrap-servers: 192.168.2.203:9092
+    #Kafka客户端组名配置
+    consumer:
+      group-id: caofanGroup
