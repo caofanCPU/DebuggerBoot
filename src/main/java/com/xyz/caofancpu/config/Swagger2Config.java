@@ -1,5 +1,6 @@
 package com.xyz.caofancpu.config;
 
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.bind.annotation.RestController;
@@ -16,10 +17,23 @@ import java.util.List;
 
 @Configuration
 public class Swagger2Config {
-
+    
+    /**
+     * 需要认证的接口路径正则表达式
+     */
+    @Value("${swagger.authPathRegex}")
+    private String authPathRegex;
+    
+    /**
+     * 是否展示API文档
+     */
+    @Value("${swagger.showApi}")
+    private Boolean showApi;
+    
     @Bean
     public Docket createRestApi() {
         return new Docket(DocumentationType.SWAGGER_2)
+                .enable(showApi)
                 .apiInfo(apiInfo())
                 .select()
                 .apis(RequestHandlerSelectors.withClassAnnotation(RestController.class))
@@ -56,7 +70,7 @@ public class Swagger2Config {
             {
                 add(SecurityContext.builder()
                         .securityReferences(defaultAuth())
-                        .forPaths(PathSelectors.regex("^(?!auth).*$"))
+                        .forPaths(PathSelectors.regex(authPathRegex))
                         .build());
             }
         };

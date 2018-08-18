@@ -127,7 +127,7 @@
             <optional>true</optional>
         </dependency>
 
-        <!-- Swagger2界面API -->
+        <!-- Swagger2界面API，注意：2.7.0版本有坑！ -->
         <dependency>
             <groupId>io.springfox</groupId>
             <artifactId>springfox-swagger2</artifactId>

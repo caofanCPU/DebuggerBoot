@@ -46,3 +46,7 @@ test:
       topics: bynz,demo
 #用户中心服务配置
 user-profile-url: http://USERPROFILE-SERVICE
+
+swagger:
+  authPathRegex: ^(?!auth).*$
+  showApi: false
