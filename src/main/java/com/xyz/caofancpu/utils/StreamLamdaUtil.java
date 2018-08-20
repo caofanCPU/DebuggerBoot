@@ -67,14 +67,18 @@ public class StreamLamdaUtil {
         List<Area> countyList = initCountyList();
         
         // 市区根据pid分类
-        Map<Integer, List<Area>> cityClassfiedMap = classify(cityList);
-        Map<Integer, List<Area>> countyClassfiedMap = classify(countyList);
+        Map<Integer, List<Area>> cityClassifiedMap = classify(cityList);
+        Map<Integer, List<Area>> countyClassifiedMap = classify(countyList);
         
         // 织入省市区树状
-        handleData(provinceList, cityClassfiedMap);
-        handleData(cityList, countyClassfiedMap);
+        handleData(provinceList, cityClassifiedMap);
+        handleData(cityList, countyClassifiedMap);
         String jsonString = JSONObject.toJSONString(provinceList);
-        JSONUtil.outputJson(jsonString);
+        output(JSONUtil.outputJson(jsonString));
+    }
+    
+    public static void output(String jsonString) {
+        System.out.println(jsonString);
     }
     
     /**
