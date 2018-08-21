@@ -49,4 +49,4 @@ user-profile-url: http://USERPROFILE-SERVICE
 
 swagger:
   authPathRegex: ^(?!auth).*$
-  showApi: false
+  showApi: true

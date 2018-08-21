@@ -1,7 +1,9 @@
 package com.xyz.caofancpu.utils;
 
-import com.xyz.caofancpu.model.FixedQuery;
+
 import org.apache.commons.beanutils.BeanUtils;
+import org.apache.commons.beanutils.ConvertUtils;
+import org.apache.commons.beanutils.converters.DateConverter;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
@@ -9,9 +11,7 @@ import java.lang.reflect.Modifier;
 import java.math.BigDecimal;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 
 /**
  * Created by caofanCPU on 2018/8/10.
@@ -32,6 +32,7 @@ public class BeanConvertUtil {
         if (!validate(sourceMap, targetObj)) {
         
         }
+        ConvertUtils.register(loadDateConverter(), Date.class);
         BeanUtils.populate(targetObj, sourceMap);
         /**
          * copyProperties包含populate的功能，但是copyProperties适用于从httpRequest中转换数据，
@@ -204,26 +205,72 @@ public class BeanConvertUtil {
         return true;
     }
     
+    /**
+     * 对象为List<map></map>结构, 转为指定实体bean
+     *
+     * @param sourceData
+     * @param clazz
+     * @param <T>
+     * @return
+     */
+    public static <T> List<T> parseTargetListObj(Object sourceData, Class<T> clazz) {
+        if (sourceData == null || clazz == null || !(sourceData instanceof List)) {
+            return null;
+        }
+        List sourceList = (List) sourceData;
+        List<T> resultList = new ArrayList<>(sourceList.size());
+        sourceList.stream().filter(Objects::nonNull).forEach(item -> {
+            T resultObj = parseTargetObj(item, clazz);
+            resultList.add(resultObj);
+        });
+        return resultList;
+    }
+    
+    /**
+     * 对象为map结构, 转为指定实体bean
+     *
+     * @param sourceData
+     * @param clazz
+     * @param <T>
+     * @return
+     */
+    public static <T> T parseTargetObj(Object sourceData, Class<T> clazz) {
+        if (sourceData == null || clazz == null || !(sourceData instanceof Map)) {
+            return null;
+        }
+        try {
+            ConvertUtils.register(loadDateConverter(), Date.class);
+            T target = clazz.newInstance();
+            BeanUtils.populate(target, (Map<String, Object>) sourceData);
+            return target;
+        } catch (InstantiationException e) {
+            e.printStackTrace();
+        } catch (IllegalAccessException e) {
+            e.printStackTrace();
+        } catch (InvocationTargetException e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+    
+    /**
+     * 获取时间转换器,支持String格式时间转为java.util.Date类型
+     *
+     * @return
+     */
+    public static DateConverter loadDateConverter() {
+        DateConverter dateConverter = new DateConverter(null);
+        dateConverter.setPatterns(new String[]{DateUtil.FORMAT_ALL, DateUtil.FORMAT_SIMPLE, DateUtil.FORMAT_SIMPLE_CN});
+        return dateConverter;
+    }
+    
     public static void main(String[] args) {
         testDescribe();
         
     }
     
     public static void testDescribe() {
-        FixedQuery fixedQuery = new FixedQuery(10, "渣渣");
-        Map<String, String> map = null;
-        try {
-            map = BeanUtils.describe(fixedQuery);
-        } catch (IllegalAccessException e) {
-            e.printStackTrace();
-        } catch (InvocationTargetException e) {
-            e.printStackTrace();
-        } catch (NoSuchMethodException e) {
-            e.printStackTrace();
-        }
-        if (map != null) {
-            map.entrySet().stream().forEach(item -> System.out.println("k=" + item.getKey() + ", v=" + item.getValue()));
-        }
+    
     }
     
 }

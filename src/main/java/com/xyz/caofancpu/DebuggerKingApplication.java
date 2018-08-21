@@ -29,7 +29,7 @@ public class DebuggerKingApplication {
     
     /**
      * 注意：@LoadBalanced注解，使用该注解，则调用其他服务时，必须使用服务名称[http://SERVICE-XXX]，而非IP:port
-     *
+     * 使用场景: 都在网关内部, 走ribbon调用
      * @return
      */
     @Bean

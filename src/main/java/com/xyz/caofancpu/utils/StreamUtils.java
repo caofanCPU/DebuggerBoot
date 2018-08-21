@@ -2,11 +2,7 @@ package com.xyz.caofancpu.utils;
 
 import org.apache.commons.collections.CollectionUtils;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -74,6 +70,25 @@ public class StreamUtils {
         // 2.从流中恢复map
         Map<String, Object> resultMap = tempStream.collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue));
         return resultMap;
+    }
+    
+    /**
+     * 根据排序关键key对应的值的hashCode进行排序
+     * 注意: 强烈推荐 排序key对应的数据为id类型
+     *
+     * @param sourceList
+     * @param sortedKey
+     * @param asc
+     * @return
+     */
+    public static List<Map<String, Object>> sort(List<Map<String, Object>> sourceList, final String sortedKey, Boolean asc) {
+        if (CollectionUtils.isEmpty(sourceList)) {
+            return new ArrayList<>();
+        }
+        List<Map<String, Object>> sortedList = sourceList.stream()
+                .sorted((x, y) -> x.get(sortedKey).hashCode() > y.get(sortedKey).hashCode() && asc ? -1 : 1)
+                .collect(Collectors.toList());
+        return sortedList;
     }
     
     public static void main(String[] args) {
