@@ -1,6 +1,7 @@
 package com.xyz.caofancpu.utils;
 
 import org.apache.commons.collections.CollectionUtils;
+import org.springframework.util.Assert;
 
 import java.util.*;
 import java.util.stream.Collectors;
@@ -92,7 +93,22 @@ public class StreamUtils {
     }
     
     public static void main(String[] args) {
-        Map<String, Object> paramsMap = new HashMap<String, Object>(4, 0.5f){
+        testStreamReturnSymbol();
+    }
+    
+    public static void testStreamReturnSymbol() {
+        Stream<Integer> sourceStream = Stream.of(1, 2, 3, 4, 5);
+        sourceStream.forEach(item -> {
+            if (item > 3) {
+                return;
+            }
+            System.out.println("流中元素: " + item);
+        });
+        System.out.println("流结束后, 代码继续前行....");
+    }
+    
+    public static void testRemoveNullElement() {
+        Map<String, Object> paramsMap = new HashMap<String, Object>(4, 0.5f) {
             {
                 put("name", null);
                 put("age", 12L);
@@ -101,4 +117,17 @@ public class StreamUtils {
         Map<String, Object> resultMap = removeNullElement(paramsMap);
         System.out.println(resultMap);
     }
+    
+    public static void testIntegerHashCode() {
+        Integer a = Integer.valueOf(127);
+        Integer b = a.hashCode();
+        if (a == b) {
+            System.out.println("整型数值小于等于127,位于常量池中,因而[a==b] is OK");
+        }
+        a = 128;
+        b = a.hashCode();
+        Assert.isTrue(a == b, "不等于");
+    }
+
+    
 }
