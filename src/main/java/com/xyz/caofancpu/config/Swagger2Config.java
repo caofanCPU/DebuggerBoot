@@ -5,8 +5,10 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.bind.annotation.RestController;
 import springfox.documentation.builders.ApiInfoBuilder;
+import springfox.documentation.builders.ParameterBuilder;
 import springfox.documentation.builders.PathSelectors;
 import springfox.documentation.builders.RequestHandlerSelectors;
+import springfox.documentation.schema.ModelRef;
 import springfox.documentation.service.*;
 import springfox.documentation.spi.DocumentationType;
 import springfox.documentation.spi.service.contexts.SecurityContext;
@@ -24,6 +26,9 @@ public class Swagger2Config {
     @Value("${swagger.authPathRegex}")
     private String authPathRegex;
     
+    @Value("${swagger.authorizationKey}")
+    private String authKey;
+    
     /**
      * 是否展示API文档
      */
@@ -34,6 +39,7 @@ public class Swagger2Config {
     public Docket createRestApi() {
         return new Docket(DocumentationType.SWAGGER_2)
                 .enable(showApi)
+                .globalOperationParameters(setHeaderToken())
                 .apiInfo(apiInfo())
                 .select()
                 .apis(RequestHandlerSelectors.withClassAnnotation(RestController.class))
@@ -60,7 +66,7 @@ public class Swagger2Config {
     private List<ApiKey> securitySchemes() {
         return new ArrayList(2) {
             {
-                add(new ApiKey("Authorization", "Authorization", "header"));
+                add(new ApiKey(authKey, authKey, "header"));
             }
         };
     }
@@ -70,7 +76,6 @@ public class Swagger2Config {
             {
                 add(SecurityContext.builder()
                         .securityReferences(defaultAuth())
-                        .forPaths(PathSelectors.regex(authPathRegex))
                         .build());
             }
         };
@@ -82,9 +87,17 @@ public class Swagger2Config {
         authorizationScopes[0] = authorizationScope;
         return new ArrayList(2) {
             {
-                add(new SecurityReference("Authorization", authorizationScopes));
+                add(new SecurityReference(authKey, authorizationScopes));
             }
         };
+    }
+    
+    private List<Parameter> setHeaderToken() {
+        ParameterBuilder tokenPar = new ParameterBuilder();
+        List<Parameter> pars = new ArrayList<>();
+        tokenPar.name("X-Auth-Token").description(authKey).modelRef(new ModelRef("string")).parameterType("header").required(false).build();
+        pars.add(tokenPar.build());
+        return pars;
     }
 
 
