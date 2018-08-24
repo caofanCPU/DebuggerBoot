@@ -45,7 +45,7 @@ public class CommonOperateServiceImpl implements CommonOperateService {
     @Value("${file.url}")
     private String fileAccessUrl;
     
-    @Value("${authorization.user-profile.key}")
+    @Value("${swagger.authorizationKey}")
     private String authKey;
     
     @Resource

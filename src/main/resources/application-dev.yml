@@ -1,7 +1,3 @@
-#自定义token键名
-authorization:
-  user-profile:
-    key: Authorization
 #客户端配置
 eureka:
   client:
