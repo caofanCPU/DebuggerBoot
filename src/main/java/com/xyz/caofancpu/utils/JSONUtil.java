@@ -1,23 +1,9 @@
 package com.xyz.caofancpu.utils;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-
 /**
  * Created by caofanCPU on 2018/8/6.
  */
 public class JSONUtil {
-    
-    public static List<Map<String, Object>> parseList(Object source) {
-        List<Map> tempList = new ArrayList();
-        if (source instanceof ArrayList) {
-            tempList = (ArrayList) source;
-        }
-        final List<Map<String, Object>> resultList = new ArrayList<>();
-        tempList.forEach((item -> resultList.add(item)));
-        return resultList;
-    }
     
     public static String outputJson(String jsonStr) {
         String start = "    ";

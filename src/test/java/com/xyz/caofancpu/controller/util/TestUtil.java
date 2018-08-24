@@ -74,14 +74,14 @@ public class TestUtil {
             return null;
         }
         MultiValueMap<String, String> convertResult = new LinkedMultiValueMap<>();
-        for (Map.Entry<String, Object> entry : params.entrySet()) {
-            if (entry.getValue() == null) {
-                continue;
-            }
-            convertResult.put(entry.getKey(), new ArrayList() {{
-                add(entry.getValue().toString());
-            }});
-        }
+        params.entrySet().stream()
+                .filter(item -> item.getValue() != null)
+                .forEach(item -> convertResult.put(item.getKey(), new ArrayList() {
+                            {
+                                add(item.getValue().toString());
+                            }
+                        })
+                );
         return convertResult;
     }
     

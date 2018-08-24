@@ -1,5 +1,6 @@
 package com.xyz.caofancpu.utils;
 
+import jdk.nashorn.internal.ir.annotations.Ignore;
 import org.apache.commons.collections.CollectionUtils;
 import org.springframework.util.Assert;
 
@@ -13,15 +14,17 @@ import java.util.stream.Stream;
 public class StreamUtils {
     
     /**
-     * 根据指定字段过滤集合元素的数据
+     * List版本:根据指定字段过滤出目标属性
      *
      * @param sourceList
      * @param targetPropertySet
      * @return
      */
-    public static List<Map<String, Object>> filterProperty(List<Map<String, Object>> sourceList, Set<String> targetPropertySet) {
+    public static List<Map<String, Object>> filterProperty(
+            List<Map<String, Object>> sourceList,
+            Set<String> targetPropertySet) {
         if (CollectionUtils.isEmpty(sourceList) || CollectionUtils.isEmpty(targetPropertySet)) {
-            return null;
+            return sourceList;
         }
         List<Map<String, Object>> resultList = new ArrayList<>();
         sourceList.stream().forEach(item ->
@@ -40,9 +43,16 @@ public class StreamUtils {
         return resultList;
     }
     
+    /**
+     * Map版本:根据指定字段过滤出目标属性
+     *
+     * @param source
+     * @param targetPropertySet
+     * @return
+     */
     public static Map<String, Object> filterProperty(Map<String, Object> source, Set<String> targetPropertySet) {
         if (source == null || source.isEmpty() || CollectionUtils.isEmpty(targetPropertySet)) {
-            return null;
+            return source;
         }
         Map<String, Object> target = new HashMap<>(8, 0.75f);
         targetPropertySet.parallelStream().forEach(property -> {
@@ -54,6 +64,39 @@ public class StreamUtils {
     }
     
     /**
+     * List版本:根据指定字段剔除目标属性
+     *
+     * @param sourceList
+     * @param targetPropertySet
+     * @return
+     */
+    public static List<Map<String, Object>> removeProperty(
+            List<Map<String, Object>> sourceList,
+            Set<String> targetPropertySet) {
+        if (CollectionUtils.isEmpty(sourceList) || CollectionUtils.isEmpty(targetPropertySet)) {
+            return sourceList;
+        }
+        sourceList.stream().forEach(item -> targetPropertySet.parallelStream().forEach(property -> item.remove(property)));
+        return sourceList;
+    }
+    
+    /**
+     * Map版本:根据指定字段剔除目标属性
+     *
+     * @param source
+     * @param targetPropertySet
+     * @return
+     */
+    public static Map<String, Object> removeProperty(Map<String, Object> source, Set<String> targetPropertySet) {
+        if (source == null || source.isEmpty() || CollectionUtils.isEmpty(targetPropertySet)) {
+            return source;
+        }
+        targetPropertySet.parallelStream().forEach(property -> {
+            source.remove(property);
+        });
+        return source;
+    }
+    /**
      * 剔除请求中值为null的参数
      *
      * @param paramsMap
@@ -61,10 +104,9 @@ public class StreamUtils {
      */
     public static Map<String, Object> removeNullElement(Map<String, Object> paramsMap) {
         if (paramsMap == null || paramsMap.isEmpty()) {
-            return new HashMap<>(1, 0.5f);
+            return paramsMap;
         }
         /** 一般请求参数不会太多，故而使用单向顺序流即可 */
-        
         // 1.首先构建流，剔除值为空的元素
         Stream<Map.Entry<String, Object>> tempStream = paramsMap.entrySet().stream()
                 .filter((entry) -> entry.getValue() != null);
@@ -93,9 +135,73 @@ public class StreamUtils {
     }
     
     public static void main(String[] args) {
-        testStreamReturnSymbol();
+        testFilterMapProperty();
     }
     
+    @Ignore
+    public static void testFilterMapProperty() {
+        Map<String, Object> sourceMap = new HashMap<String, Object>(4, 0.5f) {
+            {
+                put("id", 1);
+                put("name", "帝八哥");
+                put("age", 120L);
+            }
+        };
+        Set<String> targetPropertySet = new HashSet<String>(4) {
+            {
+                add("name");
+            }
+        };
+//        Map<String, Object> resultMap = filterProperty(sourceMap, targetPropertySet);
+        Map<String, Object> resultMap = removeProperty(sourceMap, targetPropertySet);
+        System.out.println(resultMap.size());
+    }
+    
+    @Ignore
+    public static void testFilterListProperty() {
+        List<Map<String, Object>> sourceList = new ArrayList<Map<String, Object>>(12) {
+            {
+                add(new HashMap<String, Object>(4, 0.5f) {
+                    {
+                        put("id", 1);
+                        put("name", "帝八哥");
+                        put("age", 120L);
+                    }
+                });
+                add(new HashMap<String, Object>(4, 0.5f) {
+                    {
+                        put("id", 2);
+                        put("name", "谷歌");
+                        put("age", 120L);
+                    }
+                });
+                add(new HashMap<String, Object>(4, 0.5f) {
+                    {
+                        put("id", 3);
+                        put("name", "百度");
+                        put("age", 120L);
+                    }
+                });
+                add(new HashMap<String, Object>(4, 0.5f) {
+                    {
+                        put("id", 4);
+                        put("name", "阿里巴巴");
+                        put("age", 120L);
+                    }
+                });
+            }
+        };
+        Set<String> targetPropertySet = new HashSet<String>(4) {
+            {
+                add("name");
+            }
+        };
+        List<Map<String, Object>> resultList = filterProperty(sourceList, targetPropertySet);
+//        List<Map<String, Object>> resultList = filterProperty(sourceList, targetPropertySet);
+        System.out.println(resultList.size());
+    }
+    
+    @Ignore
     public static void testStreamReturnSymbol() {
         Stream<Integer> sourceStream = Stream.of(1, 2, 3, 4, 5);
         sourceStream.forEach(item -> {
@@ -107,6 +213,7 @@ public class StreamUtils {
         System.out.println("流结束后, 代码继续前行....");
     }
     
+    @Ignore
     public static void testRemoveNullElement() {
         Map<String, Object> paramsMap = new HashMap<String, Object>(4, 0.5f) {
             {
@@ -118,6 +225,7 @@ public class StreamUtils {
         System.out.println(resultMap);
     }
     
+    @Ignore
     public static void testIntegerHashCode() {
         Integer a = Integer.valueOf(127);
         Integer b = a.hashCode();

@@ -24,16 +24,12 @@ public class UrlUtil {
      * @param contextType
      * @return
      */
-    public static String encodeUrl(String url, final String contextType) {
+    public static String encodeUrl(String url, final String contextType)
+            throws UnsupportedEncodingException {
         if (StringUtils.isNotEmpty(url)) {
-            try {
-                url = URLEncoder.encode(url, contextType);
-            } catch (UnsupportedEncodingException e) {
-                e.printStackTrace();
-                url = "";
-            }
+            return URLEncoder.encode(url, contextType);
         }
-        return url;
+        throw new IllegalArgumentException("非法的URL参数:Empty");
     }
     
     /**
@@ -43,24 +39,29 @@ public class UrlUtil {
      * @param contextType
      * @return
      */
-    private static String decodeUrl(String url, final String contextType) {
+    private static String decodeUrl(String url, final String contextType)
+            throws UnsupportedEncodingException {
         if (StringUtils.isNotEmpty(url)) {
-            try {
-                url = URLDecoder.decode(url, contextType);
-            } catch (UnsupportedEncodingException e) {
-                e.printStackTrace();
-            }
-        } else {
-            url = "";
+            return URLDecoder.decode(url, contextType);
         }
-        return url;
+        throw new IllegalArgumentException("非法的URL参数:Empty");
     }
     
     public static void main(String[] args) {
         String originUrl = "http://cwq.nongjicai.com/#/orderConfirm?orderId=10025";
-        String encodeUrlByUTF = encodeUrl(originUrl, UTF_TYPE);
+        String encodeUrlByUTF = null;
+        try {
+            encodeUrlByUTF = encodeUrl(originUrl, UTF_TYPE);
+        } catch (UnsupportedEncodingException e) {
+            e.printStackTrace();
+        }
         System.out.println(encodeUrlByUTF);
-        String decodeUrlByUTF = decodeUrl(encodeUrlByUTF, UTF_TYPE);
+        String decodeUrlByUTF = null;
+        try {
+            decodeUrlByUTF = decodeUrl(encodeUrlByUTF, UTF_TYPE);
+        } catch (UnsupportedEncodingException e) {
+            e.printStackTrace();
+        }
         System.out.println(decodeUrlByUTF);
         Assert.isTrue(originUrl.equals(decodeUrlByUTF), "测试失败！");
     }

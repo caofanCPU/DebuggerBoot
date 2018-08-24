@@ -35,7 +35,7 @@ public class CommonOperateServiceImpl implements CommonOperateService {
     /**
      * LOG
      */
-    private static final Logger LOGGER = LoggerFactory.getLogger(CommonOperateServiceImpl.class);
+    private static final Logger logger = LoggerFactory.getLogger(CommonOperateServiceImpl.class);
     
     private static final String COMMA_SEPARATOR = ",";
     
@@ -62,7 +62,7 @@ public class CommonOperateServiceImpl implements CommonOperateService {
             try {
                 bytes = file.getBytes();
             } catch (IOException e) {
-                LOGGER.error(e.getMessage());
+                logger.error(e.getMessage());
                 throw new GlobalErrorInfoException(GlobalErrorInfoEnum.INTERNAL_ERROR);
             }
             
@@ -80,14 +80,14 @@ public class CommonOperateServiceImpl implements CommonOperateService {
             ResultBody rb = restTemplate.postForObject(fileAccessUrl + "/file/upload", map, ResultBody.class);
             
             if (!"200".equals(rb.getCode())) {
-                LOGGER.error("调用上传文件失败: {}", rb.getMsg());
+                logger.error("调用上传文件失败: {}", rb.getMsg());
                 throw new GlobalErrorInfoException(GlobalErrorInfoEnum.CALL_SERVICE_ERROR);
             }
             attachment.setType(type);
             attachment.setName(path);
             attachment.setCreateTime(DateUtil.date2Str(new Date(), DateUtil.FORMAT_ALL));
-            
-            LOGGER.info("\n上传文件：[" + attachment.getCreateTime() + "]" + attachment.getName());
+    
+            logger.info("\n上传文件：[" + attachment.getCreateTime() + "]" + attachment.getName());
         }
     }
     
@@ -104,11 +104,11 @@ public class CommonOperateServiceImpl implements CommonOperateService {
         ResultBody rb = restTemplate.postForObject(fileAccessUrl + "/file/generateUrl", map, ResultBody.class);
         
         if (!"200".equals(rb.getCode())) {
-            LOGGER.error("调用上传文件失败: {}", rb.getMsg());
+            logger.error("调用上传文件失败: {}", rb.getMsg());
             throw new GlobalErrorInfoException(GlobalErrorInfoEnum.CALL_SERVICE_ERROR);
         }
         String accessUrl = (String) rb.getData();
-        LOGGER.info("查询文件访问Url: " + "\n输入文件名[" + attachmentName + "]\n输出Url[" + accessUrl + "]");
+        logger.info("查询文件访问Url: " + "\n输入文件名[" + attachmentName + "]\n输出Url[" + accessUrl + "]");
         return accessUrl;
     }
     

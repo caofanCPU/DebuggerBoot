@@ -23,6 +23,8 @@ import org.springframework.web.context.WebApplicationContext;
 import java.util.ArrayList;
 import java.util.Map;
 
+import static com.xyz.caofancpu.utils.JSONUtil.outputJson;
+
 @RunWith(SpringRunner.class)
 @SpringBootTest(classes = DebuggerKingApplication.class)
 @AutoConfigureMockMvc
@@ -66,7 +68,6 @@ public class DebuggerKingApplicationTests {
     @Ignore
     public String handleBodyExecute(Object parameter, String url)
             throws Exception {
-        
         ObjectMapper mapper = new ObjectMapper();
         String responseString = mvc.perform(MockMvcRequestBuilders.post(url)
                 .contentType(MediaType.APPLICATION_JSON_UTF8)
@@ -104,14 +105,14 @@ public class DebuggerKingApplicationTests {
             return null;
         }
         MultiValueMap<String, String> convertResult = new LinkedMultiValueMap<>();
-        for (Map.Entry<String, Object> entry : params.entrySet()) {
-            if (entry.getValue() == null) {
-                continue;
-            }
-            convertResult.put(entry.getKey(), new ArrayList() {{
-                add(entry.getValue().toString());
-            }});
-        }
+        params.entrySet().stream()
+                .filter(item -> item.getValue() != null)
+                .forEach(item -> convertResult.put(item.getKey(), new ArrayList() {
+                            {
+                                add(item.getValue().toString());
+                            }
+                        })
+                );
         return convertResult;
     }
     
@@ -124,58 +125,6 @@ public class DebuggerKingApplicationTests {
     public void output(String str) {
         System.out.println("测试结果 : \n" + outputJson(str));
     }
-    
-    /**
-     * 将Json字符串格式化，用于控制台输出
-     *
-     * @param jsonStr
-     * @return
-     */
-    @Ignore
-    public String outputJson(String jsonStr) {
-        String start = "    ";
-        // 用户标记层级
-        int level = 0;
-        StringBuilder jsonResultStr = new StringBuilder();
-        // 循环遍历每一个字符
-        for (int i = 0; i < jsonStr.length(); i++) {
-            // 获取当前字符
-            char piece = jsonStr.charAt(i);
-            // 如果上一个字符是断行，则在本行开始按照level数值添加标记符，排除第一行
-            if (i != 0 && '\n' == jsonResultStr.charAt(jsonResultStr.length() - 1)) {
-                for (int k = 0; k < level; k++) {
-                    jsonResultStr.append(start);
-                }
-            }
-            switch (piece) {
-                case '{':
-                case '[':
-                    // 如果字符是{或者[，则断行，level加1
-                    jsonResultStr.append(piece + "\n");
-                    level++;
-                    break;
-                case ',':
-                    // 如果是","，则断行
-                    jsonResultStr.append(piece + "\n");
-                    break;
-                case '}':
-                case ']':
-                    // 如果是"}"或者"]"，则断行，level减1
-                    jsonResultStr.append("\n");
-                    level--;
-                    for (int k = 0; k < level; k++) {
-                        jsonResultStr.append(start);
-                    }
-                    jsonResultStr.append(piece);
-                    break;
-                default:
-                    jsonResultStr.append(piece);
-                    break;
-            }
-        }
-        return jsonResultStr.toString();
-    }
-    
     
 }
 

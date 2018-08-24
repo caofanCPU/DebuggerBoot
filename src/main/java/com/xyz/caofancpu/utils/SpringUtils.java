@@ -5,8 +5,9 @@ import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationContextAware;
 import org.springframework.stereotype.Component;
 
+
 /**
- * Created by xwj on 2017/9/7.
+ * SpringUtils for get Beans from IOC
  */
 @Component
 public class SpringUtils implements ApplicationContextAware {

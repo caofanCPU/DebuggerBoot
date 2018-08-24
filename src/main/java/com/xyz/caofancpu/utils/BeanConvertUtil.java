@@ -4,6 +4,8 @@ package com.xyz.caofancpu.utils;
 import org.apache.commons.beanutils.BeanUtils;
 import org.apache.commons.beanutils.ConvertUtils;
 import org.apache.commons.beanutils.converters.DateConverter;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
@@ -17,6 +19,11 @@ import java.util.*;
  * Created by caofanCPU on 2018/8/10.
  */
 public class BeanConvertUtil {
+    
+    /**
+     * LOG
+     */
+    private static final Logger logger = LoggerFactory.getLogger(BeanConvertUtil.class);
     
     /**
      * 将Map中的数据替换Bean中属性
@@ -77,7 +84,10 @@ public class BeanConvertUtil {
      * @param propertyMap
      * @param targetObj
      */
-    public static void transferToBean(Map<String, Object> sourceDataMap, Map<String, Object> propertyMap, Object targetObj) {
+    public static void transferToBean(
+            Map<String, Object> sourceDataMap,
+            Map<String, Object> propertyMap,
+            Object targetObj) {
         if (!validate(sourceDataMap, targetObj) || !validate(propertyMap, targetObj)) {
             return;
         }
@@ -88,10 +98,11 @@ public class BeanConvertUtil {
             // 根据Bean字段的属性类型，进行强制转换
             try {
                 Field presentField = targetObj.getClass().getDeclaredField(fieldName);
-                String fieldTypeName = presentField.getGenericType().getTypeName().toString();
+                String fieldTypeName = presentField.getGenericType().getTypeName();
                 sourceDataMap.put(mapKey, convertObject(fieldTypeName, sourceDataMap.get(mapKey)));
             } catch (NoSuchFieldException e) {
-                e.printStackTrace();
+                logger.error("对象字段转换失败, {}", e.getMessage());
+                return;
             }
             ReflectionUtil.setFieldValue(targetObj, fieldName, sourceDataMap.get(mapKey));
         });
@@ -107,7 +118,7 @@ public class BeanConvertUtil {
      * @throws Exception
      */
     public static Object mapToObject(Map<String, Object> map, Class<?> beanClass)
-            throws Exception {
+            throws IllegalAccessException, InstantiationException {
         if (map == null) {
             return null;
         }
@@ -122,7 +133,7 @@ public class BeanConvertUtil {
             // 过滤null值
             if (present != null) {
                 // 获取对象的属性类型，并强转为其类型
-                String fieldTypeName = field.getGenericType().getTypeName().toString();
+                String fieldTypeName = field.getGenericType().getTypeName();
                 map.put(field.getName(), convertObject(fieldTypeName, present));
                 field.setAccessible(true);
                 field.set(obj, map.get(field.getName()));
@@ -158,7 +169,7 @@ public class BeanConvertUtil {
                     SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
                     return sdf.parse(targetObj.toString());
                 } catch (ParseException e) {
-                    e.printStackTrace();
+                    logger.error("对象时间字段转换失败, {}", e.getMessage());
                 }
                 return targetObj;
             default:
@@ -175,7 +186,7 @@ public class BeanConvertUtil {
      * @throws Exception
      */
     public static Map<String, Object> objectToMap(Object obj)
-            throws Exception {
+            throws IllegalAccessException {
         if (obj == null) {
             return null;
         }
@@ -215,12 +226,24 @@ public class BeanConvertUtil {
      */
     public static <T> List<T> parseTargetListObj(Object sourceData, Class<T> clazz) {
         if (sourceData == null || clazz == null || !(sourceData instanceof List)) {
-            return null;
+            throw new IllegalArgumentException("非法的参数");
         }
         List sourceList = (List) sourceData;
         List<T> resultList = new ArrayList<>(sourceList.size());
         sourceList.stream().filter(Objects::nonNull).forEach(item -> {
-            T resultObj = parseTargetObj(item, clazz);
+            T resultObj = null;
+            try {
+                resultObj = parseTargetObj(item, clazz);
+            } catch (IllegalAccessException e) {
+                logger.error("非法参数, {}", e.getMessage());
+                return;
+            } catch (InstantiationException e) {
+                logger.error("非法参数, {}", e.getMessage());
+                return;
+            } catch (InvocationTargetException e) {
+                logger.error("非法参数, {}", e.getMessage());
+                return;
+            }
             resultList.add(resultObj);
         });
         return resultList;
@@ -234,23 +257,15 @@ public class BeanConvertUtil {
      * @param <T>
      * @return
      */
-    public static <T> T parseTargetObj(Object sourceData, Class<T> clazz) {
+    public static <T> T parseTargetObj(Object sourceData, Class<T> clazz)
+            throws IllegalAccessException, InstantiationException, InvocationTargetException {
         if (sourceData == null || clazz == null || !(sourceData instanceof Map)) {
-            return null;
+            throw new IllegalArgumentException("非法的参数");
         }
-        try {
-            ConvertUtils.register(loadDateConverter(), Date.class);
-            T target = clazz.newInstance();
-            BeanUtils.populate(target, (Map<String, Object>) sourceData);
-            return target;
-        } catch (InstantiationException e) {
-            e.printStackTrace();
-        } catch (IllegalAccessException e) {
-            e.printStackTrace();
-        } catch (InvocationTargetException e) {
-            e.printStackTrace();
-        }
-        return null;
+        ConvertUtils.register(loadDateConverter(), Date.class);
+        T target = clazz.newInstance();
+        BeanUtils.populate(target, (Map<String, Object>) sourceData);
+        return target;
     }
     
     /**
@@ -265,11 +280,7 @@ public class BeanConvertUtil {
     }
     
     public static void main(String[] args) {
-        testDescribe();
-        
-    }
     
-    public static void testDescribe() {
     
     }
     
