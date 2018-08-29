@@ -1,0 +1,12 @@
+
+
+@ApiImplicitParams({
+            @ApiImplicitParam(name = "memberId", value = "会员ID", required = true, dataType = "integer", paramType = "body"),
+            @ApiImplicitParam(name = "name", value = "会员名称", required = false, dataType = "string", paramType = "body"),
+            @ApiImplicitParam(name = "attachmentIdList", value = "附件ID数组", required = true, dataType = "long", paramType = "body")
+    })
+
+source-dataType   in [string (this includes dates and files), number, integer, boolean, array, object]
+spring-dataType   in [string, int, long, list]
+paramType  in [ path, query, body, header, form]
+

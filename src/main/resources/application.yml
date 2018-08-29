@@ -11,7 +11,7 @@ eureka:
     leaseRenewalIntervalInSeconds: 5
 #文件访问系统配置
 file:
-  url: http://SERVICE-FSS
+  url: http://SERVICE-FILE
 #日志系统配置
 logging:
   config: classpath:logback-spring.xml
@@ -45,7 +45,7 @@ test:
     kafka:
       topics: caofanCPU,demo
 #用户中心服务配置
-user-profile-url: http://USERPROFILE-SERVICE
+user-profile-url: http://USER-SERVICE
 
 swagger:
   authPathRegex: ^(?!auth).*$

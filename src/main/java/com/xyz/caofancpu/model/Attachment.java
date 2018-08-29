@@ -28,6 +28,14 @@ public class Attachment implements Serializable {
     
     private String accessUrl;
     
+    public Attachment() {
+    }
+    
+    public Attachment(String name, Integer sortId) {
+        this.name = name;
+        this.sortId = sortId;
+    }
+    
     public String getAccessUrl() {
         return accessUrl;
     }

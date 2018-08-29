@@ -128,14 +128,59 @@ public class StreamUtils {
         if (CollectionUtils.isEmpty(sourceList)) {
             return new ArrayList<>();
         }
+        // 1.直接使用JSK8中的增强List的sort方法
+        sourceList.sort((item1, item2) -> item1.get(sortedKey).hashCode() > item2.get(sortedKey).hashCode() && asc ? 1 : -1);
+        return sourceList;
+        
+        /*// 2.使用流 + 开辟新空间 进行排序 [未推荐使用]
         List<Map<String, Object>> sortedList = sourceList.stream()
                 .sorted((x, y) -> x.get(sortedKey).hashCode() > y.get(sortedKey).hashCode() && asc ? -1 : 1)
                 .collect(Collectors.toList());
-        return sortedList;
+        return sortedList;*/
     }
     
     public static void main(String[] args) {
-        testFilterMapProperty();
+        testListSort();
+    }
+    
+    @Ignore
+    public static void testListSort() {
+        List<Map<String, Object>> attachmentList = new ArrayList<Map<String, Object>>(10) {
+            {
+                add(new HashMap<String, Object>(2, 0.5f) {
+                    {
+                        put("id", 4);
+                        put("name", "张三");
+                    }
+                });
+                add(new HashMap<String, Object>(2, 0.5f) {
+                    {
+                        put("id", 3);
+                        put("name", "李四");
+                    }
+                });
+                add(new HashMap<String, Object>(2, 0.5f) {
+                    {
+                        put("id", 1);
+                        put("name", "王五");
+                    }
+                });
+                add(new HashMap<String, Object>(2, 0.5f) {
+                    {
+                        put("id", 2);
+                        put("name", "赵六");
+                    }
+                });
+                add(new HashMap<String, Object>(2, 0.5f) {
+                    {
+                        put("id", 2);
+                        put("name", "赵六2");
+                    }
+                });
+            }
+        };
+        sort(attachmentList, "id", true);
+        System.out.println("排序成功!");
     }
     
     @Ignore
