@@ -47,7 +47,7 @@ public class CommonOperateControllerTests {
         params.put("demo", "this is demo");
         MultiValueMap<String, String> requestParams = testUtil.convertRequestParam(params);
         String responseStr = testUtil.handleParamExecute(requestParams, "/sysDict/listByPage");
-        JSONUtil.outputJson(responseStr);
+        JSONUtil.formatStandardJSON(responseStr);
     }
     
 }

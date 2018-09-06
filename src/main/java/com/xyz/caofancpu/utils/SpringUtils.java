@@ -13,14 +13,8 @@ import org.springframework.stereotype.Component;
 public class SpringUtils implements ApplicationContextAware {
 
     private static ApplicationContext applicationContext; // Spring应用上下文环境
-
-    /*
-     *
-     * 实现了ApplicationContextAware 接口，必须实现该方法；
-     *
-     * 通过传递applicationContext参数初始化成员变量applicationContext
-     */
-
+    
+    
     public void setApplicationContext(ApplicationContext applicationContext)
             throws BeansException {
         SpringUtils.applicationContext = applicationContext;

@@ -208,7 +208,7 @@ public class RestTemplateUtil {
     public void showRequestLog(String url, Map<String, Object> paramMap, String token) {
         logger.info("\n\n\n"
                 + "请求url=" + url + "\n"
-                + "请求参数paramsMap=" + JSONUtil.outputJson(new JSONObject(paramMap).toJSONString()) + "\n"
+                + "请求参数paramsMap=" + JSONUtil.formatStandardJSON(new JSONObject(paramMap).toJSONString()) + "\n"
                 + "携带token=" + token
                 + "\n\n\n");
     }
@@ -225,7 +225,7 @@ public class RestTemplateUtil {
      * @param jsonString
      */
     public void showResponseLog(String jsonString) {
-        logger.info("\n\n\n" + "接口响应：" + JSONUtil.outputJson(jsonString) + "\n\n\n");
+        logger.info("\n\n\n" + "接口响应：" + JSONUtil.formatStandardJSON(jsonString) + "\n\n\n");
     }
     
     

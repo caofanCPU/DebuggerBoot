@@ -41,11 +41,17 @@ public class BeanConvertUtil {
         }
         ConvertUtils.register(loadDateConverter(), Date.class);
         BeanUtils.populate(targetObj, sourceMap);
-        /**
-         * copyProperties包含populate的功能，但是copyProperties适用于从httpRequest中转换数据，
-         * 故而平常不推荐使用
-         */
-//        BeanUtils.copyProperties(targetObj, sourceMap);
+    }
+    
+    /**
+     * copyProperties包含populate的功能，但是copyProperties适用于从httpRequest中转换数据，
+     * 故而平常不推荐使用
+     */
+    public static <T> T copyProperties(Object sourceObj, Class<T> clazz)
+            throws IllegalAccessException, InstantiationException, InvocationTargetException {
+        T targetObj = clazz.newInstance();
+        BeanUtils.copyProperties(targetObj, sourceObj);
+        return targetObj;
     }
     
     

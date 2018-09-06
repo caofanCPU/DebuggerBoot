@@ -7,6 +7,7 @@ import java.util.List;
  * @date 2018/7/29
  */
 public class Area {
+
     private Integer id;
     
     private String name;
@@ -15,7 +16,15 @@ public class Area {
     
     private List<Area> children;
     
+    /**
+     * 提供默认构造方法, 供反射使用
+     */
+    public Area() {
+    }
     
+    /**
+     * 带参构造方法, 必须提供无参构造方法
+     */
     public Area(Integer id, String name, Integer pid) {
         this.id = id;
         this.name = name;

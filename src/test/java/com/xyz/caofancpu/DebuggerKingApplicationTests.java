@@ -23,7 +23,7 @@ import org.springframework.web.context.WebApplicationContext;
 import java.util.ArrayList;
 import java.util.Map;
 
-import static com.xyz.caofancpu.utils.JSONUtil.outputJson;
+import static com.xyz.caofancpu.utils.JSONUtil.formatStandardJSON;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest(classes = DebuggerKingApplication.class)
@@ -123,7 +123,7 @@ public class DebuggerKingApplicationTests {
      */
     @Ignore
     public void output(String str) {
-        System.out.println("测试结果 : \n" + outputJson(str));
+        System.out.println("测试结果 : \n" + formatStandardJSON(str));
     }
     
 }
