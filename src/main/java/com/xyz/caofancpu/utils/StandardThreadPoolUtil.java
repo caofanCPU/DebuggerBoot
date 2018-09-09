@@ -21,13 +21,14 @@ public class StandardThreadPoolUtil {
             synchronized (ThreadPoolTaskExecutor.class) {
                 if (threadPoolTaskExecutor == null) {
                     threadPoolTaskExecutor = new ThreadPoolTaskExecutor();
+                    init(threadPoolTaskExecutor);
                 }
             }
         }
         return threadPoolTaskExecutor;
     }
     
-    private void init(ThreadPoolTaskExecutor threadPoolTaskExecutor) {
+    private static void init(ThreadPoolTaskExecutor threadPoolTaskExecutor) {
         //核心线程数
         threadPoolTaskExecutor.setCorePoolSize(16);
         //最大线程数
@@ -47,4 +48,5 @@ public class StandardThreadPoolUtil {
         //加载
         threadPoolTaskExecutor.initialize();
     }
+    
 }

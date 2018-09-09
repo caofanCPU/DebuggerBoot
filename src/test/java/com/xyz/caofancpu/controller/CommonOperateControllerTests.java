@@ -43,8 +43,11 @@ public class CommonOperateControllerTests {
     @Test
     public void listSysDictByPageTest()
             throws Exception {
-        HashMap<String, Object> params = new HashMap();
-        params.put("demo", "this is demo");
+        HashMap<String, Object> params = new HashMap<String, Object>(2, 0.5f) {
+            {
+                put("demo", "this is demo");
+            }
+        };
         MultiValueMap<String, String> requestParams = testUtil.convertRequestParam(params);
         String responseStr = testUtil.handleParamExecute(requestParams, "/sysDict/listByPage");
         JSONUtil.formatStandardJSON(responseStr);
