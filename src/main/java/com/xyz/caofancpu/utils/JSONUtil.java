@@ -123,13 +123,9 @@ public class JSONUtil {
                     try {
                         T result = BeanConvertUtil.copyProperties(item, clazz);
                         resultList.add(result);
-                    } catch (IllegalAccessException e) {
-                        logger.info("JSONArray转换失败! {}", e.getMessage());
-                        return;
-                    } catch (InstantiationException e) {
-                        logger.info("JSONArray转换失败! {}", e.getMessage());
-                        return;
-                    } catch (InvocationTargetException e) {
+                    } catch (IllegalAccessException
+                            | InstantiationException
+                            | InvocationTargetException e) {
                         logger.info("JSONArray转换失败! {}", e.getMessage());
                         return;
                     }
@@ -155,13 +151,9 @@ public class JSONUtil {
                     try {
                         Map<String, Object> result = BeanConvertUtil.copyProperties(item, HashMap.class);
                         resultList.add(result);
-                    } catch (IllegalAccessException e) {
-                        logger.info("JSONArray转换失败! {}", e.getMessage());
-                        return;
-                    } catch (InstantiationException e) {
-                        logger.info("JSONArray转换失败! {}", e.getMessage());
-                        return;
-                    } catch (InvocationTargetException e) {
+                    } catch (IllegalAccessException
+                            | InstantiationException
+                            | InvocationTargetException e) {
                         logger.info("JSONArray转换失败! {}", e.getMessage());
                         return;
                     }
