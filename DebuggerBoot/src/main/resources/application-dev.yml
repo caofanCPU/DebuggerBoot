@@ -1,0 +1,43 @@
+#客户端配置
+eureka:
+  client:
+    fetch-registry: false
+    register-with-eureka: false
+#日志级别配置，不同环境不一致
+logging:
+  level:
+    com:
+      ovfintech:
+        bynz:
+          #DTO数据库操作日志级别
+          mapper: debug
+    org:
+      springframework:
+        #Spring框架日志级别
+        web: debug
+#服务所在网关路由配置
+server:
+  context-path: /debuggerking
+#数据库配置
+spring:
+  datasource:
+    connection-test-query: select 1
+    driverClassName: com.mysql.jdbc.Driver
+    url: jdbc:mysql://192.168.2.150:3306/bynz_test?useUnicode=true&characterEncoding=UTF-8&zeroDateTimeBehavior=convertToNull
+    username: root
+    password: ENC(7q5tQ5gmPhEE7o+aAaDnVg==)
+jasypt:
+  encryptor:
+    password: e!JdljyJ^e4I5oU
+  http:
+    #文件上传大小限制
+    multipart:
+      max-file-size: 10MB
+      max-request-size: 10MB
+  #Kafka配置
+  kafka:
+    #Kafka消息中心访问URL
+    bootstrap-servers: 192.168.2.203:9092
+    #Kafka客户端组名配置
+    consumer:
+      group-id: caofanGroup
