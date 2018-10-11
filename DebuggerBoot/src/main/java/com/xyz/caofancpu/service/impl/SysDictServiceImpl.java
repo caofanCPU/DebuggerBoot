@@ -28,6 +28,7 @@ public class SysDictServiceImpl implements SysDictService {
      */
     private static final Logger logger = LoggerFactory.getLogger(SysDictServiceImpl.class);
     
+    @SuppressWarnings("SpringJavaInjectionPointsAutowiringInspection")
     @Autowired
     private transient SysDictMapper sysDictMapper;
     

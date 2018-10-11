@@ -1,8 +1,8 @@
 package com.xyz.caofancpu.validator;
 
-import com.xyz.caofancpu.result.CustomerErrorInfo;
-import com.xyz.caofancpu.result.GlobalErrorInfoException;
-import com.xyz.caofancpu.utils.ReflectionUtil;
+import com.xyz.caofancpu.util.DataOperateUtils.ReflectionUtil;
+import com.xyz.caofancpu.util.result.CustomerErrorInfo;
+import com.xyz.caofancpu.util.result.GlobalErrorInfoException;
 import org.apache.commons.lang3.StringUtils;
 import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.annotation.Around;

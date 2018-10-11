@@ -2,7 +2,7 @@ package com.xyz.caofancpu.service;
 
 
 import com.xyz.caofancpu.model.Attachment;
-import com.xyz.caofancpu.result.GlobalErrorInfoException;
+import com.xyz.caofancpu.util.result.GlobalErrorInfoException;
 import org.springframework.web.multipart.MultipartFile;
 
 /**

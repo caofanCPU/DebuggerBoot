@@ -47,7 +47,13 @@ test:
 #用户中心服务配置
 user-profile-url: http://USER-SERVICE
 
+# swagger认证配置
 swagger:
   authPathRegex: ^(?!auth).*$
   showApi: true
   authorizationKey: Authorization
+
+# 系统间认证KEY
+authorization:
+  user-profile:
+    key: Authorization
