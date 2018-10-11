@@ -82,6 +82,8 @@
 
     </dependencies>
 
+    <!--发布配置: 注意,nexus仓库属性支持发布, 允许覆盖更新等-->
+    <!--替代方案: 本地安装, 供自身引用-->
     <distributionManagement>
         <!-- 两个ID必须与 setting.xml中的<server><id>nexus-releases</id></server>保持一致 -->
         <repository>
