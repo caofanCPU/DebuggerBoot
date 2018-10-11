@@ -49,13 +49,16 @@ public class ResultBody {
         this.data = data;
     }
     
-    public void fail(String msg) {
+    public ResultBody fail(String msg) {
+        this.code = GlobalErrorInfoEnum.PARA_ERROR.getCode();
         this.msg = StringUtils.isEmpty(code) ? GlobalErrorInfoEnum.INTERNAL_ERROR.getMsg() : msg;
+        return this;
     }
     
-    public void fail(String code, String msg) {
+    public ResultBody fail(String code, String msg) {
         this.code = StringUtils.isEmpty(code) ? GlobalErrorInfoEnum.INTERNAL_ERROR.getCode() : code;
         this.msg = StringUtils.isEmpty(code) ? GlobalErrorInfoEnum.INTERNAL_ERROR.getMsg() : msg;
+        return this;
     }
     
     @Override
