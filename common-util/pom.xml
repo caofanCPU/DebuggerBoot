@@ -115,7 +115,17 @@
             </plugin>
 
         </plugins>
+        <!--从以下配置中, 推荐将Mapper的XML映射文件放入resources资源目录中, 并修改好model与mapper的映射关系-->
         <resources>
+            <!--Mapper对应的xml映射文件-->
+            <resource>
+                <directory>src/main/java</directory>
+                <includes>
+                    <include>**/*.xml</include>
+                    <include>**/*.properties</include>
+                </includes>
+            </resource>
+            <!--SpringBoot的资源配置文件-->
             <resource>
                 <directory>src/main/resources</directory>
                 <includes>
