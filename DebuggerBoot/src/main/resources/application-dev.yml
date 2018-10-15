@@ -15,7 +15,7 @@ logging:
       springframework:
         #Spring框架日志级别
         web: debug
-#服务所在网关路由配置
+#模拟服务所在网关路由/nginx配置
 server:
   context-path: /debuggerking
 #数据库配置

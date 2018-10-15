@@ -15,7 +15,7 @@ import javax.annotation.Resource;
 @SpringBootApplication(scanBasePackages = {"com.xyz.caofancpu"})
 //禁止自动注册
 //@EnableDiscoveryClient
-@MapperScan("com.xyz.caofancpu.mapper")
+@MapperScan("com.xyz..*.mapper")
 @EnableEncryptableProperties
 @EnableSwagger2
 public class DebuggerKingApplication {

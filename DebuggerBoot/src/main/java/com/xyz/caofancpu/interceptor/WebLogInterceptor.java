@@ -21,7 +21,7 @@ public class WebLogInterceptor {
     private Logger logger = LoggerFactory.getLogger(this.getClass());
     
     
-    @Pointcut("execution(public * com.xyz.caofancpu.controller..*.*(..))")
+    @Pointcut("execution(public * com.xyz..*.controller.*Controller.*(..))")
     public void webLog() {
     }
     
