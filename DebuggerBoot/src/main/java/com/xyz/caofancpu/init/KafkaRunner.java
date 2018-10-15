@@ -1,7 +1,6 @@
 package com.xyz.caofancpu.init;
 
 import com.xyz.caofancpu.message.kafka.KafkaMessage;
-import com.xyz.caofancpu.message.kafka.KafkaProperty;
 import com.xyz.caofancpu.message.kafka.KafkaSender;
 import com.xyz.caofancpu.model.Area;
 import org.slf4j.Logger;

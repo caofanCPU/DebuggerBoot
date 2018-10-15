@@ -1,6 +1,7 @@
 package com.xyz.caofancpu.message.kafka;
 
 import com.alibaba.fastjson.JSONObject;
+import com.xyz.caofancpu.init.KafkaProperty;
 import com.xyz.caofancpu.service.kafka.KafkaConsumerService;
 import com.xyz.caofancpu.utils.SpringUtils;
 import org.apache.commons.lang3.StringUtils;

@@ -1,4 +1,4 @@
-package com.xyz.caofancpu.message.kafka;
+package com.xyz.caofancpu.init;
 
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.context.annotation.Configuration;
@@ -10,10 +10,13 @@ import java.util.concurrent.ConcurrentHashMap;
 
 /**
  * Created by caofanCPU on 2018/8/3.
+ * 从properties配置文件中读取配置
  */
 @Configuration
-@ConfigurationProperties(prefix = "kafka") //声明前缀
-@PropertySource(value = "classpath:kafka.properties") // 声明文件访问路径
+//声明前缀
+@ConfigurationProperties(prefix = "kafka")
+// 声明文件访问路径
+@PropertySource(value = "classpath:kafka.properties")
 @Scope(value = "singleton")
 public class KafkaProperty {
     
