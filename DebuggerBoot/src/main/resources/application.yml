@@ -14,7 +14,7 @@ file:
   url: http://SERVICE-FILE
 #日志系统配置
 logging:
-  config: classpath:logback-spring.xml
+  config: classpath*:logback-spring.xml
 #Mybatis配置
 mybatis:
   configuration:

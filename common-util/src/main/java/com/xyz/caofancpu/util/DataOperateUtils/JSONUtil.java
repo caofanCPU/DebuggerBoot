@@ -178,8 +178,52 @@ public class JSONUtil {
         return resultArray;
     }
     
-    public static void main(String[] args) {
+    /**
+     * Map<String, Object> 转 JSONObject
+     *
+     * @param sourceMap
+     * @return
+     */
+    public static JSONObject mapShiftToJSON(Map<String, Object> sourceMap) {
+        if (Objects.isNull(sourceMap) || 0 == sourceMap.size()) {
+            throw new IllegalArgumentException("sourceMap数据为空!");
+        }
+        return JSONObject.parseObject(JSONObject.toJSONString(sourceMap));
+    }
     
+    /**
+     * JSONObject 转 Map<String, Object>
+     *
+     * @param jsonObject
+     * @return
+     */
+    public static Map<String, Object> JSONShiftToMap(JSONObject jsonObject) {
+        if (Objects.isNull(jsonObject)) {
+            throw new IllegalArgumentException("jsonObject数据为空!");
+        }
+        return jsonObject;
+    }
+    
+    public static void main(String[] args) {
+//        Map<String, Object> paramMap = new HashMap<String, Object>(4, 0.75f){
+//            {
+//                put("id", 12);
+//                put("name", "曹繁");
+//                put("createTime", new Date());
+//                put("updateTime", "2018-10-22 10:22:33");
+//                put("length", 1000L);
+//            }
+//        };
+//        JSONObject jsonObject = mapShiftToJSON(paramMap);
+//        Long length = jsonObject.getLong("length");
+//        Date createTime = jsonObject.getDate("length");
+//        Date updateTime = jsonObject.getDate("updateTime");
+//        Integer id = jsonObject.getInteger("id");
+//        System.out.print(jsonObject.toJSONString());
+        String str = "{\"createTime\":1540278569539,\"name\":\"曹繁\",\"length\":1000,\"updateTime\":\"2018-10-22 10:22:33\",\"id\":12}";
+        JSONObject jsonObject = JSONObject.parseObject(str);
+        Map<String, Object> result = jsonObject;
+        int i  = 2;
     }
     
 }
