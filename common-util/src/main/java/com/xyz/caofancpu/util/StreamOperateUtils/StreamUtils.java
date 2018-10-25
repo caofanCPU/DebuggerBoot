@@ -30,7 +30,7 @@ public class StreamUtils {
         sourceList.stream().forEach(item ->
                 {
                     Map<String, Object> newPropertyMap = new HashMap<>();
-                    targetPropertySet.parallelStream().forEach(property ->
+                    targetPropertySet.stream().forEach(property ->
                     {
                         // 剔除值为null的属性，避免JSON序列化时报错：HttpMessageNotWritableException
                         if (item.get(property) != null) {
@@ -55,7 +55,7 @@ public class StreamUtils {
             return source;
         }
         Map<String, Object> target = new HashMap<>(8, 0.75f);
-        targetPropertySet.parallelStream().forEach(property -> {
+        targetPropertySet.stream().forEach(property -> {
             if (source.get(property) != null) {
                 target.put(property, source.get(property));
             }
@@ -76,7 +76,7 @@ public class StreamUtils {
         if (CollectionUtils.isEmpty(sourceList) || CollectionUtils.isEmpty(targetPropertySet)) {
             return sourceList;
         }
-        sourceList.stream().forEach(item -> targetPropertySet.parallelStream().forEach(property -> item.remove(property)));
+        sourceList.stream().forEach(item -> targetPropertySet.stream().forEach(property -> item.remove(property)));
         return sourceList;
     }
     
@@ -91,9 +91,7 @@ public class StreamUtils {
         if (source == null || source.isEmpty() || CollectionUtils.isEmpty(targetPropertySet)) {
             return source;
         }
-        targetPropertySet.parallelStream().forEach(property -> {
-            source.remove(property);
-        });
+        targetPropertySet.stream().forEach(property -> source.remove(property));
         return source;
     }
     
