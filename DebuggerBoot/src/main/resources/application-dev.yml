@@ -7,8 +7,8 @@ eureka:
 logging:
   level:
     com:
-      ovfintech:
-        bynz:
+      xyz:
+        caofancpu:
           #DTO数据库操作日志级别
           mapper: debug
     org:
