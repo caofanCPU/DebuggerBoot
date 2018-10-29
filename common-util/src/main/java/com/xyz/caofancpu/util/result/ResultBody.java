@@ -25,6 +25,42 @@ public class ResultBody {
         this.msg = GlobalErrorInfoEnum.SUCCESS.getMsg();
     }
     
+    /**
+     * 接口调用失败时, 用此方法向前端返回对应失败原因
+     *
+     * @param errorMsg
+     * @return
+     */
+    public ResultBody fail(String errorMsg) {
+        this.code = GlobalErrorInfoEnum.ILLEGAL_BUS_ID.getCode();
+        this.msg = StringUtils.isEmpty(errorMsg) ? GlobalErrorInfoEnum.ILLEGAL_BUS_ID.getCode() : errorMsg;
+        return this;
+    }
+    
+    /**
+     * 接口调用成功, 返回指定数据
+     *
+     * @param data
+     * @return
+     */
+    public ResultBody success(Object data) {
+        this.data = data;
+        return this;
+    }
+    
+    /**
+     * 接口调用成功, 返回指定数据及提示消息
+     *
+     * @param data
+     * @param successMsg
+     * @return
+     */
+    public ResultBody success(Object data, String successMsg) {
+        this.data = data;
+        this.msg = successMsg;
+        return this;
+    }
+    
     public String getCode() {
         return code;
     }
@@ -47,18 +83,6 @@ public class ResultBody {
     
     public void setData(Object data) {
         this.data = data;
-    }
-    
-    public ResultBody fail(String msg) {
-        this.code = GlobalErrorInfoEnum.PARA_ERROR.getCode();
-        this.msg = StringUtils.isEmpty(code) ? GlobalErrorInfoEnum.INTERNAL_ERROR.getMsg() : msg;
-        return this;
-    }
-    
-    public ResultBody fail(String code, String msg) {
-        this.code = StringUtils.isEmpty(code) ? GlobalErrorInfoEnum.INTERNAL_ERROR.getCode() : code;
-        this.msg = StringUtils.isEmpty(code) ? GlobalErrorInfoEnum.INTERNAL_ERROR.getMsg() : msg;
-        return this;
     }
     
     @Override
