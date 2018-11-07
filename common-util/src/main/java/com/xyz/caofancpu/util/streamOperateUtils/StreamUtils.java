@@ -1,4 +1,4 @@
-package com.xyz.caofancpu.util.StreamOperateUtils;
+package com.xyz.caofancpu.util.streamOperateUtils;
 
 import jdk.nashorn.internal.ir.annotations.Ignore;
 import org.apache.commons.collections.CollectionUtils;

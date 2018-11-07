@@ -2,7 +2,7 @@ package com.xyz.caofancpu.controller;
 
 import com.xyz.caofancpu.DebuggerKingApplication;
 import com.xyz.caofancpu.controller.util.TestUtil;
-import com.xyz.caofancpu.util.DataOperateUtils.JSONUtil;
+import com.xyz.caofancpu.util.dataOperateUtils.JSONUtil;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;

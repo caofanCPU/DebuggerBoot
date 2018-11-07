@@ -1,5 +1,8 @@
 package com.xyz.caofancpu.interceptor;
 
+import com.alibaba.fastjson.JSONObject;
+import com.xyz.caofancpu.util.dataOperateUtils.JSONUtil;
+import com.xyz.caofancpu.utils.DataHelper;
 import org.aspectj.lang.JoinPoint;
 import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.annotation.*;
@@ -12,7 +15,6 @@ import org.springframework.web.context.request.ServletRequestAttributes;
 import javax.servlet.http.HttpServletRequest;
 import java.net.InetAddress;
 import java.net.UnknownHostException;
-import java.util.Arrays;
 
 @Component
 @Aspect
@@ -21,39 +23,52 @@ public class WebLogInterceptor {
     private Logger logger = LoggerFactory.getLogger(this.getClass());
     
     
+    /**
+     * 日志切面
+     */
     @Pointcut("execution(public * com.xyz..*.controller.*Controller.*(..))")
     public void webLog() {
+        // do something
     }
     
     @Before("webLog()")
     public void doBefore(JoinPoint joinPoint) {
         ServletRequestAttributes attributes = (ServletRequestAttributes) RequestContextHolder.getRequestAttributes();
         HttpServletRequest request = attributes.getRequest();
-        // 记录下请求内容
-        logger.info("\n请求地址 : {}", request.getRequestURL().toString());
-        logger.info("\nHTTP METHOD : {}", request.getMethod());
-        // 获取真实的ip地址
-        logger.info("\nIP : {}", getIpAddress(request));
-        logger.info("\nCLASS_METHOD : " + joinPoint.getSignature().getDeclaringTypeName() + "."
-                + joinPoint.getSignature().getName());
-        logger.info("\n参数名 : {}", Arrays.toString(request.getParameterMap().keySet().toArray()));
-        logger.info("\n参数值 : {}", Arrays.toString(joinPoint.getArgs()));
+        String requestInterface = joinPoint.getSignature().getDeclaringTypeName()
+                + "."
+                + joinPoint.getSignature().getName();
+        String requestParam = JSONUtil.formatStandardJSON(JSONObject.toJSONString(DataHelper.getParameterMap(request)));
+        String requestBody;
+        try {
+            requestBody = JSONUtil.formatStandardJSON(JSONObject.toJSONString(joinPoint.getArgs()));
+        } catch (Exception e) {
+            logger.info("入参为文件(InputStreamSource)或HttpRequest等类型, 打印对象地址信息");
+            requestBody = joinPoint.getArgs().toString();
+        }
+        logger.info("\n请求IP=" + getIpAddress(request) + "\n"
+                + "请求方式=" + request.getMethod() + "\n"
+                + "请求地址=" + request.getRequestURL().toString() + "\n"
+                + "请求接口=" + requestInterface + "\n"
+                + "请求Param参数=" + requestParam + "\n"
+                + "请求Body对象=" + requestBody + "\n"
+        );
     }
     
     @Around("webLog()")
     public Object doAround(ProceedingJoinPoint proceedingJoinPoint)
             throws Throwable {
         long startTime = System.currentTimeMillis();
-        Object ob = proceedingJoinPoint.proceed();
-        logger.info("耗时 : {}", (System.currentTimeMillis() - startTime));
-        return ob;
+        Object result = proceedingJoinPoint.proceed();
+        logger.info("耗时 : {}ms", (System.currentTimeMillis() - startTime));
+        // 处理完请求，返回内容
+        logger.info("响应给前端的数据 : \n{}", JSONUtil.formatStandardJSON(JSONObject.toJSONString(result)));
+        return result;
     }
     
     @AfterReturning("webLog()")
     public void doAfterReturning(JoinPoint joinPoint) {
-        // 处理完请求，返回内容
-        logger.info("WebLogAspect.doAfterReturning()");
-        logger.info("response : {}", joinPoint.toString());
+        // do something
     }
     
     /**
@@ -84,7 +99,8 @@ public class WebLogInterceptor {
             }
         }
         //对于通过多个代理的情况，第一个IP为客户端真实IP,多个IP按照','分割
-        if (ipAddress != null && ipAddress.length() > 15) { //"***.***.***.***".length() = 15
+        //"***.***.***.***".length() = 15
+        if (ipAddress != null && ipAddress.length() > 15) {
             if (ipAddress.indexOf(",") > 0) {
                 ipAddress = ipAddress.substring(0, ipAddress.indexOf(","));
             }

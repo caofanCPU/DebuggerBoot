@@ -1,6 +1,6 @@
 package com.xyz.caofancpu.validator;
 
-import com.xyz.caofancpu.util.DataOperateUtils.ReflectionUtil;
+import com.xyz.caofancpu.util.dataOperateUtils.ReflectionUtil;
 import com.xyz.caofancpu.util.result.CustomerErrorInfo;
 import com.xyz.caofancpu.util.result.GlobalErrorInfoException;
 import org.apache.commons.lang3.StringUtils;

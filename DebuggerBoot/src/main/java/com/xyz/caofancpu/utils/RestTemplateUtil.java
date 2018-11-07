@@ -1,7 +1,7 @@
 package com.xyz.caofancpu.utils;
 
 import com.alibaba.fastjson.JSONObject;
-import com.xyz.caofancpu.util.DataOperateUtils.JSONUtil;
+import com.xyz.caofancpu.util.dataOperateUtils.JSONUtil;
 import com.xyz.caofancpu.util.result.GlobalErrorInfoEnum;
 import com.xyz.caofancpu.util.result.GlobalErrorInfoException;
 import com.xyz.caofancpu.util.result.ResultBody;
@@ -23,6 +23,7 @@ import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Objects;
 import java.util.Set;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
@@ -35,6 +36,9 @@ import java.util.stream.Stream;
 public class RestTemplateUtil {
     
     private static Logger logger = LoggerFactory.getLogger(RestTemplateUtil.class);
+    
+    @Value("${fileOperate.logging.key}")
+    private String fileOperateLoggingKey;
     
     @Value("${authorization.user-profile.key}")
     private String authKey;
@@ -99,24 +103,23 @@ public class RestTemplateUtil {
             throws GlobalErrorInfoException {
         Map<String, Object> requestMap = removeNullElement(paramMap);
         String token = loadToken();
-        showRequestLog(url, requestMap, token);
+        showRequestLog(url, requestMap, token, HttpMethod.GET);
         HttpEntity<Map<String, Object>> httpEntity = loadHttpEntity(new HashMap<>(1, 0.5f), token);
         ResponseEntity<JSONObject> responseEntity;
         try {
             String requestUrl = loadUrl(url, requestMap);
             responseEntity = restTemplate.exchange(requestUrl, HttpMethod.GET, httpEntity, JSONObject.class);
-            if (responseEntity == null) {
-                logger.error("调用微服务接口失败：{}", url + "\n响应为null");
-            }
+    
         } catch (RestClientException e) {
-            logger.error("调用微服务接口失败：{}", url + "\n" + e.getMessage());
+            logger.error("调用接口失败! 接口: {} \n原因: {}", url, e.getMessage());
             throw new GlobalErrorInfoException(GlobalErrorInfoEnum.CALL_SERVICE_ERROR);
         }
         if (responseEntity == null) {
+            logger.error("调用服务接口失败! 接口: {} \n原因: {}", url, "响应为null");
             return new ResultBody(GlobalErrorInfoEnum.CALL_SERVICE_ERROR);
         }
         JSONObject responseJson = responseEntity.getBody();
-        showResponseLog(responseJson.toJSONString());
+        showResponseLog(url, responseJson.toJSONString());
         return convertResponse(responseJson);
     }
     
@@ -166,22 +169,20 @@ public class RestTemplateUtil {
             throws GlobalErrorInfoException {
         Map<String, Object> bodyMap = removeNullElement(paramMap);
         String token = loadToken();
-        showRequestLog(url, bodyMap, token);
+        showRequestLog(url, bodyMap, token, HttpMethod.POST);
         HttpEntity<Map<String, Object>> httpEntity = loadHttpEntity(paramMap, token);
         JSONObject responseJson;
         try {
             responseJson = restTemplate.postForObject(url, httpEntity, JSONObject.class);
-            if (responseJson == null) {
-                logger.error("调用微服务接口失败：{}", url + "\n响应为null");
-            }
         } catch (RestClientException e) {
-            logger.error("调用微服务接口失败：{}", url + "\n" + e.getMessage());
+            logger.error("调用接口失败! 接口: {} \n原因: {}", url, e.getMessage());
             throw new GlobalErrorInfoException(GlobalErrorInfoEnum.CALL_SERVICE_ERROR);
         }
         if (responseJson == null) {
+            logger.error("调用服务接口失败! 接口: {} \n原因: {}", url, "响应为null");
             return new ResultBody(new GlobalErrorInfoException(GlobalErrorInfoEnum.CALL_SERVICE_ERROR));
         }
-        showResponseLog(responseJson.toJSONString());
+        showResponseLog(url, responseJson.toJSONString());
         return convertResponse(responseJson);
     }
     
@@ -208,9 +209,15 @@ public class RestTemplateUtil {
      * @param paramMap
      * @param token
      */
-    public void showRequestLog(String url, Map<String, Object> paramMap, String token) {
+    public void showRequestLog(String url, Map<String, Object> paramMap, String token, HttpMethod httpMethod) {
+        // 针对文件上传, 设置不打印LOG
+        if (Objects.nonNull(paramMap.get(fileOperateLoggingKey))
+                && Boolean.FALSE.toString().equals(paramMap.get(fileOperateLoggingKey))) {
+            return;
+        }
         logger.info("\n\n\n"
                 + "请求url=" + url + "\n"
+                + "请求方式=" + StringUtils.upperCase(httpMethod.name()) + "\n"
                 + "请求参数paramsMap=" + JSONUtil.formatStandardJSON(new JSONObject(paramMap).toJSONString()) + "\n"
                 + "携带token=" + token
                 + "\n\n\n");
@@ -227,9 +234,11 @@ public class RestTemplateUtil {
      *
      * @param jsonString
      */
-    public void showResponseLog(String jsonString) {
-        logger.info("\n\n\n" + "接口响应：" + JSONUtil.formatStandardJSON(jsonString) + "\n\n\n");
+    public void showResponseLog(String url, String jsonString) {
+        logger.info("\n\n\n"
+                + "接口url=" + url + "\n"
+                + "接口响应:\n" + JSONUtil.formatStandardJSON(jsonString)
+                + "\n\n\n");
     }
-    
     
 }

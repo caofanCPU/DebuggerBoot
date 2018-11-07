@@ -1,4 +1,4 @@
-package com.xyz.caofancpu.util.DataOperateUtils;
+package com.xyz.caofancpu.util.dataOperateUtils;
 
 
 import org.apache.commons.beanutils.BeanUtils;

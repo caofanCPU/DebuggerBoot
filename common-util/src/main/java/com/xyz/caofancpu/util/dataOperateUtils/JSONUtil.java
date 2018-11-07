@@ -1,4 +1,4 @@
-package com.xyz.caofancpu.util.DataOperateUtils;
+package com.xyz.caofancpu.util.dataOperateUtils;
 
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
@@ -69,6 +69,7 @@ public class JSONUtil {
         }
         return jsonResultStr.toString().replaceAll("\n\n", "\n");
     }
+    
     
     /**
      * 对象序列化为JSONString

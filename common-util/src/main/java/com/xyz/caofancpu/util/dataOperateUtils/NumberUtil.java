@@ -1,4 +1,4 @@
-package com.xyz.caofancpu.util.DataOperateUtils;
+package com.xyz.caofancpu.util.dataOperateUtils;
 
 /**
  * Created by caofanCPU on 2018/7/3.

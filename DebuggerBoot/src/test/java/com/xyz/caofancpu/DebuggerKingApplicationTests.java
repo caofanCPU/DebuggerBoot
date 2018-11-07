@@ -23,7 +23,7 @@ import org.springframework.web.context.WebApplicationContext;
 import java.util.ArrayList;
 import java.util.Map;
 
-import static com.xyz.caofancpu.util.DataOperateUtils.JSONUtil.formatStandardJSON;
+import static com.xyz.caofancpu.util.dataOperateUtils.JSONUtil.formatStandardJSON;
 
 
 @RunWith(SpringRunner.class)
