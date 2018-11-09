@@ -21,10 +21,7 @@ import org.springframework.web.context.request.ServletRequestAttributes;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Objects;
-import java.util.Set;
+import java.util.*;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -186,6 +183,38 @@ public class RestTemplateUtil {
         return convertResponse(responseJson);
     }
     
+    /**
+     * POST方式调用，传body对象, 对象为List
+     *
+     * @param url
+     * @param paramList
+     * @return
+     */
+    public ResultBody postListBody(String url, List<?> paramList)
+            throws GlobalErrorInfoException {
+        List<?> filteredList = paramList.stream().filter(Objects::nonNull).collect(Collectors.toList());
+        String token = loadToken();
+        Map<String, Object> bodyLoggingMap = new HashMap<String, Object>(4, 0.5f) {
+            {
+                put("List<?>", paramList);
+            }
+        };
+        showRequestLog(url, bodyLoggingMap, token, HttpMethod.POST);
+        HttpEntity<List<?>> httpEntity = loadListHttpEntity(filteredList, token);
+        JSONObject responseJson;
+        try {
+            responseJson = restTemplate.postForObject(url, httpEntity, JSONObject.class);
+        } catch (RestClientException e) {
+            logger.error("调用微服务接口失败! 接口: {} \n原因: {}", url, e.getMessage());
+            throw new GlobalErrorInfoException(GlobalErrorInfoEnum.CALL_SERVICE_ERROR);
+        }
+        if (responseJson == null) {
+            logger.error("调用微服务接口失败! 接口: {} \n原因: {}", url, "响应为null");
+            return new ResultBody(new GlobalErrorInfoException(GlobalErrorInfoEnum.CALL_SERVICE_ERROR));
+        }
+        showResponseLog(url, responseJson.toJSONString());
+        return convertResponse(responseJson);
+    }
     
     /**
      * 封装请求对象HttpEntity，主要是token、请求参数
@@ -203,6 +232,21 @@ public class RestTemplateUtil {
     }
     
     /**
+     * 封装请求对象HttpEntity，主要是token、请求参数
+     *
+     * @param paramList
+     * @param token
+     * @return
+     */
+    public HttpEntity<List<?>> loadListHttpEntity(List<?> paramList, String token) {
+        HttpHeaders headers = new HttpHeaders();
+        headers.add("Authorization", token);
+        headers.add("Content-Type", "application/json");
+        HttpEntity<List<?>> httpEntity = new HttpEntity<>(paramList, headers);
+        return httpEntity;
+    }
+    
+    /**
      * 打印请求参数
      *
      * @param url
@@ -215,12 +259,12 @@ public class RestTemplateUtil {
                 && Boolean.FALSE.toString().equals(paramMap.get(fileOperateLoggingKey))) {
             return;
         }
-        logger.info("\n\n\n"
+        logger.info("\n[请求服务接口]:\n"
                 + "请求url=" + url + "\n"
                 + "请求方式=" + StringUtils.upperCase(httpMethod.name()) + "\n"
                 + "请求参数paramsMap=" + JSONUtil.formatStandardJSON(new JSONObject(paramMap).toJSONString()) + "\n"
                 + "携带token=" + token
-                + "\n\n\n");
+        );
     }
     
     public String loadToken() {
@@ -235,10 +279,10 @@ public class RestTemplateUtil {
      * @param jsonString
      */
     public void showResponseLog(String url, String jsonString) {
-        logger.info("\n\n\n"
+        logger.info("\n[服务响应]:\n"
                 + "接口url=" + url + "\n"
                 + "接口响应:\n" + JSONUtil.formatStandardJSON(jsonString)
-                + "\n\n\n");
+        );
     }
     
 }
