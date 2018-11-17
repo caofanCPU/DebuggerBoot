@@ -60,9 +60,12 @@ public class WebLogInterceptor {
             throws Throwable {
         long startTime = System.currentTimeMillis();
         Object result = proceedingJoinPoint.proceed();
-        logger.info("耗时 : {}ms", (System.currentTimeMillis() - startTime));
         // 处理完请求，返回内容
-        logger.info("响应给前端的数据 : \n{}", JSONUtil.formatStandardJSON(JSONObject.toJSONString(result)));
+        logger.info("\n[后台响应结果]:\n"
+                + "响应耗时[" + (System.currentTimeMillis() - startTime) + "ms]" + "\n"
+                + "响应数据结果:\n"
+                + JSONUtil.formatStandardJSON(JSONObject.toJSONString(result))
+        );
         return result;
     }
     

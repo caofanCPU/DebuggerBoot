@@ -48,6 +48,7 @@ public class DataHelper {
                         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
                         obj = sdf.parse(obj.toString());
                     }
+    
                     //根据获取的方法名称及当前field的类型获取method对象
                     Method method = entity.getClass().getDeclaredMethod(methodName, field.getType());
                     method.setAccessible(true);
@@ -104,6 +105,7 @@ public class DataHelper {
         return returnMap;
     }
     
+    
     public static void putDefaultValueToBean(Object entity)
             throws SecurityException, ClassNotFoundException, NoSuchMethodException,
             IllegalAccessException, IllegalArgumentException, InvocationTargetException {
@@ -124,12 +126,15 @@ public class DataHelper {
                     m = clazz.getMethod(SET_METHOD + name, String.class);
                     m.invoke(entity, "");
                 }
+    
             } else if ("class java.lang.Integer".equals(field.getGenericType().toString())) {
                 Integer value = (Integer) m.invoke(entity); // 调用getter方法获取属性值
                 if (value == null) {
                     m = clazz.getMethod(SET_METHOD + name, Integer.class);
                     m.invoke(entity, 0);
                 }
+    
+    
             } else if ("class java.lang.Long".equals(field.getGenericType().toString())) {
                 Integer value = (Integer) m.invoke(entity); // 调用getter方法获取属性值
                 if (value == null) {
@@ -163,6 +168,8 @@ public class DataHelper {
                     m.invoke(entity, new Date());
                 }
             }
+    
         }
+        
     }
 }

@@ -1,19 +1,22 @@
 package com.xyz.caofancpu.service.impl;
 
 
+import com.alibaba.fastjson.JSONObject;
 import com.xyz.caofancpu.model.Attachment;
 import com.xyz.caofancpu.service.CommonOperateService;
+import com.xyz.caofancpu.util.commonOperateUtils.GlobalResultCheckUtil;
 import com.xyz.caofancpu.util.dataOperateUtils.DateUtil;
-import com.xyz.caofancpu.util.result.GlobalErrorInfoEnum;
+import com.xyz.caofancpu.util.result.CustomerErrorInfo;
 import com.xyz.caofancpu.util.result.GlobalErrorInfoException;
 import com.xyz.caofancpu.util.result.ResultBody;
+import com.xyz.caofancpu.utils.RestTemplateUtil;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.DependsOn;
 import org.springframework.stereotype.Service;
-import org.springframework.web.client.RestTemplate;
+import org.springframework.web.context.request.RequestAttributes;
 import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
 import org.springframework.web.multipart.MultipartFile;
@@ -48,75 +51,102 @@ public class CommonOperateServiceImpl implements CommonOperateService {
     @Value("${swagger.authorizationKey}")
     private String authKey;
     
+    @Value("${fileOperate.logging.key}")
+    private String fileOperateLoggingKey;
+    
+    @Value("${fileOperate.logging.value}")
+    private String fileOperateLoggingValue;
+    
     @Resource
-    private transient RestTemplate restTemplate;
+    private transient RestTemplateUtil restTemplateUtil;
     
     @Override
     public void uploadAttachment(Attachment attachment, MultipartFile file)
             throws GlobalErrorInfoException {
-        if (file == null
-                || file.isEmpty()) {
-            throw new GlobalErrorInfoException(GlobalErrorInfoEnum.ILLEGAL_PARAMETER);
-        } else {
-            byte[] bytes;
-            try {
-                bytes = file.getBytes();
-            } catch (IOException e) {
-                logger.error(e.getMessage());
-                throw new GlobalErrorInfoException(GlobalErrorInfoEnum.INTERNAL_ERROR);
-            }
-            
-            String type = file.getOriginalFilename().toLowerCase();
-            type = type.substring(type.lastIndexOf("."));
-            // 上传服务器开始
-            String path = UUID.randomUUID().toString().replaceAll("-", "") + type;
-            String fileBase64 = Base64.getEncoder().encodeToString(bytes);
-            Map<String, Object> map = new HashMap<>(8, 0.5f);
-            map.put("appname", appName);
-            map.put("filename", path);
-            map.put("contents", fileBase64);
-            map.put("open", false);
-            
-            ResultBody rb = restTemplate.postForObject(fileAccessUrl + "/file/upload", map, ResultBody.class);
-            
-            if (!"200".equals(rb.getCode())) {
-                logger.error("调用上传文件失败: {}", rb.getMsg());
-                throw new GlobalErrorInfoException(GlobalErrorInfoEnum.CALL_SERVICE_ERROR);
-            }
-            attachment.setType(type);
-            attachment.setName(path);
-            attachment.setCreateTime(DateUtil.date2Str(new Date(), DateUtil.FORMAT_ALL));
-            
-            logger.info("\n上传文件：[" + attachment.getCreateTime() + "]" + attachment.getName());
+        if (Objects.isNull(file) || file.isEmpty()) {
+            throw new GlobalErrorInfoException(new CustomerErrorInfo("上传文件不能为空!"));
         }
+        byte[] bytes;
+        try {
+            bytes = file.getBytes();
+        } catch (IOException e) {
+            logger.error("获取文件二进制流失败, {}", e.getMessage());
+            throw new GlobalErrorInfoException(new CustomerErrorInfo("文件上传失败, 请重试!"));
+        }
+    
+        String originalFilename = file.getOriginalFilename().toLowerCase();
+        String type = originalFilename.substring(originalFilename.lastIndexOf("."));
+        // 上传服务器开始
+        String path = UUID.randomUUID().toString().replaceAll("-", "") + type;
+        String fileBase64 = Base64.getEncoder().encodeToString(bytes);
+        Map<String, Object> paramMap = new HashMap<String, Object>(8, 0.75f) {
+            {
+                put("appname", appName);
+                put("filename", path);
+                put("contents", fileBase64);
+                put("open", false);
+            }
+        };
+        // 禁用文件内容打印LOG
+        closeFileOperateLogging(paramMap);
+        restTemplateUtil.postBody(fileAccessUrl + "/file/upload", paramMap);
+    
+        attachment.setType(type);
+        attachment.setName(path);
+        attachment.setCreateTime(DateUtil.date2StrForSimpleDetail(new Date()));
+    
+        logger.info("\n客户端于[{}]上传文件：[{}]", attachment.getCreateTime(), attachment.getName());
     }
     
     @Override
     public String getAttachmentAccessUrl(String attachmentName)
             throws GlobalErrorInfoException {
         if (StringUtils.isEmpty(attachmentName)) {
-            throw new GlobalErrorInfoException(GlobalErrorInfoEnum.ILLEGAL_PARAMETER);
+            throw new GlobalErrorInfoException(new CustomerErrorInfo("文件名参数错误"));
         }
-        Map<String, Object> map = new HashMap<>(4, 0.5f);
-        map.put("appname", appName);
-        map.put("filename", attachmentName);
-        
-        ResultBody rb = restTemplate.postForObject(fileAccessUrl + "/file/generateUrl", map, ResultBody.class);
-        
-        if (!"200".equals(rb.getCode())) {
-            logger.error("调用上传文件失败: {}", rb.getMsg());
-            throw new GlobalErrorInfoException(GlobalErrorInfoEnum.CALL_SERVICE_ERROR);
-        }
-        String accessUrl = (String) rb.getData();
-        logger.info("查询文件访问Url: " + "\n输入文件名[" + attachmentName + "]\n输出Url[" + accessUrl + "]");
+        Map<String, Object> map = new HashMap<String, Object>(4, 0.5f) {
+            {
+                put("appname", appName);
+                put("filename", attachmentName);
+            }
+        };
+    
+        ResultBody resultBody = restTemplateUtil.postBody(fileAccessUrl + "/file/generateUrl", map);
+        GlobalResultCheckUtil.handleMSResultBody(resultBody);
+        JSONObject jsonObject = JSONObject.parseObject(JSONObject.toJSONString(resultBody));
+        String accessUrl = jsonObject.getString("data");
+        logger.info("查询文件访问Url:\n输入文件名[{}]\n输出Url[{}]", attachmentName, accessUrl);
         return accessUrl;
     }
     
     @Override
     public String loadToken() {
-        HttpServletRequest request = ((ServletRequestAttributes) RequestContextHolder.getRequestAttributes()).getRequest();
+        RequestAttributes temRequestAttributes = RequestContextHolder.getRequestAttributes();
+        if (Objects.isNull(temRequestAttributes)) {
+            return null;
+        }
+        ServletRequestAttributes sra = (ServletRequestAttributes) temRequestAttributes;
+        RequestContextHolder.setRequestAttributes(sra, true);
+        HttpServletRequest request;
+        try {
+            request = ((ServletRequestAttributes) RequestContextHolder.getRequestAttributes()).getRequest();
+        } catch (Exception e) {
+            logger.info("[提示]无HttpServletRequest信息, 加载token为null");
+            return null;
+        }
+        if (Objects.isNull(request)) {
+            return null;
+        }
         String token = request.getHeader(authKey);
         return token;
+    }
+    
+    @Override
+    public void closeFileOperateLogging(Map<String, Object> paramMap) {
+        if (Objects.isNull(paramMap)) {
+            return;
+        }
+        paramMap.put(fileOperateLoggingKey, fileOperateLoggingValue);
     }
     
 }

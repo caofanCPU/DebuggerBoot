@@ -1,5 +1,6 @@
-package com.xyz.caofancpu.validator;
+package com.xyz.caofancpu.interceptor;
 
+import com.xyz.caofancpu.annotion.Check;
 import com.xyz.caofancpu.util.dataOperateUtils.ReflectionUtil;
 import com.xyz.caofancpu.util.result.CustomerErrorInfo;
 import com.xyz.caofancpu.util.result.GlobalErrorInfoException;

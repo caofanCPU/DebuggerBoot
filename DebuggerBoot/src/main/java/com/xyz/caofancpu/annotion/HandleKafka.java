@@ -1,4 +1,4 @@
-package com.xyz.caofancpu.message.kafka.backup;
+package com.xyz.caofancpu.annotion;
 
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;

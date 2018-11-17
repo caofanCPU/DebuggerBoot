@@ -14,7 +14,7 @@ file:
   url: http://SERVICE-FILE
 #日志系统配置
 logging:
-  config: classpath*:logback-spring.xml
+  config: classpath:logback-spring.xml
 #Mybatis配置
 mybatis:
   configuration:
@@ -62,6 +62,12 @@ authorization:
   user-profile:
     key: Authorization
 
+fileOperate:
+  # 针对文件操作接口, 是否打印文件内容参数
+  # 不建议日志中打印文件内容, 因此此key对应的值默认为false
+  logging:
+    key: openFileOperateLogging
+    value: false
 
 # 部署运行命令
 #    nohup java -server -Xmx512M -Xms512M -XX:NewRatio=2 -Xdebug -Xrunjdwp:transport=dt_socket,server=y,suspend=n,address=58084 -jar XXX.jar &

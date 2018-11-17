@@ -14,4 +14,14 @@ public class GlobalErrorInfoException extends Exception {
     public void setErrorInfo(ErrorInfoInterface errorInfo) {
         this.errorInfo = errorInfo;
     }
+    
+    /**
+     * 自定义异常信息, 复写
+     *
+     * @return
+     */
+    @Override
+    public String getMessage() {
+        return errorInfo.getMsg();
+    }
 }

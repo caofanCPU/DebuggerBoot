@@ -1,8 +1,17 @@
+# =======================================
+# ===============注册中心配置==============
+# =======================================
+# 注册中心配置
+
 #客户端配置
 eureka:
   client:
     fetch-registry: false
     register-with-eureka: false
+#    serviceUrl:
+#      defaultZone: http://XXXXX/eureka/
+#  instance:
+#    instance-id: ${spring.cloud.client.ipAddress}:${server.port}
 #日志级别配置，不同环境不一致
 logging:
   level:

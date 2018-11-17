@@ -8,6 +8,9 @@ public class ResultBody {
     private String msg;
     private Object data;
     
+    public Boolean isSuccess() {
+        return GlobalErrorInfoEnum.SUCCESS.getCode().equals(this.code);
+    }
     
     public ResultBody(ErrorInfoInterface errorInfo) {
         this.code = errorInfo.getCode();
@@ -27,19 +30,17 @@ public class ResultBody {
     
     /**
      * 接口调用失败时, 用此方法向前端返回对应失败原因
-     *
      * @param errorMsg
      * @return
      */
     public ResultBody fail(String errorMsg) {
-        this.code = GlobalErrorInfoEnum.ILLEGAL_BUS_ID.getCode();
-        this.msg = StringUtils.isEmpty(errorMsg) ? GlobalErrorInfoEnum.ILLEGAL_BUS_ID.getCode() : errorMsg;
+        this.code = GlobalErrorInfoEnum.GLOBAL_MSG.getCode();
+        this.msg = StringUtils.isEmpty(errorMsg) ? GlobalErrorInfoEnum.GLOBAL_MSG.getMsg() : errorMsg;
         return this;
     }
     
     /**
      * 接口调用成功, 返回指定数据
-     *
      * @param data
      * @return
      */
@@ -50,7 +51,6 @@ public class ResultBody {
     
     /**
      * 接口调用成功, 返回指定数据及提示消息
-     *
      * @param data
      * @param successMsg
      * @return

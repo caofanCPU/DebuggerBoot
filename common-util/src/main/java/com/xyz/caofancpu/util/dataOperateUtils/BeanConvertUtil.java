@@ -4,8 +4,6 @@ package com.xyz.caofancpu.util.dataOperateUtils;
 import org.apache.commons.beanutils.BeanUtils;
 import org.apache.commons.beanutils.ConvertUtils;
 import org.apache.commons.beanutils.converters.DateConverter;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
@@ -19,11 +17,6 @@ import java.util.*;
  * Created by caofanCPU on 2018/8/10.
  */
 public class BeanConvertUtil {
-    
-    /**
-     * LOG
-     */
-    private static final Logger logger = LoggerFactory.getLogger(BeanConvertUtil.class);
     
     /**
      * 将Map中的数据替换Bean中属性
@@ -41,7 +34,13 @@ public class BeanConvertUtil {
         }
         ConvertUtils.register(loadDateConverter(), Date.class);
         BeanUtils.populate(targetObj, sourceMap);
+        /**
+         * copyProperties包含populate的功能，但是copyProperties适用于从httpRequest中转换数据，
+         * 故而平常不推荐使用
+         */
+//        BeanUtils.copyProperties(targetObj, sourceMap);
     }
+    
     
     /**
      * copyProperties包含populate的功能，但是copyProperties适用于从httpRequest中转换数据，
@@ -53,7 +52,6 @@ public class BeanConvertUtil {
         BeanUtils.copyProperties(targetObj, sourceObj);
         return targetObj;
     }
-    
     
     /**
      * 将Bean中的属性替换Map中的数据
@@ -90,10 +88,7 @@ public class BeanConvertUtil {
      * @param propertyMap
      * @param targetObj
      */
-    public static void transferToBean(
-            Map<String, Object> sourceDataMap,
-            Map<String, Object> propertyMap,
-            Object targetObj) {
+    public static void transferToBean(Map<String, Object> sourceDataMap, Map<String, Object> propertyMap, Object targetObj) {
         if (!validate(sourceDataMap, targetObj) || !validate(propertyMap, targetObj)) {
             return;
         }
@@ -104,11 +99,10 @@ public class BeanConvertUtil {
             // 根据Bean字段的属性类型，进行强制转换
             try {
                 Field presentField = targetObj.getClass().getDeclaredField(fieldName);
-                String fieldTypeName = presentField.getGenericType().getTypeName();
+                String fieldTypeName = presentField.getGenericType().getTypeName().toString();
                 sourceDataMap.put(mapKey, convertObject(fieldTypeName, sourceDataMap.get(mapKey)));
             } catch (NoSuchFieldException e) {
-                logger.error("对象字段转换失败, {}", e.getMessage());
-                return;
+                e.printStackTrace();
             }
             ReflectionUtil.setFieldValue(targetObj, fieldName, sourceDataMap.get(mapKey));
         });
@@ -124,7 +118,7 @@ public class BeanConvertUtil {
      * @throws Exception
      */
     public static Object mapToObject(Map<String, Object> map, Class<?> beanClass)
-            throws IllegalAccessException, InstantiationException {
+            throws Exception {
         if (map == null) {
             return null;
         }
@@ -175,7 +169,7 @@ public class BeanConvertUtil {
                     SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
                     return sdf.parse(targetObj.toString());
                 } catch (ParseException e) {
-                    logger.error("对象时间字段转换失败, {}", e.getMessage());
+                    e.printStackTrace();
                 }
                 return targetObj;
             default:
@@ -192,7 +186,7 @@ public class BeanConvertUtil {
      * @throws Exception
      */
     public static Map<String, Object> objectToMap(Object obj)
-            throws IllegalAccessException {
+            throws Exception {
         if (obj == null) {
             return null;
         }
@@ -223,7 +217,7 @@ public class BeanConvertUtil {
     }
     
     /**
-     * 对象为List<map></map>结构, 转为指定实体bean
+     * 对象为List<map>结构, 转为指定实体bean
      *
      * @param sourceData
      * @param clazz
@@ -232,24 +226,12 @@ public class BeanConvertUtil {
      */
     public static <T> List<T> parseTargetListObj(Object sourceData, Class<T> clazz) {
         if (sourceData == null || clazz == null || !(sourceData instanceof List)) {
-            throw new IllegalArgumentException("非法的参数");
+            return null;
         }
         List sourceList = (List) sourceData;
         List<T> resultList = new ArrayList<>(sourceList.size());
         sourceList.stream().filter(Objects::nonNull).forEach(item -> {
-            T resultObj = null;
-            try {
-                resultObj = parseTargetObj(item, clazz);
-            } catch (IllegalAccessException e) {
-                logger.error("非法参数, {}", e.getMessage());
-                return;
-            } catch (InstantiationException e) {
-                logger.error("非法参数, {}", e.getMessage());
-                return;
-            } catch (InvocationTargetException e) {
-                logger.error("非法参数, {}", e.getMessage());
-                return;
-            }
+            T resultObj = parseTargetObj(item, clazz);
             resultList.add(resultObj);
         });
         return resultList;
@@ -263,15 +245,23 @@ public class BeanConvertUtil {
      * @param <T>
      * @return
      */
-    public static <T> T parseTargetObj(Object sourceData, Class<T> clazz)
-            throws IllegalAccessException, InstantiationException, InvocationTargetException {
+    public static <T> T parseTargetObj(Object sourceData, Class<T> clazz) {
         if (sourceData == null || clazz == null || !(sourceData instanceof Map)) {
-            throw new IllegalArgumentException("非法的参数");
+            return null;
         }
-        ConvertUtils.register(loadDateConverter(), Date.class);
-        T target = clazz.newInstance();
-        BeanUtils.populate(target, (Map<String, Object>) sourceData);
-        return target;
+        try {
+            ConvertUtils.register(loadDateConverter(), Date.class);
+            T target = clazz.newInstance();
+            BeanUtils.populate(target, (Map<String, Object>) sourceData);
+            return target;
+        } catch (InstantiationException e) {
+            e.printStackTrace();
+        } catch (IllegalAccessException e) {
+            e.printStackTrace();
+        } catch (InvocationTargetException e) {
+            e.printStackTrace();
+        }
+        return null;
     }
     
     /**
@@ -281,12 +271,116 @@ public class BeanConvertUtil {
      */
     public static DateConverter loadDateConverter() {
         DateConverter dateConverter = new DateConverter(null);
-        dateConverter.setPatterns(new String[]{DateUtil.FORMAT_ALL, DateUtil.FORMAT_SIMPLE, DateUtil.FORMAT_SIMPLE_CN});
+        dateConverter.setPatterns(new String[]{
+                DateUtil.FORMAT_SIMPLE_DETAIL_PRECISE,
+                DateUtil.FORMAT_SIMPLE_DETAIL,
+                DateUtil.FORMAT_SIMPLE,
+                DateUtil.FORMAT_SIMPLE_CN
+        });
         return dateConverter;
     }
     
-    public static void main(String[] args) {
+    /**
+     * 对象转String
+     *
+     * @param source
+     * @return
+     */
+    public static String convertToString(Object source) {
+        if (Objects.isNull(source)) {
+            return null;
+        }
+        return source.toString();
+    }
     
+    /**
+     * 转换为时间对象Date
+     *
+     * @param source
+     * @return
+     */
+    public static Date convertToDate(Object source) {
+        if (Objects.isNull(source)) {
+            return null;
+        }
+        if (source instanceof Long) {
+            return new Date(convertToLong(source));
+        }
+        SimpleDateFormat sdf = new SimpleDateFormat(DateUtil.FORMAT_SIMPLE_DETAIL);
+        try {
+            return sdf.parse(source.toString());
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+    
+    /**
+     * 对象转Integer
+     *
+     * @param source
+     * @return
+     */
+    public static Integer convertToInteger(Object source) {
+        if (Objects.isNull(source)) {
+            return null;
+        }
+        return Integer.parseInt(source.toString());
+    }
+    
+    /**
+     * 对象转Long
+     *
+     * @param source
+     * @return
+     */
+    public static Long convertToLong(Object source) {
+        if (Objects.isNull(source)) {
+            return null;
+        }
+        return Long.parseLong(source.toString());
+    }
+    
+    /**
+     * 对象转BigDecimal, 默认采用四舍五入保留2位小数
+     *
+     * @param source
+     * @param newScale
+     * @param roundingMode
+     * @return
+     */
+    public static BigDecimal convertToBigDecimal(Object source, int newScale, int roundingMode) {
+        if (Objects.isNull(source)) {
+            return null;
+        }
+        if (newScale <= 0) {
+            newScale = 2;
+        }
+        if (roundingMode <= 0) {
+            roundingMode = 2;
+        }
+        return new BigDecimal(source.toString()).setScale(newScale, roundingMode);
+    }
+    
+    /**
+     * 对象转BigDecimal, 默认采用四舍五入保留2位小数
+     *
+     * @param source
+     * @return
+     */
+    public static BigDecimal convertToDefaultBigDecimal(Object source) {
+        if (Objects.isNull(source)) {
+            return null;
+        }
+        return convertToBigDecimal(source, 2, BigDecimal.ROUND_HALF_UP);
+    }
+    
+    public static void main(String[] args) {
+        testDescribe();
+        
+    }
+    
+    public static void testDescribe() {
     
     }
     

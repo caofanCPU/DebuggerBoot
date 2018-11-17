@@ -8,7 +8,10 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.lang.reflect.InvocationTargetException;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
+import java.util.Objects;
 
 /**
  * Created by caofanCPU on 2018/8/6.
@@ -21,11 +24,21 @@ public class JSONUtil {
     private static final Logger logger = LoggerFactory.getLogger(JSONUtil.class);
     
     /**
-     * 转换为标准格式JSON化字符串
-     *
-     * @param jsonStr
+     * 推荐使用
+     * ResultBody.getData()为数组时, 转化为List<Map<String, Object>>
+     * @param source
      * @return
      */
+    public static List<Map<String, Object>> parseList(Object source) {
+        List<Map> tempList = new ArrayList();
+        if (source instanceof ArrayList) {
+            tempList = (ArrayList) source;
+        }
+        List<Map<String, Object>> resultList = new ArrayList<>();
+        tempList.forEach((item -> resultList.add(item)));
+        return resultList;
+    }
+    
     public static String formatStandardJSON(String jsonStr) {
         String start = "    ";
         // 用户标记层级
@@ -69,7 +82,6 @@ public class JSONUtil {
         }
         return jsonResultStr.toString().replaceAll("\n\n", "\n");
     }
-    
     
     /**
      * 对象序列化为JSONString
@@ -148,17 +160,7 @@ public class JSONUtil {
         List<Map<String, Object>> resultList = new ArrayList<>();
         array.stream()
                 .filter(Objects::nonNull)
-                .forEach(item -> {
-                    try {
-                        Map<String, Object> result = BeanConvertUtil.copyProperties(item, HashMap.class);
-                        resultList.add(result);
-                    } catch (IllegalAccessException
-                            | InstantiationException
-                            | InvocationTargetException e) {
-                        logger.info("JSONArray转换失败! {}", e.getMessage());
-                        return;
-                    }
-                });
+                .forEach(item -> resultList.add((Map<String, Object>) item));
         return resultList;
     }
     
@@ -205,26 +207,14 @@ public class JSONUtil {
         return jsonObject;
     }
     
-    public static void main(String[] args) {
-//        Map<String, Object> paramMap = new HashMap<String, Object>(4, 0.75f){
-//            {
-//                put("id", 12);
-//                put("name", "曹繁");
-//                put("createTime", new Date());
-//                put("updateTime", "2018-10-22 10:22:33");
-//                put("length", 1000L);
-//            }
-//        };
-//        JSONObject jsonObject = mapShiftToJSON(paramMap);
-//        Long length = jsonObject.getLong("length");
-//        Date createTime = jsonObject.getDate("length");
-//        Date updateTime = jsonObject.getDate("updateTime");
-//        Integer id = jsonObject.getInteger("id");
-//        System.out.print(jsonObject.toJSONString());
-        String str = "{\"createTime\":1540278569539,\"name\":\"曹繁\",\"length\":1000,\"updateTime\":\"2018-10-22 10:22:33\",\"id\":12}";
-        JSONObject jsonObject = JSONObject.parseObject(str);
-        Map<String, Object> result = jsonObject;
-        int i  = 2;
+    public static <T> T mapToBean(Object sourceObject, Class<T> clazz) {
+        if (Objects.isNull(sourceObject)) {
+            throw new IllegalArgumentException("源数据为空!");
+        }
+        if (Objects.isNull(clazz)) {
+            throw new IllegalArgumentException("目标class为空!");
+        }
+        return JSONObject.parseObject(JSONObject.toJSONString(sourceObject), clazz);
     }
     
 }
