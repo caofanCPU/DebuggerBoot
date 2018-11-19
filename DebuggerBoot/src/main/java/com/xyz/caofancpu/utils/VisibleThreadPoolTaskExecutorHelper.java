@@ -5,68 +5,68 @@ import org.slf4j.LoggerFactory;
 import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
 import org.springframework.util.concurrent.ListenableFuture;
 
+import java.util.Objects;
 import java.util.concurrent.Callable;
 import java.util.concurrent.Future;
 import java.util.concurrent.ThreadPoolExecutor;
 
 /**
- * FileName: VisiableThreadPoolTaskExecutorHelper
+ * FileName: VisibleThreadPoolTaskExecutorHelper
  * Author:   caofanCPU
  * Date:     2018/11/17 16:47
  */
 
-public class VisiableThreadPoolTaskExecutorHelper extends ThreadPoolTaskExecutor {
-    private static final Logger logger = LoggerFactory.getLogger(VisiableThreadPoolTaskExecutorHelper.class);
+public class VisibleThreadPoolTaskExecutorHelper extends ThreadPoolTaskExecutor {
+    private static final Logger logger = LoggerFactory.getLogger(VisibleThreadPoolTaskExecutorHelper.class);
     
     private void showThreadPoolInfo(String prefix) {
         ThreadPoolExecutor threadPoolExecutor = getThreadPoolExecutor();
-        
-        if (null == threadPoolExecutor) {
+        if (Objects.isNull(threadPoolExecutor)) {
             return;
         }
-        
-        logger.info("{}, {},taskCount [{}], completedTaskCount [{}], activeCount [{}], queueSize [{}]",
+        logger.info("\n线程前缀:[{}]\n执行动作:[{}]\n任务总数:[{}]\n已完成任务数:[{}]\n当前处理任务数量[{}]\n待办任务队列数量[{}]",
                 this.getThreadNamePrefix(),
                 prefix,
                 threadPoolExecutor.getTaskCount(),
                 threadPoolExecutor.getCompletedTaskCount(),
                 threadPoolExecutor.getActiveCount(),
-                threadPoolExecutor.getQueue().size());
+                threadPoolExecutor.getQueue().size()
+        );
     }
     
     @Override
     public void execute(Runnable task) {
-        showThreadPoolInfo("1. do execute");
+        showThreadPoolInfo("HandlingTask(处理)");
         super.execute(task);
     }
     
     @Override
     public void execute(Runnable task, long startTimeout) {
-        showThreadPoolInfo("2. do execute");
+        showThreadPoolInfo("HandlingTask(处理)");
         super.execute(task, startTimeout);
     }
     
     @Override
     public Future<?> submit(Runnable task) {
-        showThreadPoolInfo("1. do submit");
+        showThreadPoolInfo("SubmitTask(提交)");
         return super.submit(task);
     }
     
     @Override
     public <T> Future<T> submit(Callable<T> task) {
-        showThreadPoolInfo("2. do submit");
+        showThreadPoolInfo("SubmitTask(提交)");
         return super.submit(task);
     }
     
     @Override
     public ListenableFuture<?> submitListenable(Runnable task) {
-        showThreadPoolInfo("1. do submitListenable");
+        showThreadPoolInfo("SubmitTask(监听提交)");
         return super.submitListenable(task);
     }
     
     @Override
     public <T> ListenableFuture<T> submitListenable(Callable<T> task) {
-        showThreadPoolInfo("2. do submitListenable");
+        showThreadPoolInfo("SubmitTask(监听提交)");
         return super.submitListenable(task);
     }
     
