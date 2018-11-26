@@ -15,5 +15,10 @@ public interface SysDictMapper {
     
     List<Map<String, Object>> getSysDictList();
     
-    
+    /**
+     * 批量插入数据, 要返回的主键数据 会直接填充在 入参中
+     *
+     * @param dataList
+     */
+    void batchAddConfig(List<Map<String, Object>> dataList);
 }

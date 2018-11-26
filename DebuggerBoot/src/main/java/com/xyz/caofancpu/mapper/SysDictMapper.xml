@@ -10,6 +10,18 @@
         SELECT name, code FROM nz_sys_dict WHERE 1 = 1 ORDER BY sortId ASC
     </select>
 
+    <insert id="batchAddConfig" parameterType="java.util.List" useGeneratedKeys="true" keyProperty="id">
+        INSERT INTO nz_sys_dict (
+        name,
+        caode
+        )
+        VALUES
+        <foreach item="item" collection="list" index="index" separator=",">
+            (
+            #{item.name}, #{item.code}
+            )
+        </foreach>
+    </insert>
 
 </mapper>
 

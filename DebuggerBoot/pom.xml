@@ -161,6 +161,27 @@
             <version>0.0.6</version>
         </dependency>
 
+        <!--MD5等加密工具-->
+        <dependency>
+            <groupId>org.springframework.security</groupId>
+            <artifactId>spring-security-core</artifactId>
+            <version>4.2.4.RELEASE</version>
+        </dependency>
+
+        <!--解析配置-->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-configuration-processor</artifactId>
+            <optional>true</optional>
+        </dependency>
+
+        <!--WebSocket工具包-->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-websocket</artifactId>
+            <version>1.3.5.RELEASE</version>
+        </dependency>
+
     </dependencies>
 
     <dependencyManagement>
