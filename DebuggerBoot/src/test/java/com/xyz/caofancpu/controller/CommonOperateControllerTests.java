@@ -1,55 +1,34 @@
 package com.xyz.caofancpu.controller;
 
-import com.xyz.caofancpu.DebuggerKingApplication;
-import com.xyz.caofancpu.controller.util.TestUtil;
+import com.xyz.caofancpu.DebuggerKingApplicationTests;
 import com.xyz.caofancpu.util.dataOperateUtils.JSONUtil;
-import org.junit.Before;
 import org.junit.Test;
-import org.junit.runner.RunWith;
-import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
-import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.test.context.junit4.SpringRunner;
-import org.springframework.test.context.web.WebAppConfiguration;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.util.MultiValueMap;
 
-import javax.annotation.Resource;
 import java.util.HashMap;
+import java.util.Map;
 
 /**
  * Created by caofanCPU on 2018/7/25.
- * <p>
- * 分页测试代码，示例
+ *
+ *
  */
-@RunWith(SpringRunner.class)
-@SpringBootTest(classes = DebuggerKingApplication.class)
-@AutoConfigureMockMvc
-@WebAppConfiguration
-public class CommonOperateControllerTests {
+public class CommonOperateControllerTests extends DebuggerKingApplicationTests {
     
-    @Resource(type = TestUtil.class)
-    private TestUtil testUtil;
-    
-    /**
-     * 初始化测试环境context
-     *
-     * @throws Exception
-     */
-    @Before
-    public void setupMockMvc()
-            throws Exception {
-        testUtil.setupMockMvc();
-    }
+    private static final Logger logger = LoggerFactory.getLogger(CommonOperateControllerTests.class);
     
     @Test
     public void listSysDictByPageTest()
             throws Exception {
-        HashMap<String, Object> params = new HashMap<String, Object>(2, 0.5f) {
+        Map<String, Object> params = new HashMap<String, Object>(2, 0.5f) {
             {
                 put("demo", "this is demo");
             }
         };
-        MultiValueMap<String, String> requestParams = testUtil.convertRequestParam(params);
-        String responseStr = testUtil.handleParamExecute(requestParams, "/sysDict/listByPage");
+        MultiValueMap<String, String> requestParams = springBootJunitTestUtil.convertRequestParam(params);
+        String responseStr = springBootJunitTestUtil.handlePostParamExecute(requestParams, "/sysDict/listByPage");
         JSONUtil.formatStandardJSON(responseStr);
     }
     

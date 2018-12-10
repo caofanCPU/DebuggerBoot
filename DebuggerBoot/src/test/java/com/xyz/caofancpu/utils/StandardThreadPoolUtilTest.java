@@ -19,7 +19,7 @@ import java.util.stream.IntStream;
  * <author>          <time>          <version>          <desc>
  * 作者姓名           修改时间           版本号              描述
  */
-
+@Deprecated
 public class StandardThreadPoolUtilTest {
     
     private static final Logger logger = LoggerFactory.getLogger(StandardThreadPoolUtilTest.class);

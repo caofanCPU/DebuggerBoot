@@ -4,7 +4,7 @@
     <conversionRule conversionWord="ip" converterClass="com.xyz.caofancpu.utils.LogIpConfigUtil"/>
     <include resource="org/springframework/boot/logging/logback/base.xml"/>
     <springProperty scope="context" name="port" source="server.port"/>
-    <property name="LOG_PATH" value=".logs"/>
+    <property name="LOG_PATH" value="/local/cf"/>
     <property name="APP_DIR" value="debugger-king"/>
 
     <appender name="INFO_FILE" class="ch.qos.logback.core.rolling.RollingFileAppender">
