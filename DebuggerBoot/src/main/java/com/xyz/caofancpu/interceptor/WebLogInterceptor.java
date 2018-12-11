@@ -15,6 +15,8 @@ import org.springframework.web.context.request.ServletRequestAttributes;
 import javax.servlet.http.HttpServletRequest;
 import java.net.InetAddress;
 import java.net.UnknownHostException;
+import java.util.Arrays;
+import java.util.Objects;
 
 @Component
 @Aspect
@@ -44,15 +46,17 @@ public class WebLogInterceptor {
             requestBody = JSONUtil.formatStandardJSON(JSONObject.toJSONString(joinPoint.getArgs()));
         } catch (Exception e) {
             logger.info("入参为文件(InputStreamSource)或HttpRequest等类型, 打印对象地址信息");
-            requestBody = joinPoint.getArgs().toString();
+            requestBody = Arrays.toString(joinPoint.getArgs());
         }
-        logger.info("\n请求IP=" + getIpAddress(request) + "\n"
+        StringBuilder sb = new StringBuilder();
+        sb.append("\n[前端页面请求]:\n"
+                + "请求IP=" + getIpAddress(request) + "\n"
                 + "请求方式=" + request.getMethod() + "\n"
                 + "请求地址=" + request.getRequestURL().toString() + "\n"
                 + "请求接口=" + requestInterface + "\n"
                 + "请求Param参数=" + requestParam + "\n"
-                + "请求Body对象=" + requestBody + "\n"
-        );
+                + "请求Body对象=" + requestBody + "\n");
+        logger.info(sb.toString());
     }
     
     @Around("webLog()")
@@ -61,11 +65,12 @@ public class WebLogInterceptor {
         long startTime = System.currentTimeMillis();
         Object result = proceedingJoinPoint.proceed();
         // 处理完请求，返回内容
-        logger.info("\n[后台响应结果]:\n"
+        StringBuilder sb = new StringBuilder();
+        sb.append("\n[后台响应结果]:\n"
                 + "响应耗时[" + (System.currentTimeMillis() - startTime) + "ms]" + "\n"
                 + "响应数据结果:\n"
-                + JSONUtil.formatStandardJSON(JSONObject.toJSONString(result))
-        );
+                + JSONUtil.formatStandardJSON(JSONObject.toJSONString(result)));
+        logger.info(sb.toString());
         return result;
     }
     
@@ -98,7 +103,9 @@ public class WebLogInterceptor {
                 } catch (UnknownHostException e) {
                     logger.error("获取IP异常 : {}", e);
                 }
-                ipAddress = inet.getHostAddress();
+                if (Objects.nonNull(inet)) {
+                    ipAddress = inet.getHostAddress();
+                }
             }
         }
         //对于通过多个代理的情况，第一个IP为客户端真实IP,多个IP按照','分割

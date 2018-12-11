@@ -15,7 +15,9 @@ import org.springframework.stereotype.Component;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.Map;
+import java.util.Objects;
 import java.util.Properties;
 
 /**
@@ -23,6 +25,7 @@ import java.util.Properties;
  * 首先通过注解定义该拦截器的切入点，
  * 对那个类的哪个方法进行拦截，
  * 防止方法重载需要声明参数类型以及个数
+ * @since 0.0.1
  */
 
 @Intercepts({@Signature(type = StatementHandler.class, method = "prepare", args = {Connection.class, Integer.class})})
@@ -39,7 +42,7 @@ public class PageInterceptor implements Interceptor {
     @Override
     @Deprecated
     public Object intercept(Invocation invocation)
-            throws Throwable {
+            throws Exception {
         
         // 通过拦截器得到被拦截的对象,就是上面配置的注解的对象
         StatementHandler statementHandler = (StatementHandler) invocation.getTarget();
@@ -68,15 +71,30 @@ public class PageInterceptor implements Interceptor {
             ParameterHandler parameterHandler = (ParameterHandler) metaObject.getValue("delegate.parameterHandler");
             parameterHandler.setParameters(preparedStatement);
             // 参数被设置以后，直接执行sql语句得到结果集合
-            ResultSet resultSet = preparedStatement.executeQuery();
-            while (resultSet.next()) {
-                // 将查询到的结果集合设置到pageInfo中
-                pageInfo.setTotalRecordNumber(resultSet.getInt(1));
+            ResultSet resultSet = null;
+            try {
+                resultSet = preparedStatement.executeQuery();
+            } catch (SQLException e) {
+                e.printStackTrace();
+            } finally {
+                if (Objects.nonNull(resultSet)) {
+                    try {
+                        resultSet.close();
+                    } catch (SQLException e) {
+                        e.printStackTrace();
+                    }
+                }
             }
-            // 最后改造分页查询sql
-            String pageSql = sql + " limit " + pageInfo.getDbIndex() + "," + pageInfo.getPageSize();
-            // 通过反射将原来的sql给换成加入分页的sql
-            metaObject.setValue("delegate.boundSql.sql", pageSql);
+            if (Objects.nonNull(resultSet)) {
+                while (resultSet.next()) {
+                    // 将查询到的结果集合设置到pageInfo中
+                    pageInfo.setTotalRecordNumber(resultSet.getInt(1));
+                }
+                // 最后改造分页查询sql
+                String pageSql = sql + " limit " + pageInfo.getDbIndex() + "," + pageInfo.getPageSize();
+                // 通过反射将原来的sql给换成加入分页的sql
+                metaObject.setValue("delegate.boundSql.sql", pageSql);
+            }
         }
         // 连接器是链式结构的，我们完成我们的拦截处理以后，还要保证接下来的其他拦截器或者代码继续执行
         return invocation.proceed();

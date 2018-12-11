@@ -10,6 +10,7 @@ import org.springframework.boot.CommandLineRunner;
 import org.springframework.core.annotation.Order;
 import org.springframework.stereotype.Component;
 
+import java.util.Arrays;
 import java.util.Map;
 
 /**
@@ -42,7 +43,7 @@ public class KafkaRunner implements CommandLineRunner {
     public void run(String... strings) {
         initKafkaProperty();
         logger.info(kafkaProperty.getTopicMap().toString());
-        logger.info(kafkaProperty.getTopics().toString());
+        logger.info(Arrays.toString(kafkaProperty.getTopics()));
         sendMessage(testTopic, new Area(100, "oh, mykafka", 2));
 //        kafkaConsumerDispatcher.dispatcher("{\"id\":\"12\"}");
     }

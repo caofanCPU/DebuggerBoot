@@ -29,16 +29,8 @@ public enum SingletonEnum {
         return singletonInstanceId;
     }
     
-    public void setSingletonInstanceId(Integer singletonInstanceId) {
-        this.singletonInstanceId = singletonInstanceId;
-    }
-    
     public String getSingletonInstanceName() {
         return singletonInstanceName;
-    }
-    
-    public void setSingletonInstanceName(String singletonInstanceName) {
-        this.singletonInstanceName = singletonInstanceName;
     }
     
     public static SingletonEnum getInstanceById(Integer singletonInstanceId) {

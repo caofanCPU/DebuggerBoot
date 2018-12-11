@@ -99,17 +99,6 @@ public class District implements Serializable, Cloneable {
     }
     
     @Override
-    public District clone() {
-        District obj = null;
-        try {
-            obj = (District) super.clone();
-        } catch (CloneNotSupportedException e) {
-            e.printStackTrace();
-        }
-        return obj;
-    }
-    
-    @Override
     public String toString() {
         return "District{" +
                 "id=" + id +

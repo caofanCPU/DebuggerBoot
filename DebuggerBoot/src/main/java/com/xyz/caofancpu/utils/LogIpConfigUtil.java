@@ -13,6 +13,7 @@ import java.net.NetworkInterface;
 import java.net.SocketException;
 import java.net.UnknownHostException;
 import java.util.Enumeration;
+import java.util.Objects;
 
 public class LogIpConfigUtil extends ClassicConverter {
     private static final Logger LOGGER = LoggerFactory.getLogger(LogIpConfigUtil.class);
@@ -96,25 +97,27 @@ public class LogIpConfigUtil extends ClassicConverter {
         }
         if (ipAddress == null || ipAddress.length() == 0 || "unknown".equalsIgnoreCase(ipAddress)) {
             ipAddress = request.getRemoteAddr();
-            if (ipAddress.equals("127.0.0.1") || ipAddress.equals("0:0:0:0:0:0:0:1")) {
+            if ("127.0.0.1".equals(ipAddress) || "0:0:0:0:0:0:0:1".equals(ipAddress)) {
                 //根据网卡取本机配置的IP
                 InetAddress inet = null;
                 try {
                     inet = InetAddress.getLocalHost();
                 } catch (UnknownHostException e) {
-                    LOGGER.error("获取IP异常 : {}", e);
+                    logger.error("获取IP异常 : {}", e);
                 }
-                ipAddress = inet.getHostAddress();
+                if (Objects.nonNull(inet)) {
+                    ipAddress = inet.getHostAddress();
+                }
             }
         }
         //对于通过多个代理的情况，第一个IP为客户端真实IP,多个IP按照','分割
-        if (ipAddress != null && ipAddress.length() > 15) { //"***.***.***.***".length() = 15
+        if (Objects.nonNull(ipAddress) && ipAddress.length() > 15) {
             if (ipAddress.indexOf(",") > 0) {
                 ipAddress = ipAddress.substring(0, ipAddress.indexOf(","));
             }
         }
         return ipAddress;
     }
-
-
+    
+    
 }
