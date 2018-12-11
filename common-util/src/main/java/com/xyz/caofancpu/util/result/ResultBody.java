@@ -12,9 +12,9 @@ public class ResultBody {
         return GlobalErrorInfoEnum.SUCCESS.getCode().equals(this.code);
     }
     
-    public ResultBody(ErrorInfoInterface errorInfo) {
-        this.code = errorInfo.getCode();
-        this.msg = errorInfo.getMsg();
+    public ResultBody(String code, String msg) {
+        this.code = code;
+        this.msg = msg;
     }
     
     public ResultBody(Object data) {

@@ -4,6 +4,7 @@ import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.GregorianCalendar;
+import java.util.Objects;
 
 /**
  * Created by caofanCPU on 2018/7/2.
@@ -12,7 +13,6 @@ public class DateUtil {
     
     public final static String FORMAT_SIMPLE_DETAIL = "yyyy-MM-dd HH:mm:ss";
     public final static String FORMAT_SIMPLE_DETAIL_PRECISE = "yyyy-MM-dd HH:mm:ss:SSS";
-    
     public final static String FORMAT_SIMPLE = "yyyy-MM-dd";
     public final static String FORMAT_SIMPLE_CN = "yyyy年MM月dd日";
     
@@ -38,7 +38,7 @@ public class DateUtil {
     }
     
     public static String date2Str(Date date, String format) {
-        if (date != null) {
+        if (Objects.nonNull(date)) {
             SimpleDateFormat sdf = new SimpleDateFormat(format);
             return sdf.format(date);
         } else {

@@ -1,22 +1,22 @@
 package com.xyz.caofancpu.util.result;
 
-public class GlobalErrorInfoException extends Exception implements ErrorInfoInterface {
+public class GlobalErrorInfoRuntimeException extends RuntimeException implements ErrorInfoInterface {
     
     private String code;
     
     private String msg;
     
-    public GlobalErrorInfoException(String code, String msg) {
+    public GlobalErrorInfoRuntimeException(String code, String msg) {
         this.code = code;
         this.msg = msg;
     }
     
-    public GlobalErrorInfoException(String msg) {
+    public GlobalErrorInfoRuntimeException(String msg) {
         this.code = GlobalErrorInfoEnum.GLOBAL_MSG.getCode();
         this.msg = msg;
     }
     
-    public GlobalErrorInfoException() {
+    public GlobalErrorInfoRuntimeException() {
         this.code = GlobalErrorInfoEnum.GLOBAL_MSG.getCode();
         this.msg = GlobalErrorInfoEnum.GLOBAL_MSG.getMsg();
     }

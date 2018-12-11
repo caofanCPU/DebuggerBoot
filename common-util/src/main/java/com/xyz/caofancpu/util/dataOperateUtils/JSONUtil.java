@@ -3,11 +3,11 @@ package com.xyz.caofancpu.util.dataOperateUtils;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.alibaba.fastjson.serializer.SerializerFeature;
+import com.xyz.caofancpu.util.result.GlobalErrorInfoRuntimeException;
 import org.apache.commons.collections.CollectionUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -123,8 +123,10 @@ public class JSONUtil {
      *
      * @param jsonArray
      * @return
+     * @throws GlobalErrorInfoRuntimeException
      */
-    public static <T> List<T> arrayShiftToBean(Object jsonArray, Class<T> clazz) {
+    public static <T> List<T> arrayShiftToBean(Object jsonArray, Class<T> clazz)
+            throws GlobalErrorInfoRuntimeException {
         if (Objects.isNull(jsonArray) || Objects.isNull(clazz)) {
             throw new NullPointerException();
         }
@@ -136,11 +138,9 @@ public class JSONUtil {
                     try {
                         T result = BeanConvertUtil.copyProperties(item, clazz);
                         resultList.add(result);
-                    } catch (IllegalAccessException
-                            | InstantiationException
-                            | InvocationTargetException e) {
-                        logger.info("JSONArray转换失败! {}", e.getMessage());
-                        return;
+                    } catch (Exception e) {
+                        logger.info("JSONArray转List<Bean>失败!\n", e);
+                        throw new GlobalErrorInfoRuntimeException("对象转换失败!");
                     }
                 });
         return resultList;
@@ -151,16 +151,19 @@ public class JSONUtil {
      *
      * @param jsonArray
      * @return
+     * @throws GlobalErrorInfoRuntimeException
      */
-    public static List<Map<String, Object>> arrayShiftToMap(Object jsonArray) {
+    public static List<Map<String, Object>> arrayShiftToMap(Object jsonArray)
+            throws GlobalErrorInfoRuntimeException {
         if (Objects.isNull(jsonArray)) {
-            throw new NullPointerException();
+            logger.error("JSONArray转List<Map>, 源数据不能为空!");
+            throw new GlobalErrorInfoRuntimeException("源数据不能为空!");
         }
         JSONArray array = parseJSONArray(jsonArray);
         List<Map<String, Object>> resultList = new ArrayList<>();
         array.stream()
                 .filter(Objects::nonNull)
-                .forEach(item -> resultList.add((Map<String, Object>) item));
+                .forEach(item -> resultList.add(JSONObject.parseObject(JSONObject.toJSONString(item))));
         return resultList;
     }
     
@@ -169,10 +172,13 @@ public class JSONUtil {
      *
      * @param sourceList
      * @return
+     * @throws GlobalErrorInfoRuntimeException
      */
-    public static JSONArray shiftToJSONArray(List<?> sourceList) {
+    public static JSONArray shiftToJSONArray(List<?> sourceList)
+            throws GlobalErrorInfoRuntimeException {
         if (CollectionUtils.isEmpty(sourceList)) {
-            throw new IllegalArgumentException("sourceList数据为空!");
+            logger.error("List转JSONArray, 源数据不能为空!");
+            throw new GlobalErrorInfoRuntimeException("源数据不能为空!");
         }
         JSONArray resultArray = new JSONArray();
         sourceList.stream()
@@ -186,33 +192,49 @@ public class JSONUtil {
      *
      * @param sourceMap
      * @return
+     * @throws GlobalErrorInfoRuntimeException
      */
-    public static JSONObject mapShiftToJSON(Map<String, Object> sourceMap) {
+    public static JSONObject mapShiftToJSON(Map<String, Object> sourceMap)
+            throws GlobalErrorInfoRuntimeException {
         if (Objects.isNull(sourceMap) || 0 == sourceMap.size()) {
-            throw new IllegalArgumentException("sourceMap数据为空!");
+            logger.error("Map转JSONObject, 源数据数据不能为空!");
+            throw new GlobalErrorInfoRuntimeException("源数据数据不能为空!");
         }
         return JSONObject.parseObject(JSONObject.toJSONString(sourceMap));
     }
     
     /**
      * JSONObject 转 Map<String, Object>
-     *
+     * JSONObject是Map的子类
      * @param jsonObject
      * @return
+     * @throws GlobalErrorInfoRuntimeException
+     * @since 0.0.1
      */
-    public static Map<String, Object> JSONShiftToMap(JSONObject jsonObject) {
+    @Deprecated
+    public static Map<String, Object> JSONShiftToMap(JSONObject jsonObject)
+            throws GlobalErrorInfoRuntimeException {
         if (Objects.isNull(jsonObject)) {
-            throw new IllegalArgumentException("jsonObject数据为空!");
+            logger.error("JSONObject转Map, 源数据数据不能为空!");
+            throw new GlobalErrorInfoRuntimeException("源数据数据不能为空!");
         }
         return jsonObject;
     }
     
-    public static <T> T mapToBean(Object sourceObject, Class<T> clazz) {
-        if (Objects.isNull(sourceObject)) {
-            throw new IllegalArgumentException("源数据为空!");
-        }
-        if (Objects.isNull(clazz)) {
-            throw new IllegalArgumentException("目标class为空!");
+    /**
+     * Map转Bean
+     *
+     * @param sourceObject
+     * @param clazz
+     * @param <T>
+     * @return
+     * @throws GlobalErrorInfoRuntimeException
+     */
+    public static <T> T mapToBean(Object sourceObject, Class<T> clazz)
+            throws GlobalErrorInfoRuntimeException {
+        if (Objects.isNull(sourceObject) || Objects.isNull(clazz)) {
+            logger.error("Map转Bean, 源数据数据不能为空!");
+            throw new GlobalErrorInfoRuntimeException("源数据数据不能为空!");
         }
         return JSONObject.parseObject(JSONObject.toJSONString(sourceObject), clazz);
     }

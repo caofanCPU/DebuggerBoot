@@ -38,7 +38,7 @@ public class FileBase64Utils {
      * @throws Exception
      */
     public static String encodeBase64(String path)
-            throws Exception {
+            throws IOException {
         byte[] buffer = FileUtils.readFileToByteArray(new File(path));
         return Base64.encodeBase64String(buffer);
     }
@@ -94,7 +94,7 @@ public class FileBase64Utils {
      * 文件反序列化到对象
      *
      * @param fileFullPath
-     * @param claszz
+     * @param clazz
      * @param <T>
      * @return
      * @throws IOException
@@ -105,13 +105,20 @@ public class FileBase64Utils {
      * @deprecated 应从Redis中获取对象, 反序列化
      */
     @Deprecated
-    public static <T> T deserializeFromFile(String fileFullPath, Class<T> claszz)
-            throws IOException, ClassNotFoundException, IllegalAccessException,
-            InvocationTargetException, InstantiationException {
-        ObjectInputStream ois = new ObjectInputStream(new FileInputStream(fileFullPath));
-        Object sourceObj = ois.readObject();
-        IOUtils.closeQuietly(ois);
-        T result = BeanConvertUtil.copyProperties(sourceObj, claszz);
+    public static <T> T deserializeFromFile(String fileFullPath, Class<T> clazz)
+            throws IOException, IllegalAccessException, InvocationTargetException, InstantiationException {
+        FileInputStream fis = new FileInputStream(fileFullPath);
+        ObjectInputStream ois = new ObjectInputStream(fis);
+        Object sourceObj = null;
+        try {
+            sourceObj = ois.readObject();
+        } catch (IOException | ClassNotFoundException e) {
+            // ignore
+        } finally {
+            IOUtils.closeQuietly(ois);
+            IOUtils.closeQuietly(fis);
+        }
+        T result = BeanConvertUtil.copyProperties(sourceObj, clazz);
         return result;
     }
     
@@ -126,9 +133,16 @@ public class FileBase64Utils {
     @Deprecated
     public static void serializeToFile(Object obj, String fileFullPath)
             throws IOException {
-        ObjectOutputStream oos = new ObjectOutputStream(new FileOutputStream(fileFullPath));
-        oos.writeObject(obj);
-        IOUtils.closeQuietly(oos);
+        FileOutputStream fos = new FileOutputStream(fileFullPath);
+        ObjectOutputStream oos = new ObjectOutputStream(fos);
+        try {
+            oos.writeObject(obj);
+        } catch (IOException e) {
+            // ignore
+        } finally {
+            IOUtils.closeQuietly(oos);
+            IOUtils.closeQuietly(fos);
+        }
     }
     
     public static void main(String[] args) {

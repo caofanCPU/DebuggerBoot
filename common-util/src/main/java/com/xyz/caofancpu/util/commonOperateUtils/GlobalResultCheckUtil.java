@@ -1,6 +1,5 @@
 package com.xyz.caofancpu.util.commonOperateUtils;
 
-import com.xyz.caofancpu.util.result.CustomerErrorInfo;
 import com.xyz.caofancpu.util.result.GlobalErrorInfoException;
 import com.xyz.caofancpu.util.result.ResultBody;
 
@@ -27,7 +26,7 @@ public class GlobalResultCheckUtil {
         if (Objects.isNull(resultBody) || resultBody.isSuccess()) {
             return;
         }
-        throw new GlobalErrorInfoException(new CustomerErrorInfo(resultBody.getCode(), resultBody.getMsg()));
+        throw new GlobalErrorInfoException(resultBody.getCode(), resultBody.getMsg());
     }
     
 }
