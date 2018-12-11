@@ -26,7 +26,7 @@ public class CommonOperateController {
     /**
      * LOG
      */
-    private static final Logger LOGGER = LoggerFactory.getLogger(CommonOperateController.class);
+    private static final Logger logger = LoggerFactory.getLogger(CommonOperateController.class);
     
     @Resource
     private transient CommonOperateService commonOperateService;
@@ -50,7 +50,7 @@ public class CommonOperateController {
         try {
             DataHelper.putDataIntoEntity(map, attachment);
         } catch (Exception e) {
-            LOGGER.error("MAP转换到Attachment出错", e);
+            logger.error("MAP转换到Attachment出错: \n", e);
             throw new GlobalErrorInfoException(GlobalErrorInfoEnum.INTERNAL_ERROR);
         }
         commonOperateService.uploadAttachment(attachment, file);
@@ -67,15 +67,26 @@ public class CommonOperateController {
     @PostMapping("/attachment/getAccessUrl")
     public ResultBody getAccessUrl(@RequestParam(required = true) String attachmentName)
             throws GlobalErrorInfoException {
-        
         String accessUrl = commonOperateService.getAttachmentAccessUrl(attachmentName);
-        
         return new ResultBody(accessUrl);
     }
     
     @PostMapping("/sysDict/listByPage")
-    public ResultBody listSysDictByPage() {
+    public ResultBody listSysDictByPage()
+            throws GlobalErrorInfoException {
         PageInfo<List<Map<String, Object>>> resultPageInfo = sysDictService.getSysDictList();
         return new ResultBody(resultPageInfo);
     }
+    
+    @PostMapping("/testRuntimeException")
+    public ResultBody testRuntimeException()
+            throws GlobalErrorInfoException {
+        try {
+            throw new IllegalArgumentException("原始异常AAA");
+        } catch (Exception e) {
+            logger.error("记录原始异常BBB:\n", e);
+            throw new GlobalErrorInfoException("转换异常OK");
+        }
+    }
+    
 }

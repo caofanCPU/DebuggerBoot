@@ -11,6 +11,11 @@ public class GlobalErrorInfoException extends Exception implements ErrorInfoInte
         this.msg = msg;
     }
     
+    public GlobalErrorInfoException(ErrorInfoInterface infoInterface) {
+        this.code = infoInterface.getCode();
+        this.msg = infoInterface.getMsg();
+    }
+    
     public GlobalErrorInfoException(String msg) {
         this.code = GlobalErrorInfoEnum.GLOBAL_MSG.getCode();
         this.msg = msg;

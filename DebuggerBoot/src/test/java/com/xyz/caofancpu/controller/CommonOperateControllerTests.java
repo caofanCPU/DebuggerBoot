@@ -32,4 +32,10 @@ public class CommonOperateControllerTests extends DebuggerKingApplicationTests {
         JSONUtil.formatStandardJSON(responseStr);
     }
     
+    @Test
+    public void testRuntimeException()
+            throws Exception {
+        String responseStr = springBootJunitTestUtil.handlePostBodyExecute(new HashMap<>(2, 0.5f), "/testRuntimeException");
+        JSONUtil.formatStandardJSON(responseStr);
+    }
 }

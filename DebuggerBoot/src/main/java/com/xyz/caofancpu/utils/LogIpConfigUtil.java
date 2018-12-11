@@ -16,7 +16,7 @@ import java.util.Enumeration;
 import java.util.Objects;
 
 public class LogIpConfigUtil extends ClassicConverter {
-    private static final Logger LOGGER = LoggerFactory.getLogger(LogIpConfigUtil.class);
+    private static final Logger logger = LoggerFactory.getLogger(LogIpConfigUtil.class);
 
     @Override
     public String convert(ILoggingEvent event) {
@@ -52,7 +52,7 @@ public class LogIpConfigUtil extends ClassicConverter {
                 }
             }
         } catch (SocketException ex) {
-            LOGGER.error("获取日志Ip异常", ex);
+            logger.error("获取日志Ip异常", ex);
             ip = "127.0.0.1";
     
         }
@@ -77,7 +77,7 @@ public class LogIpConfigUtil extends ClassicConverter {
         try {
             return InetAddress.getLocalHost().getHostAddress();
         } catch (UnknownHostException e) {
-            LOGGER.error("获取日志Ip异常", e);
+            logger.error("获取日志Ip异常", e);
         }
         return "127.0.0.1";
     }

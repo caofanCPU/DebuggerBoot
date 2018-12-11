@@ -46,7 +46,7 @@ jasypt:
   #Kafka配置
   kafka:
     #Kafka消息中心访问URL
-    bootstrap-servers: 192.168.2.203:9092
+    bootstrap-servers: 192.168.2.70:9092
     #Kafka客户端组名配置
     consumer:
       group-id: caofanGroup
