@@ -5,6 +5,7 @@ import org.apache.commons.collections.CollectionUtils;
 import org.springframework.util.Assert;
 
 import java.util.*;
+import java.util.function.Supplier;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -102,7 +103,7 @@ public class StreamUtils {
      * @return
      */
     public static Map<String, Object> removeNullElement(Map<String, Object> paramsMap) {
-        if (paramsMap == null || paramsMap.isEmpty()) {
+        if (Objects.isNull(paramsMap) || paramsMap.isEmpty()) {
             return paramsMap;
         }
         /** 一般请求参数不会太多，故而使用单向顺序流即可 */
@@ -112,6 +113,63 @@ public class StreamUtils {
         // 2.从流中恢复map
         Map<String, Object> resultMap = tempStream.collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue));
         return resultMap;
+    }
+    
+    /**
+     * 从Map种移除类型为文件MultipartFile/File的元素
+     *
+     * @param paramsMap
+     * @return
+     */
+    public static Map<String, Object> removeSpecifiedElement(Map<String, Object> paramsMap, Class<?>[] clazzArray) {
+        if (Objects.isNull(paramsMap) || paramsMap.isEmpty()
+                || Objects.isNull(clazzArray) || clazzArray.length == 0) {
+            return paramsMap;
+        }
+        Map<String, Object> resultMap = new HashMap<>();
+        // 将流导入Supplier工厂, 需要时即取出来, 取出来时就会构造流, 即新的实例
+        Supplier<Stream<Class>> clazzStreamSupplier = () -> Arrays.stream(clazzArray);
+        paramsMap.entrySet().stream()
+                .filter(Objects::nonNull)
+                .forEach(entry -> {
+                    Stream<Class> clazzStream = clazzStreamSupplier.get();
+                    // 若元素类型与目标类型相同, 则结束本次循环
+                    if (clazzStream.anyMatch(clazz -> clazz.isInstance(entry.getValue()))) {
+                        return;
+                    }
+                    resultMap.put(entry.getKey(), entry.getValue());
+                });
+        return resultMap;
+    }
+    
+    
+    /**
+     * 从Map种移除指定类型的元素
+     *
+     * @param paramArray
+     * @param clazzArray
+     * @return
+     */
+    public static Object[] removeSpecifiedElement(Object[] paramArray, Class<?>[] clazzArray) {
+        if (Objects.isNull(paramArray) || paramArray.length == 0
+                || Objects.isNull(clazzArray) || clazzArray.length == 0) {
+            return paramArray;
+        }
+        List<Object> resultList = new ArrayList<>(paramArray.length);
+        // 将流导入Supplier工厂, 需要时即取出来, 取出来时就会构造流, 即新的实例
+        Supplier<Stream<Class>> clazzStreamSupplier = () -> Arrays.stream(clazzArray);
+        Arrays.stream(paramArray)
+                .filter(Objects::nonNull)
+                .forEach(paramObj -> {
+                    Stream<Class> clazzStream = clazzStreamSupplier.get();
+                    // 若元素类型与目标类型相同, 则结束本次循环
+                    // anyMatch属于流操作终止符, 因而每次操作前都需要获得流
+                    if (clazzStream.anyMatch(clazz -> clazz.isInstance(paramObj))) {
+                        return;
+                    }
+                    resultList.add(paramObj);
+                });
+        return resultList.toArray();
     }
     
     /**
