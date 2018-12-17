@@ -69,6 +69,7 @@ public class BeanConvertUtil {
             logger.error("对象属性复制失败: \n", e);
             throw new GlobalErrorInfoRuntimeException("对象属性复制失败, 原因: 目标类不存在");
         }
+        ConvertUtils.register(loadDateConverter(), Date.class);
         try {
             BeanUtils.copyProperties(targetObj, sourceObj);
         } catch (Exception e) {
