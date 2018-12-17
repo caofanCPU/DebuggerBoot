@@ -78,15 +78,4 @@ public class CommonOperateController {
         return new ResultBody(resultPageInfo);
     }
     
-    @PostMapping("/testRuntimeException")
-    public ResultBody testRuntimeException()
-            throws GlobalErrorInfoException {
-        try {
-            throw new IllegalArgumentException("原始异常AAA");
-        } catch (Exception e) {
-            logger.error("记录原始异常BBB:\n", e);
-            throw new GlobalErrorInfoException("转换异常OK");
-        }
-    }
-    
 }
