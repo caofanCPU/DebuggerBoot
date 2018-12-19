@@ -11,13 +11,15 @@ import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.ui.Model
 import org.springframework.web.bind.annotation._
 import org.springframework.web.servlet.ModelAndView
+// TODO: 该包已过时， 替换待定
+// TODO: 作用, 实现scala集合与java集合的默认转换
+import scala.collection.JavaConversions._
 
 @RestController
 @RequestMapping(Array("/httpapi"))
-class HttpApiController @Autowired()(
-                                      val HttpSuiteDao: HttpSuiteDao,
-                                      val HttpApiDao: HttpApiDao,
-                                      val HttpReportDao: HttpReportDao) {
+class HttpApiController @Autowired()(val HttpSuiteDao: HttpSuiteDao,
+                                     val HttpApiDao: HttpApiDao,
+                                     val HttpReportDao: HttpReportDao) {
 
   @RequestMapping(value = {
     Array("", "/")

@@ -11,6 +11,7 @@
     <description>scala boot come on</description>
 
 
+    <!--spring boot版本-->
     <parent>
         <groupId>org.springframework.boot</groupId>
         <artifactId>spring-boot-starter-parent</artifactId>
@@ -19,40 +20,47 @@
     </parent>
 
     <properties>
-        <scala.version>2.11.8</scala.version>
+        <java.version>1.8</java.version>
         <maven.compiler.source>1.8</maven.compiler.source>
         <maven.compiler.target>1.8</maven.compiler.target>
-        <encoding>UTF-8</encoding>
-        <scala.compat.version>2.11</scala.compat.version>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-        <java.version>1.8</java.version>
+        <encoding>UTF-8</encoding>
+        <!--scala版本-->
+        <scala.version>2.12.8</scala.version>
+        <!--scala编译器版本-->
+        <scala.compat.version>2.11</scala.compat.version>
+        <!--spring boot platform 版本-->
         <platform-bom.version>2.0.3.RELEASE</platform-bom.version>
+        <!--spring boot 启动器版本-->
         <spring-boot-starter-bom.version>1.0.0-SNAPSHOT</spring-boot-starter-bom.version>
-        <spring-boot.version>1.3.5.RELEASE</spring-boot.version>
+        <!--spring boot 版本， 必须与 parent 中一致-->
+        <spring-boot.version>1.5.14.RELEASE</spring-boot.version>
     </properties>
 
     <dependencies>
 
+        <!--密码加密-->
         <dependency>
             <groupId>com.github.ulisesbocchio</groupId>
             <artifactId>jasypt-spring-boot-starter</artifactId>
             <version>1.18</version>
         </dependency>
 
-        <!-- scala -->
+        <!-- scala库 -->
         <dependency>
             <groupId>org.scala-lang</groupId>
             <artifactId>scala-library</artifactId>
             <version>${scala.version}</version>
         </dependency>
 
+        <!--scala日志-->
         <dependency>
             <groupId>com.typesafe.scala-logging</groupId>
             <artifactId>scala-logging-slf4j_2.11</artifactId>
             <version>2.1.2</version>
         </dependency>
 
-        <!-- Test -->
+        <!-- 测试 -->
         <dependency>
             <groupId>junit</groupId>
             <artifactId>junit</artifactId>
@@ -71,23 +79,26 @@
             <scope>test</scope>
         </dependency>
 
-        <!-- sb -->
+        <!-- spring boot web配置 -->
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-web</artifactId>
+            <version>1.3.3.RELEASE</version>
         </dependency>
 
+        <!--数据库JPA-->
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-data-jpa</artifactId>
         </dependency>
 
+        <!--前端velocity-->
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-velocity</artifactId>
         </dependency>
 
-        <!--test -->
+        <!--spring boot 测试-->
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-test</artifactId>
@@ -98,20 +109,26 @@
             <artifactId>spring-test</artifactId>
         </dependency>
 
+        <!--json-->
         <dependency>
             <groupId>com.alibaba</groupId>
             <artifactId>fastjson</artifactId>
             <version>1.2.7</version>
         </dependency>
+
+        <!--mysql-->
         <dependency>
             <groupId>mysql</groupId>
             <artifactId>mysql-connector-java</artifactId>
+            <version>5.1.46</version>
         </dependency>
+        <!--java邮件-->
         <dependency>
             <groupId>javax.mail</groupId>
             <artifactId>mail</artifactId>
             <version>1.4.7</version>
         </dependency>
+        <!--okHttp-->
         <dependency>
             <groupId>com.squareup.okhttp3</groupId>
             <artifactId>okhttp</artifactId>
@@ -137,8 +154,10 @@
         <testSourceDirectory>src/test/scala</testSourceDirectory>
         <plugins>
             <plugin>
+                <!--maven-scala插件, 版本2.15.1-->
                 <groupId>org.scala-tools</groupId>
                 <artifactId>maven-scala-plugin</artifactId>
+                <version>2.15.1</version>
                 <executions>
                     <execution>
                         <goals>
@@ -153,7 +172,7 @@
                     <launchers>
                         <launcher>
                             <id>app</id>
-                            <mainClass>com.springboot.in.action.LightSwordApplication</mainClass>
+                            <mainClass>com.xyz.caofancpu.ScalaBootApplication</mainClass>
                             <args>
                                 <arg>-deprecation</arg>
                             </args>
@@ -169,7 +188,7 @@
                 <groupId>org.springframework.boot</groupId>
                 <artifactId>spring-boot-maven-plugin</artifactId>
                 <!--<configuration>-->
-                <!--<fork>true</fork>&lt;!&ndash; 如果没有该项配置，肯呢个devtools不会起作用，即应用不会restart &ndash;&gt;-->
+                <!--<fork>true</fork>&lt;!&ndash; 如果没有该项配置，可能devtools不会起作用，即应用不会restart &ndash;&gt;-->
                 <!--</configuration>-->
             </plugin>
             <plugin>

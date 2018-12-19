@@ -1,0 +1,13 @@
+清屏  _> cls
+
+切换盘符  _> X:
+展示目录  _> dir
+
+
+maven数据库盐值加密
+1. _> G:
+2. _> cd G:\DebuggerKing\MAVEN-Repository
+3. _> cd org/jasypt/jasypt/1.9.2
+4. _> java -cp jasypt-1.9.2.jar org.jasypt.intf.cli.JasyptPBEStringEncryptionCLI input=账户名 password=盐值 algorithm=PBEWithMD5AndDES
+得到加密后的密码： WVYWDdudrjS+U6PaDhrZWw==
+注意： 每次执行结果都不一样

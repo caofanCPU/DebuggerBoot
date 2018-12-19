@@ -9,6 +9,8 @@ import org.springframework.ui.Model
 import org.springframework.web.bind.annotation.{RequestMapping, RestController}
 import org.springframework.web.servlet.ModelAndView
 
+import scala.collection.JavaConversions._
+
 @RestController
 @RequestMapping(Array("/httpreport"))
 class HttpReportController @Autowired()(val HttpReportDao: HttpReportDao) {
