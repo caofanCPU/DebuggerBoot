@@ -70,14 +70,4 @@ public class MethodParameterSpy {
         out.format(fmt, "Is name present?", p.isNamePresent());
         out.format(fmt, "Is synthetic?", p.isSynthetic());
     }
-    
-    public static void main(String... args) {
-        
-        try {
-            printClassConstructors(Class.forName(args[0]));
-            printClassMethods(Class.forName(args[0]));
-        } catch (ClassNotFoundException x) {
-            x.printStackTrace();
-        }
-    }
 }
