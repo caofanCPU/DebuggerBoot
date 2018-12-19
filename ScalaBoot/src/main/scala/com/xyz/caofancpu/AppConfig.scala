@@ -1,0 +1,8 @@
+package com.xyz.caofancpu
+
+import com.ulisesbocchio.jasyptspringboot.annotation.EnableEncryptableProperties
+import org.springframework.boot.autoconfigure.SpringBootApplication
+
+@SpringBootApplication
+@EnableEncryptableProperties
+class AppConfig
