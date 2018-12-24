@@ -18,7 +18,6 @@ import java.util.Objects;
  * Created by caofanCPU on 2018/8/10.
  */
 public class BeanConvertUtil {
-    
     /**
      * LOG
      */

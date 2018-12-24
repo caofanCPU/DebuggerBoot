@@ -1,5 +1,7 @@
 package com.xyz.caofancpu.util.commonOperateUtils;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
 
 import java.util.concurrent.ThreadPoolExecutor;
@@ -11,6 +13,10 @@ import java.util.concurrent.ThreadPoolExecutor;
  */
 
 public class StandardThreadPoolUtil {
+    /**
+     * LOG
+     */
+    private static final Logger logger = LoggerFactory.getLogger(StandardThreadPoolUtil.class);
     
     private static volatile ThreadPoolTaskExecutor threadPoolTaskExecutor;
     

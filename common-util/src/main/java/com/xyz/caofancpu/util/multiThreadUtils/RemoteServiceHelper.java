@@ -1,9 +1,11 @@
 package com.xyz.caofancpu.util.multiThreadUtils;
 
+import com.xyz.caofancpu.util.AbstractLogger;
+
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 
-public class RemoteServiceHelper<T, K, M> implements RemoteService {
+public class RemoteServiceHelper<T, K, M>  extends AbstractLogger implements RemoteService {
     
     public RemoteServiceHelper(Object serviceInstance, String methodName, Object param, Class<?>... paramClass) {
         this.serviceInstance = serviceInstance;
@@ -23,12 +25,11 @@ public class RemoteServiceHelper<T, K, M> implements RemoteService {
         if (method != null) {
             try {
                 Object obj = method.invoke(serviceInstance, params);
-//                System.out.println(JSONUtil.serializeJSON(obj));
                 return (M) obj;
             } catch (IllegalAccessException e) {
-                e.printStackTrace();
+                logger.error("远程调用反射出错, 原因: {}", e);
             } catch (InvocationTargetException e) {
-                e.printStackTrace();
+                logger.error("远程调用反射出错, 原因: {}", e);
             }
         }
         return null;
@@ -62,7 +63,7 @@ public class RemoteServiceHelper<T, K, M> implements RemoteService {
         try {
             return serviceInstance.getClass().getMethod(methodName, paramClass);
         } catch (NoSuchMethodException e) {
-            e.printStackTrace();
+            logger.error("远程调用反射出错, 原因: {}", e);
         }
         return null;
     }

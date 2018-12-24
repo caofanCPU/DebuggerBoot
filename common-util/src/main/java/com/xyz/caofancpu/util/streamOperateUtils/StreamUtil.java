@@ -2,6 +2,8 @@ package com.xyz.caofancpu.util.streamOperateUtils;
 
 import jdk.nashorn.internal.ir.annotations.Ignore;
 import org.apache.commons.collections.CollectionUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.util.Assert;
 
 import java.util.*;
@@ -12,8 +14,11 @@ import java.util.stream.Stream;
 /**
  * Created by caofanCPU on 2018/8/7.
  */
-public class StreamUtils {
-    
+public class StreamUtil {
+    /**
+     * LOG
+     */
+    private static final Logger logger = LoggerFactory.getLogger(StreamUtil.class);
     /**
      * List版本:根据指定字段过滤出目标属性
      *

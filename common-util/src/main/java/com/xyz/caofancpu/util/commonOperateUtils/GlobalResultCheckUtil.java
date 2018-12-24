@@ -2,6 +2,8 @@ package com.xyz.caofancpu.util.commonOperateUtils;
 
 import com.xyz.caofancpu.util.result.GlobalErrorInfoException;
 import com.xyz.caofancpu.util.result.ResultBody;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.Objects;
 
@@ -12,7 +14,10 @@ import java.util.Objects;
  */
 
 public class GlobalResultCheckUtil {
-    
+    /**
+     * LOG
+     */
+    private static final Logger logger = LoggerFactory.getLogger(GlobalResultCheckUtil.class);
     /**
      * 微服务接口调用统一处理
      * 响应成功, 不做任何处理

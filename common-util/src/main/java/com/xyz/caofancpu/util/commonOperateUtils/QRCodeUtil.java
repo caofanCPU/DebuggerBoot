@@ -5,6 +5,8 @@ import com.google.zxing.client.j2se.BufferedImageLuminanceSource;
 import com.google.zxing.common.BitMatrix;
 import com.google.zxing.common.HybridBinarizer;
 import com.google.zxing.qrcode.decoder.ErrorCorrectionLevel;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import javax.imageio.ImageIO;
 import java.awt.*;
@@ -19,6 +21,11 @@ import java.util.Random;
  * 二维码工具类
  */
 public class QRCodeUtil {
+    /**
+     * LOG
+     */
+    private static final Logger logger = LoggerFactory.getLogger(QRCodeUtil.class);
+    
     private static final String CHARSET = "utf-8";
     private static final String FORMAT = "JPG";
     

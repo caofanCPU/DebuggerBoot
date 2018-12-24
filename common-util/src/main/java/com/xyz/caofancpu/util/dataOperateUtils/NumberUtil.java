@@ -1,5 +1,8 @@
 package com.xyz.caofancpu.util.dataOperateUtils;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import java.math.BigDecimal;
 
 /**
@@ -8,6 +11,8 @@ import java.math.BigDecimal;
  * @author
  */
 public class NumberUtil {
+    
+    private static final Logger logger = LoggerFactory.getLogger(NumberUtil.class);
     
     /**
      * 汉语中数字大写

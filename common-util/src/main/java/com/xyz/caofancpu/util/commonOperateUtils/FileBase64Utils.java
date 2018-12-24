@@ -1,6 +1,6 @@
 package com.xyz.caofancpu.util.commonOperateUtils;
 
-import com.xyz.caofancpu.util.dataOperateUtils.BeanConvertUtil;
+import com.alibaba.fastjson.JSONObject;
 import org.apache.commons.codec.binary.Base64;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.IOUtils;
@@ -106,19 +106,22 @@ public class FileBase64Utils {
      */
     @Deprecated
     public static <T> T deserializeFromFile(String fileFullPath, Class<T> clazz)
-            throws IOException, IllegalAccessException, InvocationTargetException, InstantiationException {
+            throws IOException {
         FileInputStream fis = new FileInputStream(fileFullPath);
         ObjectInputStream ois = new ObjectInputStream(fis);
         Object sourceObj = null;
         try {
             sourceObj = ois.readObject();
-        } catch (IOException | ClassNotFoundException e) {
+        } catch (IOException e) {
             // ignore
+        } catch (ClassNotFoundException e) {
+            logger.error("反序列化文件出错, 原因: {}", e);
+            throw new IOException("反序列化的目的类不存在!");
         } finally {
             IOUtils.closeQuietly(ois);
             IOUtils.closeQuietly(fis);
         }
-        T result = BeanConvertUtil.copyProperties(sourceObj, clazz);
+        T result = JSONObject.parseObject(JSONObject.toJSONString(sourceObj), clazz);
         return result;
     }
     

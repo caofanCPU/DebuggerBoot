@@ -1,6 +1,9 @@
 package com.xyz.caofancpu.util.commonOperateUtils;
 
+import com.xyz.caofancpu.util.result.GlobalErrorInfoException;
 import org.apache.commons.lang3.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.util.Assert;
 
 import java.io.UnsupportedEncodingException;
@@ -13,9 +16,12 @@ import java.net.URLEncoder;
  */
 public class UrlUtil {
     
-    public static final String UTF_TYPE = "utf-8";
+    /**
+     * LOG
+     */
+    private static final Logger logger = LoggerFactory.getLogger(UrlUtil.class);
     
-    public static final String ISO_TYPE = "ISO-8859-1";
+    public static final String UTF_TYPE = "utf-8";
     
     /**
      * 对URL进行指定格式的转码
@@ -25,11 +31,15 @@ public class UrlUtil {
      * @return
      */
     public static String encodeUrl(String url, final String contextType)
-            throws UnsupportedEncodingException {
+            throws GlobalErrorInfoException {
         if (StringUtils.isNotEmpty(url)) {
-            return URLEncoder.encode(url, contextType);
+            try {
+                return URLEncoder.encode(url, contextType);
+            } catch (UnsupportedEncodingException e) {
+                logger.error("url编码失败, 原因: {}", e);
+            }
         }
-        throw new IllegalArgumentException("非法的URL参数:Empty");
+        throw new GlobalErrorInfoException("URL参数不能为空!");
     }
     
     /**
@@ -40,11 +50,15 @@ public class UrlUtil {
      * @return
      */
     private static String decodeUrl(String url, final String contextType)
-            throws UnsupportedEncodingException {
+            throws GlobalErrorInfoException {
         if (StringUtils.isNotEmpty(url)) {
-            return URLDecoder.decode(url, contextType);
+            try {
+                return URLDecoder.decode(url, contextType);
+            } catch (UnsupportedEncodingException e) {
+                logger.error("URL解码失败, 原因: {}", e);
+            }
         }
-        throw new IllegalArgumentException("非法的URL参数:Empty");
+        throw new GlobalErrorInfoException("URL参数不能为空!");
     }
     
     public static void main(String[] args) {
@@ -52,15 +66,15 @@ public class UrlUtil {
         String encodeUrlByUTF = null;
         try {
             encodeUrlByUTF = encodeUrl(originUrl, UTF_TYPE);
-        } catch (UnsupportedEncodingException e) {
-            e.printStackTrace();
+        } catch (GlobalErrorInfoException e) {
+            // ignore
         }
         System.out.println(encodeUrlByUTF);
         String decodeUrlByUTF = null;
         try {
             decodeUrlByUTF = decodeUrl(encodeUrlByUTF, UTF_TYPE);
-        } catch (UnsupportedEncodingException e) {
-            e.printStackTrace();
+        } catch (GlobalErrorInfoException e) {
+            // ignore
         }
         System.out.println(decodeUrlByUTF);
         Assert.isTrue(originUrl.equals(decodeUrlByUTF), "测试失败！");

@@ -1,6 +1,8 @@
 package com.xyz.caofancpu.util.dataOperateUtils;
 
 import com.alibaba.fastjson.JSONObject;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.Map;
 import java.util.Objects;
@@ -15,6 +17,10 @@ import java.util.regex.Pattern;
  */
 
 public class StringTemplateUtil {
+    /**
+     * LOG
+     */
+    private static final Logger logger = LoggerFactory.getLogger(StringTemplateUtil.class);
     
     public static final String TEMPLATE_KEY_PRIFIX = "\\$\\{";
     
