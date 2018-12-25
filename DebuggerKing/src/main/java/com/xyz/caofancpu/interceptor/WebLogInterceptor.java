@@ -18,6 +18,9 @@ import java.net.UnknownHostException;
 import java.util.Arrays;
 import java.util.Objects;
 
+/**
+ * @author caofanCPU
+ */
 @Component
 @Aspect
 public class WebLogInterceptor {

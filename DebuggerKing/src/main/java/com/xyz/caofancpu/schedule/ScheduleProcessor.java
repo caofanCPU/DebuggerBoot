@@ -17,14 +17,14 @@ import java.util.Date;
 public class ScheduleProcessor {
     
     private static int count = 1;
-    private final Logger LOGGER = LoggerFactory.getLogger(ScheduleProcessor.class);
+    private final Logger logger = LoggerFactory.getLogger(ScheduleProcessor.class);
     
     /**
      * 1分钟跑一次
      */
     @Scheduled(cron = "0 0/1 * * * ?")
     public void doSchedule() {
-        LOGGER.info("\n"
+        logger.info("\n"
                 + DateUtil.date2Str(new Date(), DateUtil.FORMAT_SIMPLE_DETAIL)
                 + ".007  帝八哥 2018 --- [           Debugger] K.I.N.G :"
                 + " Demo定时任务第[" + count + "]次执行...");

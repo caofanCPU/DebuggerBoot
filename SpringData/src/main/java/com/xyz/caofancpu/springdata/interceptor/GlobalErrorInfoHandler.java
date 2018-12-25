@@ -5,6 +5,9 @@ import com.xyz.caofancpu.util.result.ResultBody;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
+/**
+ * @author caofanCPU
+ */
 @RestControllerAdvice
 public class GlobalErrorInfoHandler {
     @ExceptionHandler(value = GlobalErrorInfoException.class)

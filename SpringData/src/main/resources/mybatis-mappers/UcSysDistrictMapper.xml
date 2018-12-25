@@ -1,0 +1,120 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.xyz.caofancpu.springdata.mapper.UcSysDistrictMapper">
+
+    <!--auto generated Code-->
+    <resultMap id="AllColumnMap" type="com.xyz.caofancpu.springdata.model.UcSysDistrict">
+        <result column="id" property="id"/>
+        <result column="name" property="name"/>
+        <result column="pid" property="pid"/>
+        <result column="initial" property="initial"/>
+        <result column="initials" property="initials"/>
+        <result column="pinyin" property="pinyin"/>
+        <result column="code" property="code"/>
+        <result column="area_code" property="areaCode"/>
+        <result column="sort" property="sort"/>
+    </resultMap>
+
+    <!--auto generated Code-->
+    <sql id="all_column">
+        id,
+        name,
+        pid,
+        initial,
+        initials,
+        pinyin,
+        code,
+        area_code,
+        sort
+    </sql>
+
+    <!--auto generated Code-->
+    <insert id="insert">
+        INSERT INTO uc_sys_district
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="id != null">id,</if>
+            <if test="name != null">name,</if>
+            <if test="pid != null">pid,</if>
+            <if test="initial != null">initial,</if>
+            <if test="initials != null">initials,</if>
+            <if test="pinyin != null">pinyin,</if>
+            <if test="code != null">code,</if>
+            <if test="areaCode != null">area_code,</if>
+            <if test="sort != null">sort,</if>
+        </trim>
+        VALUES
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="id != null">#{id},</if>
+            <if test="name != null">#{name},</if>
+            <if test="pid != null">#{pid},</if>
+            <if test="initial != null">#{initial},</if>
+            <if test="initials != null">#{initials},</if>
+            <if test="pinyin != null">#{pinyin},</if>
+            <if test="code != null">#{code},</if>
+            <if test="areaCode != null">#{areaCode},</if>
+            <if test="sort != null">#{sort},</if>
+        </trim>
+    </insert>
+
+    <!--auto generated Code-->
+    <insert id="insertList">
+        INSERT INTO uc_sys_district
+        (
+        <include refid="all_column"/>
+        ) VALUES
+        <foreach collection="list" item="item" index="index" separator=",">
+            (
+            #{item.id},
+            #{item.name},
+            #{item.pid},
+            #{item.initial},
+            #{item.initials},
+            #{item.pinyin},
+            #{item.code},
+            #{item.areaCode},
+            #{item.sort}
+            )
+        </foreach>
+    </insert>
+
+    <!--auto generated Code-->
+    <update id="update">
+        UPDATE uc_sys_district
+        <set>
+            <if test="id != null">id = #{id},</if>
+            <if test="name != null">name = #{name},</if>
+            <if test="pid != null">pid = #{pid},</if>
+            <if test="initial != null">initial = #{initial},</if>
+            <if test="initials != null">initials = #{initials},</if>
+            <if test="pinyin != null">pinyin = #{pinyin},</if>
+            <if test="code != null">code = #{code},</if>
+            <if test="areaCode != null">area_code = #{areaCode},</if>
+            <if test="sort != null">sort = #{sort}</if>
+        </set>
+        WHERE id = #{id}
+    </update>
+
+    <!--auto generated Code-->
+    <select id="select" resultMap="AllColumnMap">
+        SELECT
+        <include refid="all_column"/>
+        FROM uc_sys_district
+        <where>
+            <if test="id != null">AND id = #{id}</if>
+            <if test="name != null">AND name = #{name}</if>
+            <if test="pid != null">AND pid = #{pid}</if>
+            <if test="initial != null">AND initial = #{initial}</if>
+            <if test="initials != null">AND initials = #{initials}</if>
+            <if test="pinyin != null">AND pinyin = #{pinyin}</if>
+            <if test="code != null">AND code = #{code}</if>
+            <if test="areaCode != null">AND area_code = #{areaCode}</if>
+            <if test="sort != null">AND sort = #{sort}</if>
+        </where>
+        LIMIT 1000
+    </select>
+
+    <!--auto generated Code-->
+    <delete id="delete">
+        DELETE FROM uc_sys_district where id = #{id}
+    </delete>
+</mapper>
