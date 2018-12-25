@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.xyz.caofancpu.mapper.SysDictMapper">
+
+    <select id="getInitSysDictList" resultType="java.util.Map">
+        SELECT name, code FROM nz_sys_dict WHERE pid = 9999 ORDER BY sortId ASC
+    </select>
+
+    <select id="getSysDictList" resultType="java.util.Map">
+        SELECT name, code FROM nz_sys_dict WHERE 1 = 1 ORDER BY sortId ASC
+    </select>
+
+    <insert id="batchAddConfig" parameterType="java.util.List" useGeneratedKeys="true" keyProperty="id">
+        INSERT INTO nz_sys_dict (
+        name,
+        caode
+        )
+        VALUES
+        <foreach item="item" collection="list" index="index" separator=",">
+            (
+            #{item.name}, #{item.code}
+            )
+        </foreach>
+    </insert>
+
+</mapper>
+

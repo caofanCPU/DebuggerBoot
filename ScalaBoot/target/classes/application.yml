@@ -1,0 +1,47 @@
+####---------------------------------
+####-----------  分块配置  -----------
+####---------------------------------
+
+
+
+
+####---------------------------------
+####--------- 数据库密码加密  ---------
+####---------------------------------
+# 加密口令(盐值)
+jasypt:
+  encryptor:
+    password: k7t87J0cxSMdxZC8Ykzjjg==
+
+
+
+####---------------------------------
+####------------ 日志配置  -----------
+####---------------------------------
+logging:
+  level:
+    org:
+      springframework:
+        web: debug
+  config: classpath:logback-spring.xml
+
+
+
+####---------------------------------
+####---------- 公用核心配置 -----------
+####---------------------------------
+spring:
+  profiles:
+    #当前环境
+    active: dev
+  # 前端页面模板
+  velocity:
+    charset: UTF-8
+    properties:
+      input:
+        encoding: UTF-8
+      output:
+        encoding: UTF-8
+    resourceLoaderPath: classpath:/templates/
+    suffix: .html
+    toolbox-config-location: /WEB-INF/toolbox.xml

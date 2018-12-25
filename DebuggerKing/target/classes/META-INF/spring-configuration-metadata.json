@@ -1,0 +1,22 @@
+{
+  "hints": [],
+  "groups": [
+    {
+      "sourceType": "com.xyz.caofancpu.init.KafkaProperty",
+      "name": "kafka",
+      "type": "com.xyz.caofancpu.init.KafkaProperty"
+    }
+  ],
+  "properties": [
+    {
+      "sourceType": "com.xyz.caofancpu.init.KafkaProperty",
+      "name": "kafka.topic-map",
+      "type": "java.util.Map<java.lang.String,java.lang.String>"
+    },
+    {
+      "sourceType": "com.xyz.caofancpu.init.KafkaProperty",
+      "name": "kafka.topics",
+      "type": "java.lang.String[]"
+    }
+  ]
+}
