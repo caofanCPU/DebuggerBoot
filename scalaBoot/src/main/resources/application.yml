@@ -5,13 +5,13 @@
 
 
 
-
 ####---------------------------------
 ####--------- 数据库密码加密  ---------
 ####---------------------------------
-#jasypt:
-#    encryptor:
-#        password: e!JdljyJ^e4I5oU
+# 加密口令(盐值)
+jasypt:
+  encryptor:
+    password: k7t87J0cxSMdxZC8Ykzjjg==
 
 
 
@@ -33,7 +33,7 @@ logging:
 spring:
   profiles:
     #当前环境
-    active: local
+    active: dev
   # 前端页面模板
   velocity:
     charset: UTF-8

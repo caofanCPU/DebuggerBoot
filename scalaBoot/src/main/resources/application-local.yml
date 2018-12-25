@@ -42,6 +42,5 @@ spring:
     url: jdbc:mysql://127.0.0.1:3306/debuggerking?useUnicode=true&characterEncoding=UTF-8&zeroDateTimeBehavior=convertToNull
     # 登录名
     username: root
-    # 密码
-    #        password: ENC(WVYWDdudrjS+U6PaDhrZWw==)
-    password: root
+    # 加密后的密码
+    password: ENC(KX8h5m7elpf72DmySlXGaA==)

@@ -1,4 +1,4 @@
-package com.xyz.caofancpu.baseSupport;
+package com.xyz.caofancpu.util;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
