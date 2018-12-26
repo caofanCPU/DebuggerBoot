@@ -7,6 +7,7 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import java.io.Serializable;
+import java.util.Date;
 
 /**
  * 省市区
@@ -58,5 +59,15 @@ public class UcSysDistrict implements Serializable {
      * 排序
      */
     private int sort;
+    
+    /**
+     * 创建时间
+     */
+    private Date createTime;
+    
+    /**
+     * 更新时间
+     */
+    private Date updateTime;
     
 }

@@ -5,45 +5,47 @@ import org.apache.ibatis.annotations.Mapper;
 
 import java.util.List;
 
-
-/**
- * 省市区Mapper
- *
- * @author caofanCPU
- */
 @Mapper
 public interface UcSysDistrictMapper {
-    
+
     /**
-     * 新增记录
-     *
+     * 添加记录
+     * 
      * @param ucSysDistrict
-     * @return
+     * @return 
      */
-    int insert(UcSysDistrict ucSysDistrict);
-    
+    int add(UcSysDistrict ucSysDistrict);
+
     /**
-     * 批量新增记录
-     *
+     * 批量插入
+     * 
      * @param ucSysDistrictList
-     * @return
+     * @return 
      */
-    int insertList(List<UcSysDistrict> ucSysDistrictList);
-    
+    int batchAdd(List<UcSysDistrict> ucSysDistrictList);
+
     /**
-     * 查询
-     *
+     * 查询列表
+     * 
      * @param ucSysDistrict
-     * @return
+     * @return 
      */
-    List<UcSysDistrict> select(UcSysDistrict ucSysDistrict);
-    
+    List<UcSysDistrict> queryList(UcSysDistrict ucSysDistrict);
+
     /**
      * 更新记录
-     *
+     * 
      * @param ucSysDistrict
-     * @return
+     * @return 
      */
     int update(UcSysDistrict ucSysDistrict);
     
+    /**
+     * [WARN]: 主键id物理删除
+     *
+     * @param id
+     * @return
+     */
+    int deleteById(int id);
+
 }

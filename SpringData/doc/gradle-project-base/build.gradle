@@ -1,0 +1,47 @@
+apply plugin: 'java'
+apply plugin: 'maven'
+
+group = 'com.xyz.caofancpu'
+version = '1.0.0-SNAPSHOT'
+
+description = """SpringData"""
+
+sourceCompatibility = 1.8
+targetCompatibility = 1.8
+tasks.withType(JavaCompile) {
+	options.encoding = 'UTF-8'
+}
+
+
+
+repositories {
+        
+     maven { url "http://maven.aliyun.com/nexus/content/groups/public/" }
+     maven { url "http://repo.maven.apache.org/maven2" }
+}
+dependencies {
+    compile group: 'com.xyz.caofanCPU.util', name: 'DebuggerKingUtil', version:'1.0.0-SNAPSHOT'
+    compile group: 'org.springframework.boot', name: 'spring-boot-starter-web', version:'1.5.18.RELEASE'
+    compile group: 'org.springframework.boot', name: 'spring-boot-starter-data-rest', version:'1.5.18.RELEASE'
+    compile group: 'org.springframework.boot', name: 'spring-boot-starter-data-jpa', version:'1.5.18.RELEASE'
+    compile group: 'org.mybatis.spring.boot', name: 'mybatis-spring-boot-starter', version:'1.3.2'
+    compile group: 'org.springframework.kafka', name: 'spring-kafka', version:'1.3.8.RELEASE'
+    compile group: 'mysql', name: 'mysql-connector-java', version:'5.1.46'
+    compile group: 'org.projectlombok', name: 'lombok', version:'1.16.22'
+    compile group: 'com.github.ulisesbocchio', name: 'jasypt-spring-boot-starter', version:'1.18'
+    compile group: 'org.apache.commons', name: 'commons-lang3', version:'3.3.2'
+    compile group: 'commons-collections', name: 'commons-collections', version:'3.2.1'
+    compile group: 'org.springframework.data', name: 'spring-data-rest-hal-browser', version:'2.6.17.RELEASE'
+    compile group: 'com.alibaba', name: 'druid', version:'1.0.14'
+    compile group: 'com.github.pagehelper', name: 'pagehelper-spring-boot-starter', version:'1.2.4'
+    compile group: 'org.mybatis', name: 'mybatis', version:'3.4.6'
+    compile group: 'com.alibaba', name: 'fastjson', version:'1.2.47'
+    compile(group: 'commons-beanutils', name: 'commons-beanutils', version:'1.9.3') {
+exclude(module: 'commons-logging')
+    }
+    compile group: 'org.springframework.boot', name: 'spring-boot-configuration-processor', version:'1.5.18.RELEASE'
+    testCompile(group: 'org.springframework.boot', name: 'spring-boot-starter-test', version:'1.5.18.RELEASE') {
+exclude(module: 'commons-logging')
+    }
+    testCompile group: 'org.springframework.kafka', name: 'spring-kafka-test', version:'1.3.8.RELEASE'
+}

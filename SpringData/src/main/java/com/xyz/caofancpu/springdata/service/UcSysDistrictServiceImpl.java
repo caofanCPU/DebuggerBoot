@@ -7,53 +7,60 @@ import org.springframework.stereotype.Service;
 import javax.annotation.Resource;
 import java.util.List;
 
-/**
- * @author caofanCPU
- */
-@Service
+@Service("ucSysDistrictService")
 public class UcSysDistrictServiceImpl {
-    
+
     @Resource
     private UcSysDistrictMapper ucSysDistrictMapper;
-    
+
     /**
      * 添加记录
-     *
+     * 
      * @param ucSysDistrict
-     * @return
+     * @return 
      */
-    public int insert(UcSysDistrict ucSysDistrict) {
-        return ucSysDistrictMapper.insert(ucSysDistrict);
+    public int add(UcSysDistrict ucSysDistrict) {
+        return ucSysDistrictMapper.add(ucSysDistrict);
     }
-    
+
     /**
-     * 批量添加记录
-     *
+     * 批量插入
+     * 
      * @param ucSysDistrictList
-     * @return
+     * @return 
      */
-    public int insertList(List<UcSysDistrict> ucSysDistrictList) {
-        return ucSysDistrictMapper.insertList(ucSysDistrictList);
+    public int batchAdd(List<UcSysDistrict> ucSysDistrictList) {
+        return ucSysDistrictMapper.batchAdd(ucSysDistrictList);
+    }
+
+    /**
+     * 查询列表
+     * 
+     * @param ucSysDistrict
+     * @return 
+     */
+    public List<UcSysDistrict> queryList(UcSysDistrict ucSysDistrict) {
+        return ucSysDistrictMapper.queryList(ucSysDistrict);
     }
     
     /**
-     * 查询
-     *
+     * 更新记录
+     * 
      * @param ucSysDistrict
-     * @return
-     */
-    public List<UcSysDistrict> select(UcSysDistrict ucSysDistrict) {
-        return ucSysDistrictMapper.select(ucSysDistrict);
-    }
-    
-    /**
-     * 更新
-     *
-     * @param ucSysDistrict
-     * @return
+     * @return 
      */
     public int update(UcSysDistrict ucSysDistrict) {
         return ucSysDistrictMapper.update(ucSysDistrict);
     }
     
+    /**
+     * [WARN]: 主键id物理删除
+     *
+     * @param id
+     * @return
+     */
+    public int deleteById(int id) {
+        return ucSysDistrictMapper.deleteById(id);
+    }
+
 }
