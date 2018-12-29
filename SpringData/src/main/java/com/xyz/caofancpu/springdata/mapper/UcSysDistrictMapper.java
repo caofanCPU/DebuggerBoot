@@ -39,12 +39,12 @@ public interface UcSysDistrictMapper {
      * @return 
      */
     int update(UcSysDistrict ucSysDistrict);
-    
+
     /**
      * [WARN]: 主键id物理删除
-     *
+     * 
      * @param id
-     * @return
+     * @return 
      */
     int deleteById(int id);
 

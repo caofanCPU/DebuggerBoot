@@ -8,7 +8,7 @@ import javax.annotation.Resource;
 import java.util.List;
 
 @Service("ucSysDistrictService")
-public class UcSysDistrictServiceImpl {
+public class UcSysDistrictService {
 
     @Resource
     private UcSysDistrictMapper ucSysDistrictMapper;
@@ -42,7 +42,7 @@ public class UcSysDistrictServiceImpl {
     public List<UcSysDistrict> queryList(UcSysDistrict ucSysDistrict) {
         return ucSysDistrictMapper.queryList(ucSysDistrict);
     }
-    
+
     /**
      * 更新记录
      * 
@@ -52,12 +52,12 @@ public class UcSysDistrictServiceImpl {
     public int update(UcSysDistrict ucSysDistrict) {
         return ucSysDistrictMapper.update(ucSysDistrict);
     }
-    
+
     /**
      * [WARN]: 主键id物理删除
-     *
+     * 
      * @param id
-     * @return
+     * @return 
      */
     public int deleteById(int id) {
         return ucSysDistrictMapper.deleteById(id);

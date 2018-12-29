@@ -1,5 +1,5 @@
 -- -----------------------------------------------------------
--- auto [CREATE] Generated on 2018-12-26 21:11:32 
+-- auto [CREATE] Generated on 2018-12-29 18:13:27 
 -- -----------------------------------------------------------
 -- DROP TABLE IF EXISTS `uc_sys_district`; 
 CREATE TABLE uc_sys_district(
