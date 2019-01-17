@@ -1,9 +1,12 @@
 package com.xyz.caofancpu.interceptor;
 
+import com.alibaba.fastjson.JSONObject;
 import com.xyz.caofancpu.annotion.Check;
+import com.xyz.caofancpu.util.dataOperateUtils.JSONUtil;
 import com.xyz.caofancpu.util.dataOperateUtils.ReflectionUtil;
 import com.xyz.caofancpu.util.result.CustomerErrorInfo;
 import com.xyz.caofancpu.util.result.GlobalErrorInfoException;
+import com.xyz.caofancpu.util.result.ResultBody;
 import org.apache.commons.lang3.StringUtils;
 import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.annotation.Around;
@@ -11,6 +14,7 @@ import org.aspectj.lang.annotation.Aspect;
 import org.aspectj.lang.reflect.MethodSignature;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.core.annotation.Order;
 import org.springframework.stereotype.Component;
 import org.springframework.util.CollectionUtils;
 
@@ -21,9 +25,10 @@ import java.util.regex.Pattern;
 
 @Aspect
 @Component
+@Order(2)
 public class CheckParamAspect {
     
-    private static final Logger LOG = LoggerFactory.getLogger(CheckParamAspect.class);
+    private static final Logger logger = LoggerFactory.getLogger(CheckParamAspect.class);
     
     // -====================== 常量 =========================
     
@@ -249,6 +254,13 @@ public class CheckParamAspect {
         // 参数校验
         String msg = doCheck(point);
         if (StringUtils.isNotEmpty(msg)) {
+            // 处理完请求，返回内容
+            StringBuilder sb = new StringBuilder();
+            sb.append("\n[后台响应结果]:\n"
+                    + "响应耗时[0ms]" + "\n"
+                    + "响应数据结果:\n"
+                    + JSONUtil.formatStandardJSON(JSONObject.toJSONString(new ResultBody().fail(msg))));
+            logger.info(sb.toString());
             // 这里可以返回自己封装的返回类
             CustomerErrorInfo errInfo = new CustomerErrorInfo("501", msg);
             throw new GlobalErrorInfoException(errInfo);
@@ -270,7 +282,7 @@ public class CheckParamAspect {
         // 获取方法
         Method method = getMethod(point);
         // 默认的错误信息
-        String methodInfo = StringUtils.isEmpty(method.getName()) ? "" : " while calling " + method.getName();
+        String methodInfo = StringUtils.isEmpty(method.getName()) ? "" : " 调用方法 " + method.getName();
         String msg = "";
         if (isCheck(method, arguments)) {
             Check annotation = method.getAnnotation(Check.class);
@@ -278,7 +290,7 @@ public class CheckParamAspect {
             // 只支持对第一个参数进行校验
             Object vo = arguments[0];
             if (vo == null) {
-                msg = "param can not be null";
+                msg = "入参不能为空!";
             } else {
                 for (String field : fields) {
                     if (StringUtils.isNotEmpty(msg)) {
@@ -308,7 +320,7 @@ public class CheckParamAspect {
                         .getDeclaredMethod(joinPoint.getSignature().getName(),
                                 method.getParameterTypes());
             } catch (SecurityException | NoSuchMethodException e) {
-                LOG.error("反射获取方法失败，{}" + e.getMessage());
+                logger.error("反射获取方法失败，{}" + e.getMessage());
             }
         }
         return method;

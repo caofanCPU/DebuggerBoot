@@ -9,6 +9,7 @@ import javax.persistence.Id;
 import java.io.Serializable;
 import java.util.Date;
 
+
 /**
  * 省市区
  * @author caofanCPU
