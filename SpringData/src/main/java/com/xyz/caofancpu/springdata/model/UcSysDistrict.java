@@ -1,6 +1,7 @@
 package com.xyz.caofancpu.springdata.model;
 
 import lombok.*;
+import lombok.experimental.Accessors;
 
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -20,6 +21,7 @@ import java.util.Date;
 @NoArgsConstructor
 @RequiredArgsConstructor
 @AllArgsConstructor(access = AccessLevel.PROTECTED)
+@Accessors(chain = true)
 public class UcSysDistrict implements Serializable {
     /**
      * 区域ID
