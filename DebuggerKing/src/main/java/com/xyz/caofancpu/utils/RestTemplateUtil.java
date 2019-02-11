@@ -132,7 +132,7 @@ public class RestTemplateUtil {
         final String paramSymbol = "?";
         final String connectSymbol = "&";
         final String equalSymbol = "=";
-        if (StringUtils.isEmpty(url) || paramsMap.isEmpty()) {
+        if (StringUtils.isBlank(url) || paramsMap.isEmpty()) {
             return url;
         }
         StringBuilder sb = new StringBuilder(url);

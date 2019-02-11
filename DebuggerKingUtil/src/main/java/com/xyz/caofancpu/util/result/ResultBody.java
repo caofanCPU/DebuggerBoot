@@ -36,7 +36,13 @@ public class ResultBody {
      */
     public ResultBody fail(String errorMsg) {
         this.code = GlobalErrorInfoEnum.GLOBAL_MSG.getCode();
-        this.msg = StringUtils.isEmpty(errorMsg) ? GlobalErrorInfoEnum.GLOBAL_MSG.getMsg() : errorMsg;
+        this.msg = StringUtils.isBlank(errorMsg) ? GlobalErrorInfoEnum.GLOBAL_MSG.getMsg() : errorMsg;
+        return this;
+    }
+    
+    public ResultBody fail(String code, String errorMsg) {
+        this.code = StringUtils.isBlank(code) ? GlobalErrorInfoEnum.GLOBAL_MSG.getCode() : code;
+        this.msg = StringUtils.isBlank(errorMsg) ? GlobalErrorInfoEnum.GLOBAL_MSG.getMsg() : errorMsg;
         return this;
     }
     

@@ -101,7 +101,7 @@ public class CommonOperateServiceImpl implements CommonOperateService {
     @Override
     public String getAttachmentAccessUrl(String attachmentName)
             throws GlobalErrorInfoException {
-        if (StringUtils.isEmpty(attachmentName)) {
+        if (StringUtils.isBlank(attachmentName)) {
             throw new GlobalErrorInfoException(new CustomerErrorInfo("文件名参数错误"));
         }
         Map<String, Object> map = new HashMap<String, Object>(4, 0.5f) {

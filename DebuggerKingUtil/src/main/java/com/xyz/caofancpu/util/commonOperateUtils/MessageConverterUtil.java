@@ -25,7 +25,7 @@ public class MessageConverterUtil {
      * @return
      */
     public static <T> T convertJsonToMessage(String jsonString, Class<T> clazz) {
-        if (StringUtils.isEmpty(jsonString) || Objects.isNull(clazz)) {
+        if (StringUtils.isBlank(jsonString) || Objects.isNull(clazz)) {
             throw new IllegalArgumentException("非法的入参");
         }
         return JSONObject.parseObject(jsonString, clazz);

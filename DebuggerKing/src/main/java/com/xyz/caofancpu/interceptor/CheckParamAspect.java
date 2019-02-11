@@ -282,7 +282,7 @@ public class CheckParamAspect {
         // 获取方法
         Method method = getMethod(point);
         // 默认的错误信息
-        String methodInfo = StringUtils.isEmpty(method.getName()) ? "" : " 调用方法 " + method.getName();
+        String methodInfo = StringUtils.isBlank(method.getName()) ? "" : " 调用方法 " + method.getName();
         String msg = "";
         if (isCheck(method, arguments)) {
             Check annotation = method.getAnnotation(Check.class);
@@ -388,7 +388,7 @@ public class CheckParamAspect {
         fieldInfo.operator = fieldInfo.optEnum.value;
         // 处理错误信息
         String defaultMsg = fieldInfo.field + " must " + fieldInfo.operator + " " + fieldInfo.operatorNum + methodInfo;
-        fieldInfo.innerMsg = StringUtils.isEmpty(innerMsg) ? defaultMsg : innerMsg;
+        fieldInfo.innerMsg = StringUtils.isBlank(innerMsg) ? defaultMsg : innerMsg;
         return fieldInfo;
     }
     
