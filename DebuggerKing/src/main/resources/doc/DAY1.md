@@ -1,0 +1,235 @@
+时间因素
+
+可执行计划
+
+可调节串联顺序的任务
+
+可调整为并联的任务集
+
+需求决定论
+
+整理全貌
+
+步骤一: |据需求修改
+
+步骤二: |划重点, 划需求
+
+---
+
+划重点后
+
+分类做笔记
+
+---
+
+SpringAOP, 静态代理-动态代理(JDK动态代理, CGLIB动态代理)
+
+线程的状态, 线程与任务, 线程池(拒绝策略)
+
+主线程最后结束的方式 
+
+- CountDownLatch
+
+- CyclicBarrier
+
+- Semaphore
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+---
+
+```
+public List<Map<String, Object>> batchCreateContract2(Integer memberId,
+                                                          Integer areaId,
+                                                          String phone,
+                                                          List<ContractTemplate> templateList,
+                                                          Long orderId,
+                                                          Integer financialProductId)
+            throws GlobalErrorInfoException, ExecutionException, InterruptedException {
+        if (CollectionUtils.isEmpty(templateList)) {
+            throw new GlobalErrorInfoException("模板ID参数错误![BSR]");
+        }
+//        Map<String, Object> loanUseMap = loadUseInfoByOrderId(orderId);
+        long start = System.currentTimeMillis();
+        Map<Integer, Future<?>> map = new HashMap<>();
+        Order order = getOrderById(orderId);
+
+        Map<String, Object> loanUseMap = new ConcurrentHashMap<String,Object>(){
+            {
+                // 订单实收金额 -> 借据金额
+                put("receiptsAmount", order.getReceiptsAmount());
+                put("merchantId", order.getMerchantId());
+                put("merchantName", order.getMerchantName());
+            }
+        };
+
+
+
+        // 设置门店银行卡号
+        Integer merchantId = order.getMerchantId();
+//        MemberVO memberVo = memberMSService.getMemberById(merchantId);
+        addToPool(map,1,this,"getMemberById",merchantId,new Class[]{Integer.class});
+
+        addToPool(map,2,this,"getMemberById",order.getMemberId(),new Class[]{Integer.class});
+
+
+
+//        Map<String, Object> loanCreditMap = loadCreditInfoByMemberId(memberId);
+        Map<String,Object> loanCreditMap = null;
+        addToPool(map,3,this,"loadCreditInfoByMemberId",memberId,new Class[]{Integer.class});
+//        Map<String, Object> bankMap = loadBankerInfo(areaId, financialProductId);
+        Map<String,Object> bankMap = new HashMap<>();
+        addToPool(map,4,this,"loadBankArea",areaId,new Class[]{Integer.class});
+//        Map<String, Object> bankConfigMap = fundMSService.loadEnterpriseByArea(areaId);
+        addToPool(map,5,this,"loadMemberRate",memberId,new Class[]{Integer.class});
+
+        // TODO: 优化, 查询会员应优化为1次
+//        MemberVO memberVo = memberMSService.getMemberById(memberId);
+        // TODO: 借据时间不能超过借款合同截止日期, 封装为通用方法
+
+        MemberVO member = null;
+
+        // 4.获取所有模板的属性集合
+        Set<Long> templateIdSet = new HashSet<>(4, 0.75f);
+        templateList.stream()
+                .filter(Objects::nonNull)
+                .forEach(item -> templateIdSet.add(Long.parseLong(item.getId().toString())));
+//        List<ContractTemplateAttr> attrList = batchLoadContractTemplateAttrList(StringUtils.join(templateIdSet, ","));
+        List<ContractTemplateAttr> attrList = null;
+        addToPool(map,6,this,"batchLoadContractTemplateAttrList",StringUtils.join(templateIdSet, ","),String.class);
+
+//        CountDownLatch countDownLatch = new CountDownLatch(6);
+
+        Iterator<Map.Entry<Integer,Future<?>>> iterator = null;
+        while (!map.isEmpty()) {
+            iterator = map.entrySet().iterator();
+            while(iterator.hasNext()) {
+                Map.Entry<Integer, Future<?>> entry = iterator.next();
+                Integer key = entry.getKey();
+                Future<?> future = entry.getValue();
+                if (future.isDone()) {
+                    iterator.remove();
+                    switch (key) {
+                        case 1:
+                            MemberVO memberVO = (MemberVO) future.get();
+                            System.out.println(memberVO);
+                            loanUseMap.put("merchantBankCardNo", memberVO.getBankCardNo());
+                            break;
+
+                        case 2:
+                            member = (MemberVO) future.get();
+                            loanUseMap.put("memberName", member.getName());
+                            loanUseMap.put("memberMobile", member.getMobile());
+                            loanUseMap.put("memberCardId", member.getIdCard());
+                            loanUseMap.put("memberAddress", member.getAddress());
+                            loanUseMap.put("memberBankCardNo", member.getBankCardNo());
+
+                            // TODO: 借据日期不能超过借款合同截至日期
+                            // 设置借据金额信息
+                            loanUseMap.put("receiptsAmountCN", NumberUtil.convertToCN(BeanConvertUtil.convertToBigDecimal(loanUseMap.get("receiptsAmount"), 2, BigDecimal.ROUND_HALF_UP)));
+                            loanUseMap.put("loanUseStartTime", DateUtil.date2StrForSimpleCN(new Date()));
+                            loanUseMap.put("loanUseOverTime", DateUtil.date2StrForSimpleCN(DateUtil.getOverTime(new Date(), 12, -1)));
+                            break;
+                        case 3:
+                            loanCreditMap = (Map<String, Object>) future.get();
+                            break;
+
+                        case 4:
+                        case 5:
+                            bankMap.putAll((Map<String, Object>) future.get());
+
+                            break;
+                        case 6:
+                            attrList = (List<ContractTemplateAttr>) future.get();
+
+                            break;
+                    }
+                }
+            }
+        }
+        long end = System.currentTimeMillis();
+        System.out.println("XXXX:耗时:"+(end-start));
+//        countDownLatch.await();
+        // 3.组装合同数据
+        Map<String, Object> contractContentMap = loadContractContent(loanUseMap, loanCreditMap, bankMap);
+
+        final MemberVO memberVo = member;
+        final List<ContractTemplateAttr> finalAttrList = attrList;
+        // 5.创建projectCode
+        String projectCode = generateProjectCode();
+        // 6.准备合同数据
+        List<Contract> contractList = new ArrayList<>(4);
+        templateList.stream()
+                .filter(Objects::nonNull)
+                .forEach(template -> {
+                    Contract contract = loadContractByTemplate(template, projectCode, null);
+                    fillMemberInfo(memberVo, contract);
+
+                    if (!checkContractTemplateSigner(template, 2)) {
+                        // 出现异常, 结束本次循环, 流操作继续
+                        logger.error("模板签署方不是2个, 合同中心模板ID: {}", template.getId());
+                        return;
+                    }
+
+                    fillMemberSignInfo(memberVo, contract, template.getTemplateSignList().get(0));
+                    fillBankerSignInfo(bankMap, contract, template.getTemplateSignList().get(1));
+                    fillContractAttrValue(contract, contractContentMap, finalAttrList);
+                    contractList.add(contract);
+                });
+        if (CollectionUtils.isEmpty(contractList) || contractList.size() != templateIdSet.size()) {
+            logger.error("准备合同数据失败, 原因: 合同模板数量[{}] != 合同数量[{}]", templateIdSet.size(), contractList.size());
+            throw new GlobalErrorInfoException("创建合同失败, 请重试![BSR]");
+        }
+        // 6.创建合同
+        start = System.currentTimeMillis();
+        String msErrorMsg = "创建合同失败, 请重试![MS]";
+        ResultBody resultBody = restTemplateUtil.postListBody(msUrlConfigValueService.contractCenterUrl + "/contract/createBatchContract", contractList, msErrorMsg);
+        List<Map<String, Object>> resultList = JSONUtil.parseList(resultBody.getData());
+        if (CollectionUtils.isEmpty(resultList) || resultList.size() != templateIdSet.size()) {
+            logger.error("微服务创建合同失败, 原因: 应创建合同数量[{}] != 实际返回合同数量[{}]", templateIdSet.size(), resultList.size());
+            throw new GlobalErrorInfoException("创建合同失败, 请重试![BSR]");
+        }
+        end = System.currentTimeMillis();
+        System.out.println("UUUUU耗时："+(end-start));
+        return new ArrayList<>();
+    }
+
+
+    private void addToPool(Map<Integer, Future<?>> map, Integer index, Object service, String method, Object params, Class<?>... paramClass) {
+        RemoteServiceHelper remoteService = new RemoteServiceHelper(service, method, params, paramClass);
+        RemoteRequestTask a = new RemoteRequestTask(remoteService);
+        map.put(index, threadPoolTaskExecutor.submit(a));
+    }
+```
