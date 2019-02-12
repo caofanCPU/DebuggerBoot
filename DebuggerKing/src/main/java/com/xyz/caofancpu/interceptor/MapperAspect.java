@@ -20,7 +20,7 @@ import java.lang.reflect.Method;
 @Component
 public class MapperAspect {
     
-    @Around(value = "execution(* com.ovfintech..*.mapper..*Mapper.*(..))")
+    @Around(value = "execution(* com.xyz.*.mapper..*Mapper.*(..))")
     public Object aroundMethod(ProceedingJoinPoint pjp)
             throws Throwable {
         Object result;

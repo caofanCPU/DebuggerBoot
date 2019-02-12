@@ -36,7 +36,7 @@ public class WebLogAspect {
     /**
      * 日志切面
      */
-    @Pointcut("execution(public * com.ovfintech..*.controller..*Controller.*(..))")
+    @Pointcut("execution(public * com.xyz..*.controller..*Controller.*(..))")
     public void webLog() {
         // do something
     }

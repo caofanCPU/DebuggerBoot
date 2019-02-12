@@ -20,7 +20,7 @@ import java.lang.reflect.Method;
 @Component
 public class ServiceAspect {
     
-    @Around(value = "execution(* com.ovfintech..*.service.imp..*ServiceImpl.*(..))")
+    @Around(value = "execution(* com.xyz..*.service.imp..*ServiceImpl.*(..))")
     public Object aroundMethod(ProceedingJoinPoint pjp)
             throws Throwable {
         Object result;
