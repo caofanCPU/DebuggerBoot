@@ -79,9 +79,13 @@ public class WebLogInterceptor {
         return result;
     }
     
-    @AfterReturning("webLog()")
-    public void doAfterReturning(JoinPoint joinPoint) {
-        // do something
+    @AfterReturning(value = "webLog()", returning = "returnValue")
+    public void doAfterReturning(JoinPoint joinPoint, Object returnValue) {
+        StringBuilder sb = new StringBuilder();
+        sb.append("\nlalallaallalalallalalalallalalallalalal\n[后台响应结果]:\n"
+                + "响应数据结果:\n"
+                + JSONUtil.formatStandardJSON(JSONObject.toJSONString(returnValue)));
+        logger.info(sb.toString());
     }
     
     /**
