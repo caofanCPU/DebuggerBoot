@@ -2,39 +2,21 @@
 
 **框架源码准则: 一个*真正干活*的函数总是*以do开头*, 给予干活错觉的函数喜欢以get/create/load开头**
 
+加载过程图
+
+
+
+![](https://img-blog.csdn.net/20171212142946140?watermark/2/text/aHR0cDovL2Jsb2cuY3Nkbi5uZXQvamFja193YW5nMDAx/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70/gravity/Center)
+
+
+
+详细流程可参考[SpringBoot启动流程图](https://www.processon.com/view/link/59812124e4b0de2518b32b6e)
 
 
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+![](https://github.com/caofanCPU/PassedCode/blob/master/MATLAB/Chromosome/ResultPicture/chromosome%20(1).jpg)
 
 
 
@@ -70,8 +52,6 @@ Spring中各个MVC组件, 例如: 申明为@Controller/@Service/@Component/@Mapp
 
 - 最佳实现, 组件不要使用存在写操作的公有变量, 考虑其他方法予以解决
 
-
-
 ---
 
 ### ThreadLocal及ThreadLocalMap
@@ -94,6 +74,16 @@ Spring中各个MVC组件, 例如: 申明为@Controller/@Service/@Component/@Mapp
 
   set/get方法核心, 通过线程对象Thread获取ThreadLocalMap, 判断ThreadLocalMap是否为空, 为空则初始化创建一个ThreadLocalMap, 非空则到ThreadLocalMap的Entry中查找, 查找的key为ThreadLocal对象
 
+- 另外,Spring为保证一个事物的所有方法拿到的是同一个数据库连接,将首次从数据库连接池获得的连接封装到当前线程的ThreadLocalMap中,结构: `ThreadLocalMap<Map<Object, Object>>`, **该Map中key是根据数据源DataSource生成, 而calue则是DataSource获取到的连接封装的ConnectionHolrder**
+
+  最佳实践:
+
+  尽可能保证一个事物只在一个线程中; 
+
+  或者主线程开启的子线程不涉及事务处理;
+
+  如果子线程非要涉及事务, 则子线程调用的方法配置事务不能与主线程的调用方法在同一个类里面.原因就是Spring的事务是基于AOP的, 两个方法在同一个类中,父方法走的是代理增强类->调用父方法原始类->子方法,子方法根本未进行事务增强
+
 - ThreadLocalMap内存泄露原因
 
   在一个线程中, 当线程还未结束(Y一直运, ThreadRef未出栈) 部分ThreadLocal对象在Thread的运行栈中出栈了, 因为已经执行过了,而
@@ -109,102 +99,6 @@ Spring中各个MVC组件, 例如: 申明为@Controller/@Service/@Component/@Mapp
   ![](https://images2015.cnblogs.com/blog/1156565/201707/1156565-20170724121152430-1111069410.png)
 
 - 避免内存泄漏的方法
-
-  
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 
