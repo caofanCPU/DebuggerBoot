@@ -8,7 +8,7 @@ logging:
 
 #服务部署端口
 server:
-  port: 8952
+  port: 8099
 #Spring配置
 spring:
   thymeleaf:
