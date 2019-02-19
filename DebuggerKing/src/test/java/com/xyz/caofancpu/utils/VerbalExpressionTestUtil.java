@@ -29,5 +29,4 @@ public class VerbalExpressionTestUtil {
         Matcher matcher = pattern.matcher(context);
         return matcher.replaceAll(target);
     }
-    
 }
