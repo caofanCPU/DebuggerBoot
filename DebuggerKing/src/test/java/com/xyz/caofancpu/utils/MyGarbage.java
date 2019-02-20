@@ -10,17 +10,13 @@ package com.xyz.caofancpu.utils;
 public class MyGarbage {
     
     public static void main(String[] args) {
-        int defaultCap = 10;
-        int cap = defaultCap;
-        for (int i = 1; i < 5; i++) {
-            cap += (cap >> 1);
-            out(cap + "\n");
-        }
+        int n = 16;
+        n = n - (n >>> 2);
+        out(n + "");
     }
     
     public static void out(String text) {
         System.out.println(text);
-        
     }
     
 }
