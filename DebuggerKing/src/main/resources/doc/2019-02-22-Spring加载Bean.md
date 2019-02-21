@@ -1,4 +1,20 @@
-### Spring Load Bean
+---
+
+layout:     post        
+title:      Spring加载Bean
+subtitle:           
+date:       1314-02-02    
+author:     帝八哥  
+header-img: img/2019WeAreComing.jpg    
+catalog:    true        
+category:   java        
+tags:       
+- Git
+- Blog   
+
+---
+
+# Spring加载Bean
 
 **框架源码准则: 一个*真正干活*的函数总是*以do开头*, 给予干活错觉的函数喜欢以get/create/load开头**
 
@@ -11,20 +27,6 @@
 
 
 详细流程可参考[SpringBoot启动流程图](https://www.processon.com/view/link/59812124e4b0de2518b32b6e)
-
-
-
-
-
-![](https://github.com/caofanCPU/PassedCode/blob/master/MATLAB/Chromosome/ResultPicture/chromosome%20(1).jpg)
-
-
-
-
-
-
-
-
 
 
 
@@ -99,16 +101,6 @@ Spring中各个MVC组件, 例如: 申明为@Controller/@Service/@Component/@Mapp
   ![](https://images2015.cnblogs.com/blog/1156565/201707/1156565-20170724121152430-1111069410.png)
 
 - 避免内存泄漏的方法
-
-
-
-
-
-
-
-
-
-
 
 
 

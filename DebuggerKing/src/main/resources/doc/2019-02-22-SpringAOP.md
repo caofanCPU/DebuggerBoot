@@ -1,4 +1,20 @@
-### Spring AOP 分析
+---
+
+layout:     post        
+title:      Spring-AOP分析(待补充)
+subtitle:           
+date:       1314-02-02    
+author:     帝八哥  
+header-img: img/2019WeAreComing.jpg    
+catalog:    true        
+category:   java        
+tags:       
+- Git
+- Blog   
+
+---
+
+### Spring-AOP分析(待补充)
 
 - AspectJ, 借助aspectjweaver.jar及动态字节码生成技术
 
@@ -44,11 +60,6 @@
 
   CGLIB动态代理: 代理类需要继承目标类, 不适用于目标类为final的情况, 使用动态字节码生成技术
 
----
-
-replacing [Root bean: class [null]; scope=; abstract=false; lazyInit=false; autowireMode=3; dependencyCheck=0; autowireCandidate=true; primary=false; factoryBeanName=restTemplateConfig; factoryMethodName=restTemplate; initMethodName=null; destroyMethodName=(inferred); defined in class path resource [com/xyz/caofancpu/config/RestTemplateConfig.class]] with [Root bean: class [null]; scope=; abstract=false; lazyInit=false; autowireMode=3; dependencyCheck=0; autowireCandidate=true; primary=false; factoryBeanName=debuggerKingApplication; factoryMethodName=restTemplate; initMethodName=null; destroyMethodName=(inferred); defined in com.xyz.caofancpu.DebuggerKingApplication]
-
----
 
 优秀代码:
 
