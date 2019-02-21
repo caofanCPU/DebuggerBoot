@@ -7,7 +7,7 @@ date:       1314-02-02
 author:     帝八哥
 header-img: img/2019WeAreComing.jpg    
 catalog:    true        
-category:   debugger        
+category:   home        
 tags:       
 - Git
 - Blog   
