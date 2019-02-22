@@ -1,6 +1,5 @@
 package com.xyz.caofancpu.utils;
 
-import java.util.Arrays;
 import java.util.Random;
 import java.util.Stack;
 
@@ -194,11 +193,6 @@ public class FFTSort {
         }
         originArray[start] = referredValue;
         return start;
-    }
-    
-    
-    public static void outArray(Object[] array) {
-        out(Arrays.toString(array));
     }
     
     public static void out(Object out) {
