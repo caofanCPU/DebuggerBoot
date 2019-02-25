@@ -4,47 +4,47 @@ import java.util.Random;
 import java.util.Stack;
 
 /**
- * FileName: FFTSort
+ * FileName: SortAlgorithmUtil
  * 快速排序
  *
  * @author: caofanCPU
  * @date: 2019/2/22 15:32
  */
 
-public class FFTSort {
+public class SortAlgorithmUtil {
     
     public static void main(String[] args) {
-        Integer[] originArray = getInitRandomArray(1000);
-        Integer[] originArrayCopy = new Integer[originArray.length];
-        System.arraycopy(originArray, 0, originArrayCopy, 0, originArray.length);
-        Integer[] originArrayCopy2 = new Integer[originArray.length];
-        System.arraycopy(originArray, 0, originArrayCopy2, 0, originArray.length);
-        Integer[] originArrayCopy3 = new Integer[originArray.length];
-        System.arraycopy(originArray, 0, originArrayCopy3, 0, originArray.length);
-        
+        Integer[] originArray = new Integer[]{1, 4, 3, 5, 2};
+//        Integer[] originArrayCopy = new Integer[originArray.length];
+//        System.arraycopy(originArray, 0, originArrayCopy, 0, originArray.length);
+//        Integer[] originArrayCopy2 = new Integer[originArray.length];
+//        System.arraycopy(originArray, 0, originArrayCopy2, 0, originArray.length);
+//        Integer[] originArrayCopy3 = new Integer[originArray.length];
+//        System.arraycopy(originArray, 0, originArrayCopy3, 0, originArray.length);
+    
         long startTime = System.currentTimeMillis();
         recursionFFTSort(originArray);
         long endTime = System.currentTimeMillis();
 //        outArray(originArray);
         out("递归快排消耗时间: [" + (endTime - startTime) + "ms]\n");
-        
-        startTime = System.currentTimeMillis();
-        nonRecursionFFTSort(originArrayCopy);
-        endTime = System.currentTimeMillis();
-//        outArray(originArrayCopy);
-        out("非递归快排消耗时间: [" + (endTime - startTime) + "ms]\n");
-        
-        startTime = System.currentTimeMillis();
-        mergerSort(originArrayCopy2);
-        endTime = System.currentTimeMillis();
-//        outArray(originArrayCopy2);
-        out("递归归并排序消耗时间: [" + (endTime - startTime) + "ms]\n");
-        
-        startTime = System.currentTimeMillis();
-        nonMergerSort(originArrayCopy3);
-        endTime = System.currentTimeMillis();
-//        outArray(originArrayCopy3);
-        out("非递归归并排序消耗时间: [" + (endTime - startTime) + "ms]\n");
+
+//        startTime = System.currentTimeMillis();
+//        nonRecursionFFTSort(originArrayCopy);
+//        endTime = System.currentTimeMillis();
+////        outArray(originArrayCopy);
+//        out("非递归快排消耗时间: [" + (endTime - startTime) + "ms]\n");
+//
+//        startTime = System.currentTimeMillis();
+//        mergerSort(originArrayCopy2);
+//        endTime = System.currentTimeMillis();
+////        outArray(originArrayCopy2);
+//        out("递归归并排序消耗时间: [" + (endTime - startTime) + "ms]\n");
+//
+//        startTime = System.currentTimeMillis();
+//        nonMergerSort(originArrayCopy3);
+//        endTime = System.currentTimeMillis();
+////        outArray(originArrayCopy3);
+//        out("非递归归并排序消耗时间: [" + (endTime - startTime) + "ms]\n");
     }
     
     /**
