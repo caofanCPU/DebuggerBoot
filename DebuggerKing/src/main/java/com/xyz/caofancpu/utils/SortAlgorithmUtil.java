@@ -1,5 +1,6 @@
 package com.xyz.caofancpu.utils;
 
+import java.util.Arrays;
 import java.util.Random;
 import java.util.Stack;
 
@@ -14,37 +15,38 @@ import java.util.Stack;
 public class SortAlgorithmUtil {
     
     public static void main(String[] args) {
-        Integer[] originArray = new Integer[]{1, 4, 3, 5, 2};
+//        Integer[] originArray = getInitRandomArray(1000000);
+        Integer[] originArray = new Integer[]{1, 4, 2, 3, 5};
 //        Integer[] originArrayCopy = new Integer[originArray.length];
 //        System.arraycopy(originArray, 0, originArrayCopy, 0, originArray.length);
 //        Integer[] originArrayCopy2 = new Integer[originArray.length];
 //        System.arraycopy(originArray, 0, originArrayCopy2, 0, originArray.length);
-//        Integer[] originArrayCopy3 = new Integer[originArray.length];
-//        System.arraycopy(originArray, 0, originArrayCopy3, 0, originArray.length);
-    
+        Integer[] originArrayCopy3 = new Integer[originArray.length];
+        System.arraycopy(originArray, 0, originArrayCopy3, 0, originArray.length);
+
         long startTime = System.currentTimeMillis();
-        recursionFFTSort(originArray);
+//        recursionFFTSort(originArray);
         long endTime = System.currentTimeMillis();
-//        outArray(originArray);
-        out("递归快排消耗时间: [" + (endTime - startTime) + "ms]\n");
+//        out(Arrays.toString(originArray));
+//        out("递归快排消耗时间: [" + (endTime - startTime) + "ms]\n");
 
 //        startTime = System.currentTimeMillis();
 //        nonRecursionFFTSort(originArrayCopy);
 //        endTime = System.currentTimeMillis();
-////        outArray(originArrayCopy);
+//        out(Arrays.toString(originArrayCopy));
 //        out("非递归快排消耗时间: [" + (endTime - startTime) + "ms]\n");
 //
 //        startTime = System.currentTimeMillis();
-//        mergerSort(originArrayCopy2);
+//        recursionMergerSort(originArrayCopy2);
 //        endTime = System.currentTimeMillis();
-////        outArray(originArrayCopy2);
+//        out(Arrays.toString(originArrayCopy2));
 //        out("递归归并排序消耗时间: [" + (endTime - startTime) + "ms]\n");
 //
-//        startTime = System.currentTimeMillis();
-//        nonMergerSort(originArrayCopy3);
-//        endTime = System.currentTimeMillis();
-////        outArray(originArrayCopy3);
-//        out("非递归归并排序消耗时间: [" + (endTime - startTime) + "ms]\n");
+        startTime = System.currentTimeMillis();
+        nonRecursionMergerSort(originArrayCopy3);
+        endTime = System.currentTimeMillis();
+        out(Arrays.toString(originArrayCopy3));
+        out("非递归归并排序消耗时间: [" + (endTime - startTime) + "ms]\n");
     }
     
     /**
@@ -110,35 +112,46 @@ public class SortAlgorithmUtil {
         }
     }
     
-    public static void mergerSort(Integer[] originArray) {
-        doMergerSort(originArray, 0, originArray.length - 1);
+    public static void recursionMergerSort(Integer[] originArray) {
+        doRecursionMergerSort(originArray, 0, originArray.length - 1);
     }
     
-    public static void doMergerSort(Integer[] originArray, int start, int end) {
+    public static void doRecursionMergerSort(Integer[] originArray, int start, int end) {
         if (start >= end) {
             return;
         }
         int midRoller = (start + end) / 2;
-        doMergerSort(originArray, start, midRoller);
-        doMergerSort(originArray, midRoller + 1, end);
+        doRecursionMergerSort(originArray, start, midRoller);
+        doRecursionMergerSort(originArray, midRoller + 1, end);
         doMerge(originArray, start, midRoller, end);
     }
     
-    public static void nonMergerSort(Integer[] originArray) {
-        doNonMergerSort(originArray, 0, originArray.length - 1);
+    public static void nonRecursionMergerSort(Integer[] originArray) {
+        doNonRecursionMergerSort(originArray, 0, originArray.length - 1);
     }
     
-    public static void doNonMergerSort(Integer[] originArray, int start, int end) {
+    public static void doNonRecursionMergerSort(Integer[] originArray, int start, int end) {
         if (start >= end) {
             return;
         }
+        // 循环一致化-while循环, 注意 + - 与 位运算的优先级
         int subLength = 1;
         while (subLength <= originArray.length) {
-            for (int i = start; i + subLength <= end; i += 2 * subLength) {
-                doMerge(originArray, i, i + subLength - 1, Math.min(i + subLength * 2 - 1, originArray.length - 1));
+            int i = start;
+            while (i + subLength <= end) {
+                doMerge(originArray, i, i + subLength - 1, Math.min(i + (subLength << 1) - 1, originArray.length - 1));
+                i += (subLength << 1);
             }
-            subLength *= 2;
+            subLength <<= 1;
         }
+        
+        // 循环一致化-for循环
+        /*for (int subLength = 1; subLength <= originArray.length; subLength <<= 1) {
+            for (int i = start; i + subLength <= end; i += (subLength << 1)) {
+                doMerge(originArray, i, i + subLength - 1, Math.min(i + (subLength << 1) - 1, originArray.length - 1));
+            }
+        }*/
+        
     }
     
     public static void doMerge(Integer[] originArray, int start, int midRoller, int end) {
@@ -162,11 +175,6 @@ public class SortAlgorithmUtil {
         while (j <= end) {
             tempArray[k++] = originArray[j++];
         }
-        // 用新数组元素覆盖原数组
-//        for (int x = 0; x < tempArray.length; x++) {
-//            originArray[x + start] = tempArray[x];
-//        }
-        // 优化
         System.arraycopy(tempArray, 0, originArray, start, tempArray.length);
     }
     
@@ -180,20 +188,45 @@ public class SortAlgorithmUtil {
     public static int doFFTPartition(Integer[] originArray, int start, int end) {
         int referredValue = originArray[start];
         while (start < end) {
-            // 一定先从从end处移动
+            // 一定先从end处移动
             while (originArray[end] >= referredValue && end > start) {
                 end--;
             }
-            originArray[start] = originArray[end];
+            if (start != end) {
+                originArray[start] = originArray[end];
+            }
             
             while (originArray[start] <= referredValue && end > start) {
                 start++;
             }
-            originArray[end] = originArray[start];
+            if (start != end) {
+                originArray[end] = originArray[start];
+            }
         }
         originArray[start] = referredValue;
         return start;
     }
+    
+    public static int doFasterPartition(Integer[] originArray, int start, int end) {
+        int preIndex = start - 1;
+        int currentIndex = start;
+        int referredValue = originArray[end - 1];
+        
+        while (currentIndex < end) {
+            if (originArray[currentIndex] < referredValue && ++preIndex != currentIndex) {
+                int tempValue = originArray[currentIndex];
+                originArray[currentIndex] = originArray[preIndex];
+                originArray[preIndex] = tempValue;
+            }
+            currentIndex++;
+        }
+        
+        if (originArray[++preIndex] != referredValue) {
+//            https://blog.csdn.net/a1414345/article/details/74160831
+        }
+        return 0;
+    }
+    
     
     public static void out(Object out) {
         System.out.print(out + "\n");
