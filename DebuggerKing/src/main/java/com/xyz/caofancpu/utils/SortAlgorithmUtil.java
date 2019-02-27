@@ -25,10 +25,10 @@ public class SortAlgorithmUtil {
         System.arraycopy(originArray, 0, originArrayCopy3, 0, originArray.length);
 
         long startTime = System.currentTimeMillis();
-//        recursionFFTSort(originArray);
+        recursionFFTSort(originArray);
         long endTime = System.currentTimeMillis();
-//        out(Arrays.toString(originArray));
-//        out("递归快排消耗时间: [" + (endTime - startTime) + "ms]\n");
+        out(Arrays.toString(originArray));
+        out("递归快排消耗时间: [" + (endTime - startTime) + "ms]\n");
 
 //        startTime = System.currentTimeMillis();
 //        nonRecursionFFTSort(originArrayCopy);
@@ -207,26 +207,11 @@ public class SortAlgorithmUtil {
         return start;
     }
     
-    public static int doFasterPartition(Integer[] originArray, int start, int end) {
-        int preIndex = start - 1;
-        int currentIndex = start;
-        int referredValue = originArray[end - 1];
-        
-        while (currentIndex < end) {
-            if (originArray[currentIndex] < referredValue && ++preIndex != currentIndex) {
-                int tempValue = originArray[currentIndex];
-                originArray[currentIndex] = originArray[preIndex];
-                originArray[preIndex] = tempValue;
-            }
-            currentIndex++;
-        }
-        
-        if (originArray[++preIndex] != referredValue) {
-//            https://blog.csdn.net/a1414345/article/details/74160831
-        }
-        return 0;
+    public static void swap(int a, int b) {
+        int temp = a;
+        a = b;
+        b = temp;
     }
-    
     
     public static void out(Object out) {
         System.out.print(out + "\n");
