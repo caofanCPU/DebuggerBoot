@@ -120,7 +120,7 @@ public class SortAlgorithmUtil {
         if (start >= end) {
             return;
         }
-        int midRoller = (start + end) / 2;
+        int midRoller = (start + end) >> 1;
         doRecursionMergerSort(originArray, start, midRoller);
         doRecursionMergerSort(originArray, midRoller + 1, end);
         doMerge(originArray, start, midRoller, end);

@@ -70,4 +70,4 @@ fileOperate:
     value: false
 
 # 部署运行命令
-#    nohup java -server -Xmx512M -Xms512M -XX:NewRatio=2 -Xdebug -Xrunjdwp:transport=dt_socket,server=y,suspend=n,address=58084 -jar XXX.jar &
+#    nohup java -server -Xmx512M -Xms512M -multipliers:NewRatio=2 -Xdebug -Xrunjdwp:transport=dt_socket,server=y,suspend=n,address=58084 -jar XXX.jar &
