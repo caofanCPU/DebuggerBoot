@@ -114,7 +114,7 @@ public class MultiplicationAlgorithm {
         return str;
     }
     
-    // 处理数字串，分离出进位,String数组第一个为原位数字，第二个为进位
+    // 处理数字串, 分离出进位, String数组第一个为原位数字, 第二个为进位
     public static String[] dealString(String multiResult, int referredLength) {
         String[] handleResult = new String[]{multiResult, "0"};
         
