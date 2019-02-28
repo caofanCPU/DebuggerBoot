@@ -74,7 +74,7 @@ public class MultiplicationAlgorithm {
         VerbalExpression removeZeroFirstRegex = VerbalExpression.regex()
                 .startOfLine().find("0").oneOrMore()
                 .build();
-        return VerbalExpressionUtil.executePatternRex(removeZeroFirstRegex, text, StringUtils.SPACE);
+        return VerbalExpressionUtil.executePatternRex(removeZeroFirstRegex, text, StringUtils.EMPTY);
     }
     
     // 两个数字串按位加
