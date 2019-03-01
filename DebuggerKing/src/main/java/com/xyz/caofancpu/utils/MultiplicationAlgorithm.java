@@ -15,16 +15,34 @@ import java.util.regex.Pattern;
  */
 
 public class MultiplicationAlgorithm {
-    // 规模只要在这个范围内可以直接计算（整型数值满足）
-    public final static int THRESHOLD_LENGTH = 4;
+    /**
+     * 字串递归结束条件: 规模只要在这个范围内可以直接计算（整型数值满足）
+     */
+    public final static int THRESHOLD_LENGTH = 2;
     
-    // 其中，len为X、Y的长度最大值
+    /**
+     * 0字串用于填充高位
+     */
+    public final static String ZERO = "0";
+    
+    /**
+     * 递归次数标识
+     */
+    public static int recursionNum;
+    
+    /**
+     * 大数字串乘法
+     *
+     * @param X
+     * @param Y
+     * @return
+     */
     public static String bigIntMultiply(String X, String Y) {
         int maxLength = Math.max(X.length(), Y.length());
         
         // 递归结束点: 达到阈值条件进行整数乘法运算
         if (maxLength <= THRESHOLD_LENGTH) {
-            return "" + (Integer.parseInt(X) * Integer.parseInt(Y));
+            return String.valueOf(Integer.parseInt(X) * Integer.parseInt(Y));
         }
         
         // 高位补零
@@ -49,40 +67,52 @@ public class MultiplicationAlgorithm {
         String BC = bigIntMultiply(B, C);
         String BD = bigIntMultiply(B, D);
         
-        // 注意处理进位的方法，巧妙地运用了字符串的拼接方面
-        // 【1】 处理BD，得到原位及进位
-        String[] sBD = dealString(BD, B.length());
-        // 【2】 处理AD + BC的和
+        out("==========第" + (recursionNum++) + "次递归=============");
+        // 从低位往高位方向逐一计算结果
+        // 先计算BD的进位及留位
+        String[] sBD = handleString(BD, B.length());
+        // 再计算 AD + BC
         String ADBC = add(AD, BC);
-        // 【3】 加上BD的进位
-        if (!"0".equals(sBD[1])) {
+        // BD若有进位, 则需要加到 AD + BC中
+        if (!ZERO.equals(sBD[1])) {
             ADBC = add(ADBC, sBD[1]);
         }
-        // 【4】 得到ADBC的进位
-        String[] sADBC = dealString(ADBC, Math.max(A.length(), B.length()));
+        // 计算AD + BC 的进位
+        String[] sADBC = handleString(ADBC, Math.max(A.length(), B.length()));
         
-        // 【5】 AC加上ADBC的进位
+        // 最后计算AC + [(AD + BC)的进位]
         AC = add(AC, sADBC[1]);
-        // 【6】 最终结果
+        // 拼接结果 AC-(AD + BC)-BD
         return AC + sADBC[0] + sBD[0];
     }
     
+    /**
+     * 正则剔除字串高位上的 0
+     * @param text
+     * @return
+     */
     public static String removeRareZero(String text) {
         if (StringUtils.isBlank(text)) {
             return text;
         }
         VerbalExpression removeZeroFirstRegex = VerbalExpression.regex()
-                .startOfLine().find("0").oneOrMore()
+                .startOfLine().find(ZERO).oneOrMore()
                 .build();
         return VerbalExpressionUtil.executePatternRex(removeZeroFirstRegex, text, StringUtils.EMPTY);
     }
     
-    // 两个数字串按位加
+    /**
+     * 两个大数字串的加法
+     * 注意: 字符串 + 运算底层就是新建StringBuilder, 每次 + 都新建SB且会复制数组元素
+     *       sb.insert(0, value)可以把value添加在头部, 但是确实通过value.append(sb.toString()的复制)完成的, 效率待考量
+     * @param AD
+     * @param BC
+     * @return
+     */
     public static String add(String AD, String BC) {
-        // 返回的结果
-        String str = "";
-        
         int maxLength = Math.max(AD.length(), BC.length());
+        // 返回的结果, 放入StringBuilder中, 并指定初始容量, 避免扩容
+        StringBuilder sb = new StringBuilder(maxLength + 16);
         // 高位补零
         if (AD.length() != BC.length()) {
             if (AD.length() > BC.length()) {
@@ -91,32 +121,38 @@ public class MultiplicationAlgorithm {
                 AD = fillZero(AD, maxLength);
             }
         }
-        
         // 按位加，进位存储在flag中
-        int flag = 0;
+        int carry = 0;
         // 按序从后往前按位求和
         for (int i = maxLength - 1; i >= 0; i--) {
-            int t = flag + Integer.parseInt(AD.substring(i, i + 1))
+            int currentValue = carry + Integer.parseInt(AD.substring(i, i + 1))
                     + Integer.parseInt(BC.substring(i, i + 1));
-            // 结果超过9，则进位当前位，保留个位数
-            if (t > 9) {
-                flag = 1;
-                t = t - 10;
-            } else {
-                flag = 0;
-            }
-            // 拼接结果字符串
-            str = "" + t + str;
+            // 计算进位和留位
+            carry = currentValue / 10;
+            int remainValue = currentValue % 10;
+    
+            // 拼接结果字符串, 高位需要添加到头部
+            sb.insert(0, remainValue);
         }
-        if (flag != 0) {
-            str = "" + flag + str;
+        if (carry != 0) {
+            sb.insert(0, carry);
         }
-        return str;
+        // 先逆序再输出
+        String result = sb.toString();
+        out("处理加法操作数字串, 字串AD=[" + AD + "], 字串BC=[" + BC + "], 加法结果=[" + result + "]");
+        return result;
     }
     
-    // 处理数字串, 分离出进位, String数组第一个为原位数字, 第二个为进位
-    public static String[] dealString(String multiResult, int referredLength) {
-        String[] handleResult = new String[]{multiResult, "0"};
+    /**
+     * 处理数字串, 分离出进位与留位
+     * 返回的数组第一个为留位数字串, 第二个为进位数字串
+     *
+     * @param multiResult
+     * @param referredLength
+     * @return
+     */
+    public static String[] handleString(String multiResult, int referredLength) {
+        String[] handleResult = new String[]{multiResult, ZERO};
         
         if (multiResult.length() > referredLength) {
             int upgradeLength = multiResult.length() - referredLength;
@@ -126,26 +162,36 @@ public class MultiplicationAlgorithm {
             // 位数不足则填充零
             handleResult[0] = fillZero(handleResult[0], referredLength);
         }
+        out("处理数字串=[" + multiResult + "], 参考长度=[" + referredLength + "], " +
+                "处理结果: 进位=[" + handleResult[1] + "], 留位=[" + handleResult[0] + "]");
         return handleResult;
     }
     
-    // 格式化操作的数字字符串，高位补零
+    /**
+     * 格式化处理数字字符串，高位补零
+     * @param X
+     * @param maxLength
+     * @return
+     */
     public static String fillZero(String X, int maxLength) {
-        while (maxLength > X.length()) {
-            X = "0" + X;
+        // StringBuilder初始化容量
+        StringBuilder sb = new StringBuilder(maxLength);
+        sb.append(X);
+        while (sb.length() < maxLength) {
+            sb.insert(0, ZERO);
         }
-        return X;
+        return sb.toString();
     }
     
     public static void main(String[] args) {
         Pattern numberPattern = getPattern("^[1-9]\\d*$");
         while (Boolean.TRUE) {
+            initRecursionNum();
             System.out.println("请输入乘数A（不以0开头的正整数）：");
             Scanner sc = new Scanner(System.in);
             String A = sc.next();
             if (!checkNumber(numberPattern, A)) {
                 System.out.println("乘数A输入不合法, 请检查！");
-                sc = null;
                 continue;
             }
             
@@ -153,18 +199,20 @@ public class MultiplicationAlgorithm {
             String B = sc.next();
             if (!checkNumber(numberPattern, B)) {
                 System.out.println("被乘数B输入不合法, 请检查！");
-                sc = null;
                 continue;
             }
             
             String result = bigIntMultiply(A, B);
             result = removeRareZero(result);
-            out("乘数A * 被乘数B = 结果");
+            out("一共递归(" + recursionNum + ")次完成计算: [乘数A] * [被乘数B] = [结果]");
             out(A + " * " + B + " = " + result);
+            out("===========================================");
         }
-        
     }
     
+    public static void initRecursionNum() {
+        recursionNum = 1;
+    }
     
     public static Pattern getPattern(String rule) {
         return Pattern.compile(rule);
