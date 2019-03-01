@@ -264,8 +264,9 @@ public class MultiThreadPlayUtil {
                 }
                 executorService.execute(new CountDownLatchRunnable(countDownLatch, i, taskDescription));
             }
-            out("主线程HangOut一丢丢, 等待子线程执行任务完成");
             try {
+                Thread.sleep(getRandomWaitTime(1));
+                out("主线程HangOut一丢丢, 等待子线程执行任务完成");
                 countDownLatch.await();
                 out("全部子线程都执行完任务, 主线程霸气回归, 脉动回来!");
             } catch (InterruptedException e) {
