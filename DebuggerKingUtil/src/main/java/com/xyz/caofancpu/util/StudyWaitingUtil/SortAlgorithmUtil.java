@@ -1,4 +1,4 @@
-package com.xyz.caofancpu.utils;
+package com.xyz.caofancpu.util.StudyWaitingUtil;
 
 import java.util.Arrays;
 import java.util.Random;
