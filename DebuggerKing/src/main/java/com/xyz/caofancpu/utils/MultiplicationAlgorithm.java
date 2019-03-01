@@ -201,10 +201,11 @@ public class MultiplicationAlgorithm {
                 System.out.println("被乘数B输入不合法, 请检查！");
                 continue;
             }
-            
+            long startTime = System.currentTimeMillis();
             String result = bigIntMultiply(A, B);
+            long endTime = System.currentTimeMillis();
             result = removeRareZero(result);
-            out("一共递归(" + recursionNum + ")次完成计算: [乘数A] * [被乘数B] = [结果]");
+            out("一共递归(" + recursionNum + ")次, 耗费(" + (endTime - startTime) + ")ms完成计算: [乘数A] * [被乘数B] = [结果]");
             out(A + " * " + B + " = " + result);
             out("===========================================");
         }
