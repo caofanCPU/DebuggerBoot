@@ -8,13 +8,13 @@ import java.util.Scanner;
 import java.util.regex.Pattern;
 
 /**
- * FileName: MultiplicationAlgorithm
+ * FileName: MultiplicationAlgorithmUtil
  *
  * @author: caofanCPU
  * @date: 2019/2/28 14:24
  */
 
-public class MultiplicationAlgorithm {
+public class MultiplicationAlgorithmUtil {
     /**
      * 字串递归结束条件: 规模只要在这个范围内可以直接计算（整型数值满足）
      */
