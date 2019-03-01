@@ -192,11 +192,11 @@ public class SortAlgorithmUtil {
             while (originArray[end] >= referredValue && end > start) {
                 end--;
             }
-            if (start != end) {
+            if (end != start) {
                 originArray[start] = originArray[end];
             }
-            
-            while (originArray[start] <= referredValue && end > start) {
+    
+            while (originArray[start] <= referredValue && start < end) {
                 start++;
             }
             if (start != end) {
@@ -205,12 +205,6 @@ public class SortAlgorithmUtil {
         }
         originArray[start] = referredValue;
         return start;
-    }
-    
-    public static void swap(int a, int b) {
-        int temp = a;
-        a = b;
-        b = temp;
     }
     
     public static void out(Object out) {
