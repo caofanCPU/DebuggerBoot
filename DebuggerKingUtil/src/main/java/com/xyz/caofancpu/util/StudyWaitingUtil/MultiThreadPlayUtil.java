@@ -204,13 +204,21 @@ public class MultiThreadPlayUtil {
         public Exchanger<V> getExchanger() {
             return new Exchanger<>();
         }
+    
+        public int getExchangeThreadNum(int limitThreadNum) {
+            if (limitThreadNum < 2) {
+                return commonLimitThreadThreshold << 1;
+            }
+            // 来一波骚操作
+            return limitThreadNum >> 1 << 1;
+        }
         
         public void execute() {
             final Exchanger<V> exchanger = getExchanger();
-            int limitThreadNum = commonLimitThreadThreshold >> 1;
+            int limitThreadNum = getExchangeThreadNum(7);
             V data;
             for (int i = 1; i <= limitThreadNum; i++) {
-                if (i != 1) {
+                if (i % 2 == 0) {
                     try {
                         Thread.sleep(getRandomWaitTime(1));
                     } catch (InterruptedException e) {
