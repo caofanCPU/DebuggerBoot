@@ -55,10 +55,14 @@ public class HashMapGenerateUtil {
             item.put("元素2", "德玛西亚");
             return item;
         });
-        
+    
+        // 方式一
         hashMap.keySet().stream()
                 .filter(Objects::nonNull)
                 .forEach(key -> System.out.println("键 = [" + key + "]\t值 = [" + hashMap.get(key) + "]"));
+    
+        // 方式二
+        hashMap.forEach((key, value) -> System.out.println("键 = [" + key + "]\t值 = [" + value + "]"));
     }
     
 }
