@@ -1,6 +1,6 @@
 package com.xyz.caofancpu.util.multiThreadUtils;
 
-import com.xyz.caofancpu.util.AbstractLogger;
+import com.xyz.caofancpu.util.logger.AbstractLogger;
 
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
