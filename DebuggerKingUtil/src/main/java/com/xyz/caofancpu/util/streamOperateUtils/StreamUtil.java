@@ -33,20 +33,22 @@ public class StreamUtil {
         if (CollectionUtils.isEmpty(sourceList) || CollectionUtils.isEmpty(targetPropertySet)) {
             return sourceList;
         }
-        List<Map<String, Object>> resultList = new ArrayList<>();
-        sourceList.stream().forEach(item ->
+        List<Map<String, Object>> resultList = sourceList.stream()
+                .filter(Objects::nonNull)
+                .map(item ->
                 {
                     Map<String, Object> newPropertyMap = new HashMap<>();
-                    targetPropertySet.stream().forEach(property ->
-                    {
-                        // 剔除值为null的属性，避免JSON序列化时报错：HttpMessageNotWritableException
-                        if (item.get(property) != null) {
-                            newPropertyMap.put(property, item.get(property));
-                        }
-                    });
-                    resultList.add(newPropertyMap);
-                }
-        );
+                    targetPropertySet.stream()
+                            .forEach(property ->
+                            {
+                                // 剔除值为null的属性，避免JSON序列化时报错：HttpMessageNotWritableException
+                                if (item.get(property) != null) {
+                                    newPropertyMap.put(property, item.get(property));
+                                }
+                            });
+                    return newPropertyMap;
+                })
+                .collect(Collectors.toList());
         return resultList;
     }
     
@@ -62,11 +64,13 @@ public class StreamUtil {
             return source;
         }
         Map<String, Object> target = new HashMap<>(8, 0.75f);
-        targetPropertySet.stream().forEach(property -> {
-            if (source.get(property) != null) {
-                target.put(property, source.get(property));
-            }
-        });
+        targetPropertySet.stream()
+                .forEach(property ->
+                {
+                    if (source.get(property) != null) {
+                        target.put(property, source.get(property));
+                    }
+                });
         return target;
     }
     
