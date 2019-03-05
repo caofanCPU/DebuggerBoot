@@ -87,8 +87,15 @@ public class StreamUtil {
         if (CollectionUtils.isEmpty(sourceList) || CollectionUtils.isEmpty(targetPropertySet)) {
             return sourceList;
         }
-        sourceList.stream().forEach(item -> targetPropertySet.stream().forEach(property -> item.remove(property)));
-        return sourceList;
+        return sourceList.stream()
+                .filter(Objects::nonNull)
+                .map(item -> {
+                    targetPropertySet.stream()
+                            .filter(Objects::nonNull)
+                            .forEach(property -> item.remove(property));
+                    return item;
+                })
+                .collect(Collectors.toList());
     }
     
     /**
@@ -102,7 +109,9 @@ public class StreamUtil {
         if (source == null || source.isEmpty() || CollectionUtils.isEmpty(targetPropertySet)) {
             return source;
         }
-        targetPropertySet.stream().forEach(property -> source.remove(property));
+        targetPropertySet.stream()
+                .filter(Objects::nonNull)
+                .forEach(property -> source.remove(property));
         return source;
     }
     
@@ -309,7 +318,6 @@ public class StreamUtil {
             }
         };
         List<Map<String, Object>> resultList = filterProperty(sourceList, targetPropertySet);
-//        List<Map<String, Object>> resultList = filterProperty(sourceList, targetPropertySet);
         System.out.println(resultList.size());
     }
     
