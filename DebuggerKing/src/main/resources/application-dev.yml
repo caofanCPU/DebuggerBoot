@@ -51,6 +51,12 @@ jasypt:
     consumer:
       group-id: caofanGroup
 
+task:
+  handle:
+    average:  10
+  rootPath: /data/xx
+  resultPath: /data/ff
+
 wx:
   domain: https://caofancpu.github.io
 # 部署运行命令

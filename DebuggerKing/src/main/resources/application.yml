@@ -10,8 +10,9 @@ eureka:
     leaseExpirationDurationInSeconds: 10
     leaseRenewalIntervalInSeconds: 5
 #文件访问系统配置
-file:
-  url: http://SERVICE-FILE
+ms:
+  file:
+    url: http://SERVICE-FILE
 #日志系统配置
 logging:
   config: classpath:logback-spring.xml
