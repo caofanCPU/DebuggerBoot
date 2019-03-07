@@ -25,12 +25,64 @@ public class StreamCoreMethodTest {
 //            testStreamOfFindExtreme(productItemList);
             // 2. 去重
 //            testStreamOfNonRepeatable(productItemList);
-            // 3. 分组归类
-//            testStreamOfClassify(productItemList);
-            // 4. 归约化简(计数求和)
+            // 3. 排序
+//            testStreamOfSort(productItemList);
+            // 4. 分组/归类/平铺
+            testStreamOfClassify(productItemList);
+            // 5. 归约化简(计数求和)
 //            testStreamOfSummationExample1(productItemList);
-            testStreamOfSummationExample2(productItemList);
+//            testStreamOfSummationExample2(productItemList);
+    
+            testNonRepeatableWord();
         }
+    }
+    
+    /**
+     * 使用Stream进行排序 例子: 根据价格 ProductItem.price 进行排序
+     *
+     * @param productItemList
+     */
+    public static void testStreamOfSort(List<ProductItem> productItemList) {
+//        List<Integer> originList = Ints.asList(IntStream.range(1, 11).toArray());
+        viewData("原始列表元素", productItemList);
+        
+        productItemList.sort((item1, item2) -> item1.getPrice().compareTo(item2.getPrice()));
+        viewData("递增方式一(不推荐)排序后列表元素", productItemList);
+        
+        productItemList.sort(Comparator.comparing(ProductItem::getPrice, (x, y) -> {
+            return y.compareTo(x);
+        }));
+        viewData("递减排序方式一(不推荐)后列表元素", productItemList);
+        
+        productItemList.sort(Comparator.comparing(ProductItem::getPrice, BigDecimal::compareTo));
+        viewData("递增方式二(不推荐)排序后列表元素", productItemList);
+        
+        productItemList.sort(Comparator.comparing(ProductItem::getPrice).reversed());
+        viewData("递减排序方式二(推荐)后列表元素", productItemList);
+        
+        productItemList.sort(Comparator.comparing(ProductItem::getPrice));
+        viewData("递增方式三(不推荐)排序后列表元素", productItemList);
+        
+        viewData("原始列表元素", productItemList);
+        // 使用stream进行排序
+        List<ProductItem> ascList = productItemList.stream()
+                .filter(Objects::nonNull)
+                .sorted(Comparator.comparing(ProductItem::getPrice))
+                .collect(Collectors.toList());
+        viewData("递增方式四(不推荐)排序后列表元素", ascList);
+        
+        List<ProductItem> descList = productItemList.stream()
+                .filter(Objects::nonNull)
+                .sorted(Comparator.comparing(ProductItem::getPrice).reversed())
+                .collect(Collectors.toList());
+        viewData("递减方式四(不推荐)排序后列表元素", descList);
+        
+        viewData("原始列表元素", productItemList);
+        // 使用Collections.sort()排序(不推荐)
+        Collections.sort(productItemList, Comparator.comparing(ProductItem::getPrice));
+        viewData("递增方式五(不推荐)排序后列表元素", productItemList);
+        Collections.sort(productItemList, Comparator.comparing(ProductItem::getPrice).reversed());
+        viewData("递减方式五(不推荐)排序后列表元素", productItemList);
     }
     
     /**
@@ -55,6 +107,12 @@ public class StreamCoreMethodTest {
                 .collect(Collectors.groupingBy(ProductItem::getColor, Collectors.toList()))
                 .forEach((key, value) -> fastClassifiedList.add(value));
         viewData("快速分组归类为List后的数据", fastClassifiedList);
+    
+        List<ProductItem> flattedList = fastClassifiedList.stream()
+                .filter(Objects::nonNull)
+                .flatMap(List::stream)
+                .collect(Collectors.toList());
+        viewData("齐嵌套列表扁平化展开后的数据", flattedList);
     }
     
     /**
@@ -153,20 +211,20 @@ public class StreamCoreMethodTest {
             normalSum = normalSum.add(item.getPrice().multiply(BigDecimal.valueOf(item.getSalesNum())));
         }
         viewData("使用普通for循环计算总销售额: ", normalSum);
-        
+    
         BigDecimal enhanceSum1 = productItemList.stream()
                 .filter(Objects::nonNull)
                 .map(item -> item.getPrice().multiply(BigDecimal.valueOf(item.getSalesNum())))
                 // reduce(BigDecimal.valueOf(0), (x, y) -> x.add(y)) <==> reduce(BigDecimal.valueOf(0), BigDecimal::add)
                 .reduce(BigDecimal.valueOf(0), BigDecimal::add);
         viewData("使用增强归约方式一(推荐)求和计算总销售额: ", enhanceSum1);
-        
+    
         double enhanceSum = productItemList.stream()
                 .filter(Objects::nonNull)
                 .mapToDouble(item -> Double.valueOf(item.getPrice().multiply(BigDecimal.valueOf(item.getSalesNum())).toString()))
                 .sum();
         viewData("使用增强归约方式二(推荐)求和计算总销售额: ", enhanceSum);
-        
+    
         BigDecimal enhanceSum3 = productItemList.stream()
                 .filter(Objects::nonNull)
                 .map(item -> item.getPrice().multiply(BigDecimal.valueOf(item.getSalesNum())))
@@ -175,6 +233,47 @@ public class StreamCoreMethodTest {
                 .get();
         viewData("使用增强归约方式三(推荐)求和计算总销售额: ", enhanceSum3);
     }
+    
+    private static void testNonRepeatableWord() {
+        List<String> originList = Arrays.asList("Hello", "World");
+        // 传统使用for循环方法
+        StringBuilder sb = new StringBuilder();
+        for (String element : originList) {
+            sb.append(element);
+        }
+        char[] wordArray = sb.toString().toCharArray();
+        Set<Character> wordSet = new HashSet<>(16, 0.75f);
+        for (int i = 0; i < wordArray.length; i++) {
+            wordSet.add(wordArray[i]);
+        }
+        viewData("去重后的字母列表", wordSet);
+        
+        // 流式操作
+        Set<Character> nonRepeatableWordSet = originList.stream()
+                .map(s -> s.split(""))
+                .flatMap(Arrays::stream)
+                // 去重可去掉, 因为后续Collectors.toSet()本身可保证去重
+                .distinct()
+                .map(s -> s.charAt(0))
+                .collect(Collectors.toSet());
+        viewData("去重后的字母列表", nonRepeatableWordSet);
+    }
+    
+    public static void testLamdaExpression() {
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                System.out.println("启动一个线程");
+            }
+        }).start();
+        
+        
+        new Thread(() -> System.out.println("启动一个线程")).start();
+        
+    }
+    
+    
+    
     
     public static void viewData(String msg, Object data) {
         SystemOutUtil.out(msg + "\n" + JSONUtil.formatStandardJSON(JSONObject.toJSONString(data)));
