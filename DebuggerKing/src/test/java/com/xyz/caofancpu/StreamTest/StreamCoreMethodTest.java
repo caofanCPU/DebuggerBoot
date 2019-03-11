@@ -28,7 +28,7 @@ public class StreamCoreMethodTest {
             // 3. 排序
 //            testStreamOfSort(productItemList);
             // 4. 分组/归类/平铺
-            testStreamOfClassify(productItemList);
+//            testStreamOfClassify(productItemList);
             // 5. 归约化简(计数求和)
 //            testStreamOfSummationExample1(productItemList);
 //            testStreamOfSummationExample2(productItemList);
@@ -39,7 +39,6 @@ public class StreamCoreMethodTest {
     
     /**
      * 使用Stream进行排序 例子: 根据价格 ProductItem.price 进行排序
-     *
      * @param productItemList
      */
     public static void testStreamOfSort(List<ProductItem> productItemList) {
@@ -48,7 +47,7 @@ public class StreamCoreMethodTest {
         
         productItemList.sort((item1, item2) -> item1.getPrice().compareTo(item2.getPrice()));
         viewData("递增方式一(不推荐)排序后列表元素", productItemList);
-        
+    
         productItemList.sort(Comparator.comparing(ProductItem::getPrice, (x, y) -> {
             return y.compareTo(x);
         }));
@@ -56,13 +55,13 @@ public class StreamCoreMethodTest {
         
         productItemList.sort(Comparator.comparing(ProductItem::getPrice, BigDecimal::compareTo));
         viewData("递增方式二(不推荐)排序后列表元素", productItemList);
-        
+    
         productItemList.sort(Comparator.comparing(ProductItem::getPrice).reversed());
         viewData("递减排序方式二(推荐)后列表元素", productItemList);
         
         productItemList.sort(Comparator.comparing(ProductItem::getPrice));
         viewData("递增方式三(不推荐)排序后列表元素", productItemList);
-        
+    
         viewData("原始列表元素", productItemList);
         // 使用stream进行排序
         List<ProductItem> ascList = productItemList.stream()
@@ -70,13 +69,13 @@ public class StreamCoreMethodTest {
                 .sorted(Comparator.comparing(ProductItem::getPrice))
                 .collect(Collectors.toList());
         viewData("递增方式四(不推荐)排序后列表元素", ascList);
-        
+    
         List<ProductItem> descList = productItemList.stream()
                 .filter(Objects::nonNull)
                 .sorted(Comparator.comparing(ProductItem::getPrice).reversed())
                 .collect(Collectors.toList());
         viewData("递减方式四(不推荐)排序后列表元素", descList);
-        
+    
         viewData("原始列表元素", productItemList);
         // 使用Collections.sort()排序(不推荐)
         Collections.sort(productItemList, Comparator.comparing(ProductItem::getPrice));
@@ -266,8 +265,8 @@ public class StreamCoreMethodTest {
                 System.out.println("启动一个线程");
             }
         }).start();
-        
-        
+    
+    
         new Thread(() -> System.out.println("启动一个线程")).start();
         
     }

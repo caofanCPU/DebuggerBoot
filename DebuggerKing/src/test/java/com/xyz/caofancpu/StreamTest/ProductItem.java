@@ -20,7 +20,7 @@ import java.util.Objects;
 @Data
 @NoArgsConstructor
 //@RequiredArgsConstructor
-@AllArgsConstructor(access = AccessLevel.PROTECTED)
+@AllArgsConstructor(access = AccessLevel.PUBLIC)
 @Accessors(chain = true)
 @ApiModel
 public class ProductItem {
