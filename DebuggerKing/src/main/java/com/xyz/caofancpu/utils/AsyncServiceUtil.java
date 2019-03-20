@@ -17,7 +17,6 @@ import org.springframework.stereotype.Component;
 @Api(description = "异步服务中心")
 public class AsyncServiceUtil {
     
-    
     @Autowired
     private transient KafkaSender kafkaSender;
     

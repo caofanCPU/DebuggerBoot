@@ -14,12 +14,12 @@ import java.util.UUID;
 /**
  * Created by caofanCPU on 2018/2/26.
  */
-public class FileBase64Utils {
+public class FileBase64Util {
     
     /**
      * LOG
      */
-    private static final Logger logger = LoggerFactory.getLogger(FileBase64Utils.class);
+    private static final Logger logger = LoggerFactory.getLogger(FileBase64Util.class);
     
     /**
      * 生成唯一序列标识

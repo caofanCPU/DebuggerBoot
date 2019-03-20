@@ -13,6 +13,12 @@
 
     <dependencies>
 
+        <dependency>
+            <groupId>com.google.guava</groupId>
+            <artifactId>guava</artifactId>
+            <version>18.0</version>
+        </dependency>
+
         <!--正则表达式神器 -->
         <dependency>
             <groupId>ru.lanwen.verbalregex</groupId>

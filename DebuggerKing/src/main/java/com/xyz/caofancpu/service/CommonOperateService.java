@@ -35,6 +35,18 @@ public interface CommonOperateService {
     
     void closeFileOperateLogging(Map<String, Object> paramMap);
     
+    /**
+     * 获取TOKEN
+     *
+     * @return
+     */
     String loadToken();
+    
+    /**
+     * 创建文件的父目录
+     *
+     * @param mainRoot
+     */
+    void createParentDir(String mainRoot);
 }
 

@@ -4,6 +4,8 @@ package com.xyz.caofancpu.service.impl;
 import com.alibaba.fastjson.JSONObject;
 import com.xyz.caofancpu.model.Attachment;
 import com.xyz.caofancpu.service.CommonOperateService;
+import com.xyz.caofancpu.service.configValue.CommonConfigValueService;
+import com.xyz.caofancpu.service.configValue.MSUrlConfigValueService;
 import com.xyz.caofancpu.util.commonOperateUtils.GlobalResultCheckUtil;
 import com.xyz.caofancpu.util.dataOperateUtils.DateUtil;
 import com.xyz.caofancpu.util.result.CustomerErrorInfo;
@@ -13,7 +15,7 @@ import com.xyz.caofancpu.utils.RestTemplateUtil;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Value;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.DependsOn;
 import org.springframework.stereotype.Service;
 import org.springframework.web.context.request.RequestAttributes;
@@ -23,6 +25,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
+import java.io.File;
 import java.io.IOException;
 import java.util.*;
 
@@ -42,23 +45,14 @@ public class CommonOperateServiceImpl implements CommonOperateService {
     
     private static final String COMMA_SEPARATOR = ",";
     
-    @Value("${app.name}")
-    private String appName;
-    
-    @Value("${file.url}")
-    private String fileAccessUrl;
-    
-    @Value("${swagger.authorizationKey}")
-    private String authKey;
-    
-    @Value("${fileOperate.logging.key}")
-    private String fileOperateLoggingKey;
-    
-    @Value("${fileOperate.logging.value}")
-    private String fileOperateLoggingValue;
-    
     @Resource
-    private transient RestTemplateUtil restTemplateUtil;
+    private RestTemplateUtil restTemplateUtil;
+    
+    @Autowired
+    private CommonConfigValueService commonConfigValueService;
+    
+    @Autowired
+    private MSUrlConfigValueService msUrlConfigValueService;
     
     @Override
     public void uploadAttachment(Attachment attachment, MultipartFile file)
@@ -81,7 +75,7 @@ public class CommonOperateServiceImpl implements CommonOperateService {
         String fileBase64 = Base64.getEncoder().encodeToString(bytes);
         Map<String, Object> paramMap = new HashMap<String, Object>(8, 0.75f) {
             {
-                put("appname", appName);
+                put("appname", commonConfigValueService.appName);
                 put("filename", path);
                 put("contents", fileBase64);
                 put("open", false);
@@ -89,7 +83,7 @@ public class CommonOperateServiceImpl implements CommonOperateService {
         };
         // 禁用文件内容打印LOG
         closeFileOperateLogging(paramMap);
-        restTemplateUtil.postBody(fileAccessUrl + "/file/upload", paramMap);
+        restTemplateUtil.postBody(msUrlConfigValueService.fileAccessUrl + "/file/upload", paramMap);
         
         attachment.setType(type);
         attachment.setName(path);
@@ -106,12 +100,12 @@ public class CommonOperateServiceImpl implements CommonOperateService {
         }
         Map<String, Object> map = new HashMap<String, Object>(4, 0.5f) {
             {
-                put("appname", appName);
+                put("appname", commonConfigValueService.appName);
                 put("filename", attachmentName);
             }
         };
-        
-        ResultBody resultBody = restTemplateUtil.postBody(fileAccessUrl + "/file/generateUrl", map);
+    
+        ResultBody resultBody = restTemplateUtil.postBody(msUrlConfigValueService.fileAccessUrl + "/file/generateUrl", map);
         GlobalResultCheckUtil.handleMSResultBody(resultBody);
         JSONObject jsonObject = JSONObject.parseObject(JSONObject.toJSONString(resultBody));
         String accessUrl = jsonObject.getString("data");
@@ -137,8 +131,16 @@ public class CommonOperateServiceImpl implements CommonOperateService {
         if (Objects.isNull(request)) {
             return null;
         }
-        String token = request.getHeader(authKey);
+        String token = request.getHeader(commonConfigValueService.authKey);
         return token;
+    }
+    
+    @Override
+    public void createParentDir(String mainRoot) {
+        File file = new File(mainRoot);
+        if (!file.exists()) {
+            file.mkdirs();
+        }
     }
     
     @Override
@@ -146,7 +148,7 @@ public class CommonOperateServiceImpl implements CommonOperateService {
         if (Objects.isNull(paramMap)) {
             return;
         }
-        paramMap.put(fileOperateLoggingKey, fileOperateLoggingValue);
+        paramMap.put(commonConfigValueService.fileOperateLoggingKey, commonConfigValueService.fileOperateLoggingValue);
     }
     
 }
