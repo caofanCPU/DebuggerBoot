@@ -14,9 +14,9 @@ package com.xyz.caofancpu.util.StudyWaitingUtil;
 public class XinChengInterview {
     
     public static void main(String[] args) {
-//        testThread();
-        
-        testInstanceContruct();
+        testThread();
+
+//        testInstanceContruct();
         
     }
     

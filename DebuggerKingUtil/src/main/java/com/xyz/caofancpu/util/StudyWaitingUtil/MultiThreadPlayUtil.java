@@ -125,7 +125,7 @@ public class MultiThreadPlayUtil {
     
     static class CycleBarrierDemo {
         public void execute() {
-            final CyclicBarrier cyclicBarrier = getDefaltTaskedCycleBarrierMonitor();
+            final CyclicBarrier cyclicBarrier = getDefaultTaskedCycleBarrierMonitor();
             int limitThreadNum = commonLimitThreadThreshold >> 1;
             for (int i = 1; i <= limitThreadNum; i++) {
                 if (i != 1) {
@@ -146,8 +146,8 @@ public class MultiThreadPlayUtil {
         public CyclicBarrier getCustomerCycleBarrierMonitor(int limitThreadNum) {
             return new CyclicBarrier(limitThreadNum > 0 ? limitThreadNum : commonLimitThreadThreshold);
         }
-        
-        public CyclicBarrier getDefaltTaskedCycleBarrierMonitor() {
+    
+        public CyclicBarrier getDefaultTaskedCycleBarrierMonitor() {
             return new CyclicBarrier(commonLimitThreadThreshold >> 1,
                     () -> {
                         long waitTime = getRandomWaitTime(1);
@@ -262,7 +262,7 @@ public class MultiThreadPlayUtil {
     static class CountDownLatchDemo {
         public void execute() {
             int subThreadLimitNum = commonLimitThreadThreshold << 1;
-            final CountDownLatch countDownLatch = getCountDownLanch(subThreadLimitNum);
+            final CountDownLatch countDownLatch = getCountDownLatch(subThreadLimitNum);
             String taskDescription;
             for (int i = 1; i <= subThreadLimitNum; i++) {
                 if (i % 2 == 0) {
@@ -281,8 +281,8 @@ public class MultiThreadPlayUtil {
                 e.printStackTrace();
             }
         }
-        
-        public CountDownLatch getCountDownLanch(int subThreadLimitNum) {
+    
+        public CountDownLatch getCountDownLatch(int subThreadLimitNum) {
             if (subThreadLimitNum < 1) {
                 subThreadLimitNum = commonLimitThreadThreshold;
             }
