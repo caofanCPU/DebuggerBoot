@@ -1,5 +1,7 @@
 package com.xyz.caofancpu.util.StudyWaitingUtil;
 
+import java.util.Objects;
+
 /**
  * Copyright (C), 2000-2019, 帝八哥科技无限股份有限公司
  * FileName: XinChengInterview
@@ -14,10 +16,10 @@ package com.xyz.caofancpu.util.StudyWaitingUtil;
 public class XinChengInterview {
     
     public static void main(String[] args) {
-        testThread();
+//        testThread();
 
-//        testInstanceContruct();
-        
+//        testInstanceConstruct();
+        mergeTwoOrderedArray();
     }
     
     
@@ -25,6 +27,66 @@ public class XinChengInterview {
         System.out.println(text);
     }
     
+    /**
+     * 关于合并两个已然有序的数组，保证结果仍然有序
+     */
+    public static void mergeTwoOrderedArray() {
+        int[] arrA = new int[]{1, 2, 3, 4, 5};
+        int[] arrB = new int[]{2, 4, 5};
+        
+        int[] arrResult = new int[arrA.length + arrB.length];
+        int indexA = 0;
+        int indexB = 0;
+        int indexResult = 0;
+        // 直接对俩数组元素比较，根据排序规则-递增或递减，筛选出元素，删选元素添加到新数组，同时指针++
+        while (indexA < arrA.length && indexB < arrB.length) {
+            if (arrA[indexA] <= arrB[indexB]) {
+                arrResult[indexResult++] = arrA[indexA++];
+            } else {
+                arrResult[indexResult++] = arrB[indexB++];
+            }
+        }
+        while (indexA < arrA.length) {
+            arrResult[indexResult++] = arrA[indexA++];
+        }
+        while (indexB < arrB.length) {
+            arrResult[indexResult++] = arrB[indexB++];
+        }
+        for (int i = 0; i < arrResult.length; i++) {
+            out(arrResult[i] + ", ");
+        }
+    }
+    
+    /**
+     * 保证数组是递增的
+     *
+     * @param originArray
+     * @return
+     */
+    public static void sortedByAsc(int[] originArray) {
+        if (Objects.isNull(originArray) || originArray.length == 1) {
+            return;
+        }
+        for (int i = 0; i < originArray.length; i++) {
+            for (int j = i + 1; j < originArray.length; j++) {
+                if (originArray[j] < originArray[i]) {
+                    swapElement(originArray, j, i);
+                }
+            }
+            
+        }
+    }
+    
+    private static void swapElement(int[] originArray, int indexA, int indexB) {
+        int tempValue = originArray[indexA];
+        originArray[indexA] = originArray[indexB];
+        originArray[indexB] = tempValue;
+    }
+    
+    
+    /**
+     * 关于启动线程的测试
+     */
     public static void testThread() {
         Thread sxThread = new Thread(() -> {
             out(Thread.currentThread().getName() + " 傻逼");
@@ -37,13 +99,19 @@ public class XinChengInterview {
         out("线程");
     }
     
-    public static void testInstanceContruct() {
+    /**
+     * 关于初始化子对象，静态块、构造函数的执行顺序问题
+     */
+    public static void testInstanceConstruct() {
         TestInstanceSunB sunB = new TestInstanceSunB();
         out("----------分界线----------");
         sunB = new TestInstanceSunB();
         sunB.conclusion();
     }
     
+    /**
+     * 父类
+     */
     static class TestInstanceParentA {
         
         public static int initValue = 20;
@@ -60,7 +128,9 @@ public class XinChengInterview {
         
     }
     
-    
+    /**
+     * 子类
+     */
     static class TestInstanceSunB extends TestInstanceParentA {
         
         static {
