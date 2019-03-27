@@ -32,10 +32,19 @@ public class XinChengInterview {
         System.out.println(text);
     }
     
+    /**
+     * 数组输出元素
+     *
+     * @param originArray
+     * @param text
+     */
     public static void outArray(int[] originArray, String text) {
         out(text + Arrays.toString(originArray));
     }
     
+    /**
+     * 两个数组求并集，去重
+     */
     public static void unionTwoOrderedArray() {
         int[] arrayA = new int[]{1, 2, 3, 4, 5};
         int[] arrayB = new int[]{2, 4, 5};
@@ -109,6 +118,9 @@ public class XinChengInterview {
 //        }
     }
     
+    /**
+     * 两个数组求交集，并去重
+     */
     public static void commonTwoArray() {
         int[] arrayA = new int[]{1, 2, 3, 4, 5};
         int[] arrayB = new int[]{2, 4, 5};
@@ -145,6 +157,9 @@ public class XinChengInterview {
         
     }
     
+    /**
+     * 两个数组相对于第一个数组求差集
+     */
     public static void differentTwoArray() {
         int[] arrayA = new int[]{1, 2, 3, 4, 5};
         int[] arrayB = new int[]{2, 4, 5};
@@ -195,6 +210,12 @@ public class XinChengInterview {
         }
     }
     
+    /**
+     * 交换数组元素
+     * @param originArray
+     * @param indexA
+     * @param indexB
+     */
     private static void swapElement(int[] originArray, int indexA, int indexB) {
         int tempValue = originArray[indexA];
         originArray[indexA] = originArray[indexB];
