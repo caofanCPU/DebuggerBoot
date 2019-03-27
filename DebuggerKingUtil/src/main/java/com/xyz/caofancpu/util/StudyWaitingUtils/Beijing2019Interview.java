@@ -1,11 +1,13 @@
-package com.xyz.caofancpu.util.StudyWaitingUtil;
+package com.xyz.caofancpu.util.StudyWaitingUtils;
 
-import java.util.Arrays;
 import java.util.Objects;
+
+import static com.xyz.caofancpu.util.StudyWaitingUtils.StudyUtil.out;
+import static com.xyz.caofancpu.util.StudyWaitingUtils.StudyUtil.outArray;
 
 /**
  * Copyright (C), 2000-2019, 帝八哥科技无限股份有限公司
- * FileName: XinChengInterview
+ * FileName: Beijing2019Interview
  * Author:   CY_XYZ
  * Date:     2019/3/20 19:09
  * Description: ${DESCRIPTION}
@@ -14,7 +16,7 @@ import java.util.Objects;
  * 作者姓名           修改时间           版本号              描述
  */
 
-public class XinChengInterview {
+public class Beijing2019Interview {
     
     public static void main(String[] args) {
 //        testThread();
@@ -28,14 +30,9 @@ public class XinChengInterview {
     }
     
     
-    public static void out(String text) {
-        System.out.println(text);
-    }
-    
-    public static void outArray(int[] originArray, String text) {
-        out(text + Arrays.toString(originArray));
-    }
-    
+    /**
+     * 两个数组求并集，去重
+     */
     public static void unionTwoOrderedArray() {
         int[] arrayA = new int[]{1, 2, 3, 4, 5};
         int[] arrayB = new int[]{2, 4, 5};
@@ -64,8 +61,7 @@ public class XinChengInterview {
         while (indexB < arrayB.length) {
             arrayUnion[indexUnion++] = arrayB[indexB++];
         }
-        int[] arrayResult = new int[indexUnion];
-        System.arraycopy(arrayUnion, 0, arrayResult, 0, indexUnion);
+        int[] arrayResult = StudyUtil.handleArrayCopyFromHead(arrayUnion, indexUnion);
         outArray(arrayResult, "两个递增数组的并集(剔除重复元素)arrayUnion = ");
         out("**********************************************\n");
 //        for (int i = 0; i < arrayMerge.length; i++) {
@@ -100,8 +96,7 @@ public class XinChengInterview {
         while (indexB < arrayB.length) {
             arrayMerge[indexMerge++] = arrayB[indexB++];
         }
-        int[] arrayResult = new int[indexMerge];
-        System.arraycopy(arrayMerge, 0, arrayResult, 0, indexMerge);
+        int[] arrayResult = StudyUtil.handleArrayCopyFromHead(arrayMerge, indexMerge);
         outArray(arrayResult, "两个递增数组的合并(允许重复元素)arrayMerge = ");
         out("**********************************************\n");
 //        for (int i = 0; i < arrayMerge.length; i++) {
@@ -109,6 +104,9 @@ public class XinChengInterview {
 //        }
     }
     
+    /**
+     * 两个数组求交集，并去重
+     */
     public static void commonTwoArray() {
         int[] arrayA = new int[]{1, 2, 3, 4, 5};
         int[] arrayB = new int[]{2, 4, 5};
@@ -135,16 +133,19 @@ public class XinChengInterview {
                 indexA++;
             }
         }
-        int[] arrayResult = new int[indexCommon];
-        System.arraycopy(arrayCommon, 0, arrayResult, 0, indexCommon);
+        int[] arrayResult = StudyUtil.handleArrayCopyFromHead(arrayCommon, indexCommon);
         outArray(arrayResult, "两个递增数组的交集arrayCommon = ");
         out("**********************************************\n");
 //        for (int i = 0; i < indexCommon; i++) {
 //            out(arrayCommon[i] + ", ");
 //        }
-        
     }
     
+    
+    
+    /**
+     * 两个数组相对于第一个数组求差集
+     */
     public static void differentTwoArray() {
         int[] arrayA = new int[]{1, 2, 3, 4, 5};
         int[] arrayB = new int[]{2, 4, 5};
@@ -165,8 +166,7 @@ public class XinChengInterview {
                 indexB++;
             }
         }
-        int[] arrayResult = new int[indexDifferent];
-        System.arraycopy(arrayDifferentByFirst, 0, arrayResult, 0, indexDifferent);
+        int[] arrayResult = StudyUtil.handleArrayCopyFromHead(arrayDifferentByFirst, indexDifferent);
         outArray(arrayResult, "两个递增数组相对于第1个数组的差集arrayDifferentByFirst = ");
         out("**********************************************\n");
 //        for (int i = 0; i < indexDifferent; i++) {
@@ -195,6 +195,12 @@ public class XinChengInterview {
         }
     }
     
+    /**
+     * 交换数组元素
+     * @param originArray
+     * @param indexA
+     * @param indexB
+     */
     private static void swapElement(int[] originArray, int indexA, int indexB) {
         int tempValue = originArray[indexA];
         originArray[indexA] = originArray[indexB];

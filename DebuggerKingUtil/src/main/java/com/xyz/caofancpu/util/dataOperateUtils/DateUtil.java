@@ -63,9 +63,9 @@ public class DateUtil {
         Calendar calendar = new GregorianCalendar();
         calendar.setTime(startDate);
         //把日期往后增加一年.整数往后推,负数往前移动
-        calendar.add(calendar.MONTH, monthNum);
+        calendar.add(Calendar.MONTH, monthNum);
         //把日期往后增加一年.整数往后推,负数往前移动
-        calendar.add(calendar.DAY_OF_MONTH, dayNum);
+        calendar.add(Calendar.DAY_OF_MONTH, dayNum);
         return calendar.getTime();
     }
 }
