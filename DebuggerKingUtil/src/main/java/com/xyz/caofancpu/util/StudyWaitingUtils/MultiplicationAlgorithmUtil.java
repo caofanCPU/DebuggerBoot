@@ -1,4 +1,4 @@
-package com.xyz.caofancpu.util.StudyWaitingUtil;
+package com.xyz.caofancpu.util.StudyWaitingUtils;
 
 import org.apache.commons.lang3.StringUtils;
 import ru.lanwen.verbalregex.VerbalExpression;
