@@ -5,8 +5,12 @@ import com.xyz.caofancpu.model.MiniAttachment;
 import com.xyz.caofancpu.service.CommonOperateService;
 import com.xyz.caofancpu.service.configValue.CommonConfigValueService;
 import com.xyz.caofancpu.util.commonOperateUtils.FileBase64Util;
+import com.xyz.caofancpu.util.multiThreadUtils.RemoteRequestTask;
+import com.xyz.caofancpu.util.multiThreadUtils.RemoteServiceHelper;
+import com.xyz.caofancpu.util.result.ResultBody;
 import io.swagger.annotations.Api;
 import org.apache.commons.collections.CollectionUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,9 +19,8 @@ import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Objects;
+import java.util.*;
+import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Future;
 
 /**
@@ -33,7 +36,7 @@ public class FileTaskService {
     
     // 引入默认线程池
     @Resource(name = "defaultThreadPool")
-    private ThreadPoolTaskExecutor executor;
+    private ThreadPoolTaskExecutor defaultThreadPool;
     
     @Autowired
     private CommonOperateService commonOperateService;
@@ -55,7 +58,7 @@ public class FileTaskService {
         groupedTaskList.stream()
                 .filter(Objects::nonNull)
                 .forEach(item -> {
-                    Future<?> future = executor.submit(() -> {
+                    Future<?> future = defaultThreadPool.submit(() -> {
                         handleFileCopy(item);
                     });
                     futureList.add(future);
@@ -133,6 +136,80 @@ public class FileTaskService {
             resultList.add(value);
         }
         return resultList;
+    }
+    
+    
+    public ResultBody exe() {
+        Map<Integer, Future<?>> taskResultMap = new HashMap<>();
+        addToPool(taskResultMap, 1, this, "loadData", 1, new Class[]{Integer.class});
+        addToPool(taskResultMap, 2, this, "loadData", 2, new Class[]{Integer.class});
+        addToPool(taskResultMap, 3, this, "loadData", 3, new Class[]{Integer.class});
+        
+        int[] checkResultArray = new int[]{0, 0, 0};
+        taskResultMap.keySet().stream()
+                .filter(Objects::nonNull)
+                .forEach(key -> {
+                    Future<?> currentFuture = taskResultMap.get(key);
+                    switch (key) {
+                        case 1:
+                            // check phone
+                            if (checkResult(currentFuture)) {
+                                checkResultArray[0] = 1;
+                            }
+                            break;
+                        case 2:
+                            // check cardId
+                            if (checkResult(currentFuture)) {
+                                checkResultArray[1] = 1;
+                            }
+                            break;
+                        case 3:
+                            // check bankCardId
+                            if (checkResult(currentFuture)) {
+                                checkResultArray[2] = 1;
+                            }
+                            break;
+                        default:
+                            break;
+                    }
+                });
+        return getCheckResult(checkResultArray);
+    }
+    
+    private ResultBody getCheckResult(int[] checkResultArray) {
+        if (checkResultArray[0] != 1) {
+            return new ResultBody().fail("手机号验证失败！");
+        }
+        if (checkResultArray[1] != 1) {
+            return new ResultBody().fail("身份证号验证失败！");
+        }
+        if (checkResultArray[2] != 1) {
+            return new ResultBody().fail("银行卡号验证失败！");
+        }
+        return new ResultBody().fail(StringUtils.EMPTY);
+    }
+    
+    public boolean checkResult(Future task) {
+        try {
+            return (Boolean) task.get();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        } catch (ExecutionException e) {
+            e.printStackTrace();
+        }
+        return Boolean.FALSE;
+    }
+    
+    public Integer loadData(Integer id) {
+        return 1;
+    }
+    
+    private void addToPool(
+            Map<Integer, Future<?>> taskResultMap, Integer taskNo, Object executeService,
+            String executeMethod, Object params, Class<?>... paramClass) {
+        RemoteServiceHelper remoteService = new RemoteServiceHelper(executeService, executeMethod, params, paramClass);
+        RemoteRequestTask task = new RemoteRequestTask(remoteService);
+        taskResultMap.put(taskNo, defaultThreadPool.submit(task));
     }
     
 }
