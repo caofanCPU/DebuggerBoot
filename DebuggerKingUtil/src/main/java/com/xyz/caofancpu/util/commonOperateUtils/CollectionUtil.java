@@ -3,6 +3,7 @@ package com.xyz.caofancpu.util.commonOperateUtils;
 
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.Maps;
+import lombok.NonNull;
 import net.sourceforge.pinyin4j.PinyinHelper;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang3.ArrayUtils;
@@ -10,9 +11,13 @@ import org.apache.commons.lang3.StringUtils;
 
 import java.util.*;
 import java.util.Map.Entry;
+import java.util.function.BiFunction;
+import java.util.function.BinaryOperator;
 import java.util.function.Function;
+import java.util.function.Supplier;
 import java.util.stream.Collector;
 import java.util.stream.Collectors;
+import java.util.stream.StreamSupport;
 
 /**
  * 集合工具类
@@ -21,118 +26,156 @@ public class CollectionUtil extends CollectionUtils {
     
     /**
      * map判空
-     * @param coll
+     * @param source
      * @return
      */
-    public static boolean isEmpty(Map coll) {
-        return (coll == null || coll.isEmpty());
+    public static boolean isEmpty(Map source) {
+        return (source == null || source.isEmpty());
     }
 
     /**
-     * 转换为Set
+     * 转换为Set, 底层默认使用HashSet
      * @return
      */
-    public static <F, T> Set<F> transSet(Collection<T> coll, Function<? super T, ? extends F> mapper){
-        if(isEmpty(coll)) {
-            return Collections.emptySet();
-        }
-        return coll.stream().map(mapper).collect(Collectors.toSet());
+    public static <E, R> Set<R> transToSet(Collection<E> source, Function<? super E, ? extends R> mapper){
+        return source.stream().filter(Objects::nonNull).map(mapper).collect(Collectors.toSet());
     }
 
     /**
-     * 转换为List
+     * 转换为List, 底层默认使用ArrayList
      */
-    public static <F, T> List<F> transList(Collection<T> coll, Function<? super T, ? extends F> mapper){
-        if(isEmpty(coll)) {
-            return Collections.emptyList();
-        }
-        return coll.stream().map(mapper).collect(Collectors.toList());
+    public static <E, R> List<R> transToList(Collection<E> source, Function<? super E, ? extends R> mapper){
+        return source.stream().filter(Objects::nonNull).map(mapper).collect(Collectors.toList());
     }
-
+    
+    /**
+     * 转换为指定的集合，常用Set/List，HashSet/ArrayList，LinkedSet/LinkedList
+     * @param resultColl
+     * @param source
+     * @param mapper
+     * @param <E>
+     * @param <R>
+     * @param <C>
+     * @return
+     */
+    public static <E, R, C extends Collection<R>> C transToCollection(Supplier<C> resultColl, Collection<E> source, Function<? super E, ? extends R> mapper) {
+        return source.stream().filter(Objects::nonNull).map(mapper).collect(Collectors.toCollection(resultColl));
+    }
+    
     /**
      * 转换为去重的List
      */
-    public static <F, T> List<F> distinctList(Collection<T> coll, Function<? super T, ? extends F> mapper){
-        if(isEmpty(coll)) {
-            return Collections.emptyList();
-        }
-        return coll.stream().map(mapper).distinct().collect(Collectors.toList());
+    public static <E, R> List<R> distinctList(Collection<E> source, Function<? super E, ? extends R> mapper){
+        return source.stream().filter(Objects::nonNull).map(mapper).distinct().collect(Collectors.toList());
     }
 
     /**
      * 去重
      */
-    public static <T> List<T> distinctList(Collection<T> coll){
-        if(isEmpty(coll)) {
-            return Collections.emptyList();
-        }
-        return coll.stream().distinct().collect(Collectors.toList());
+    public static <E> List<E> distinctList(Collection<E> source){
+        return source.stream().filter(Objects::nonNull).distinct().collect(Collectors.toList());
     }
 
     /**
      * 转换
      */
-    public static <T, A, R> R collect(Collection<T> coll, Collector<? super T, A, R> collector){
-        return coll.stream().collect(collector);
+    public static <E, A, R> R collect(Collection<E> source, Collector<? super E, A, R> collector){
+        return source.stream().filter(Objects::nonNull).collect(collector);
     }
 
     /**
-     * 转换为Map-List
+     * 为避免数据丢失，Steam API底层对Collectors.toMap做了较为硬性的要求
+     * 1.toMap首先不允许key重复， 因而分组时需要注意使用KEY字段
+     * 2.value不允许为null
+     *
+     * 因而，以下*ToMap方法在使用时请注意以上两条，而*ToMapEnhance允许key重复，并启用新值替换旧值的机制
+     *
      */
-    public static <T, F> Map<F, List<T>> groupIndex(Collection<T> coll, Function<? super T, ? extends F> mapper){
-        if(isEmpty(coll)) {
-            return Collections.emptyMap();
-        }
-        return coll.stream().collect(Collectors.groupingBy(mapper));
-    }
-
+    
     /**
-     * 转换为Map-List
+     * 分组转换为Map<K, List<V>>，底层默认HashMap<K, ArrayList<V>>
      */
-    public static <T, F, R> Map<F, List<R>> groupIndex(Collection<T> coll, Function<? super T, ? extends F> group, Function<? super T, ? extends R> mapper){
-        if(isEmpty(coll)) {
-            return Collections.emptyMap();
-        }
-        return coll.stream().collect(Collectors.groupingBy(group,Collectors.mapping(mapper, Collectors.toList())));
+    public static <E, K> Map<K, List<E>> groupIndexToMap(Collection<E> source, Function<? super E, ? extends K> kFunction){
+        return source.stream().filter(Objects::nonNull).collect(Collectors.groupingBy(kFunction));
+    }
+    
+    /**
+     * 分组转换为指定的Map<K, List<V>>， 例如TreeMap<K, List<V>>/LinkedHashMap<K, List<V>>
+     */
+    public static <E, K, M extends Map<K, List<E>>> M groupIndexToMap(Supplier<M> mapColl, Collection<E> source, Function<? super E, ? extends K> kFunction){
+        return source.stream().filter(Objects::nonNull).collect(Collectors.groupingBy(kFunction, mapColl, Collectors.toList()));
+    }
+    
+    /**
+     * 分组转换为指定Map<K, 指定的List<V>>，例如TreeMap<K, LinkedList<V>>/LinkedHashMap<K, LinkedList<V>>
+     */
+    public static <E, K, M extends Map<K, C>, C extends Collection<E>> M groupIndexToMap(Supplier<M> mapColl, Supplier<C> vColl, Collection<E> source, Function<? super E, ? extends K> kFunction){
+        return source.stream().filter(Objects::nonNull).collect(Collectors.groupingBy(kFunction, mapColl, Collectors.toCollection(vColl)));
+    }
+    
+    /**
+     * 分组转换为指定Map<K, 指定的List<V>>，例如TreeMap<K, LinkedList<V>>/LinkedHashMap<K, LinkedList<V>>
+     * 并且可对原始数组元素进行计算(转化)为其他对象
+     */
+    public static <E, K, V, M extends Map<K, C>, C extends Collection<V>> M groupIndexToMap(Supplier<M> mapColl, Supplier<C> vColl, Collection<E> source, Function<? super E, ? extends K> kGroupFunction, Function<? super E, ? extends V> vFunction){
+        return source.stream().filter(Objects::nonNull).collect(Collectors.groupingBy(kGroupFunction, mapColl, Collectors.mapping(vFunction, Collectors.toCollection(vColl))));
     }
 
     /**
      * 转换为Map-Value
      */
-    public static <K, V> ImmutableMap<K, V> uniqueIndex(Iterable<V> values, Function<? super V, K> function) {
-        if(values==null) {
+    public static <E, K> ImmutableMap<K, E> uniqueIndex(Iterable<E> values, Function<? super E, K> kFunction) {
+        if (Objects.isNull(values)) {
             return ImmutableMap.of();
         }
-        return Maps.uniqueIndex(values, function::apply);
+        return Maps.uniqueIndex(values, kFunction::apply);
     }
 
     /**
      * 转换为Map-Value
      */
-    public static <K, V> Map<K, V> transMap(Iterable<V> values, Function<? super V, K> function) {
-        Map<K, V> map = new HashMap<>();
-        if(values==null) {
-            return map;
-        }
-        for (V item : values) {
-            map.put(function.apply(item), item);
-        }
-        return map;
+    public static <E, K> Map<K, E> transToMap(@NonNull Iterable<E> values, Function<? super E, K> kFunction) {
+        return StreamSupport.stream(values.spliterator(), Boolean.FALSE)
+                .filter(Objects::nonNull)
+                .collect(Collectors.toMap(item -> kFunction.apply(item), Function.identity()));
     }
-
+    
+    /**
+     * 转换为Map-Value, 重复KEY将抛出异常
+     */
+    public static <E, K, M extends Map<K, E>> M transToMap(Supplier<M> mapColl, @NonNull Iterable<E> values, Function<? super E, K> kFunction) {
+        return StreamSupport.stream(values.spliterator(), Boolean.FALSE)
+                .filter(Objects::nonNull)
+                .collect(Collectors.toMap(item -> kFunction.apply(item), Function.identity(), nonDuplicateKey(), mapColl));
+    }
+    
+    /**
+     * 转换为Map-Value, 允许重复KEY
+     */
+    public static <E, K, M extends Map<K, E>> M transToMapEnhance(Supplier<M> mapColl, @NonNull Iterable<E> values, Function<? super E, K> kFunction) {
+        return StreamSupport.stream(values.spliterator(), Boolean.FALSE)
+                .filter(Objects::nonNull)
+                .collect(Collectors.toMap(item -> kFunction.apply(item), Function.identity(), enableNewOnDuplicateKey(), mapColl));
+    }
+    
     /**
      * 转换为Map-Value
      */
-    public static <T, K, V> Map<K, V> transMap(Iterable<T> values, Function<? super T, K> keyFunction, Function<? super T, V> valueFunction) {
-        Map<K, V> map = new HashMap<>();
-        if(values==null) {
-            return map;
-        }
-        for (T item : values) {
-            map.put(keyFunction.apply(item), valueFunction.apply(item));
-        }
-        return map;
+    public static <E, K, V> Map<K, V> transMap(@NonNull Iterable<E> values, Function<? super E, K> kFunction, Function<? super E, V> vFunction) {
+        return StreamSupport.stream(values.spliterator(), Boolean.FALSE)
+                .filter(Objects::nonNull)
+                .collect(Collectors.toMap(item -> kFunction.apply(item), item -> vFunction.apply(item)));
     }
+    
+    /**
+     * 转换为Map-Value, 重复KEY将抛出异常
+     */
+    public static <E, K, V, M extends Map<K, V>> M transToMap(Supplier<M> mapColl, @NonNull Iterable<E> values, Function<? super E, K> kFunction, Function<? super E, V> vFunction) {
+        return StreamSupport.stream(values.spliterator(), Boolean.FALSE)
+                .filter(Objects::nonNull)
+                .collect(Collectors.toMap(item -> kFunction.apply(item), item -> vFunction.apply(item), nonDuplicateKey(), mapColl));
+    }
+    
     
     /**
      * 按照指定分隔符将数组元素拼接为字符串
@@ -157,7 +200,7 @@ public class CollectionUtil extends CollectionUtils {
         if (CollectionUtil.isEmpty(list)) {
             return StringUtils.EMPTY;
         }
-        List<String> stringList = transList(list, Object::toString);
+        List<String> stringList = transToList(list, Object::toString);
         if (Objects.isNull(separator)) {
             separator = StringUtils.EMPTY;
         }
@@ -185,51 +228,85 @@ public class CollectionUtil extends CollectionUtils {
         }
         return result;
     }
-
-    /**
-     * 对map中value排序
-     * @param map
-     */
-    public static  <K> LinkedHashMap<K, Float> sortMap(Map<K, Float> map){
-        //获取entrySet
-        Set<Entry<K,Float>> mapEntries = map.entrySet();
-
-        //使用链表来对集合进行排序，使用LinkedList，利于插入元素
-        List<Entry<K, Float>> result = new LinkedList<>(mapEntries);
-        //自定义比较器来比较链表中的元素
-        result.sort(Comparator.comparing(Entry::getValue));
-
-        //将排好序的存入到LinkedHashMap(可保持顺序)中，需要存储键和值信息对到新的映射中。
-        LinkedHashMap<K,Float> linkMap = new LinkedHashMap<>();
-        for(Entry<K,Float> newEntry :result){
-            linkMap.put(newEntry.getKey(), newEntry.getValue());
+    
+    public static <K, V extends Comparable<V>> LinkedHashMap<K, V> sortedMapByValue(Map<K, V> sourceMap, Comparator<? super Entry<K, V>> comparator) {
+        if (isEmpty(sourceMap)) {
+            return new LinkedHashMap<>(2, 0.5F, Boolean.FALSE);
         }
-        return linkMap;
+        List<Entry<K, V>> entryList = sourceMap.entrySet().stream().sorted(comparator).collect(Collectors.toList());
+        // 由于
+        return transToMap(LinkedHashMap::new, entryList, Entry::getKey, Entry::getValue);
     }
 
-
     /**
-     * 从list里根据唯一字段值 查找
+     * 在List中根据自定字段(函数)查找元素，找到任意一个就返回，找不到就返回null
      * @param list
      * @param function
      * @param value
      * @return
      */
-    public static <T, F> T find(List<T> list, Function<? super T, F> function, F value) {
-        if(value==null) {
-            return null;
-        }
-        if(isEmpty(list)) {
-            return null;
-        }
-        for (T t : list) {
-            if(value.equals(function.apply(t))) {
-                return t;
-            }
-        }
-        return null;
+    public static <T, F> T findAny(List<T> list, Function<? super T, F> function, @NonNull F value) {
+        return list.stream().filter(item -> value.equals(function.apply(item))).findAny().orElse(null);
     }
-
+    
+    /**
+     * 在List中根据自定字段(函数)查找元素，返回找到的第一个元素，找不到就返回null
+     * @param list
+     * @param function
+     * @param value
+     * @param <T>
+     * @param <F>
+     * @return
+     */
+    public static <T, F> T findFirst(List<T> list, Function<? super T, F> function, @NonNull F value) {
+        return list.stream().filter(item -> value.equals(function.apply(item))).findFirst().orElse(null);
+    }
+    
+    
+    /**
+     * 判断元素在list中存在至少一个值，存在就立马返回
+     * @param list
+     * @param function
+     * @param value
+     * @param <T>
+     * @param <F>
+     * @return
+     */
+    public static <T, F> boolean existAtLeastOne(List<T> list, Function<? super T, F> function, @NonNull F value) {
+        return list.stream().anyMatch(item -> value.equals(function.apply(item)));
+    }
+    
+    /**
+     * 判断元素在list中是否存在
+     * @param list
+     * @param function
+     * @param value
+     * @param <T>
+     * @param <F>
+     * @return
+     */
+    public static <T, F> Boolean exist(List<T> list, Function<? super T, F> function, @NonNull F value) {
+        return list.stream().allMatch(item -> value.equals(function.apply(item)));
+    }
+    
+    
+    /**
+     * Returns a merge function, suitable for use in
+     * {@link Map#merge(Object, Object, BiFunction) Map.merge()} or
+     * throws {@code IllegalStateException}.  This can be used to enforce the
+     * assumption that the elements being collected are distinct.
+     *
+     * @param <T> the type of input arguments to the merge function
+     * @return a merge function which always throw {@code IllegalStateException}
+     */
+    private static <T> BinaryOperator<T> nonDuplicateKey() {
+        return (u, v) -> { throw new IllegalStateException(String.format("转换Map时不允许重复Key: [%s]", u)); };
+    }
+    
+    private static <T> BinaryOperator<T> enableNewOnDuplicateKey() {
+        return (oldValue, newValue) -> newValue;
+    }
+    
     public static <T> Comparator<T> getNameComparator(Function<T, String> function) {
         return new NameComparator<T>(function);
     }

@@ -7,8 +7,8 @@ import java.util.List;
 
 /**
  * FileName: FileClassifiedResult
- * Author:   caofanCPU
- * Date:     2018/9/5 14:57
+ * @Author:   caofanCPU
+ * @Date:     2018/9/5 14:57
  */
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public class FileClassifiedResult implements Serializable {
