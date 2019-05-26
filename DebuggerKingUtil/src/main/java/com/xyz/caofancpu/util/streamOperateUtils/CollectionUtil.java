@@ -1,4 +1,4 @@
-package com.xyz.caofancpu.util.commonOperateUtils;
+package com.xyz.caofancpu.util.streamOperateUtils;
 
 
 import com.google.common.collect.ImmutableMap;
@@ -17,6 +17,7 @@ import java.util.function.Function;
 import java.util.function.Supplier;
 import java.util.stream.Collector;
 import java.util.stream.Collectors;
+import java.util.stream.IntStream;
 import java.util.stream.StreamSupport;
 
 /**
@@ -206,28 +207,6 @@ public class CollectionUtil extends CollectionUtils {
         }
         return stringList.stream().filter(Objects::nonNull).collect(Collectors.joining(separator));
     }
-
-    /**
-     * 保持原来顺序返回list分组
-     * @param list key不会跳着分布
-     * @param function
-     * @return
-     */
-    private static <K, V> List<List<V>> groupList(List<V> list, Function<? super V, K> function) {
-        List<List<V>> result = new ArrayList<>();
-        K cutKey= null;
-        List<V> resultItem = new ArrayList<>();
-        for (V item : list) {
-            K key = function.apply(item);
-            if(cutKey==null || !cutKey.equals(key)) {
-                cutKey = key;
-                resultItem = new ArrayList<>();
-                result.add(resultItem);
-            }
-            resultItem.add(item);
-        }
-        return result;
-    }
     
     public static <K, V extends Comparable<V>> LinkedHashMap<K, V> sortedMapByValue(Map<K, V> sourceMap, Comparator<? super Entry<K, V>> comparator) {
         if (isEmpty(sourceMap)) {
@@ -289,6 +268,42 @@ public class CollectionUtil extends CollectionUtils {
         return list.stream().allMatch(item -> value.equals(function.apply(item)));
     }
     
+    /**
+     * examNo : subjects     ==>   subject   : examNos
+     * examNo : studentIds   ==>   studentId : examNos
+     * taskId : studentIds   ==>   studentId : taskIds
+     *
+     */
+    public static <E1, E2, K1, K2> Map<K2, List<E2>> reverseKVInMap(@NonNull Map<K1, List<E1>> sourceMap, Function<? super K1, E2> kFunction, Function<? super E1, K2> vFunction) {
+        Map<K2, List<E2>> aux = new HashMap<>();
+        sourceMap.entrySet().stream()
+                .filter(Objects::nonNull)
+                .forEach(entry -> entry.getValue().stream()
+                        .filter(Objects::nonNull)
+                        .forEach(v -> aux.computeIfAbsent(vFunction.apply(v), init -> new ArrayList<>()).add(kFunction.apply(entry.getKey())))
+                );
+        return aux;
+    }
+    
+    /**
+     * Map键值对反转，支持返回结果自定义收集容器
+     * 例如返回LinkedHashMap<K, LinkedList<V>
+     *
+     * Map<k1, Coll_1<v1>>  ==>  Map<k2, Coll_1<v2>>
+     *    kFunction.apply(k1) ==> v2
+     *    vFunction.apply(v1) ==> k2
+     */
+    public static <V1, V2, K1, K2, C1 extends Collection<V1>, C2 extends Collection<V2>, M1 extends Map<K1, C1>, M2 extends Map<K2, C2> >
+    M2 reverseKVInMap(Supplier<M2> mapColl, Supplier<C2> vColl, @NonNull M1 sourceMap, Function<? super K1, V2> kFunction, Function<? super V1, K2> vFunction){
+        M2 aux = mapColl.get();
+        sourceMap.entrySet().stream()
+                .filter(Objects::nonNull)
+                .forEach(entry -> entry.getValue().stream()
+                        .filter(Objects::nonNull)
+                        .forEach(v -> aux.computeIfAbsent(vFunction.apply(v), init -> vColl.get()).add(kFunction.apply(entry.getKey())))
+                );
+        return aux;
+    }
     
     /**
      * Returns a merge function, suitable for use in
