@@ -268,13 +268,24 @@ public class CollectionUtil extends CollectionUtils {
         return list.stream().allMatch(item -> value.equals(function.apply(item)));
     }
     
+    
     /**
-     * examNo : subjects     ==>   subject   : examNos
-     * examNo : studentIds   ==>   studentId : examNos
-     * taskId : studentIds   ==>   studentId : taskIds
+     * Map键值对反转
+     * 示例，
+     * { examA : [stu1, stu2, stu3], examB: [stu1, stu2] }
+     *                       ⬇
+     * {stu1 : [examA, examB], stu2 : [examA, examB], stu3 : [examA]}
      *
+     * @param sourceMap
+     * @param kFunction
+     * @param vFunction
+     * @param <E1>
+     * @param <E2>
+     * @param <K1>
+     * @param <K2>
+     * @return
      */
-    public static <E1, E2, K1, K2> Map<K2, List<E2>> reverseKVInMap(@NonNull Map<K1, List<E1>> sourceMap, Function<? super K1, E2> kFunction, Function<? super E1, K2> vFunction) {
+    public static <E1, E2, K1, K2> Map<K2, List<E2>> reverseKV(@NonNull Map<K1, List<E1>> sourceMap, Function<? super K1, E2> kFunction, Function<? super E1, K2> vFunction) {
         Map<K2, List<E2>> aux = new HashMap<>();
         sourceMap.entrySet().stream()
                 .filter(Objects::nonNull)
@@ -285,6 +296,7 @@ public class CollectionUtil extends CollectionUtils {
         return aux;
     }
     
+    
     /**
      * Map键值对反转，支持返回结果自定义收集容器
      * 例如返回LinkedHashMap<K, LinkedList<V>
@@ -292,9 +304,23 @@ public class CollectionUtil extends CollectionUtils {
      * Map<k1, Coll_1<v1>>  ==>  Map<k2, Coll_1<v2>>
      *    kFunction.apply(k1) ==> v2
      *    vFunction.apply(v1) ==> k2
+     * @param mapColl
+     * @param vColl
+     * @param sourceMap
+     * @param kFunction
+     * @param vFunction
+     * @param <V1>
+     * @param <V2>
+     * @param <K1>
+     * @param <K2>
+     * @param <C1>
+     * @param <C2>
+     * @param <M1>
+     * @param <M2>
+     * @return
      */
-    public static <V1, V2, K1, K2, C1 extends Collection<V1>, C2 extends Collection<V2>, M1 extends Map<K1, C1>, M2 extends Map<K2, C2> >
-    M2 reverseKVInMap(Supplier<M2> mapColl, Supplier<C2> vColl, @NonNull M1 sourceMap, Function<? super K1, V2> kFunction, Function<? super V1, K2> vFunction){
+    public static <V1, V2, K1, K2, C1 extends Collection<V1>, C2 extends Collection<V2>, M1 extends Map<K1, C1>, M2 extends Map<K2, C2>>
+    M2 reverseKV(Supplier<M2> mapColl, Supplier<C2> vColl, @NonNull M1 sourceMap, Function<? super K1, V2> kFunction, Function<? super V1, K2> vFunction){
         M2 aux = mapColl.get();
         sourceMap.entrySet().stream()
                 .filter(Objects::nonNull)
