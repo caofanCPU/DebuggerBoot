@@ -203,3 +203,65 @@ select exam_no, task_id, school_id, group_id, group_name, group_sort, major, tea
  FROM dwd_task_group
  WHERE exam_no = 'E15201518440832018030001105' and task_id = 0 and school_id = 10225488;
 ------------------------------------------------------------------------------------------------------------------------
+43  2019-05-28 13:00:21.305 [http-nio-8115-exec-10] DEBUG c.h.d.entry.DwsGradeSubjectMo.fetch[49] - ==>
+
+    select
+        exam_no,
+        task_id,
+        subject_organ,
+        school_id,
+        major,
+        subject_total_score,
+        sum_total_score,
+        sum_judge_score,
+        max_score,
+        min_score,
+        avg_score,
+        mid_score,
+        student_score,
+        absent_student_score,
+        push_student_num,
+        report_subject_type,
+        exam_name,
+        task_name,
+        is_exercise_complete
+    FROM
+        dws_grade_subject
+    WHERE
+        exam_no = 'E15201518440832018030001105'
+        and school_id = 10225488
+        and major = 0;
+------------------------------------------------------------------------------------------------------------------------
+44  2019-05-28 13:00:26.445 [http-nio-8115-exec-10] DEBUG c.h.d.entry.DwsGroupSubjectMo.fetch[49] - ==>
+
+    select
+        exam_no,
+        task_id,
+        subject_organ,
+        school_id,
+        group_id,
+        subject_total_score,
+        sum_total_score,
+        sum_judge_score,
+        max_score,
+        min_score,
+        avg_score,
+        mid_score,
+        student_score,
+        absent_student_score,
+        push_student_num,
+        report_subject_type,
+        exam_name,
+        task_name,
+        group_name,
+        group_sort,
+        report_group_type,
+        major
+    FROM
+        dws_group_subject
+    WHERE
+        exam_no = 'E15201518440832018030001105'
+        and task_id = 0
+        and subject_organ = 0
+        and school_id = 10225488;
+------------------------------------------------------------------------------------------------------------------------
