@@ -197,7 +197,7 @@ public class CollectionUtil extends CollectionUtils {
      * @param separator
      * @return
      */
-    public static String join(List<Object> list, String separator) {
+    public static <T extends Object> String join(List<T> list, String separator) {
         if (CollectionUtil.isEmpty(list)) {
             return StringUtils.EMPTY;
         }

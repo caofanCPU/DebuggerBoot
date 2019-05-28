@@ -4,7 +4,7 @@ import com.xyz.caofancpu.model.FileClassifiedResult;
 import com.xyz.caofancpu.model.MiniAttachment;
 import com.xyz.caofancpu.service.CommonOperateService;
 import com.xyz.caofancpu.service.configValue.CommonConfigValueService;
-import com.xyz.caofancpu.util.commonOperateUtils.FileBase64Util;
+import com.xyz.caofancpu.util.commonOperateUtils.FileUtil;
 import com.xyz.caofancpu.util.multiThreadUtils.RemoteRequestTask;
 import com.xyz.caofancpu.util.multiThreadUtils.RemoteServiceHelper;
 import com.xyz.caofancpu.util.result.ResultBody;
@@ -103,7 +103,7 @@ public class FileTaskService {
                                         }
                                         String destFileFullPath = destFileParentPath + "/" + fileSourceName;
                                         try {
-                                            FileBase64Util.copyFile(mini.getFilePath(), destFileFullPath);
+                                            FileUtil.copyFile(mini.getFilePath(), destFileFullPath);
                                         } catch (IOException e) {
                                             logger.error("拷贝文件失败, 文件原名: [{}], {}", sourceFileName, e.getMessage());
                                             return;

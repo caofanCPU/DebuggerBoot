@@ -1,6 +1,5 @@
 package com.xyz.caofancpu.util.StudyWaitingUtils;
 
-import org.apache.commons.lang3.StringUtils;
 import ru.lanwen.verbalregex.VerbalExpression;
 
 import java.util.regex.Matcher;
@@ -14,13 +13,8 @@ import java.util.regex.Pattern;
  */
 
 public class VerbalExpressionUtil {
-    public static void main(String[] args) {
-        VerbalExpression testRegex = VerbalExpression.regex()
-                .startOfLine().find("0").oneOrMore()
-                .build();
-        String testString = "0000000010000000000000000";
-        System.out.println(testRegex.toString());
-        System.out.println(executePatternRex(testRegex, testString, StringUtils.SPACE));
+    public static void main(String[] args) throws Exception {
+    
     }
     
     public static String executePatternRex(VerbalExpression regexExpression, String originText, String replacer) {

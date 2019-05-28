@@ -24,4 +24,10 @@ public class Area {
     private Integer pid;
     
     private List<Area> children;
+    
+    public Area(Integer id, String name, Integer pid) {
+        this.id = id;
+        this.name = name;
+        this.pid = pid;
+    }
 }
