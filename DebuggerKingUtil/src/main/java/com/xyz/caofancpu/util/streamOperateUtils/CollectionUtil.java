@@ -17,7 +17,6 @@ import java.util.function.Function;
 import java.util.function.Supplier;
 import java.util.stream.Collector;
 import java.util.stream.Collectors;
-import java.util.stream.IntStream;
 import java.util.stream.StreamSupport;
 
 /**
@@ -76,7 +75,24 @@ public class CollectionUtil extends CollectionUtils {
     public static <E> List<E> distinctList(Collection<E> source){
         return source.stream().filter(Objects::nonNull).distinct().collect(Collectors.toList());
     }
-
+    
+    /**
+     * 根据集合元素中指定的字段进行去重，返回去重后的元素集合
+     *
+     * @param coll
+     * @param distinctComparator
+     * @param <T>
+     * @return
+     */
+    public static <T> List<T> distinctListByField(Collection<T> coll, Comparator<T> distinctComparator) {
+        if (isEmpty(coll)) {
+            return Collections.emptyList();
+        }
+        return coll.stream()
+                .filter(Objects::nonNull)
+                .collect(Collectors.collectingAndThen(Collectors.toCollection(() -> new TreeSet<>(distinctComparator)), ArrayList::new));
+    }
+    
     /**
      * 转换
      */
@@ -329,6 +345,74 @@ public class CollectionUtil extends CollectionUtils {
                         .forEach(v -> aux.computeIfAbsent(vFunction.apply(v), init -> vColl.get()).add(kFunction.apply(entry.getKey())))
                 );
         return aux;
+    }
+    
+    /**
+     * 针对复杂Map中，查找key匹配函数的键值对集合
+     * 不满足匹配函数条件时返回空
+     *
+     * @param srcMap
+     * @param kFunction
+     * @param value
+     * @param <K>
+     * @param <V>
+     * @param <T>
+     * @return
+     */
+    public static <K, V, T> List<Map.Entry<K, V>> find(Map<K, V> srcMap, Function<? super K, T> kFunction, @NonNull T value) {
+        if (isEmpty(srcMap)) {
+            return null;
+        }
+        return srcMap.entrySet().stream()
+                .filter(Objects::nonNull)
+                .map(entry -> {
+                    if (value.equals(kFunction.apply(entry.getKey()))) {
+                        return entry;
+                    }
+                    return null;
+                })
+                .filter(Objects::nonNull)
+                .collect(Collectors.toList());
+    }
+    
+    /**
+     * 针对复杂Map中，查找key匹配函数的键值对，只取一个
+     * 不满足匹配函数条件时返回null
+     *
+     * @param srcMap
+     * @param kFunction
+     * @param value
+     * @param <K>
+     * @param <V>
+     * @param <T>
+     * @return
+     */
+    public static <K, V, T> Map.Entry<K, V> findOne(Map<K, V> srcMap, Function<? super K, T> kFunction, @NonNull T value) {
+        if (isEmpty(srcMap)) {
+            return null;
+        }
+        return srcMap.entrySet().stream()
+                .filter(Objects::nonNull)
+                .filter(entry -> value.equals(kFunction.apply(entry.getKey())))
+                .findAny()
+                .get();
+    }
+    
+    /**
+     * 针对复杂Map中，查找key匹配函数的键值对，只取一个
+     * 不满足匹配函数条件时返回null
+     *
+     * @param srcMap
+     * @param kFunction
+     * @param value
+     * @param <K>
+     * @param <V>
+     * @param <T>
+     * @return
+     */
+    public static <K, V, T> V findOneValue(Map<K, V> srcMap, Function<? super K, T> kFunction, @NonNull T value) {
+        Entry<K, V> resultEntry = findOne(srcMap, kFunction, value);
+        return Objects.isNull(resultEntry) ? null : resultEntry.getValue();
     }
     
     /**
