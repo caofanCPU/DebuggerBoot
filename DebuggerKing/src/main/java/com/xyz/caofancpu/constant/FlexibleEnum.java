@@ -56,7 +56,7 @@ public enum FlexibleEnum {
     public static void main(String[] args) {
         List<FlexibleEnum> flexibleEnums = Arrays.asList(FlexibleEnum.values());
         flexibleEnums.sort(Comparator.comparing(FlexibleEnum::getValue).reversed());
-        flexibleEnums.stream().forEach(FlexibleEnum::process);
+        flexibleEnums.forEach(FlexibleEnum::process);
     }
     
     /**

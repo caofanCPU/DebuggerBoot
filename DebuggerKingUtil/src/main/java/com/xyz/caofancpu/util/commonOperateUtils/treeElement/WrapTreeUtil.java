@@ -13,7 +13,6 @@ import java.util.stream.Collectors;
  */
 public class WrapTreeUtil {
     
-    
     /**
      * 对于给定的列表， 顺序遍历父节点->子节点，遍历到的元素添加到结果收集容器中
      *
@@ -51,9 +50,9 @@ public class WrapTreeUtil {
      * @param sourceList  数据源
      * @param pidFunction pid操作函数表达式
      * @param idFunction  id操作函数表达式
-     * @return
+     * @return 树元素列表
      */
-    public static <I extends Comparable, C> List<WrapTree<I, C>> initTree(List<C> sourceList, @NonNull Function<C, I> pidFunction, @NonNull Function<C, I> idFunction, Function<C, I> depthFunction) {
+    private static <I extends Comparable, C> List<WrapTree<I, C>> initTree(List<C> sourceList, @NonNull Function<C, I> pidFunction, @NonNull Function<C, I> idFunction, Function<C, I> depthFunction) {
         TreeMap<I, List<C>> pidMultiMap = sourceList.stream()
                 .filter(Objects::nonNull)
                 .collect(TreeMap::new, (map, c) -> map.computeIfAbsent(pidFunction.apply(c), init -> new ArrayList<>()).add(c), TreeMap::putAll);
@@ -63,8 +62,8 @@ public class WrapTreeUtil {
     /**
      * 递归展开子集
      *
-     * @param collector
-     * @param treeElements
+     * @param collector    结果搜集器
+     * @param treeElements 树元素列表
      */
     private static <I extends Comparable, C> void expandTree(List<C> collector, List<WrapTree<I, C>> treeElements) {
         if (CollectionUtil.isEmpty(treeElements)) {
@@ -85,9 +84,10 @@ public class WrapTreeUtil {
      * 对于给定的列表， 顺序遍历父节点->子节点，只将叶子节点添加到结果收集容器中
      *
      * @param collector    结果收集容器
-     * @param treeElements
+     * @param treeElements 树元素列表
      * @param depth        叶子节点深度限制
      */
+    @SuppressWarnings("unchecked")
     private static <I extends Comparable, C> void collectTreeLeaf(List<C> collector, List<WrapTree<I, C>> treeElements, @NonNull I depth) {
         if (CollectionUtil.isEmpty(treeElements)) {
             return;
@@ -111,14 +111,14 @@ public class WrapTreeUtil {
      * @param pidMultiMap 分类Map
      * @param idFunction  id操作函数
      * @param pid         pid
-     * @return
+     * @return 树元素列表
      */
     private static <I extends Comparable, C> List<WrapTree<I, C>> initTreeChildItems(Map<I, List<C>> pidMultiMap, @NonNull Function<C, I> idFunction, Function<C, I> depthFunction, @NonNull I pid) {
         List<C> currentList = pidMultiMap.get(pid);
         if (CollectionUtil.isEmpty(currentList)) {
             return new ArrayList<>();
         }
-        List<WrapTree<I, C>> result = currentList.stream()
+        return currentList.stream()
                 .filter(Objects::nonNull)
                 .map(cItem -> {
                     WrapTree<I, C> wrapTree = new WrapTree<I, C>().setPid(pid).setId(idFunction.apply(cItem));
@@ -130,7 +130,6 @@ public class WrapTreeUtil {
                     return wrapTree;
                 })
                 .collect(Collectors.toList());
-        return result;
     }
     
 }

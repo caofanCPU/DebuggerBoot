@@ -16,7 +16,7 @@ import java.util.List;
 @Accessors(chain = true)
 @NoArgsConstructor
 @AllArgsConstructor
-public class WrapTree<I extends Comparable, E> {
+class WrapTree<I extends Comparable, E> {
     /**
      * 树元素ID, 一般为Integer/Long型
      */
@@ -38,7 +38,7 @@ public class WrapTree<I extends Comparable, E> {
      */
     private List<WrapTree<I, E>> childElements;
     
-    public boolean hasChildren() {
+    boolean hasChildren() {
         return CollectionUtil.isNotEmpty(childElements);
     }
 }

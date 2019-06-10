@@ -26,34 +26,36 @@ public class CollectionUtil extends CollectionUtils {
     
     /**
      * map判空
-     * @param source
-     * @return
+     *
+     * @param source 数据源
+     * @return 判断结果
      */
     public static boolean isEmpty(Map source) {
         return (source == null || source.isEmpty());
     }
-
+    
     /**
      * 转换为Set, 底层默认使用HashSet
-     * @return
+     *
+     * @return Set
      */
-    public static <E, R> Set<R> transToSet(Collection<E> source, Function<? super E, ? extends R> mapper){
+    public static <E, R> Set<R> transToSet(Collection<E> source, Function<? super E, ? extends R> mapper) {
         return source.stream().filter(Objects::nonNull).map(mapper).collect(Collectors.toSet());
     }
-
+    
     /**
      * 转换为List, 底层默认使用ArrayList
      */
-    public static <E, R> List<R> transToList(Collection<E> source, Function<? super E, ? extends R> mapper){
+    public static <E, R> List<R> transToList(Collection<E> source, Function<? super E, ? extends R> mapper) {
         return source.stream().filter(Objects::nonNull).map(mapper).collect(Collectors.toList());
     }
     
     /**
      * 转换为指定的集合，常用Set/List，HashSet/ArrayList，LinkedSet/LinkedList
+     *
      * @param resultColl
      * @param source
      * @param mapper
-     * @returnF
      */
     public static <E, R, C extends Collection<R>> C transToCollection(Supplier<C> resultColl, Collection<E> source, Function<? super E, ? extends R> mapper) {
         return source.stream().filter(Objects::nonNull).map(mapper).collect(Collectors.toCollection(resultColl));
@@ -62,14 +64,14 @@ public class CollectionUtil extends CollectionUtils {
     /**
      * 转换为去重的List
      */
-    public static <E, R> List<R> distinctList(Collection<E> source, Function<? super E, ? extends R> mapper){
+    public static <E, R> List<R> distinctList(Collection<E> source, Function<? super E, ? extends R> mapper) {
         return source.stream().filter(Objects::nonNull).map(mapper).distinct().collect(Collectors.toList());
     }
-
+    
     /**
      * 去重
      */
-    public static <E> List<E> distinctList(Collection<E> source){
+    public static <E> List<E> distinctList(Collection<E> source) {
         return source.stream().filter(Objects::nonNull).distinct().collect(Collectors.toList());
     }
     
@@ -92,10 +94,10 @@ public class CollectionUtil extends CollectionUtils {
     /**
      * 转换
      */
-    public static <E, A, R> R collect(Collection<E> source, Collector<? super E, A, R> collector){
+    public static <E, A, R> R collect(Collection<E> source, Collector<? super E, A, R> collector) {
         return source.stream().filter(Objects::nonNull).collect(collector);
     }
-
+    
     /**
      * 为避免数据丢失，Steam API底层对Collectors.toMap做了较为硬性的要求
      * 1.toMap首先不允许key重复， 因而分组时需要注意使用KEY字段
@@ -108,21 +110,21 @@ public class CollectionUtil extends CollectionUtils {
     /**
      * 分组转换为Map<K, List<V>>，底层默认HashMap<K, ArrayList<V>>
      */
-    public static <E, K> Map<K, List<E>> groupIndexToMap(Collection<E> source, Function<? super E, ? extends K> kFunction){
+    public static <E, K> Map<K, List<E>> groupIndexToMap(Collection<E> source, Function<? super E, ? extends K> kFunction) {
         return source.stream().filter(Objects::nonNull).collect(Collectors.groupingBy(kFunction));
     }
     
     /**
      * 分组转换为指定的Map<K, List<V>>， 例如TreeMap<K, List<V>>/LinkedHashMap<K, List<V>>
      */
-    public static <E, K, M extends Map<K, List<E>>> M groupIndexToMap(Supplier<M> mapColl, Collection<E> source, Function<? super E, ? extends K> kFunction){
+    public static <E, K, M extends Map<K, List<E>>> M groupIndexToMap(Supplier<M> mapColl, Collection<E> source, Function<? super E, ? extends K> kFunction) {
         return source.stream().filter(Objects::nonNull).collect(Collectors.groupingBy(kFunction, mapColl, Collectors.toList()));
     }
     
     /**
      * 分组转换为指定Map<K, 指定的List<V>>，例如TreeMap<K, LinkedList<V>>/LinkedHashMap<K, LinkedList<V>>
      */
-    public static <E, K, M extends Map<K, C>, C extends Collection<E>> M groupIndexToMap(Supplier<M> mapColl, Supplier<C> vColl, Collection<E> source, Function<? super E, ? extends K> kFunction){
+    public static <E, K, M extends Map<K, C>, C extends Collection<E>> M groupIndexToMap(Supplier<M> mapColl, Supplier<C> vColl, Collection<E> source, Function<? super E, ? extends K> kFunction) {
         return source.stream().filter(Objects::nonNull).collect(Collectors.groupingBy(kFunction, mapColl, Collectors.toCollection(vColl)));
     }
     
@@ -130,10 +132,11 @@ public class CollectionUtil extends CollectionUtils {
      * 分组转换为指定Map<K, 指定的List<V>>，例如TreeMap<K, LinkedList<V>>/LinkedHashMap<K, LinkedList<V>>
      * 并且可对原始数组元素进行计算(转化)为其他对象
      */
-    public static <E, K, V, M extends Map<K, C>, C extends Collection<V>> M groupIndexToMap(Supplier<M> mapColl, Supplier<C> vColl, Collection<E> source, Function<? super E, ? extends K> kGroupFunction, Function<? super E, ? extends V> vFunction){
-        return source.stream().filter(Objects::nonNull).collect(Collectors.groupingBy(kGroupFunction, mapColl, Collectors.mapping(vFunction, Collectors.toCollection(vColl))));
+    public static <E, K, V, M extends Map<K, C>, C extends Collection<V>> M groupIndexToMap(Supplier<M> mapColl, Supplier<C> vColl, Collection<E> source, Function<? super E, ? extends K> kGroupFunction, Function<? super E, ? extends V> vFunction) {
+        return source.stream().filter(Objects::nonNull).collect(
+                Collectors.groupingBy(kGroupFunction, mapColl, Collectors.mapping(vFunction, Collectors.toCollection(vColl))));
     }
-
+    
     /**
      * 转换为Map-Value
      */
@@ -143,7 +146,7 @@ public class CollectionUtil extends CollectionUtils {
         }
         return Maps.uniqueIndex(values, kFunction::apply);
     }
-
+    
     /**
      * 转换为Map-Value
      */
@@ -191,6 +194,7 @@ public class CollectionUtil extends CollectionUtils {
     
     /**
      * 按照指定分隔符将数组元素拼接为字符串
+     *
      * @param arr
      * @param separator
      * @return
@@ -204,6 +208,7 @@ public class CollectionUtil extends CollectionUtils {
     
     /**
      * 按照指定分隔符将数组元素拼接为字符串
+     *
      * @param list
      * @param separator
      * @return
@@ -226,9 +231,10 @@ public class CollectionUtil extends CollectionUtils {
         List<Entry<K, V>> entryList = sourceMap.entrySet().stream().sorted(comparator).collect(Collectors.toList());
         return transToMap(LinkedHashMap::new, entryList, Entry::getKey, Entry::getValue);
     }
-
+    
     /**
      * 在List中根据自定字段(函数)查找元素，找到任意一个就返回，找不到就返回null
+     *
      * @param list
      * @param function
      * @param value
@@ -240,6 +246,7 @@ public class CollectionUtil extends CollectionUtils {
     
     /**
      * 在List中根据自定字段(函数)查找元素，返回找到的第一个元素，找不到就返回null
+     *
      * @param list
      * @param function
      * @param value
@@ -252,6 +259,7 @@ public class CollectionUtil extends CollectionUtils {
     
     /**
      * 判断元素在list中存在至少一个值，存在就立马返回
+     *
      * @param list
      * @param function
      * @param value
@@ -263,6 +271,7 @@ public class CollectionUtil extends CollectionUtils {
     
     /**
      * 判断元素在list中是否存在
+     *
      * @param list
      * @param function
      * @param value
@@ -277,7 +286,7 @@ public class CollectionUtil extends CollectionUtils {
      * Map键值对反转
      * 示例，
      * { examA : [stu1, stu2, stu3], examB: [stu1, stu2] }
-     *                       ⬇
+     * ⬇
      * {stu1 : [examA, examB], stu2 : [examA, examB], stu3 : [examA]}
      *
      * @param sourceMap
@@ -299,10 +308,11 @@ public class CollectionUtil extends CollectionUtils {
     /**
      * Map键值对反转，支持返回结果自定义收集容器
      * 例如返回LinkedHashMap<K, LinkedList<V>
-     *
+     * <p>
      * Map<k1, Coll_1<v1>>  ==>  Map<k2, Coll_1<v2>>
-     *    kFunction.apply(k1) ==> v2
-     *    vFunction.apply(v1) ==> k2
+     * kFunction.apply(k1) ==> v2
+     * vFunction.apply(v1) ==> k2
+     *
      * @param mapColl
      * @param vColl
      * @param sourceMap
@@ -311,7 +321,7 @@ public class CollectionUtil extends CollectionUtils {
      * @return
      */
     public static <V1, V2, K1, K2, C1 extends Collection<V1>, C2 extends Collection<V2>, M1 extends Map<K1, C1>, M2 extends Map<K2, C2>>
-    M2 reverseKV(Supplier<M2> mapColl, Supplier<C2> vColl, @NonNull M1 sourceMap, Function<? super K1, V2> kFunction, Function<? super V1, K2> vFunction){
+    M2 reverseKV(Supplier<M2> mapColl, Supplier<C2> vColl, @NonNull M1 sourceMap, Function<? super K1, V2> kFunction, Function<? super V1, K2> vFunction) {
         M2 aux = mapColl.get();
         sourceMap.entrySet().stream()
                 .filter(Objects::nonNull)
@@ -391,7 +401,9 @@ public class CollectionUtil extends CollectionUtils {
      * @return a merge function which always throw {@code IllegalStateException}
      */
     private static <T> BinaryOperator<T> nonDuplicateKey() {
-        return (u, v) -> { throw new IllegalStateException(String.format("转换Map时不允许重复Key: [%s]", u)); };
+        return (u, v) -> {
+            throw new IllegalStateException(String.format("转换Map时不允许重复Key: [%s]", u));
+        };
     }
     
     private static <T> BinaryOperator<T> enableNewOnDuplicateKey() {
@@ -401,16 +413,17 @@ public class CollectionUtil extends CollectionUtils {
     public static <T> Comparator<T> getNameComparator(Function<T, String> function) {
         return new NameComparator<T>(function);
     }
-
+    
     /**
      * 姓名排序（拼音首字母升序）
      **/
     public static class NameComparator<T> implements Comparator<T> {
         private Function<T, String> function;
+        
         public NameComparator(Function<T, String> function) {
             this.function = function;
         }
-
+        
         @Override
         public int compare(T o1, T o2) {
             String name1 = function.apply(o1);
@@ -430,9 +443,9 @@ public class CollectionUtil extends CollectionUtils {
                 }
                 String[] codePointArray1 = PinyinHelper.toHanyuPinyinStringArray((char) codePoint1);
                 String[] codePointArray2 = PinyinHelper.toHanyuPinyinStringArray((char) codePoint2);
-                String pinyin1 = codePointArray1 == null ? null: codePointArray1[0];
-                String pinyin2 = codePointArray2 == null ? null: codePointArray2[0];
-
+                String pinyin1 = codePointArray1 == null ? null : codePointArray1[0];
+                String pinyin2 = codePointArray2 == null ? null : codePointArray2[0];
+                
                 if (pinyin1 != null && pinyin2 != null) {
                     // 两个字符都是汉字
                     if (!pinyin1.equals(pinyin2)) {
