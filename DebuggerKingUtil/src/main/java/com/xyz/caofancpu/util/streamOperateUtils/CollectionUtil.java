@@ -224,7 +224,6 @@ public class CollectionUtil extends CollectionUtils {
             return new LinkedHashMap<>(2, 0.5F, Boolean.FALSE);
         }
         List<Entry<K, V>> entryList = sourceMap.entrySet().stream().sorted(comparator).collect(Collectors.toList());
-        // 由于
         return transToMap(LinkedHashMap::new, entryList, Entry::getKey, Entry::getValue);
     }
 
