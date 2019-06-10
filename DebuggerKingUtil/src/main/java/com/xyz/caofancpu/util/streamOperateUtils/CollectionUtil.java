@@ -53,9 +53,6 @@ public class CollectionUtil extends CollectionUtils {
      * @param resultColl
      * @param source
      * @param mapper
-     * @param <E>
-     * @param <R>
-     * @param <C>
      * @returnF
      */
     public static <E, R, C extends Collection<R>> C transToCollection(Supplier<C> resultColl, Collection<E> source, Function<? super E, ? extends R> mapper) {
@@ -81,7 +78,6 @@ public class CollectionUtil extends CollectionUtils {
      *
      * @param coll
      * @param distinctComparator
-     * @param <T>
      * @return
      */
     public static <T> List<T> distinctListByField(Collection<T> coll, Comparator<T> distinctComparator) {
@@ -248,8 +244,6 @@ public class CollectionUtil extends CollectionUtils {
      * @param list
      * @param function
      * @param value
-     * @param <T>
-     * @param <F>
      * @return
      */
     public static <T, F> T findFirst(List<T> list, Function<? super T, F> function, @NonNull F value) {
@@ -262,8 +256,6 @@ public class CollectionUtil extends CollectionUtils {
      * @param list
      * @param function
      * @param value
-     * @param <T>
-     * @param <F>
      * @return
      */
     public static <T, F> boolean existAtLeastOne(List<T> list, Function<? super T, F> function, @NonNull F value) {
@@ -275,8 +267,6 @@ public class CollectionUtil extends CollectionUtils {
      * @param list
      * @param function
      * @param value
-     * @param <T>
-     * @param <F>
      * @return
      */
     public static <T, F> Boolean exist(List<T> list, Function<? super T, F> function, @NonNull F value) {
@@ -294,10 +284,6 @@ public class CollectionUtil extends CollectionUtils {
      * @param sourceMap
      * @param kFunction
      * @param vFunction
-     * @param <E1>
-     * @param <E2>
-     * @param <K1>
-     * @param <K2>
      * @return
      */
     public static <E1, E2, K1, K2> Map<K2, List<E2>> reverseKV(@NonNull Map<K1, List<E1>> sourceMap, Function<? super K1, E2> kFunction, Function<? super E1, K2> vFunction) {
@@ -311,7 +297,6 @@ public class CollectionUtil extends CollectionUtils {
         return aux;
     }
     
-    
     /**
      * Map键值对反转，支持返回结果自定义收集容器
      * 例如返回LinkedHashMap<K, LinkedList<V>
@@ -324,14 +309,6 @@ public class CollectionUtil extends CollectionUtils {
      * @param sourceMap
      * @param kFunction
      * @param vFunction
-     * @param <V1>
-     * @param <V2>
-     * @param <K1>
-     * @param <K2>
-     * @param <C1>
-     * @param <C2>
-     * @param <M1>
-     * @param <M2>
      * @return
      */
     public static <V1, V2, K1, K2, C1 extends Collection<V1>, C2 extends Collection<V2>, M1 extends Map<K1, C1>, M2 extends Map<K2, C2>>
@@ -353,9 +330,6 @@ public class CollectionUtil extends CollectionUtils {
      * @param srcMap
      * @param kFunction
      * @param value
-     * @param <K>
-     * @param <V>
-     * @param <T>
      * @return
      */
     public static <K, V, T> List<Map.Entry<K, V>> find(Map<K, V> srcMap, Function<? super K, T> kFunction, @NonNull T value) {
@@ -381,9 +355,6 @@ public class CollectionUtil extends CollectionUtils {
      * @param srcMap
      * @param kFunction
      * @param value
-     * @param <K>
-     * @param <V>
-     * @param <T>
      * @return
      */
     public static <K, V, T> Map.Entry<K, V> findOne(Map<K, V> srcMap, Function<? super K, T> kFunction, @NonNull T value) {
@@ -404,9 +375,6 @@ public class CollectionUtil extends CollectionUtils {
      * @param srcMap
      * @param kFunction
      * @param value
-     * @param <K>
-     * @param <V>
-     * @param <T>
      * @return
      */
     public static <K, V, T> V findOneValue(Map<K, V> srcMap, Function<? super K, T> kFunction, @NonNull T value) {
