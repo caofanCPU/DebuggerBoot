@@ -1,4 +1,4 @@
-package com.xyz.caofancpu.netty;
+package com.xyz.caofancpu.netty.DEMO;
 
 
 import io.netty.bootstrap.Bootstrap;

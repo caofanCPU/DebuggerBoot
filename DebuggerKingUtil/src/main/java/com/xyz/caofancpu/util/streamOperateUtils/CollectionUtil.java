@@ -56,7 +56,7 @@ public class CollectionUtil extends CollectionUtils {
      * @param <E>
      * @param <R>
      * @param <C>
-     * @return
+     * @returnF
      */
     public static <E, R, C extends Collection<R>> C transToCollection(Supplier<C> resultColl, Collection<E> source, Function<? super E, ? extends R> mapper) {
         return source.stream().filter(Objects::nonNull).map(mapper).collect(Collectors.toCollection(resultColl));
@@ -192,7 +192,6 @@ public class CollectionUtil extends CollectionUtils {
                 .filter(Objects::nonNull)
                 .collect(Collectors.toMap(item -> kFunction.apply(item), item -> vFunction.apply(item), nonDuplicateKey(), mapColl));
     }
-    
     
     /**
      * 按照指定分隔符将数组元素拼接为字符串

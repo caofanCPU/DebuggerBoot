@@ -17,17 +17,41 @@ import java.util.List;
 @AllArgsConstructor
 public class Area {
     
+    /**
+     * ID
+     */
     private Integer id;
     
+    /**
+     * 名称
+     */
     private String name;
     
+    /**
+     * pid
+     */
     private Integer pid;
     
+    /**
+     * 节点深度
+     */
+    private Integer depth;
+    
+    /**
+     * 子节点集合
+     */
     private List<Area> children;
     
     public Area(Integer id, String name, Integer pid) {
         this.id = id;
         this.name = name;
         this.pid = pid;
+    }
+    
+    public Area(Integer id, String name, Integer pid, Integer depth) {
+        this.id = id;
+        this.name = name;
+        this.pid = pid;
+        this.depth = depth;
     }
 }
