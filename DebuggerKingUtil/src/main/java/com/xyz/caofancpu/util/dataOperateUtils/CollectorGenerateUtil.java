@@ -1,8 +1,5 @@
 package com.xyz.caofancpu.util.dataOperateUtils;
 
-import com.xyz.caofancpu.util.dataOperateUtils.FunctionInterface.ArrayListGeneratorInterface;
-import com.xyz.caofancpu.util.dataOperateUtils.FunctionInterface.HashMapGeneratorInterface;
-
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -16,6 +13,31 @@ import java.util.Map;
  */
 
 public class CollectorGenerateUtil {
+    
+    @FunctionalInterface
+    public interface HashMapGeneratorInterface<K, V> {
+        
+        /**
+         * 该函数名称, 入参, 返回值不影响任意
+         *
+         * @param hashMap
+         * @return
+         */
+        Map<K, V> process(Map<K, V> hashMap);
+        
+    }
+    
+    @FunctionalInterface
+    public interface ArrayListGeneratorInterface<E> {
+        
+        /**
+         * 该函数名称, 入参, 返回值不影响任意
+         *
+         * @param arrayList
+         * @return
+         */
+        List<E> process(List<E> arrayList);
+    }
     
     public static <K, V> Map<K, V> initHashMap(int capacity, float loadFactor, HashMapGeneratorInterface<K, V> hashMapGenerator) {
         return hashMapGenerator.process(new HashMap(capacity, loadFactor));
