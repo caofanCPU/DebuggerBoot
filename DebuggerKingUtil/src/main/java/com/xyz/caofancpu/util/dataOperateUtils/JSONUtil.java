@@ -114,7 +114,7 @@ public class JSONUtil {
      * @param <T>
      * @return
      */
-    public static <T> T deepClone(Object object, Class<T> clazz) {
+    public static <T> T deepCloneBySerialization(Object object, Class<T> clazz) {
         return deserializeJSON(serializeJSON(object), clazz);
     }
     
