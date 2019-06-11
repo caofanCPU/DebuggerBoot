@@ -95,6 +95,30 @@ public class JSONUtil {
     }
     
     /**
+     * 反序列化对象
+     *
+     * @param jsonStr
+     * @param clazz
+     * @param <T>
+     * @return
+     */
+    public static <T> T deserializeJSON(String jsonStr, Class<T> clazz) {
+        return JSONObject.parseObject(jsonStr, clazz);
+    }
+    
+    /**
+     * 利用序列化深拷贝复杂对象
+     *
+     * @param object
+     * @param clazz
+     * @param <T>
+     * @return
+     */
+    public static <T> T deepClone(Object object, Class<T> clazz) {
+        return deserializeJSON(serializeJSON(object), clazz);
+    }
+    
+    /**
      * 对象序列化为标准格式的JSONString
      *
      * @param object

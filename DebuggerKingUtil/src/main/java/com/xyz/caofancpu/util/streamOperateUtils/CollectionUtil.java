@@ -224,6 +224,15 @@ public class CollectionUtil extends CollectionUtils {
         return stringList.stream().filter(Objects::nonNull).collect(Collectors.joining(separator));
     }
     
+    /**
+     * 对Map排序
+     *
+     * @param sourceMap
+     * @param comparator
+     * @param <K>
+     * @param <V>
+     * @return
+     */
     public static <K, V extends Comparable<V>> LinkedHashMap<K, V> sortedMapByValue(Map<K, V> sourceMap, Comparator<? super Entry<K, V>> comparator) {
         if (isEmpty(sourceMap)) {
             return new LinkedHashMap<>(2, 0.5F, Boolean.FALSE);
@@ -233,7 +242,7 @@ public class CollectionUtil extends CollectionUtils {
     }
     
     /**
-     * 在List中根据自定字段(函数)查找元素，找到任意一个就返回，找不到就返回null
+     * 在List中根据指定字段(函数)查找元素，找到任意一个就返回，找不到就返回null
      *
      * @param list
      * @param function
