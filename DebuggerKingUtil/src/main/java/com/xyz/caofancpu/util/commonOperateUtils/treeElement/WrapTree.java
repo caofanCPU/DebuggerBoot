@@ -6,23 +6,24 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.experimental.Accessors;
 
+import java.io.Serializable;
 import java.util.List;
 
 /**
  * I为id的数据类型，推荐Integer/Long
- * E为被包装的树元素类型
+ * E为被包装的树元素类型，限制必须实现序列化
  */
 @Data
 @Accessors(chain = true)
 @NoArgsConstructor
 @AllArgsConstructor
-class WrapTree<I extends Comparable, E> {
+class WrapTree<I extends Comparable, E extends Serializable> {
     /**
      * 树元素ID, 一般为Integer/Long型
      */
     private I id;
     /**
-     * 树元素父ID, 必须
+     * 树元素父ID, 与树元素子节点集合 必须二者择一
      */
     private I pid;
     /**

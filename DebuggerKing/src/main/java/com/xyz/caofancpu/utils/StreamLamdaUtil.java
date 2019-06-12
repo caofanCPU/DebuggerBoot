@@ -33,9 +33,9 @@ public class StreamLamdaUtil {
     
     public static void main(String[] args) {
         positionTime();
-        testAreaByStreamLamda();
+        testAreaByStreamLambda();
         positionTime();
-        outputExcuteTime();
+        outputExecuteTime();
     }
     
     /**
@@ -53,15 +53,15 @@ public class StreamLamdaUtil {
     /**
      * 输出执行时间
      */
-    public static void outputExcuteTime() {
+    public static void outputExecuteTime() {
         System.out.println("\n执行时间：" + (endTime - startTime) + "ms");
     }
     
     /**
-     * 测试集合的流：stream，lamda表达式
+     * 测试集合的流：stream，lambda表达式
      * 自动分类函数：groupingBy
      */
-    public static void testAreaByStreamLamda() {
+    public static void testAreaByStreamLambda() {
         // 初始化省市区数据
         List<Area> provinceList = initProvinceList();
         List<Area> cityList = initCityList();
