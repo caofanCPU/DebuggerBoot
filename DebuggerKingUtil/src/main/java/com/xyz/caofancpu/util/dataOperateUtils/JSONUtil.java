@@ -8,6 +8,7 @@ import org.apache.commons.collections.CollectionUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -83,7 +84,17 @@ public class JSONUtil {
         }
         return jsonResultStr.toString().replaceAll("\n\n", "\n");
     }
-    
+
+    /**
+     * 对象序列化为JSONString
+     *
+     * @param object
+     * @return
+     */
+    public static <T extends Serializable> String serializeJSON(T object) {
+        return JSONObject.toJSONString(object, SerializerFeature.WriteClassName);
+    }
+
     /**
      * 对象序列化为JSONString
      *
@@ -93,31 +104,29 @@ public class JSONUtil {
     public static String serializeJSON(Object object) {
         return JSONObject.toJSONString(object, SerializerFeature.WriteClassName);
     }
-    
+
     /**
      * 反序列化对象
      *
      * @param jsonStr
      * @param clazz
-     * @param <T>
      * @return
      */
-    public static <T> T deserializeJSON(String jsonStr, Class<T> clazz) {
+    public static Object deserializeJSON(String jsonStr, Class<? extends Serializable> clazz) {
         return JSONObject.parseObject(jsonStr, clazz);
     }
     
     /**
      * 利用序列化深拷贝复杂对象
      *
-     * @param object
-     * @param clazz
-     * @param <T>
+     * @param t
      * @return
      */
-    public static <T> T deepCloneBySerialization(Object object, Class<T> clazz) {
-        return deserializeJSON(serializeJSON(object), clazz);
+    @SuppressWarnings("unchecked")
+    public static <T extends Serializable> T deepCloneBySerialization(T t) {
+        return (T) deserializeJSON(serializeJSON(t), t.getClass());
     }
-    
+
     /**
      * 对象序列化为标准格式的JSONString
      *
@@ -264,5 +273,4 @@ public class JSONUtil {
         }
         return JSONObject.parseObject(JSONObject.toJSONString(sourceObject), clazz);
     }
-    
 }

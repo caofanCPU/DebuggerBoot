@@ -113,7 +113,7 @@ public class WrapTreeUtil {
      * 对于嵌套型List来说，其子节点集合的数据仍在收集容器中
      * 考虑到数据使用率的问题，使用本方法将废弃数据置空
      * <p>
-     * 代价/风险：借助JSONObject及元素的序列化实现深拷贝，内存占用多一点
+     * 代价/风险：借助JSONObject及元素的序列化实现深拷贝
      *
      * @param collector           结果收集容器
      * @param sourceNestedList    数据源
@@ -133,7 +133,7 @@ public class WrapTreeUtil {
                 .filter(Objects::nonNull)
                 .map(c -> {
                     // 深拷贝对象，并对其子节点置空
-                    setChildrenFunction.apply((C) JSONUtil.deepCloneBySerialization(c, c.getClass()));
+                    setChildrenFunction.apply(JSONUtil.deepCloneBySerialization(c));
                     return c;
                 })
                 .collect(Collectors.toList());
