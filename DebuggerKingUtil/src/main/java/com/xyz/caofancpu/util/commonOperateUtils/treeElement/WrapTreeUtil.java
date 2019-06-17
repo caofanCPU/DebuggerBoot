@@ -6,13 +6,16 @@ import com.xyz.caofancpu.util.streamOperateUtils.CollectionUtil;
 import lombok.NonNull;
 
 import java.io.Serializable;
-import java.util.*;
+import java.util.List;
+import java.util.Map;
+import java.util.Objects;
+import java.util.TreeMap;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
 /**
  * 树形List操作工具类
- * 要求： E必须具备id, pid字段
+ * 要求： E必须具备id, [pid/children]字段，主键可比较，对象可序列化
  */
 public class WrapTreeUtil {
 
@@ -31,7 +34,7 @@ public class WrapTreeUtil {
     }
 
     /**
-     * 收集末级节点
+     * 根据深度收集末级节点
      * 对于给定的列表， 顺序遍历父节点->子节点，
      * 将[满足深度限制的非叶子节点]或[小于深度限制的叶子节点]
      * 添加到结果收集容器中
@@ -43,9 +46,9 @@ public class WrapTreeUtil {
      * @param depthFunction 节点深度操作函数表达式
      * @param depth         叶子节点深度限制
      */
-    public static <I extends Comparable, C extends Serializable> void collectTreeLeafElements(List<C> collector, List<C> sourceList, @NonNull Function<C, I> pidFunction, @NonNull Function<C, I> idFunction, @NonNull Function<C, I> depthFunction, @NonNull I depth) {
+    public static <I extends Comparable, C extends Serializable> void collectRelativeTreeLeafElements(List<C> collector, List<C> sourceList, @NonNull Function<C, I> pidFunction, @NonNull Function<C, I> idFunction, @NonNull Function<C, I> depthFunction, @NonNull I depth) {
         List<WrapTree<I, C>> treeElements = initTreeByPid(sourceList, pidFunction, idFunction, depthFunction);
-        collectTreeLeaf(collector, treeElements, depth);
+        collectRelativeTreeLeafByDepth(collector, treeElements, depth);
     }
 
     /**
@@ -59,7 +62,7 @@ public class WrapTreeUtil {
     public static <I extends Comparable, C extends Serializable> List<WrapTree<I, C>> initTreeByPid(List<C> sourceList, @NonNull Function<C, I> pidFunction, @NonNull Function<C, I> idFunction, Function<C, I> depthFunction) {
         TreeMap<I, List<C>> pidMultiMap = sourceList.stream()
                 .filter(Objects::nonNull)
-                .collect(TreeMap::new, (map, c) -> map.computeIfAbsent(pidFunction.apply(c), init -> new ArrayList<>()).add(c), TreeMap::putAll);
+                .collect(TreeMap::new, (map, c) -> map.computeIfAbsent(pidFunction.apply(c), init -> Lists.newArrayList()).add(c), TreeMap::putAll);
         return initTreeChildItems(pidMultiMap, idFunction, depthFunction, pidMultiMap.firstKey());
     }
 
@@ -85,7 +88,7 @@ public class WrapTreeUtil {
     }
 
     /**
-     * 收集末级节点
+     * 根据深度限制值收集末级节点
      * 对于给定的列表， 顺序遍历父节点->子节点，
      * 将[满足深度限制的非叶子节点]或[小于深度限制的叶子节点]
      * 添加到结果收集容器中
@@ -97,9 +100,48 @@ public class WrapTreeUtil {
      * @param depthFunction    节点深度操作函数表达式
      * @param depth            叶子节点深度限制
      */
-    public static <I extends Comparable, C extends Serializable> void selectTreeLeafElements(List<C> collector, List<C> sourceNestedList, @NonNull Function<C, List<C>> childrenFunction, @NonNull Function<C, I> idFunction, @NonNull Function<C, I> depthFunction, @NonNull I depth) {
+    public static <I extends Comparable, C extends Serializable> void selectRelativeTreeLeafByDepth(List<C> collector, List<C> sourceNestedList, @NonNull Function<C, List<C>> childrenFunction, @NonNull Function<C, I> idFunction, @NonNull Function<C, I> depthFunction, @NonNull I depth) {
         List<WrapTree<I, C>> treeElements = initTreeByChildren(sourceNestedList, childrenFunction, idFunction, depthFunction);
-        collectTreeLeaf(collector, treeElements, depth);
+        collectRelativeTreeLeafByDepth(collector, treeElements, depth);
+    }
+
+    /**
+     * 根据节点深度裁剪树
+     * 处理方式：递归遍历找到目标深度的元素，将其子集置空，剩余的元素直接返回，且返回的也是树型结构
+     *
+     * @param sourceNestedList 原始嵌套List
+     * @param childrenFunction 子集获取函数
+     * @param depthFunction    深度操作函数
+     * @param depth            指定深度
+     */
+    @SuppressWarnings("unchecked")
+    public static <I extends Comparable, C extends Serializable> List<C> cutTreeElementByDepth(List<C> sourceNestedList, @NonNull Function<C, List<C>> childrenFunction, @NonNull Function<C, I> depthFunction, @NonNull I depth) {
+        return sourceNestedList.stream()
+                .filter(Objects::nonNull)
+                .map(currentElement -> {
+                    // 当前元素为叶子节点，无法对子集进行操作，可以直接返回，不需要复制对象
+                    if (CollectionUtil.isEmpty(childrenFunction.apply(currentElement))) {
+                        return currentElement;
+                    }
+                    // 深拷贝对象
+                    C newElement = JSONUtil.deepCloneBySerialization(currentElement);
+                    // 拿到子集引用
+                    List<C> children = childrenFunction.apply(newElement);
+                    // 深度未达限制值且为非叶子节点，那么递归调用
+                    if (depthFunction.apply(newElement).compareTo(depth) < 0) {
+                        // 递归获取子集返回的list结果
+                        List<C> cList = cutTreeElementByDepth(children, childrenFunction, depthFunction, depth);
+                        // 子集置空
+                        children.clear();
+                        // 再设置子集结果
+                        children.addAll(cList);
+                    } else {
+                        // 子集置空
+                        children.clear();
+                    }
+                    return newElement;
+                })
+                .collect(Collectors.toList());
     }
 
     /**
@@ -115,26 +157,31 @@ public class WrapTreeUtil {
      * <p>
      * 代价/风险：借助JSONObject及元素的序列化实现深拷贝
      *
-     * @param collector           结果收集容器
-     * @param sourceNestedList    数据源
-     * @param getChildrenFunction pid操作函数表达式
-     * @param idFunction          id操作函数表达式
-     * @param depthFunction       节点深度操作函数表达式
-     * @param depth               叶子节点深度限制
+     * @param collector        结果收集容器
+     * @param sourceNestedList 数据源
+     * @param childrenFunction pid操作函数表达式
+     * @param idFunction       id操作函数表达式
+     * @param depthFunction    节点深度操作函数表达式
+     * @param depth            叶子节点深度限制
      */
-    @SuppressWarnings("unchecked")
-    public static <I extends Comparable, C extends Serializable> void pureSelectTreeLeafElements(List<C> collector, List<C> sourceNestedList, @NonNull Function<C, List<C>> getChildrenFunction, @NonNull Function<C, C> setChildrenFunction, @NonNull Function<C, I> idFunction, @NonNull Function<C, I> depthFunction, @NonNull I depth) {
-        List<WrapTree<I, C>> treeElements = initTreeByChildren(sourceNestedList, getChildrenFunction, idFunction, depthFunction);
-        collectTreeLeaf(collector, treeElements, depth);
+    public static <I extends Comparable, C extends Serializable> void pureSelectRelativeTreeLeafByDepth(List<C> collector, List<C> sourceNestedList, @NonNull Function<C, List<C>> childrenFunction, @NonNull Function<C, I> idFunction, @NonNull Function<C, I> depthFunction, @NonNull I depth) {
+        List<WrapTree<I, C>> treeElements = initTreeByChildren(sourceNestedList, childrenFunction, idFunction, depthFunction);
+        collectRelativeTreeLeafByDepth(collector, treeElements, depth);
         if (CollectionUtil.isEmpty(collector)) {
             return;
         }
         List<C> pureSelectList = collector.stream()
                 .filter(Objects::nonNull)
                 .map(c -> {
-                    // 深拷贝对象，并对其子节点置空
-                    setChildrenFunction.apply(JSONUtil.deepCloneBySerialization(c));
-                    return c;
+                    if (CollectionUtil.isEmpty(childrenFunction.apply(c))) {
+                        return c;
+                    }
+                    // 深拷贝对象，根据setChildrenFunction处理其子节点
+                    C newElement = JSONUtil.deepCloneBySerialization(c);
+                    List<C> children = childrenFunction.apply(newElement);
+                    // 子集置空
+                    children.clear();
+                    return newElement;
                 })
                 .collect(Collectors.toList());
         collector.clear();
@@ -187,7 +234,7 @@ public class WrapTreeUtil {
     }
 
     /**
-     * 收集末级节点
+     * 收集相对深度限制值得末级节点
      * 对于给定的列表， 顺序遍历父节点->子节点，
      * 将[满足深度限制的非叶子节点]或[小于深度限制的叶子节点]
      * 添加到结果收集容器中
@@ -197,7 +244,7 @@ public class WrapTreeUtil {
      * @param depth        叶子节点深度限制
      */
     @SuppressWarnings("unchecked")
-    private static <I extends Comparable, C extends Serializable> void collectTreeLeaf(List<C> collector, List<WrapTree<I, C>> treeElements, @NonNull I depth) {
+    private static <I extends Comparable, C extends Serializable> void collectRelativeTreeLeafByDepth(List<C> collector, List<WrapTree<I, C>> treeElements, @NonNull I depth) {
         if (CollectionUtil.isEmpty(treeElements)) {
             return;
         }
@@ -206,13 +253,14 @@ public class WrapTreeUtil {
                 .forEach(currentElement -> {
                     if (currentElement.hasChildren() && depth.compareTo(currentElement.getDepth()) > 0) {
                         // 遍历时子节点时，非叶子节点并且 节点深度小于 深度限制值，则进行递归查找
-                        collectTreeLeaf(collector, currentElement.getChildElements(), depth);
+                        collectRelativeTreeLeafByDepth(collector, currentElement.getChildElements(), depth);
                     } else {
                         // 否则满足收集条件， 加入结果容器中
                         collector.add(currentElement.getElement());
                     }
                 });
     }
+
 
     /**
      * 根据pid递归设置树元素子集

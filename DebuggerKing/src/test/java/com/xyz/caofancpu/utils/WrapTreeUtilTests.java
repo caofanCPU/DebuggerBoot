@@ -1,6 +1,5 @@
 package com.xyz.caofancpu.utils;
 
-import com.google.common.collect.Lists;
 import com.xyz.caofancpu.model.Area;
 import com.xyz.caofancpu.util.commonOperateUtils.treeElement.WrapTreeUtil;
 import com.xyz.caofancpu.util.dataOperateUtils.CollectorGenerateUtil;
@@ -15,7 +14,7 @@ import java.util.List;
 public class WrapTreeUtilTests {
 
     public static void main(String[] args) {
-        testPureSelectTreeLeafElements();
+        testCutTreeElementByDepth();
     }
 
     public static void testExpandNestedListInOrder() {
@@ -25,17 +24,23 @@ public class WrapTreeUtilTests {
         int a = 1;
     }
 
+    public static void testCutTreeElementByDepth() {
+        List<Area> areaList = buildAreaNestedList();
+        List<Area> resultList = WrapTreeUtil.cutTreeElementByDepth(areaList, Area::getChildren, Area::getDepth, 3);
+        int a = 1;
+    }
+
     public static void testSelectTreeLeafElements() {
         List<Area> areaList = buildAreaNestedList();
         List<Area> resultList = new ArrayList<>();
-        WrapTreeUtil.selectTreeLeafElements(resultList, areaList, Area::getChildren, Area::getId, Area::getDepth, 2);
+        WrapTreeUtil.selectRelativeTreeLeafByDepth(resultList, areaList, Area::getChildren, Area::getId, Area::getDepth, 2);
         int a = 1;
     }
 
     public static void testPureSelectTreeLeafElements() {
         List<Area> areaList = buildAreaNestedList();
         List<Area> resultList = new ArrayList<>();
-        WrapTreeUtil.pureSelectTreeLeafElements(resultList, areaList, Area::getChildren, area -> area.setChildren(Lists.newArrayList()), Area::getId, Area::getDepth, 2);
+        WrapTreeUtil.pureSelectRelativeTreeLeafByDepth(resultList, areaList, Area::getChildren, Area::getId, Area::getDepth, 1);
         int a = 1;
     }
 
@@ -49,9 +54,10 @@ public class WrapTreeUtilTests {
     public static void testCollectTreeLeafElements() {
         List<Area> areaList = buildAreaList();
         List<Area> resultList = new ArrayList<>();
-        WrapTreeUtil.collectTreeLeafElements(resultList, areaList, Area::getPid, Area::getId, Area::getDepth, 1);
+        WrapTreeUtil.collectRelativeTreeLeafElements(resultList, areaList, Area::getPid, Area::getId, Area::getDepth, 1);
         int a = 1;
     }
+
 
     public static List<Area> buildAreaList() {
         Area beijingProvince = new Area(2, "北京市", 0, 1);
