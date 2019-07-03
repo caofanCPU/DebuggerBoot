@@ -2,6 +2,7 @@ package com.xyz.caofancpu.util.streamOperateUtils;
 
 
 import com.google.common.collect.ImmutableMap;
+import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import lombok.NonNull;
 import net.sourceforge.pinyin4j.PinyinHelper;
@@ -340,7 +341,25 @@ public class CollectionUtil extends CollectionUtils {
                 );
         return aux;
     }
-    
+
+    /**
+     * 从list里根据唯一字段值 查找所有满足条件的元素
+     *
+     * @param list
+     * @param function
+     * @param value
+     * @return
+     */
+    public static <T, F> List<T> findAll(List<T> list, Function<? super T, F> function, @NonNull F value) {
+        if (isEmpty(list)) {
+            return Lists.newArrayList();
+        }
+        return list.stream()
+                .filter(Objects::nonNull)
+                .filter(item -> value.equals(function.apply(item)))
+                .collect(Collectors.toList());
+    }
+
     /**
      * 针对复杂Map中，查找key匹配函数的键值对集合
      * 不满足匹配函数条件时返回空

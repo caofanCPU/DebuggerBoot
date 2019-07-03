@@ -13,6 +13,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
+import java.util.stream.Collectors;
 
 /**
  * Created by caofanCPU on 2018/8/6.
@@ -151,33 +152,19 @@ public class JSONUtil {
         String jsonString = serializeJSON(jsonArray);
         return JSONObject.parseArray(jsonString);
     }
-    
+
     /**
      * JSONArray转List, 用Bean接收
      *
      * @param jsonArray
      * @return
-     * @throws GlobalErrorInfoRuntimeException
      */
-    public static <T> List<T> arrayShiftToBean(Object jsonArray, Class<T> clazz)
-            throws GlobalErrorInfoRuntimeException {
-        if (Objects.isNull(jsonArray) || Objects.isNull(clazz)) {
-            throw new NullPointerException();
-        }
+    public static <T> List<T> arrayShiftToBean(Object jsonArray, Class<T> clazz) {
         JSONArray array = parseJSONArray(jsonArray);
-        List<T> resultList = new ArrayList<>();
-        array.stream()
+        return array.stream()
                 .filter(Objects::nonNull)
-                .forEach(item -> {
-                    try {
-                        T result = BeanConvertUtil.copyProperties(item, clazz);
-                        resultList.add(result);
-                    } catch (Exception e) {
-                        logger.info("JSONArray转List<Bean>失败!\n", e);
-                        throw new GlobalErrorInfoRuntimeException("对象转换失败!");
-                    }
-                });
-        return resultList;
+                .map(item -> JSONObject.parseObject(JSONObject.toJSONString(item), clazz))
+                .collect(Collectors.toList());
     }
     
     /**

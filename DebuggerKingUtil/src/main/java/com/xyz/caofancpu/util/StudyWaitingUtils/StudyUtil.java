@@ -15,8 +15,7 @@ import java.util.Objects;
  */
 
 public class StudyUtil {
-    
-    
+
     /**
      * 从起点复制一定长度的数组元素
      *
@@ -32,11 +31,11 @@ public class StudyUtil {
         System.arraycopy(originArray, 0, arrayResult, 0, copyLength);
         return arrayResult;
     }
-    
+
     public static void out(String text) {
         System.out.println(text);
     }
-    
+
     /**
      * 数组输出元素
      *
@@ -46,5 +45,5 @@ public class StudyUtil {
     public static void outArray(int[] originArray, String text) {
         out(text + Arrays.toString(originArray));
     }
-    
+
 }

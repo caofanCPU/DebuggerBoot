@@ -21,16 +21,28 @@ import static com.xyz.caofancpu.util.StudyWaitingUtils.VerbalExpressionUtil.exec
  * @Author:   caofanCPU
  * @Date:     2018/11/15 17:00
  */
-public class BeautiSQLStringUtil {
+public class BeautySQLStringUtil {
     
     /**
      * LOG
      */
-    private static final Logger logger = LoggerFactory.getLogger(BeautiSQLStringUtil.class);
+    private static final Logger logger = LoggerFactory.getLogger(BeautySQLStringUtil.class);
     
     public static final String FILE_BASE_PATH = "/Users/htuser-085/Desktop/CAOFAN/IDEA-WORK/DebuggerBoot/DebuggerKingUtil/src/main/java/com/xyz/caofancpu/util/dataOperateUtils/SQLString";
-    
+
     public static void main(String[] args) throws Exception {
+        VerbalExpression splitRegex = VerbalExpression.regex()
+                .capt().find(".").oneOrMore()
+                .or("、").oneOrMore()
+                .endCapt()
+                .build();
+        System.out.println(splitRegex.toString());
+        String result = executePatternRex(splitRegex, "1、5..（、2）", StringUtils.EMPTY);
+        System.out.println(result);
+    }
+
+    public static void handle()
+            throws Exception {
         VerbalExpression splitRegex = VerbalExpression.regex()
                 .capt().find("-").oneOrMore()
                 .endCapt().then("-")
@@ -38,20 +50,20 @@ public class BeautiSQLStringUtil {
         VerbalExpression mappingRegex = VerbalExpression.regex()
                 .capt().digit().oneOrMore().then(StringUtils.SPACE).count(2).anything().endCapt().then("=").count(2).then(">").lineBreak()
                 .build();
-        
+
         String srcFilePath = FILE_BASE_PATH + "/sql.txt";
         String desFilePath = FILE_BASE_PATH + "/sql-beauty.txt";
         String sourceSql = FileUtil.readFileToString(srcFilePath);
         List<String> splitSQL = splitByRegex(sourceSql, splitRegex);
-        
+
         List<String> formattedSQL = splitSQL.stream()
                 .map(item -> formatSQL(item, mappingRegex, StringUtils.EMPTY).toUpperCase())
                 .collect(Collectors.toList());
         FileUtil.writeStringToFile(CollectionUtil.join(formattedSQL, StringUtils.CR + StringUtils.LF), desFilePath);
-        
+
         System.out.println(splitRegex.toString() + "\n" + mappingRegex);
     }
-    
+
     public static List<String> splitByRegex(String srcContent, VerbalExpression splitRegex) {
         if (StringUtils.isEmpty(srcContent) || Objects.isNull(splitRegex)) {
             return new ArrayList<>();

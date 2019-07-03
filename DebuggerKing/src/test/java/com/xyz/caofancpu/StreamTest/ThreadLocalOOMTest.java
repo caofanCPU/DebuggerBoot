@@ -1,5 +1,8 @@
 package com.xyz.caofancpu.StreamTest;
 
+import lombok.AllArgsConstructor;
+import lombok.Data;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.ExecutorService;
@@ -48,19 +51,14 @@ public class ThreadLocalOOMTest {
                 .forEach(i -> userList.add(new User("XYB" + i, "mima" + i, "nv" + i, i)));
         return userList;
     }
-    
+
+    @Data
+    @AllArgsConstructor
     class User {
         private String userName;
         private String passWord;
         private String sex;
         private int age;
-        
-        public User(String userName, String passWord, String sex, int age) {
-            this.userName = userName;
-            this.passWord = passWord;
-            this.sex = sex;
-            this.age = age;
-        }
     }
     
 }
