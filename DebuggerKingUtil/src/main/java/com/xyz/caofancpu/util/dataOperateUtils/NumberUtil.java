@@ -49,6 +49,9 @@ public class NumberUtil {
      * @return
      */
     public static Integer getInteger(Integer digit) {
+        if (digit >= 32) {
+            digit = 31;
+        }
         return (int) ((Math.random() * 9 + 1) * Math.pow(10, digit - 1));
     }
     
