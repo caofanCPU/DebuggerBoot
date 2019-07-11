@@ -28,7 +28,7 @@ public class WrapTreeUtil {
      * @param idFunction    id操作函数表达式
      * @param depthFunction 节点深度操作函数表达式
      */
-    public static <I extends Comparable, C extends Serializable> void expandTreeElements(List<C> collector, List<C> sourceList, @NonNull Function<C, I> pidFunction, @NonNull Function<C, I> idFunction, Function<C, I> depthFunction) {
+    public static <I extends Comparable, C extends Serializable> void expandTreeElements(List<C> collector, List<C> sourceList, @NonNull Function<? super C, ? extends I> pidFunction, @NonNull Function<? super C, ? extends I> idFunction, Function<? super C, ? extends I> depthFunction) {
         List<WrapTree<I, C>> treeElements = initTreeByPid(sourceList, pidFunction, idFunction, depthFunction);
         expandTree(collector, treeElements);
     }
@@ -46,7 +46,7 @@ public class WrapTreeUtil {
      * @param depthFunction 节点深度操作函数表达式
      * @param depth         叶子节点深度限制
      */
-    public static <I extends Comparable, C extends Serializable> void collectRelativeTreeLeafElements(List<C> collector, List<C> sourceList, @NonNull Function<C, I> pidFunction, @NonNull Function<C, I> idFunction, @NonNull Function<C, I> depthFunction, @NonNull I depth) {
+    public static <I extends Comparable, C extends Serializable> void collectRelativeTreeLeafElements(List<C> collector, List<C> sourceList, @NonNull Function<? super C, ? extends I> pidFunction, @NonNull Function<? super C, ? extends I> idFunction, @NonNull Function<? super C, ? extends I> depthFunction, @NonNull I depth) {
         List<WrapTree<I, C>> treeElements = initTreeByPid(sourceList, pidFunction, idFunction, depthFunction);
         collectRelativeTreeLeafByDepth(collector, treeElements, depth);
     }
@@ -59,7 +59,7 @@ public class WrapTreeUtil {
      * @param idFunction  id操作函数表达式
      * @return 树元素列表
      */
-    public static <I extends Comparable, C extends Serializable> List<WrapTree<I, C>> initTreeByPid(List<C> sourceList, @NonNull Function<C, I> pidFunction, @NonNull Function<C, I> idFunction, Function<C, I> depthFunction) {
+    public static <I extends Comparable, C extends Serializable> List<WrapTree<I, C>> initTreeByPid(List<C> sourceList, @NonNull Function<? super C, ? extends I> pidFunction, @NonNull Function<? super C, ? extends I> idFunction, Function<? super C, ? extends I> depthFunction) {
         TreeMap<I, List<C>> pidMultiMap = sourceList.stream()
                 .filter(Objects::nonNull)
                 .collect(TreeMap::new, (map, c) -> map.computeIfAbsent(pidFunction.apply(c), init -> Lists.newArrayList()).add(c), TreeMap::putAll);
@@ -100,7 +100,7 @@ public class WrapTreeUtil {
      * @param depthFunction    节点深度操作函数表达式
      * @param depth            叶子节点深度限制
      */
-    public static <I extends Comparable, C extends Serializable> void selectRelativeTreeLeafByDepth(List<C> collector, List<C> sourceNestedList, @NonNull Function<C, List<C>> childrenFunction, @NonNull Function<C, I> idFunction, @NonNull Function<C, I> depthFunction, @NonNull I depth) {
+    public static <I extends Comparable, C extends Serializable> void selectRelativeTreeLeafByDepth(List<C> collector, List<C> sourceNestedList, @NonNull Function<C, List<C>> childrenFunction, @NonNull Function<? super C, ? extends I> idFunction, @NonNull Function<? super C, ? extends I> depthFunction, @NonNull I depth) {
         List<WrapTree<I, C>> treeElements = initTreeByChildren(sourceNestedList, childrenFunction, idFunction, depthFunction);
         collectRelativeTreeLeafByDepth(collector, treeElements, depth);
     }
@@ -115,7 +115,7 @@ public class WrapTreeUtil {
      * @param depth            指定深度
      */
     @SuppressWarnings("unchecked")
-    public static <I extends Comparable, C extends Serializable> List<C> cutTreeElementByDepth(List<C> sourceNestedList, @NonNull Function<C, List<C>> childrenFunction, @NonNull Function<C, I> depthFunction, @NonNull I depth) {
+    public static <I extends Comparable, C extends Serializable> List<C> cutTreeElementByDepth(List<C> sourceNestedList, @NonNull Function<C, List<C>> childrenFunction, @NonNull Function<? super C, ? extends I> depthFunction, @NonNull I depth) {
         return sourceNestedList.stream()
                 .filter(Objects::nonNull)
                 .map(currentElement -> {
@@ -164,7 +164,7 @@ public class WrapTreeUtil {
      * @param depthFunction    节点深度操作函数表达式
      * @param depth            叶子节点深度限制
      */
-    public static <I extends Comparable, C extends Serializable> void pureSelectRelativeTreeLeafByDepth(List<C> collector, List<C> sourceNestedList, @NonNull Function<C, List<C>> childrenFunction, @NonNull Function<C, I> idFunction, @NonNull Function<C, I> depthFunction, @NonNull I depth) {
+    public static <I extends Comparable, C extends Serializable> void pureSelectRelativeTreeLeafByDepth(List<C> collector, List<C> sourceNestedList, @NonNull Function<C, List<C>> childrenFunction, @NonNull Function<? super C, ? extends I> idFunction, @NonNull Function<? super C, ? extends I> depthFunction, @NonNull I depth) {
         List<WrapTree<I, C>> treeElements = initTreeByChildren(sourceNestedList, childrenFunction, idFunction, depthFunction);
         collectRelativeTreeLeafByDepth(collector, treeElements, depth);
         if (CollectionUtil.isEmpty(collector)) {
@@ -197,7 +197,7 @@ public class WrapTreeUtil {
      * @param idFunction       id操作函数表达式
      * @return 树元素列表
      */
-    public static <I extends Comparable, C extends Serializable> List<WrapTree<I, C>> initTreeByChildren(List<C> sourceNestedList, @NonNull Function<C, List<C>> childrenFunction, @NonNull Function<C, I> idFunction, Function<C, I> depthFunction) {
+    public static <I extends Comparable, C extends Serializable> List<WrapTree<I, C>> initTreeByChildren(List<C> sourceNestedList, @NonNull Function<C, List<C>> childrenFunction, @NonNull Function<? super C, ? extends I> idFunction, Function<? super C, ? extends I> depthFunction) {
         if (CollectionUtil.isEmpty(sourceNestedList)) {
             return Lists.newArrayList();
         }
@@ -271,7 +271,7 @@ public class WrapTreeUtil {
      * @param pid           pid
      * @return 树元素列表
      */
-    private static <I extends Comparable, C extends Serializable> List<WrapTree<I, C>> initTreeChildItems(Map<I, List<C>> pidMultiMap, @NonNull Function<C, I> idFunction, Function<C, I> depthFunction, @NonNull I pid) {
+    private static <I extends Comparable, C extends Serializable> List<WrapTree<I, C>> initTreeChildItems(Map<I, List<C>> pidMultiMap, @NonNull Function<? super C, ? extends I> idFunction, Function<? super C, ? extends I> depthFunction, @NonNull I pid) {
         List<C> currentList = pidMultiMap.get(pid);
         if (CollectionUtil.isEmpty(currentList)) {
             return Lists.newArrayList();

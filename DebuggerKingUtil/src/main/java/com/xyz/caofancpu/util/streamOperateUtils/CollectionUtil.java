@@ -141,7 +141,7 @@ public class CollectionUtil extends CollectionUtils {
     /**
      * 转换为Map-Value
      */
-    public static <E, K> ImmutableMap<K, E> uniqueIndex(Iterable<E> values, Function<? super E, K> kFunction) {
+    public static <E, K> ImmutableMap<K, E> uniqueIndex(Iterable<E> values, Function<? super E, ? extends K> kFunction) {
         if (Objects.isNull(values)) {
             return ImmutableMap.of();
         }
@@ -151,46 +151,46 @@ public class CollectionUtil extends CollectionUtils {
     /**
      * 转换为Map-Value
      */
-    public static <E, K> Map<K, E> transToMap(@NonNull Iterable<E> values, Function<? super E, K> kFunction) {
+    public static <E, K> Map<K, E> transToMap(@NonNull Iterable<E> values, Function<? super E, ? extends K> kFunction) {
         return StreamSupport.stream(values.spliterator(), Boolean.FALSE)
                 .filter(Objects::nonNull)
-                .collect(Collectors.toMap(item -> kFunction.apply(item), Function.identity()));
+                .collect(Collectors.toMap(kFunction, Function.identity()));
     }
     
     /**
      * 转换为Map-Value, 重复KEY将抛出异常
      */
-    public static <E, K, M extends Map<K, E>> M transToMap(Supplier<M> mapColl, @NonNull Iterable<E> values, Function<? super E, K> kFunction) {
+    public static <E, K, M extends Map<K, E>> M transToMap(Supplier<M> mapColl, @NonNull Iterable<E> values, Function<? super E, ? extends K> kFunction) {
         return StreamSupport.stream(values.spliterator(), Boolean.FALSE)
                 .filter(Objects::nonNull)
-                .collect(Collectors.toMap(item -> kFunction.apply(item), Function.identity(), nonDuplicateKey(), mapColl));
+                .collect(Collectors.toMap(kFunction, Function.identity(), nonDuplicateKey(), mapColl));
     }
     
     /**
      * 转换为Map-Value, 允许重复KEY
      */
-    public static <E, K, M extends Map<K, E>> M transToMapEnhance(Supplier<M> mapColl, @NonNull Iterable<E> values, Function<? super E, K> kFunction) {
+    public static <E, K, M extends Map<K, E>> M transToMapEnhance(Supplier<M> mapColl, @NonNull Iterable<E> values, Function<? super E, ? extends K> kFunction) {
         return StreamSupport.stream(values.spliterator(), Boolean.FALSE)
                 .filter(Objects::nonNull)
-                .collect(Collectors.toMap(item -> kFunction.apply(item), Function.identity(), enableNewOnDuplicateKey(), mapColl));
+                .collect(Collectors.toMap(kFunction, Function.identity(), enableNewOnDuplicateKey(), mapColl));
     }
     
     /**
      * 转换为Map-Value
      */
-    public static <E, K, V> Map<K, V> transMap(@NonNull Iterable<E> values, Function<? super E, K> kFunction, Function<? super E, V> vFunction) {
+    public static <E, K, V> Map<K, V> transMap(@NonNull Iterable<E> values, Function<? super E, ? extends K> kFunction, Function<? super E, ? extends V> vFunction) {
         return StreamSupport.stream(values.spliterator(), Boolean.FALSE)
                 .filter(Objects::nonNull)
-                .collect(Collectors.toMap(item -> kFunction.apply(item), item -> vFunction.apply(item)));
+                .collect(Collectors.toMap(kFunction, vFunction));
     }
     
     /**
      * 转换为Map-Value, 重复KEY将抛出异常
      */
-    public static <E, K, V, M extends Map<K, V>> M transToMap(Supplier<M> mapColl, @NonNull Iterable<E> values, Function<? super E, K> kFunction, Function<? super E, V> vFunction) {
+    public static <E, K, V, M extends Map<K, V>> M transToMap(Supplier<M> mapColl, @NonNull Iterable<E> values, Function<? super E, ? extends K> kFunction, Function<? super E, ? extends V> vFunction) {
         return StreamSupport.stream(values.spliterator(), Boolean.FALSE)
                 .filter(Objects::nonNull)
-                .collect(Collectors.toMap(item -> kFunction.apply(item), item -> vFunction.apply(item), nonDuplicateKey(), mapColl));
+                .collect(Collectors.toMap(kFunction, vFunction, nonDuplicateKey(), mapColl));
     }
     
     /**
@@ -214,7 +214,7 @@ public class CollectionUtil extends CollectionUtils {
      * @param separator
      * @return
      */
-    public static <T extends Object> String join(List<T> list, String separator) {
+    public static <T> String join(List<T> list, String separator) {
         if (CollectionUtil.isEmpty(list)) {
             return StringUtils.EMPTY;
         }
@@ -250,7 +250,7 @@ public class CollectionUtil extends CollectionUtils {
      * @param value
      * @return
      */
-    public static <T, F> T findAny(List<T> list, Function<? super T, F> function, @NonNull F value) {
+    public static <T, F> T findAny(List<T> list, Function<? super T, ? extends F> function, @NonNull F value) {
         return list.stream().filter(item -> value.equals(function.apply(item))).findAny().orElse(null);
     }
     
@@ -262,7 +262,7 @@ public class CollectionUtil extends CollectionUtils {
      * @param value
      * @return
      */
-    public static <T, F> T findFirst(List<T> list, Function<? super T, F> function, @NonNull F value) {
+    public static <T, F> T findFirst(List<T> list, Function<? super T, ? extends F> function, @NonNull F value) {
         return list.stream().filter(item -> value.equals(function.apply(item))).findFirst().orElse(null);
     }
     
@@ -275,7 +275,7 @@ public class CollectionUtil extends CollectionUtils {
      * @param value
      * @return
      */
-    public static <T, F> boolean existAtLeastOne(List<T> list, Function<? super T, F> function, @NonNull F value) {
+    public static <T, F> boolean existAtLeastOne(List<T> list, Function<? super T, ? extends F> function, @NonNull F value) {
         return list.stream().anyMatch(item -> value.equals(function.apply(item)));
     }
     
@@ -287,7 +287,7 @@ public class CollectionUtil extends CollectionUtils {
      * @param value
      * @return
      */
-    public static <T, F> Boolean exist(List<T> list, Function<? super T, F> function, @NonNull F value) {
+    public static <T, F> Boolean exist(List<T> list, Function<? super T, ? extends F> function, @NonNull F value) {
         return list.stream().allMatch(item -> value.equals(function.apply(item)));
     }
     
@@ -304,7 +304,7 @@ public class CollectionUtil extends CollectionUtils {
      * @param vFunction
      * @return
      */
-    public static <E1, E2, K1, K2> Map<K2, List<E2>> reverseKV(@NonNull Map<K1, List<E1>> sourceMap, Function<? super K1, E2> kFunction, Function<? super E1, K2> vFunction) {
+    public static <E1, E2, K1, K2> Map<K2, List<E2>> reverseKV(@NonNull Map<K1, List<E1>> sourceMap, Function<? super K1, ? extends E2> kFunction, Function<? super E1, ? extends K2> vFunction) {
         Map<K2, List<E2>> aux = new HashMap<>();
         sourceMap.entrySet().stream()
                 .filter(Objects::nonNull)
@@ -331,7 +331,7 @@ public class CollectionUtil extends CollectionUtils {
      * @return
      */
     public static <V1, V2, K1, K2, C1 extends Collection<V1>, C2 extends Collection<V2>, M1 extends Map<K1, C1>, M2 extends Map<K2, C2>>
-    M2 reverseKV(Supplier<M2> mapColl, Supplier<C2> vColl, @NonNull M1 sourceMap, Function<? super K1, V2> kFunction, Function<? super V1, K2> vFunction) {
+    M2 reverseKV(Supplier<M2> mapColl, Supplier<C2> vColl, @NonNull M1 sourceMap, Function<? super K1, ? extends V2> kFunction, Function<? super V1, ? extends K2> vFunction) {
         M2 aux = mapColl.get();
         sourceMap.entrySet().stream()
                 .filter(Objects::nonNull)
@@ -350,7 +350,7 @@ public class CollectionUtil extends CollectionUtils {
      * @param value
      * @return
      */
-    public static <T, F> List<T> findAll(List<T> list, Function<? super T, F> function, @NonNull F value) {
+    public static <T, F> List<T> findAll(List<T> list, Function<? super T, ? extends F> function, @NonNull F value) {
         if (isEmpty(list)) {
             return Lists.newArrayList();
         }
@@ -369,7 +369,7 @@ public class CollectionUtil extends CollectionUtils {
      * @param value
      * @return
      */
-    public static <K, V, T> List<Map.Entry<K, V>> find(Map<K, V> srcMap, Function<? super K, T> kFunction, @NonNull T value) {
+    public static <K, V, T> List<Map.Entry<K, V>> find(Map<K, V> srcMap, Function<? super K, ? extends T> kFunction, @NonNull T value) {
         if (isEmpty(srcMap)) {
             return null;
         }
@@ -394,7 +394,7 @@ public class CollectionUtil extends CollectionUtils {
      * @param value
      * @return
      */
-    public static <K, V, T> Map.Entry<K, V> findOne(Map<K, V> srcMap, Function<? super K, T> kFunction, @NonNull T value) {
+    public static <K, V, T> Map.Entry<K, V> findOne(Map<K, V> srcMap, Function<? super K, ? extends T> kFunction, @NonNull T value) {
         if (isEmpty(srcMap)) {
             return null;
         }
@@ -414,7 +414,7 @@ public class CollectionUtil extends CollectionUtils {
      * @param value
      * @return
      */
-    public static <K, V, T> V findOneValue(Map<K, V> srcMap, Function<? super K, T> kFunction, @NonNull T value) {
+    public static <K, V, T> V findOneValue(Map<K, V> srcMap, Function<? super K, ? extends T> kFunction, @NonNull T value) {
         Entry<K, V> resultEntry = findOne(srcMap, kFunction, value);
         return Objects.isNull(resultEntry) ? null : resultEntry.getValue();
     }
@@ -439,7 +439,7 @@ public class CollectionUtil extends CollectionUtils {
     }
     
     public static <T> Comparator<T> getNameComparator(Function<T, String> function) {
-        return new NameComparator<T>(function);
+        return new NameComparator<>(function);
     }
     
     /**
@@ -447,8 +447,8 @@ public class CollectionUtil extends CollectionUtils {
      **/
     public static class NameComparator<T> implements Comparator<T> {
         private Function<T, String> function;
-        
-        public NameComparator(Function<T, String> function) {
+
+        NameComparator(Function<T, String> function) {
             this.function = function;
         }
         
