@@ -14,12 +14,12 @@ import org.springframework.stereotype.Service;
 @Service(value = "testKafkaServiceImpl")
 @DependsOn("initContextPropertyInitializer")
 public class TestKafkaServiceImpl implements KafkaConsumerService {
-    
+
     private static final Logger logger = LoggerFactory.getLogger(TestKafkaServiceImpl.class);
-    
+
     @Value("${wx.domain}")
     private String wxDomain;
-    
+
     @Override
     public Boolean handle(KafkaMessage kafkaMessage) {
         logger.info("服务实现类kafkaTestServiceImpl处理消息, 消息主题： {}", kafkaMessage.getTopic());

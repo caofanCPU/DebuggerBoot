@@ -15,10 +15,10 @@ import java.util.Date;
 @Configuration
 @EnableScheduling
 public class ScheduleProcessor {
-    
+
     private static int count = 1;
     private final Logger logger = LoggerFactory.getLogger(ScheduleProcessor.class);
-    
+
     /**
      * 1分钟跑一次
      */

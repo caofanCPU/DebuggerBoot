@@ -13,8 +13,8 @@ import org.springframework.stereotype.Service;
 @Service("msUrlConfigValueService")
 @DependsOn("initContextProperty")
 public class MSUrlConfigValueService {
-    
+
     @Value("${ms.file.url}")
     public String fileAccessUrl;
-    
+
 }

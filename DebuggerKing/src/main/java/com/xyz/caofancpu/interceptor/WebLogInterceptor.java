@@ -26,10 +26,10 @@ import java.util.Objects;
 @Aspect
 @Order(1)
 public class WebLogInterceptor {
-    
+
     private Logger logger = LoggerFactory.getLogger(this.getClass());
-    
-    
+
+
     /**
      * 日志切面
      */
@@ -37,7 +37,7 @@ public class WebLogInterceptor {
     public void webLog() {
         // do something
     }
-    
+
     @Before("webLog()")
     public void doBefore(JoinPoint joinPoint) {
         ServletRequestAttributes attributes = (ServletRequestAttributes) RequestContextHolder.getRequestAttributes();
@@ -63,7 +63,7 @@ public class WebLogInterceptor {
                 + "请求Body对象=" + requestBody + "\n");
         logger.info(sb.toString());
     }
-    
+
     @Around("webLog()")
     public Object doAround(ProceedingJoinPoint proceedingJoinPoint)
             throws Throwable {
@@ -78,7 +78,7 @@ public class WebLogInterceptor {
         logger.info(sb.toString());
         return result;
     }
-    
+
     @AfterReturning(value = "webLog()", returning = "returnValue")
     public void doAfterReturning(JoinPoint joinPoint, Object returnValue) {
         StringBuilder sb = new StringBuilder();
@@ -87,7 +87,7 @@ public class WebLogInterceptor {
                 + JSONUtil.formatStandardJSON(JSONObject.toJSONString(returnValue)));
         logger.info(sb.toString());
     }
-    
+
     /**
      * 获取真实IP
      *

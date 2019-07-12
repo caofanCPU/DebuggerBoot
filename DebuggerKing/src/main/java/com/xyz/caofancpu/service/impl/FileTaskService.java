@@ -31,19 +31,19 @@ import java.util.concurrent.Future;
 @Service("fileTaskService")
 @Api(description = "文件任务服务")
 public class FileTaskService {
-    
+
     private static final Logger logger = LoggerFactory.getLogger(FileTaskService.class);
-    
+
     // 引入默认线程池
     @Resource(name = "defaultThreadPool")
     private ThreadPoolTaskExecutor defaultThreadPool;
-    
+
     @Autowired
     private CommonOperateService commonOperateService;
-    
+
     @Autowired
     private CommonConfigValueService commonConfigValueService;
-    
+
     public void copyFile(List<FileClassifiedResult> fileInfoList) {
         if (Objects.isNull(fileInfoList)) {
             return;
@@ -77,7 +77,7 @@ public class FileTaskService {
                     });
         }
     }
-    
+
     private void handleFileCopy(List<FileClassifiedResult> fileClassifiedResultList) {
         if (CollectionUtils.isEmpty(fileClassifiedResultList)) {
             return;
@@ -114,8 +114,8 @@ public class FileTaskService {
                     }
                 });
     }
-    
-    
+
+
     public <T> List<List<T>> balancedGroupingByTask(List<T> sourceList, Integer average) {
         if (CollectionUtils.isEmpty(sourceList)) {
             return new ArrayList<>();
@@ -137,14 +137,14 @@ public class FileTaskService {
         }
         return resultList;
     }
-    
-    
+
+
     public ResultBody exe() {
         Map<Integer, Future<?>> taskResultMap = new HashMap<>();
         addToPool(taskResultMap, 1, this, "loadData", 1, new Class[]{Integer.class});
         addToPool(taskResultMap, 2, this, "loadData", 2, new Class[]{Integer.class});
         addToPool(taskResultMap, 3, this, "loadData", 3, new Class[]{Integer.class});
-        
+
         int[] checkResultArray = new int[]{0, 0, 0};
         taskResultMap.keySet().stream()
                 .filter(Objects::nonNull)
@@ -175,7 +175,7 @@ public class FileTaskService {
                 });
         return getCheckResult(checkResultArray);
     }
-    
+
     private ResultBody getCheckResult(int[] checkResultArray) {
         if (checkResultArray[0] != 1) {
             return new ResultBody().fail("手机号验证失败！");
@@ -188,7 +188,7 @@ public class FileTaskService {
         }
         return new ResultBody().fail(StringUtils.EMPTY);
     }
-    
+
     public boolean checkResult(Future task) {
         try {
             return (Boolean) task.get();
@@ -199,11 +199,11 @@ public class FileTaskService {
         }
         return Boolean.FALSE;
     }
-    
+
     public Integer loadData(Integer id) {
         return 1;
     }
-    
+
     private void addToPool(
             Map<Integer, Future<?>> taskResultMap, Integer taskNo, Object executeService,
             String executeMethod, Object params, Class<?>... paramClass) {
@@ -211,5 +211,5 @@ public class FileTaskService {
         RemoteRequestTask task = new RemoteRequestTask(remoteService);
         taskResultMap.put(taskNo, defaultThreadPool.submit(task));
     }
-    
+
 }

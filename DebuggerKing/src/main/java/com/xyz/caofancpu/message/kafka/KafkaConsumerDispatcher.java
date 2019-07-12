@@ -21,18 +21,18 @@ import java.util.Map;
  */
 @Component
 public class KafkaConsumerDispatcher {
-    
+
     private static final Logger logger = LoggerFactory.getLogger(KafkaConsumerDispatcher.class);
-    
+
     @Autowired
     private KafkaProperty kafkaProperty;
-    
+
     /**
      * 测试SpEL表达式
      */
     @Value("#{'${test.spring.kafka.topics}'.split(',')}")
     private String[] kafkaTopics;
-    
+
     /**
      * 蛋疼！！！：org.springframework.kafka 1.1.8不支持SpEL表达式！！！！！！！！！！！！！！！！
      * <p>
@@ -45,7 +45,7 @@ public class KafkaConsumerDispatcher {
      *
      * @param data
      */
-    
+
     @KafkaListener(topics = {"testDemo", "testDemo2", "testDemo3"})
     public void dispatcher(String data) {
         /** 从当前线程的堆栈中获取当前执行方法，也可获取执行类 */
@@ -68,7 +68,7 @@ public class KafkaConsumerDispatcher {
             consumer.handle(convertKafkaMessage(data, topic));
         }
     }
-    
+
     private final String parseTopic(final String methodName) {
         String topic = null;
         try {
@@ -80,7 +80,7 @@ public class KafkaConsumerDispatcher {
         }
         return topic;
     }
-    
+
     private KafkaMessage convertKafkaMessage(String data, final String topic) {
         KafkaMessage kafkaMessage = null;
         if (StringUtils.isNotEmpty(data)) {
@@ -93,5 +93,5 @@ public class KafkaConsumerDispatcher {
         }
         return kafkaMessage;
     }
-    
+
 }

@@ -19,9 +19,9 @@ import java.util.concurrent.ThreadPoolExecutor;
 @Configuration
 @EnableAsync
 public class StandardThreadPoolConfig {
-    
+
     private static final Logger logger = LoggerFactory.getLogger(StandardThreadPoolConfig.class);
-    
+
     @Bean(name = "standardThreadPool")
     public ThreadPoolTaskExecutor standardThreadPool() {
         logger.info("初始化服务线程池");
@@ -43,7 +43,7 @@ public class StandardThreadPoolConfig {
         logger.info("完成服务线程池启动");
         return executor;
     }
-    
+
     @Bean
     public RejectedExecutionHandler rejectedExecutionHandler() {
         //rejection-policy：当pool已经达到max size的时候，如何处理新任务
@@ -51,6 +51,6 @@ public class StandardThreadPoolConfig {
         //对拒绝task的处理策略
         return new ThreadPoolExecutor.CallerRunsPolicy();
     }
-    
-    
+
+
 }

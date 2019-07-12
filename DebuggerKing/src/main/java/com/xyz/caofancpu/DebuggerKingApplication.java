@@ -14,7 +14,7 @@ import springfox.documentation.swagger2.annotations.EnableSwagger2;
 @EnableEncryptableProperties
 @EnableSwagger2
 public class DebuggerKingApplication {
-    
+
     /**
      * 对象解析为JSONArray
      * 可能出现:  com.alibaba.fastjson.JSONException: autoType is not support ...
@@ -24,7 +24,7 @@ public class DebuggerKingApplication {
     static {
         ParserConfig.getGlobalInstance().addAccept("com.ovfintech.bynz.model");
     }
-    
+
     public static void main(String[] args) {
         SpringApplication.run(DebuggerKingApplication.class, args);
     }

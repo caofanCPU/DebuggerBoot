@@ -12,14 +12,11 @@ import java.lang.reflect.Method;
 
 /**
  * FileName: MapperAspect
- *
- * @author: caofanCPU
- * @date: 2019/1/25 11:26
  */
 @Aspect
 @Component
 public class ServiceAspect {
-    
+
     @Around(value = "execution(* com.xyz..*.service.imp..*ServiceImpl.*(..))")
     public Object aroundMethod(ProceedingJoinPoint pjp)
             throws Throwable {

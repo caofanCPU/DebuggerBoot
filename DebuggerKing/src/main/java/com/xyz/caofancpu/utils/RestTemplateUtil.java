@@ -32,21 +32,21 @@ import java.util.stream.Stream;
  */
 @Component
 public class RestTemplateUtil {
-    
+
     private static Logger logger = LoggerFactory.getLogger(RestTemplateUtil.class);
-    
+
     @Value("${authorization.user-profile.key}")
     private String authKey;
-    
+
     @Value("${fileOperate.logging.key}")
     private String fileOperateLoggingKey;
-    
+
     @Resource(type = RestTemplate.class)
     private RestTemplate restTemplate;
-    
+
     @Value("${resource_access_key}")
     private String resourceAccessKey;
-    
+
     /**
      * 剔除请求中值为null的参数
      *
@@ -66,7 +66,7 @@ public class RestTemplateUtil {
         logger.info("完成请求参数中null值的剔除");
         return resultMap;
     }
-    
+
     public ResultBody convertResponse(JSONObject responseJson) {
         ResultBody resultBody = new ResultBody();
         boolean msgFlag = responseJson.get("msg") == null;
@@ -89,7 +89,7 @@ public class RestTemplateUtil {
         }
         return resultBody;
     }
-    
+
     /**
      * GET传参数，拼接方式
      *
@@ -119,7 +119,7 @@ public class RestTemplateUtil {
         showResponseLog(url, responseJson.toJSONString());
         return convertResponse(responseJson);
     }
-    
+
     /**
      * GET请求，把参数拼接到URL之后
      * 示例： http://xxx/{3}/name=debugger&age=20&money=100.25
@@ -154,7 +154,7 @@ public class RestTemplateUtil {
         sb.deleteCharAt(sb.length() - 1);
         return sb.toString();
     }
-    
+
     /**
      * POST方式调用，传body对象
      *
@@ -182,8 +182,8 @@ public class RestTemplateUtil {
         showResponseLog(url, responseJson.toJSONString());
         return convertResponse(responseJson);
     }
-    
-    
+
+
     /**
      * POST方式调用，传body对象, 对象为List
      *
@@ -216,7 +216,7 @@ public class RestTemplateUtil {
         showResponseLog(url, responseJson.toJSONString());
         return convertResponse(responseJson);
     }
-    
+
     /**
      * 封装请求对象HttpEntity，主要是token、请求参数
      *
@@ -231,7 +231,7 @@ public class RestTemplateUtil {
         HttpEntity<Map<String, Object>> httpEntity = new HttpEntity<>(paramMap, headers);
         return httpEntity;
     }
-    
+
     /**
      * 封装请求对象HttpEntity，主要是token、请求参数
      *
@@ -246,7 +246,7 @@ public class RestTemplateUtil {
         HttpEntity<List<?>> httpEntity = new HttpEntity<>(paramList, headers);
         return httpEntity;
     }
-    
+
     /**
      * 打印请求参数
      *
@@ -267,7 +267,7 @@ public class RestTemplateUtil {
                 + "携带token=" + token
         );
     }
-    
+
     /**
      * 判空处理
      *
@@ -293,7 +293,7 @@ public class RestTemplateUtil {
         String token = request.getHeader(authKey);
         return token;
     }
-    
+
     /**
      * 打印响应结果
      *
@@ -305,6 +305,6 @@ public class RestTemplateUtil {
                 + "接口响应:\n" + JSONUtil.formatStandardJSON(jsonString)
         );
     }
-    
-    
+
+
 }

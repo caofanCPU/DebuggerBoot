@@ -21,11 +21,10 @@ import java.util.Properties;
  * 读取自定义配置变量, 设置为全局
  *
  * @author caofanCPU
- * @date 2018-08-03
  */
 @Configuration("initContextPropertyInitializer")
 public class InitContextPropertyInitializer {
-    
+
     public static final String PROPERTY_KEY = "name";
     public static final String PROPERTY_VALUE = "code";
     public static final String DB_PROPERTY_SOURCE = "dbPropertySource";
@@ -38,8 +37,8 @@ public class InitContextPropertyInitializer {
     private static final Logger logger = LoggerFactory.getLogger(InitContextPropertyInitializer.class);
     @Autowired
     private transient SysDictMapper sysDictMapper;
-    
-    
+
+
     /**
      * 配置变量说明
      * spring boot指定了配置变量的访问优先级，【变量组】访问由高至低如下:
@@ -61,7 +60,7 @@ public class InitContextPropertyInitializer {
      */
     @Resource
     private transient ConfigurableEnvironment configurableEnvironment;
-    
+
     @PostConstruct
     public void execute() {
         // 1.读取数据库配置
@@ -69,7 +68,7 @@ public class InitContextPropertyInitializer {
         // 2.读取yaml配置文件变量
         readYamlProperty();
     }
-    
+
     /**
      * 读取数据库配置表, 设置为全局
      */
@@ -88,7 +87,7 @@ public class InitContextPropertyInitializer {
         }
         logger.info("完成数据库配置初始化!");
     }
-    
+
     /**
      * 从.yaml配置文件读取配置属性, 设置为全局
      * 注意: ClassPathResource加载的路径, 直接填写相对于resource的目录即可, 开头不需要'/'

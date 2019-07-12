@@ -37,23 +37,23 @@ import java.util.*;
 @Service("commonOperateService")
 @DependsOn("initContextPropertyInitializer")
 public class CommonOperateServiceImpl implements CommonOperateService {
-    
+
     /**
      * LOG
      */
     private static final Logger logger = LoggerFactory.getLogger(CommonOperateServiceImpl.class);
-    
+
     private static final String COMMA_SEPARATOR = ",";
-    
+
     @Resource
     private RestTemplateUtil restTemplateUtil;
-    
+
     @Autowired
     private CommonConfigValueService commonConfigValueService;
-    
+
     @Autowired
     private MSUrlConfigValueService msUrlConfigValueService;
-    
+
     @Override
     public void uploadAttachment(Attachment attachment, MultipartFile file)
             throws GlobalErrorInfoException {
@@ -67,7 +67,7 @@ public class CommonOperateServiceImpl implements CommonOperateService {
             logger.error("获取文件二进制流失败, {}", e.getMessage());
             throw new GlobalErrorInfoException(new CustomerErrorInfo("文件上传失败, 请重试!"));
         }
-        
+
         String originalFilename = file.getOriginalFilename().toLowerCase();
         String type = originalFilename.substring(originalFilename.lastIndexOf("."));
         // 上传服务器开始
@@ -84,14 +84,14 @@ public class CommonOperateServiceImpl implements CommonOperateService {
         // 禁用文件内容打印LOG
         closeFileOperateLogging(paramMap);
         restTemplateUtil.postBody(msUrlConfigValueService.fileAccessUrl + "/file/upload", paramMap);
-        
+
         attachment.setType(type);
         attachment.setName(path);
         attachment.setCreateTime(DateUtil.date2StrForSimpleDetail(new Date()));
-        
+
         logger.info("\n客户端于[{}]上传文件：[{}]", attachment.getCreateTime(), attachment.getName());
     }
-    
+
     @Override
     public String getAttachmentAccessUrl(String attachmentName)
             throws GlobalErrorInfoException {
@@ -104,7 +104,7 @@ public class CommonOperateServiceImpl implements CommonOperateService {
                 put("filename", attachmentName);
             }
         };
-    
+
         ResultBody resultBody = restTemplateUtil.postBody(msUrlConfigValueService.fileAccessUrl + "/file/generateUrl", map);
         GlobalResultCheckUtil.handleMSResultBody(resultBody);
         JSONObject jsonObject = JSONObject.parseObject(JSONObject.toJSONString(resultBody));
@@ -112,7 +112,7 @@ public class CommonOperateServiceImpl implements CommonOperateService {
         logger.info("查询文件访问Url:\n输入文件名[{}]\n输出Url[{}]", attachmentName, accessUrl);
         return accessUrl;
     }
-    
+
     @Override
     public String loadToken() {
         RequestAttributes temRequestAttributes = RequestContextHolder.getRequestAttributes();
@@ -134,7 +134,7 @@ public class CommonOperateServiceImpl implements CommonOperateService {
         String token = request.getHeader(commonConfigValueService.authKey);
         return token;
     }
-    
+
     @Override
     public void createParentDir(String mainRoot) {
         File file = new File(mainRoot);
@@ -142,7 +142,7 @@ public class CommonOperateServiceImpl implements CommonOperateService {
             file.mkdirs();
         }
     }
-    
+
     @Override
     public void closeFileOperateLogging(Map<String, Object> paramMap) {
         if (Objects.isNull(paramMap)) {
@@ -150,6 +150,6 @@ public class CommonOperateServiceImpl implements CommonOperateService {
         }
         paramMap.put(commonConfigValueService.fileOperateLoggingKey, commonConfigValueService.fileOperateLoggingValue);
     }
-    
+
 }
 

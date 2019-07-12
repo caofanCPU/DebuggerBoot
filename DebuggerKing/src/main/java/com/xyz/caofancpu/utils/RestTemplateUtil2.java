@@ -37,9 +37,9 @@ import java.util.stream.Stream;
  */
 @Component
 public class RestTemplateUtil2 {
-    
+
     private static Logger logger = LoggerFactory.getLogger(RestTemplateUtil.class);
-    
+
     /**
      * 对于多个restTemplate的情形, 使用@Autowired + @Qualifier注解
      * 使用服务名访问
@@ -47,7 +47,7 @@ public class RestTemplateUtil2 {
     @Autowired
     @Qualifier(value = "restTemplate")
     private RestTemplate restTemplate;
-    
+
     /**
      * 对于多个restTemplate的情形, 使用@Autowired + @Qualifier注解
      * 使用IP:port访问
@@ -55,16 +55,16 @@ public class RestTemplateUtil2 {
     @Autowired
     @Qualifier(value = "zuulRestTemplate")
     private RestTemplate zuulRestTemplate;
-    
+
     @Value("${authorization.user-profile.key}")
     private String authKey;
-    
+
     @Value("${fileOperate.logging.key}")
     private String fileOperateLoggingKey;
-    
+
     @Value("${resource_access_key}")
     private String resourceAccessKey;
-    
+
     /**
      * 剔除请求中值为null的参数
      *
@@ -84,7 +84,7 @@ public class RestTemplateUtil2 {
         logger.info("完成请求参数中null值的剔除");
         return resultMap;
     }
-    
+
     public ResultBody convertResponse(String url, JSONObject responseJson) {
         ResultBody resultBody = new ResultBody();
         boolean msgFlag = Objects.isNull(responseJson.get("msg"));
@@ -109,7 +109,7 @@ public class RestTemplateUtil2 {
         }
         return resultBody;
     }
-    
+
     /**
      * GET传参数，拼接方式
      *
@@ -125,7 +125,7 @@ public class RestTemplateUtil2 {
         // CAT监控:MS请求埋点, 一定要在加载CATHeaders之前执行
         Transaction requestT = Cat.newTransaction("URL.MS", url);
         Cat.logEvent("MS.请求", url, Event.SUCCESS, requestLog.replaceAll("\\s", ""));
-        
+
         HttpEntity<Map<String, Object>> httpEntity = loadHttpEntity(new HashMap<>(2, 0.5f), token);
         ResponseEntity<JSONObject> responseEntity = null;
         String requestUrl = loadUrl(url, requestMap);
@@ -138,7 +138,7 @@ public class RestTemplateUtil2 {
             // 响应监控先结束
             responseT.setStatus(e.getMessage());
             responseT.complete();
-            
+
             // 请求监控后结束
             requestT.setStatus(e.getMessage());
             requestT.complete();
@@ -148,7 +148,7 @@ public class RestTemplateUtil2 {
             logger.error("调用微服务接口失败! 接口: {} \n原因: {}", url, "响应为null");
             responseT.setStatus("微服务响应为null");
             responseT.complete();
-            
+
             requestT.setStatus("微服务响应为null");
             requestT.complete();
             return handleMSErrorResult(msErrorMsg);
@@ -158,12 +158,12 @@ public class RestTemplateUtil2 {
         Cat.logEvent("MS.响应", url, Event.SUCCESS, responseLog.replaceAll("\\s", ""));
         responseT.setStatus(Transaction.SUCCESS);
         responseT.complete();
-        
+
         requestT.setStatus(Transaction.SUCCESS);
         requestT.complete();
         return convertResponse(url, responseJson);
     }
-    
+
     /**
      * POST方式调用，传body对象
      *
@@ -180,7 +180,7 @@ public class RestTemplateUtil2 {
         Transaction requestT = Cat.newTransaction("URL.MS", url);
         Cat.logEvent("MS.请求", url, Event.SUCCESS, requestLog.replaceAll("\\s", ""));
         // CAT监控:MS请求埋点, 一定要在加载CATHeaders之前执行
-        
+
         HttpEntity<Map<String, Object>> httpEntity = loadHttpEntity(paramMap, token);
         JSONObject responseJson = null;
         // CAT监控: MS响应埋点
@@ -192,7 +192,7 @@ public class RestTemplateUtil2 {
             // 响应监控先结束
             responseT.setStatus(e.getMessage());
             responseT.complete();
-            
+
             // 请求监控后结束
             requestT.setStatus(e.getMessage());
             requestT.complete();
@@ -202,22 +202,22 @@ public class RestTemplateUtil2 {
             logger.error("调用微服务接口失败! 接口: {} \n原因: {}", url, "响应为null");
             responseT.setStatus("微服务响应为null");
             responseT.complete();
-            
+
             requestT.setStatus("微服务响应为null");
             requestT.complete();
             return handleMSErrorResult(msErrorMsg);
         }
         String responseLog = showResponseLog(url, responseJson.toJSONString());
-        
+
         Cat.logEvent("MS.响应", url, Event.SUCCESS, responseLog.replaceAll("\\s", ""));
         responseT.setStatus(Transaction.SUCCESS);
         responseT.complete();
-        
+
         requestT.setStatus(Transaction.SUCCESS);
         requestT.complete();
         return convertResponse(url, responseJson);
     }
-    
+
     /**
      * 通过IP:port访问 POST方式调用，传body对象
      *
@@ -233,7 +233,7 @@ public class RestTemplateUtil2 {
         // CAT监控:MS请求埋点, 一定要在加载CATHeaders之前执行
         Transaction requestT = Cat.newTransaction("URL.MS", url);
         Cat.logEvent("MS.请求", url, Event.SUCCESS, requestLog.replaceAll("\\s", ""));
-        
+
         HttpEntity<Map<String, Object>> httpEntity;
         if (Objects.nonNull(headers)) {
             loadCatHttpHeaders(headers);
@@ -251,7 +251,7 @@ public class RestTemplateUtil2 {
             // 响应监控先结束
             responseT.setStatus(e.getMessage());
             responseT.complete();
-            
+
             // 请求监控后结束
             requestT.setStatus(e.getMessage());
             requestT.complete();
@@ -261,22 +261,22 @@ public class RestTemplateUtil2 {
             logger.error("调用微服务接口失败! 接口: {} \n原因: {}", url, "响应为null");
             responseT.setStatus("微服务响应为null");
             responseT.complete();
-            
+
             requestT.setStatus("微服务响应为null");
             requestT.complete();
             return handleMSErrorResult(msErrorMsg);
         }
-        
+
         String responseLog = showResponseLog(url, responseJson.toJSONString());
         Cat.logEvent("MS.响应", url, Event.SUCCESS, responseLog.replaceAll("\\s", ""));
         responseT.setStatus(Transaction.SUCCESS);
         responseT.complete();
-        
+
         requestT.setStatus(Transaction.SUCCESS);
         requestT.complete();
         return convertResponse(url, responseJson);
     }
-    
+
     /**
      * POST方式调用，传body对象, 对象为List
      *
@@ -295,12 +295,12 @@ public class RestTemplateUtil2 {
                 put("List<?>", paramList);
             }
         };
-        
+
         String requestLog = showRequestLog(url, bodyLoggingMap, token, HttpMethod.POST);
         // CAT监控:MS请求埋点, 一定要在加载CATHeaders之前执行
         Transaction requestT = Cat.newTransaction("URL.MS", url);
         Cat.logEvent("MS.请求", url, Event.SUCCESS, requestLog.replaceAll("\\s", ""));
-        
+
         HttpEntity<List<?>> httpEntity = loadListHttpEntity(filteredList, token);
         JSONObject responseJson = null;
         // CAT监控: MS响应埋点
@@ -312,7 +312,7 @@ public class RestTemplateUtil2 {
             // 响应监控先结束
             responseT.setStatus(e.getMessage());
             responseT.complete();
-            
+
             // 请求监控后结束
             requestT.setStatus(e.getMessage());
             requestT.complete();
@@ -322,7 +322,7 @@ public class RestTemplateUtil2 {
             logger.error("调用微服务接口失败! 接口: {} \n原因: {}", url, "响应为null");
             responseT.setStatus("微服务响应为null");
             responseT.complete();
-            
+
             requestT.setStatus("微服务响应为null");
             requestT.complete();
             return handleMSErrorResult(msErrorMsg);
@@ -331,13 +331,13 @@ public class RestTemplateUtil2 {
         Cat.logEvent("MS.响应", url, Event.SUCCESS, responseLog.replaceAll("\\s", ""));
         responseT.setStatus(Transaction.SUCCESS);
         responseT.complete();
-        
+
         requestT.setStatus(Transaction.SUCCESS);
         requestT.complete();
         return convertResponse(url, responseJson);
     }
-    
-    
+
+
     /**
      * GET请求，把参数拼接到URL之后
      * 示例： http://xxx/{3}/name=debugger&age=20&money=100.25
@@ -373,7 +373,7 @@ public class RestTemplateUtil2 {
         sb.deleteCharAt(sb.length() - 1);
         return sb.toString();
     }
-    
+
     private void handleMSErrorMsg(String msErrorMsg)
             throws GlobalErrorInfoException {
         if (Objects.isNull(msErrorMsg)) {
@@ -381,14 +381,14 @@ public class RestTemplateUtil2 {
         }
         throw new GlobalErrorInfoException(msErrorMsg);
     }
-    
+
     private ResultBody handleMSErrorResult(String msErrorMsg) {
         if (Objects.isNull(msErrorMsg)) {
             msErrorMsg = GlobalErrorInfoEnum.GLOBAL_MS_MSG.getMsg();
         }
         return new ResultBody().fail(GlobalErrorInfoEnum.GLOBAL_MS_MSG.getCode(), msErrorMsg);
     }
-    
+
     /**
      * 封装请求对象HttpEntity，主要是token、请求参数
      *
@@ -404,7 +404,7 @@ public class RestTemplateUtil2 {
         HttpEntity<Map<String, Object>> httpEntity = new HttpEntity<>(paramMap, headers);
         return httpEntity;
     }
-    
+
     /**
      * 接入CAT监控
      *
@@ -419,7 +419,7 @@ public class RestTemplateUtil2 {
         headers.add(catFlag + Cat.Context.PARENT, catContext.getProperty(Cat.Context.PARENT));
         headers.add(catFlag + Cat.Context.CHILD, catContext.getProperty(Cat.Context.CHILD));
     }
-    
+
     /**
      * 封装请求对象HttpEntity，主要是token、请求参数
      *
@@ -435,7 +435,7 @@ public class RestTemplateUtil2 {
         HttpEntity<List<?>> httpEntity = new HttpEntity<>(paramList, headers);
         return httpEntity;
     }
-    
+
     /**
      * 打印请求参数
      *
@@ -462,7 +462,7 @@ public class RestTemplateUtil2 {
         logger.info(sb.toString());
         return sb.toString();
     }
-    
+
     /**
      * 判空处理
      *
@@ -488,7 +488,7 @@ public class RestTemplateUtil2 {
         String token = request.getHeader(authKey);
         return token;
     }
-    
+
     /**
      * 打印响应结果
      *
@@ -504,6 +504,6 @@ public class RestTemplateUtil2 {
         logger.info(sb.toString());
         return sb.toString();
     }
-    
-    
+
+
 }

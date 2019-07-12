@@ -18,12 +18,12 @@ import java.util.stream.LongStream;
  *
  */
 public class BaseTreeUtilTests {
-    
+
     public static void main(String[] args) {
 //        testBaseTree();
         testChildTree();
     }
-    
+
     public static void testBaseTree() {
         List<BaseTree> treeList = buildBaseTree();
         List<BaseTree> expandList = new ArrayList<>();
@@ -31,7 +31,7 @@ public class BaseTreeUtilTests {
         BaseTreeUtil.expandTreeElements(expandList, treeList);
         BaseTreeUtil.findTreeLeafElements(leafLimitedList, treeList, 3);
     }
-    
+
     public static void testChildTree() {
         List<ChildTree> treeList = buildChildTree();
         List<ChildTree> expandList = new ArrayList<>();
@@ -39,7 +39,7 @@ public class BaseTreeUtilTests {
         BaseTreeUtil.expandTreeElements(expandList, treeList);
         BaseTreeUtil.findTreeLeafElements(leafLimitedList, treeList, 3);
     }
-    
+
     public static List<BaseTree> buildBaseTree() {
         List<BaseTree> treeList = LongStream.range(1, 7).boxed()
                 .map(id -> {
@@ -50,7 +50,7 @@ public class BaseTreeUtilTests {
         treeList.get(0).getChildren().add(treeList.get(1));
         treeList.get(1).getChildren().add(treeList.get(2));
         treeList.get(3).getChildren().add(treeList.get(4));
-        
+
         treeList.get(5).setDepth(1);
         return new ArrayList<BaseTree>() {
             {
@@ -60,7 +60,7 @@ public class BaseTreeUtilTests {
             }
         };
     }
-    
+
     public static List<ChildTree> buildChildTree() {
         List<ChildTree> treeList = LongStream.range(1, 7).boxed()
                 .map(id -> {
@@ -74,7 +74,7 @@ public class BaseTreeUtilTests {
         treeList.get(0).getChildren().add(treeList.get(1));
         treeList.get(1).getChildren().add(treeList.get(2));
         treeList.get(3).getChildren().add(treeList.get(4));
-        
+
         treeList.get(5).setDepth(1);
         return new ArrayList<ChildTree>() {
             {
@@ -84,13 +84,13 @@ public class BaseTreeUtilTests {
             }
         };
     }
-    
+
     @Data
     @ToString(callSuper = true)
     @EqualsAndHashCode(callSuper = true)
     @Accessors(chain = true)
     @AllArgsConstructor
     public static class ChildTree extends BaseTree {
-    
+
     }
 }

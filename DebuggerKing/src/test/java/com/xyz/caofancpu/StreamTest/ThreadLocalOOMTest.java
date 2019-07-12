@@ -11,17 +11,14 @@ import java.util.stream.IntStream;
 
 /**
  * FileName: ThreadLocalOOMTest
- *
- * @author: caofanCPU
- * @date: 2019/3/11 15:03
  */
 
 public class ThreadLocalOOMTest {
     private static final int THREAD_LOOP_SIZE = 500;
     private static final int MAX_DATA_LOOP_SIZE = 10000;
-    
+
     private static ThreadLocal<List<User>> threadLocal = new ThreadLocal<>();
-    
+
     public static void main(String[] args) {
         try {
             Thread.sleep(4000L);
@@ -44,7 +41,7 @@ public class ThreadLocalOOMTest {
                 });
         executorService.shutdown();
     }
-    
+
     private List<User> addBigList() {
         List<User> userList = new ArrayList<>(MAX_DATA_LOOP_SIZE);
         IntStream.range(1, MAX_DATA_LOOP_SIZE + 1)
@@ -60,5 +57,5 @@ public class ThreadLocalOOMTest {
         private String sex;
         private int age;
     }
-    
+
 }

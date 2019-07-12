@@ -15,10 +15,10 @@ import javax.annotation.Resource;
  */
 @Configuration
 public class RestTemplateConfig {
-    
+
     @Resource
     RestTemplateBuilder restTemplateBuilder;
-    
+
     /**
      * 注意：@LoadBalanced注解，使用该注解，则调用其他服务时，必须使用服务名称[http://SERVICE-XXX]，而非IP:port
      *
@@ -29,7 +29,7 @@ public class RestTemplateConfig {
     RestTemplate restTemplate() {
         return restTemplateBuilder.build();
     }
-    
+
     /**
      * 通过IP:port访问服务
      *
@@ -39,6 +39,6 @@ public class RestTemplateConfig {
     RestTemplate zuulRestTemplate() {
         return restTemplateBuilder.build();
     }
-    
-    
+
+
 }

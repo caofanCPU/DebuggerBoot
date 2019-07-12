@@ -21,7 +21,7 @@ public class NettyDemoClient {
         int serverPort = 8000;
         Bootstrap bootstrap = new Bootstrap();
         NioEventLoopGroup group = new NioEventLoopGroup();
-        
+
         bootstrap.group(group)
                 .channel(NioSocketChannel.class)
                 .handler(new ChannelInitializer<Channel>() {
@@ -30,9 +30,9 @@ public class NettyDemoClient {
                         channel.pipeline().addLast(new StringEncoder());
                     }
                 });
-        
+
         Channel channel = bootstrap.connect(serverHost, serverPort).channel();
-        
+
         while (true) {
             channel.writeAndFlush(new Date() + ": Hello My King!");
             try {
@@ -42,5 +42,5 @@ public class NettyDemoClient {
             }
         }
     }
-    
+
 }

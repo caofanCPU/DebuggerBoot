@@ -14,9 +14,9 @@ import java.util.Map;
  * Created by caofanCPU on 2018/7/25.
  */
 public class CommonOperateControllerTests extends DebuggerKingApplicationTests {
-    
+
     private static final Logger logger = LoggerFactory.getLogger(CommonOperateControllerTests.class);
-    
+
     @Test
     public void listSysDictByPageTest()
             throws Exception {
@@ -29,7 +29,7 @@ public class CommonOperateControllerTests extends DebuggerKingApplicationTests {
         String responseStr = springBootJunitTestUtil.handlePostParamExecute(requestParams, "/sysDict/listByPage");
         JSONUtil.formatStandardJSON(responseStr);
     }
-    
+
     @Test
     public void testRuntimeException()
             throws Exception {

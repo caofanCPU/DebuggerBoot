@@ -32,18 +32,18 @@ import java.util.Properties;
 //@Component
 @Deprecated
 public class PageInterceptor implements Interceptor {
-    
+
     /**
      * 匹配mapper层的方法名，筛选所有分页的sql语句
      */
     @Deprecated
     public String sqlIdByPageRegex = "(.*)ByPage@";
-    
+
     @Override
     @Deprecated
     public Object intercept(Invocation invocation)
             throws Exception {
-        
+
         // 通过拦截器得到被拦截的对象,就是上面配置的注解的对象
         StatementHandler statementHandler = (StatementHandler) invocation.getTarget();
         // 为了获取以及设置某些对象的属性值（某些对象的属性是没有getter/setter的），mybatis提供的快捷的通过反射设置获取属性值的工具类，当然也可以通过自己写反射完成
@@ -99,18 +99,18 @@ public class PageInterceptor implements Interceptor {
         // 连接器是链式结构的，我们完成我们的拦截处理以后，还要保证接下来的其他拦截器或者代码继续执行
         return invocation.proceed();
     }
-    
+
     @Override
     public Object plugin(Object target) {
         // 表示给一个目标对象织入一个拦截器，该代码织入的的拦截器对象就是本身this对象
         return Plugin.wrap(target, this);
     }
-    
+
     @Override
     public void setProperties(Properties properties) {
         // 可读取到配置文件中定义的属性以及属性值
         sqlIdByPageRegex = (String) properties.get("sqlIdByPageRegex");
-        
+
     }
-    
+
 }

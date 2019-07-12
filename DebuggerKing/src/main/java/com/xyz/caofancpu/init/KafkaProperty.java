@@ -19,23 +19,23 @@ import java.util.concurrent.ConcurrentHashMap;
 @PropertySource(value = "classpath:kafka.properties")
 @Scope(value = "singleton")
 public class KafkaProperty {
-    
+
     private Map<String, String> topicMap = new ConcurrentHashMap<>();
-    
+
     private String[] topics = new String[]{String.valueOf(new Object().hashCode())};
-    
+
     public Map<String, String> getTopicMap() {
         return topicMap;
     }
-    
+
     public void setTopicMap(Map<String, String> topicMap) {
         this.topicMap = topicMap;
     }
-    
+
     public String[] getTopics() {
         return topics;
     }
-    
+
     public void setTopics(String[] topics) {
         this.topics = topics;
     }

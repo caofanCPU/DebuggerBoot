@@ -22,21 +22,21 @@ import java.util.Map;
 @Service("sysDictService")
 @DependsOn("initContextPropertyInitializer")
 public class SysDictServiceImpl implements SysDictService {
-    
+
     /**
      * LOG
      */
     private static final Logger logger = LoggerFactory.getLogger(SysDictServiceImpl.class);
-    
+
     @SuppressWarnings("SpringJavaInjectionPointsAutowiringInspection")
     @Autowired
     private transient SysDictMapper sysDictMapper;
-    
+
     @Override
     public List<Map<String, Object>> getInitSysDictList() {
         return sysDictMapper.getInitSysDictList();
     }
-    
+
     @Override
     public PageInfo<List<Map<String, Object>>> getSysDictList() {
         PageHelper.startPage(1, 10);

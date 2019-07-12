@@ -22,18 +22,18 @@ import java.util.Map;
 
 @RestController
 public class CommonOperateController {
-    
+
     /**
      * LOG
      */
     private static final Logger logger = LoggerFactory.getLogger(CommonOperateController.class);
-    
+
     @Resource
     private transient CommonOperateService commonOperateService;
-    
+
     @Resource(type = SysDictService.class)
     private transient SysDictService sysDictService;
-    
+
     /**
      * 上传附件
      *
@@ -56,7 +56,7 @@ public class CommonOperateController {
         commonOperateService.uploadAttachment(attachment, file);
         return new ResultBody(attachment);
     }
-    
+
     /**
      * 根据附件名称获取访问url
      *
@@ -70,12 +70,12 @@ public class CommonOperateController {
         String accessUrl = commonOperateService.getAttachmentAccessUrl(attachmentName);
         return new ResultBody(accessUrl);
     }
-    
+
     @PostMapping("/sysDict/listByPage")
     public ResultBody listSysDictByPage()
             throws GlobalErrorInfoException {
         PageInfo<List<Map<String, Object>>> resultPageInfo = sysDictService.getSysDictList();
         return new ResultBody(resultPageInfo);
     }
-    
+
 }

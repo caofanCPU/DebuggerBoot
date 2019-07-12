@@ -8,17 +8,16 @@ import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.stereotype.Component;
 
 /**
- * @auth caofanCPU
- * @date 2018-08-03
+ *
  */
 @Component
 public class KafkaSender {
-    
+
     private static final Logger logger = LoggerFactory.getLogger(KafkaSender.class);
-    
+
     @Autowired
     private KafkaTemplate kafkaTemplate;
-    
+
     public void sendMessage(KafkaMessage message) {
         logger.info("消息发送中...");
         try {
@@ -28,5 +27,5 @@ public class KafkaSender {
             logger.error("消息发送失败，{}", e.getMessage());
         }
     }
-    
+
 }

@@ -21,10 +21,10 @@ import javax.annotation.Resource;
 @AutoConfigureMockMvc
 @ActiveProfiles("dev")
 public class DebuggerKingApplicationTests {
-    
+
     @Resource(type = SpringBootJunitTestUtil.class)
     public SpringBootJunitTestUtil springBootJunitTestUtil;
-    
+
     /**
      * 默认就执行
      * 设置context
@@ -36,6 +36,6 @@ public class DebuggerKingApplicationTests {
             throws Exception {
         springBootJunitTestUtil.setupMockMvc();
     }
-    
+
 }
 

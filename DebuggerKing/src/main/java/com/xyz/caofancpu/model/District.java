@@ -16,22 +16,22 @@ import java.io.Serializable;
 @NoArgsConstructor
 @AllArgsConstructor
 public class District implements Serializable, Cloneable {
-    
+
     private Integer id;
-    
+
     private String name;
-    
+
     private Integer pid;
-    
+
     private String initial;
-    
+
     private String initials;
-    
+
     private String pinyin;
-    
+
     private String code;
-    
+
     private String areaCode;
-    
+
     private Integer sort;
 }

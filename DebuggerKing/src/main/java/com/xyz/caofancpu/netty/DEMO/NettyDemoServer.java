@@ -16,13 +16,13 @@ import io.netty.handler.codec.string.StringDecoder;
  * @author DebuggerKing
  */
 public class NettyDemoServer {
-    
+
     public static void main(String[] args) {
         ServerBootstrap serverBootstrap = new ServerBootstrap();
         int serverPort = 8000;
         NioEventLoopGroup boos = new NioEventLoopGroup();
         NioEventLoopGroup worker = new NioEventLoopGroup();
-        
+
         serverBootstrap.group(boos, worker)
                 .channel(NioServerSocketChannel.class)
                 .childHandler(new ChannelInitializer<NioSocketChannel>() {

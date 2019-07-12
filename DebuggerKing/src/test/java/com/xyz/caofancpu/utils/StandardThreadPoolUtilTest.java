@@ -21,9 +21,9 @@ import java.util.stream.IntStream;
  */
 @Deprecated
 public class StandardThreadPoolUtilTest {
-    
+
     private static final Logger logger = LoggerFactory.getLogger(StandardThreadPoolUtilTest.class);
-    
+
     @Test
     public void getInstance()
             throws Exception {

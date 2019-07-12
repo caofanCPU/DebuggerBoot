@@ -13,9 +13,6 @@ import java.io.IOException;
 /**
  * FileName: CatContentFilter
  * CAT请求封装, 若调用方接入了CAT, 则把调用方传来的CAT_msgId信息织入成树, 继续向下层服务传递
- *
- * @author: caofanCPU
- * @date: 2019/1/24 15:09
  */
 @Component
 @WebFilter(urlPatterns = "/*", filterName = "CATFilter")
@@ -23,9 +20,9 @@ public class CatContentFilter implements Filter {
     @Override
     public void init(FilterConfig filterConfig)
             throws ServletException {
-        
+
     }
-    
+
     @Override
     public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain)
             throws IOException, ServletException {
@@ -43,10 +40,10 @@ public class CatContentFilter implements Filter {
         }
         chain.doFilter(request, response);
     }
-    
+
     @Override
     public void destroy() {
-    
+
     }
-    
+
 }

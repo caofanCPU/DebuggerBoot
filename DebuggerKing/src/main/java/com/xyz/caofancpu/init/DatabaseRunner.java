@@ -12,9 +12,9 @@ import org.springframework.stereotype.Component;
 @Component
 @Order(value = 1)
 public class DatabaseRunner implements CommandLineRunner {
-    
+
     private final Logger logger = LoggerFactory.getLogger(DatabaseRunner.class);
-    
+
     @Override
     public void run(String... strings) {
         logger.info("帝八哥已就绪[Debugger].K.I.N.G");

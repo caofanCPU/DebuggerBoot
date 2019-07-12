@@ -9,7 +9,7 @@ import static java.lang.annotation.RetentionPolicy.RUNTIME;
 @Target({ElementType.TYPE, ElementType.METHOD})
 @Retention(RUNTIME)
 public @interface Check {
-    
+
     /**
      * 字段校验规则
      * 格式：字段名+校验规则+冒号+错误信息
@@ -18,5 +18,5 @@ public @interface Check {
      * @return
      */
     String[] value();
-    
+
 }

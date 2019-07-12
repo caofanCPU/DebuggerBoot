@@ -14,9 +14,9 @@ import java.util.Iterator;
 import java.util.Map;
 
 public class DataHelper {
-    
+
     private static final String SET_METHOD = "set";
-    
+
     public static void putDataIntoEntity(Map<String, Object> map, Object entity)
             throws SecurityException, ClassNotFoundException, NoSuchMethodException, IllegalAccessException,
             IllegalArgumentException, InvocationTargetException, ParseException {
@@ -48,7 +48,7 @@ public class DataHelper {
                         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
                         obj = sdf.parse(obj.toString());
                     }
-                    
+
                     //根据获取的方法名称及当前field的类型获取method对象
                     Method method = entity.getClass().getDeclaredMethod(methodName, field.getType());
                     method.setAccessible(true);
@@ -58,12 +58,11 @@ public class DataHelper {
             }
         }
     }
-    
+
     /**
      * @param key        属性名
      * @param methodType 获取方法类型（set or get）
      * @return 方法名称，反射使用
-     * @author Chunf
      */
     public static String getMethodName(String key, String methodType) {
         String methodName = "";
@@ -74,7 +73,7 @@ public class DataHelper {
         }
         return methodType + methodName;
     }
-    
+
     /**
      * 该工具类将http请求参数，都转变为字符串，尤其是数组，变成","拼接的字符串
      *
@@ -104,8 +103,8 @@ public class DataHelper {
         }
         return returnMap;
     }
-    
-    
+
+
     public static void putDefaultValueToBean(Object entity)
             throws SecurityException, ClassNotFoundException, NoSuchMethodException,
             IllegalAccessException, IllegalArgumentException, InvocationTargetException {
@@ -126,29 +125,29 @@ public class DataHelper {
                     m = clazz.getMethod(SET_METHOD + name, String.class);
                     m.invoke(entity, "");
                 }
-                
+
             } else if ("class java.lang.Integer".equals(field.getGenericType().toString())) {
                 Integer value = (Integer) m.invoke(entity); // 调用getter方法获取属性值
                 if (value == null) {
                     m = clazz.getMethod(SET_METHOD + name, Integer.class);
                     m.invoke(entity, 0);
                 }
-                
-                
+
+
             } else if ("class java.lang.Long".equals(field.getGenericType().toString())) {
                 Integer value = (Integer) m.invoke(entity); // 调用getter方法获取属性值
                 if (value == null) {
                     m = clazz.getMethod(SET_METHOD + name, Integer.class);
                     m.invoke(entity, 0L);
                 }
-                
+
             } else if ("class java.lang.Float".equals(field.getGenericType().toString())) {
                 Float value = (Float) m.invoke(entity); // 调用getter方法获取属性值
                 if (value == null) {
                     m = clazz.getMethod(SET_METHOD + name, Float.class);
                     m.invoke(entity, 0.0F);
                 }
-                
+
             } else if ("class java.lang.Double".equals(field.getGenericType().toString())) {
                 Double value = (Double) m.invoke(entity); // 调用getter方法获取属性值
                 if (value == null) {
@@ -168,8 +167,8 @@ public class DataHelper {
                     m.invoke(entity, new Date());
                 }
             }
-            
+
         }
-        
+
     }
 }

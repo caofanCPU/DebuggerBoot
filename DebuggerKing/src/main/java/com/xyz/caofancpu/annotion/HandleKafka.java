@@ -13,14 +13,14 @@ import static java.lang.annotation.RetentionPolicy.RUNTIME;
 @Target({ElementType.TYPE, ElementType.METHOD})
 @Retention(RUNTIME)
 public @interface HandleKafka {
-    
+
     /**
      * 处理类全路径名称
      *
      * @return
      */
     String classFullName();
-    
+
     /**
      * 处理方法名称
      *

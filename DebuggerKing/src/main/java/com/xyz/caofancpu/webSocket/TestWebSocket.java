@@ -19,33 +19,33 @@ import java.util.concurrent.ConcurrentHashMap;
 @ServerEndpoint(value = "/loginOrNot/testWebSocket/{uniqueId}")
 @Component
 public class TestWebSocket {
-    
+
     /**
      * LOG
      */
     private static final Logger logger = LoggerFactory.getLogger(TestWebSocket.class);
-    
+
     // 静态变量，用来记录当前在线连接数, 需要线程安全的设计
     private static int onlineCount = 0;
-    
+
     // J.U.C.map，用来存放每个客户端对应的TestWebSocket对象。
     private static ConcurrentHashMap<Long, TestWebSocket> webSocketMap = new ConcurrentHashMap<>();
-    
+
     // 与某个客户端的连接会话，需要通过它来给客户端发送数据
     private Session session;
-    
+
     public static synchronized int getOnlineCount() {
         return onlineCount;
     }
-    
+
     public static synchronized void addOnlineCount() {
         TestWebSocket.onlineCount++;
     }
-    
+
     public static synchronized void subOnlineCount() {
         TestWebSocket.onlineCount--;
     }
-    
+
     /**
      * 连接建立成功调用的方法
      */
@@ -57,7 +57,7 @@ public class TestWebSocket {
         logger.info("uniqueId={}加入, 当前连接数: {}", uniqueId, getOnlineCount());
         sendMessage("WebSocket服务连接成功!");
     }
-    
+
     /**
      * 连接关闭调用的方法
      */
@@ -67,7 +67,7 @@ public class TestWebSocket {
         subOnlineCount();
         logger.info("客户端uniqueId={}连接关闭, 当前连接数: {}", uniqueId, getOnlineCount());
     }
-    
+
     /**
      * 收到客户端消息后群发消息
      *
@@ -80,7 +80,7 @@ public class TestWebSocket {
                 .filter(Objects::nonNull)
                 .forEach(itemId -> webSocketMap.get(itemId).sendMessage(message));
     }
-    
+
     /**
      * 发生错误时调用
      */
@@ -88,7 +88,7 @@ public class TestWebSocket {
     public void onError(@PathParam(value = "uniqueId") Long uniqueId, Session session, Throwable error) {
         logger.error("客户端uniqueId={}连接发生错误!, 原因: {}", uniqueId, error.getMessage());
     }
-    
+
     public Boolean sendMessage(String message) {
         try {
             this.session.getBasicRemote().sendText(message);
@@ -99,7 +99,7 @@ public class TestWebSocket {
         return Boolean.FALSE;
         //this.session.getAsyncRemote().sendText(message);
     }
-    
+
     /**
      * 发送信息给指定ID用户，如果用户不在线则返回不在线信息给自己
      *
@@ -115,7 +115,7 @@ public class TestWebSocket {
         webSocketMap.get(uniqueId).sendMessage(message);
         logger.info("客户端uniqueId={}接收消息!\n消息内容: {}", uniqueId, message);
     }
-    
+
     /**
      * 发送信息给所有人
      *
@@ -127,5 +127,5 @@ public class TestWebSocket {
                 .filter(Objects::nonNull)
                 .forEach(orderId -> webSocketMap.get(orderId).sendMessage(message));
     }
-    
+
 }

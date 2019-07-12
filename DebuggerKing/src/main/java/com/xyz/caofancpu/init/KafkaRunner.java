@@ -15,30 +15,29 @@ import java.util.Map;
 
 /**
  * @author caofanCPU
- * @date 2018-08-03
  */
 @Component
 @Order(value = 2)
 public class KafkaRunner implements CommandLineRunner {
-    
+
     private final Logger logger = LoggerFactory.getLogger(KafkaRunner.class);
-    
+
     private final String testTopic = "testDemo";
 
 //    private final String testConsumer = "testKafkaServiceImpl";
 
 //    @Autowired
 //    private ApplicationContext applicationContext;
-    
+
     @Autowired
     private KafkaSender kafkaSender;
-    
+
     @Autowired
     private KafkaProperty kafkaProperty;
 
 //    @Autowired
 //    private KafkaConsumerDispatcher kafkaConsumerDispatcher;
-    
+
     @Override
     public void run(String... strings) {
         initKafkaProperty();
@@ -47,7 +46,7 @@ public class KafkaRunner implements CommandLineRunner {
         sendMessage(testTopic, new Area(100, "oh, mykafka", 2));
 //        kafkaConsumerDispatcher.dispatcher("{\"id\":\"12\"}");
     }
-    
+
     /**
      * 初始化kafka监听主题
      * 必要性：强
@@ -60,7 +59,7 @@ public class KafkaRunner implements CommandLineRunner {
             kafkaProperty.setTopics(topicMap.keySet().toArray(kafkaProperty.getTopics()));
         }
     }
-    
+
     /**
      * 启动测试
      * 从SpringFactory中根据beanName获取Bean实例
@@ -70,12 +69,12 @@ public class KafkaRunner implements CommandLineRunner {
 //        TestKafkaServiceImpl bean = (TestKafkaServiceImpl) obj;
 //        bean.handle(new KafkaMessage("haha", "OK"));
 //    }
-    
+
     /**
      * 发送消息到kafka
      */
     private void sendMessage(String topic, Object data) {
         kafkaSender.sendMessage(new KafkaMessage(topic, data));
     }
-    
+
 }

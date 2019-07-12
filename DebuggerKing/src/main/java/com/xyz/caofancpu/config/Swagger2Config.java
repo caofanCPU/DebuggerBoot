@@ -19,22 +19,22 @@ import java.util.List;
 
 @Configuration
 public class Swagger2Config {
-    
+
     /**
      * 需要认证的接口路径正则表达式
      */
     @Value("${swagger.authPathRegex}")
     private String authPathRegex;
-    
+
     @Value("${swagger.authorizationKey}")
     private String authKey;
-    
+
     /**
      * 是否展示API文档
      */
     @Value("${swagger.showApi}")
     private Boolean showApi;
-    
+
     @Bean
     public Docket createRestApi() {
         return new Docket(DocumentationType.SWAGGER_2)
@@ -53,7 +53,7 @@ public class Swagger2Config {
                 .securityContexts(securityContexts())
                 ;
     }
-    
+
     private ApiInfo apiInfo() {
         return new ApiInfoBuilder()
                 .title("Swagger自动API文档")
@@ -62,7 +62,7 @@ public class Swagger2Config {
                 .version("1.0.0")
                 .build();
     }
-    
+
     private List<ApiKey> securitySchemes() {
         return new ArrayList(2) {
             {
@@ -70,7 +70,7 @@ public class Swagger2Config {
             }
         };
     }
-    
+
     private List<SecurityContext> securityContexts() {
         return new ArrayList(2) {
             {
@@ -80,7 +80,7 @@ public class Swagger2Config {
             }
         };
     }
-    
+
     List<SecurityReference> defaultAuth() {
         AuthorizationScope authorizationScope = new AuthorizationScope("global", "accessEverything");
         AuthorizationScope[] authorizationScopes = new AuthorizationScope[1];
@@ -91,7 +91,7 @@ public class Swagger2Config {
             }
         };
     }
-    
+
     private List<Parameter> setHeaderToken() {
         ParameterBuilder tokenPar = new ParameterBuilder();
         List<Parameter> pars = new ArrayList<>();
@@ -99,6 +99,6 @@ public class Swagger2Config {
         pars.add(tokenPar.build());
         return pars;
     }
-    
-    
+
+
 }

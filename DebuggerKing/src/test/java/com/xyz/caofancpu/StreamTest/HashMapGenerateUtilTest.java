@@ -8,14 +8,11 @@ import java.util.Objects;
 
 /**
  * FileName: HashMapGenerateUtilTest
- *
- * @author: caofanCPU
- * @date: 2019/3/4 12:15
  */
 
 public class HashMapGenerateUtilTest {
-    
-    
+
+
     public static void main(String[] args) {
         /*Map<String, Object> hashMap = new HashMap<String, Object>(4, 0.75f) {
             {
@@ -23,21 +20,21 @@ public class HashMapGenerateUtilTest {
                 put("元素2", "流式操作");
             }
         };*/
-    
+
         Map<String, Object> hashMap = CollectorGenerateUtil.initHashMap(3, 0.75f, map -> {
             map.put("元素1", 2);
             map.put("元素2", "流式操作");
             return map;
         });
-        
+
         // 输出Map中的元素, 键值形式
         // 方式一
         hashMap.keySet().parallelStream()
                 .filter(Objects::nonNull)
                 .forEach(key -> System.out.println("键 = [" + key + "]\t值 = [" + hashMap.get(key) + "]"));
-        
+
         // 方式二
 //        hashMap.forEach((key, value) -> System.out.println("键 = [" + key + "]\t值 = [" + value + "]"));
     }
-    
+
 }

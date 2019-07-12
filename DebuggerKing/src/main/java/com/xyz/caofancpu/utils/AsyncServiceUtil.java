@@ -32,7 +32,7 @@ public class AsyncServiceUtil {
 
     @Autowired
     private transient KafkaSender kafkaSender;
-    
+
     public void sendKafkaMSG(KafkaMessage kafkaMessage) {
         kafkaSender.sendMessage(kafkaMessage);
     }

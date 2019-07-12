@@ -13,29 +13,29 @@ import org.springframework.stereotype.Service;
 @Service("commonConfigValueService")
 @DependsOn("initContextProperty")
 public class CommonConfigValueService {
-    
+
     @Value("${app.name}")
     public String appName;
-    
+
     @Value("${file.url}")
     public String fileAccessUrl;
-    
+
     @Value("${swagger.authorizationKey}")
     public String authKey;
-    
+
     @Value("${fileOperate.logging.key}")
     public String fileOperateLoggingKey;
-    
+
     @Value("${fileOperate.logging.value}")
     public String fileOperateLoggingValue;
-    
+
     @Value("${task.handle.average}")
     public int taskHandleAverage;
-    
+
     @Value("${task.rootPath}")
     public String taskRootPath;
-    
+
     @Value("${task.resultPath}")
     public String taskResultPath;
-    
+
 }

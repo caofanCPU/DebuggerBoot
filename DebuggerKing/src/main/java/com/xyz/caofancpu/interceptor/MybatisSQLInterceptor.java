@@ -30,7 +30,7 @@ import java.util.Properties;
 @Intercepts({@Signature(type = StatementHandler.class, method = "prepare", args = {Connection.class, Integer.class})})
 @Component
 public class MybatisSQLInterceptor implements Interceptor {
-    
+
     @Override
     public Object intercept(Invocation invocation)
             throws Exception {
@@ -70,16 +70,16 @@ public class MybatisSQLInterceptor implements Interceptor {
         }
         return result;
     }
-    
+
     @Override
     public Object plugin(Object target) {
         // 表示给一个目标对象织入一个拦截器，该代码织入的的拦截器对象就是本身this对象
         return Plugin.wrap(target, this);
     }
-    
+
     @Override
     public void setProperties(Properties properties) {
-    
+
     }
-    
+
 }

@@ -30,9 +30,9 @@ import java.util.Objects;
 @Aspect
 @Order(2)
 public class WebLogAspect {
-    
+
     private Logger logger = LoggerFactory.getLogger(this.getClass());
-    
+
     /**
      * 日志切面
      */
@@ -40,11 +40,11 @@ public class WebLogAspect {
     public void webLog() {
         // do something
     }
-    
+
     @Before("webLog()")
     public void doBefore(JoinPoint joinPoint) {
     }
-    
+
     @Around("webLog()")
     public Object doAround(ProceedingJoinPoint proceedingJoinPoint)
             throws Throwable {
@@ -86,7 +86,7 @@ public class WebLogAspect {
         // 耗时, 字符串标识, @#为了便于标志区分
         final String execTime = "@Time#";
         Object result;
-        
+
         StringBuilder responseSb = new StringBuilder();
         responseSb.append("\n[后台响应结果]:\n"
                 + "URL地址=" + request.getRequestURL().toString() + "\n"
@@ -122,12 +122,12 @@ public class WebLogAspect {
         requestT.complete();
         return result;
     }
-    
+
     @AfterReturning("webLog()")
     public void doAfterReturning(JoinPoint joinPoint) {
-    
+
     }
-    
+
     /**
      * 获取真实IP
      *

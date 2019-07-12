@@ -17,7 +17,7 @@ import java.util.Objects;
 
 public class LogIpConfigUtil extends ClassicConverter {
     private static final Logger logger = LoggerFactory.getLogger(LogIpConfigUtil.class);
-    
+
     /**
      * 获取真实ip
      */
@@ -54,7 +54,7 @@ public class LogIpConfigUtil extends ClassicConverter {
         }
         return ipAddress;
     }
-    
+
     @Override
     public String convert(ILoggingEvent event) {
         if (isWindowsOS()) {
@@ -63,7 +63,7 @@ public class LogIpConfigUtil extends ClassicConverter {
             return getLinuxLocalIp();
         }
     }
-    
+
     /**
      * 获取Linux下的IP地址
      *
@@ -91,11 +91,11 @@ public class LogIpConfigUtil extends ClassicConverter {
         } catch (SocketException ex) {
             logger.error("获取日志Ip异常", ex);
             ip = "127.0.0.1";
-            
+
         }
         return ip;
     }
-    
+
     /**
      * 判断操作系统是否是Windows
      *
@@ -109,7 +109,7 @@ public class LogIpConfigUtil extends ClassicConverter {
         }
         return isWindowsOS;
     }
-    
+
     private String getWindowsIp() {
         try {
             return InetAddress.getLocalHost().getHostAddress();
@@ -118,6 +118,6 @@ public class LogIpConfigUtil extends ClassicConverter {
         }
         return "127.0.0.1";
     }
-    
-    
+
+
 }

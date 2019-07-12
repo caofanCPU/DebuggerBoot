@@ -27,13 +27,13 @@ import java.util.regex.Pattern;
 @Component
 @Order(2)
 public class CheckParamAspect {
-    
+
     private static final Logger logger = LoggerFactory.getLogger(CheckParamAspect.class);
-    
+
     // -====================== 常量 =========================
-    
+
     private static final String SEPARATOR = ":";
-    
+
     /**
      * 是否不为空
      *
@@ -52,7 +52,7 @@ public class CheckParamAspect {
         }
         return isNotNull;
     }
-    
+
     /**
      * 是否为整数
      *
@@ -62,13 +62,13 @@ public class CheckParamAspect {
      */
     private static Boolean isNumber(Object value, String operatorNum) {
         Boolean isNumber = Boolean.FALSE;
-        
+
         if (value != null && (value instanceof Integer || value instanceof Long)) {
             isNumber = Boolean.TRUE;
         }
         return isNumber;
     }
-    
+
     @Deprecated
     private static Boolean isBoolStr(Object value, String operatorNum) {
         if (value != null && value instanceof Boolean) {
@@ -76,7 +76,7 @@ public class CheckParamAspect {
         }
         return Boolean.FALSE;
     }
-    
+
     /**
      * 是否为金额
      *
@@ -86,18 +86,19 @@ public class CheckParamAspect {
      */
     private static Boolean isMoney(Object value, String operatorNum) {
         Boolean isMoney = Boolean.FALSE;
-        String moneyReg = "^\\d+(\\.\\d{1,2})?$";//表示金额的正则表达式
+        //表示金额的正则表达式
+        String moneyReg = "^\\d+(\\.\\d{1,2})?$";
         Pattern moneyPattern = Pattern.compile(moneyReg);
-        
+
         if (value != null && moneyPattern.matcher(value.toString()).matches()) {
             isMoney = Boolean.TRUE;
         }
-        
+
         return isMoney;
     }
-    
+
     // -=================== 对不同类型的值进行校验 起 =======================
-    
+
     /**
      * 是否为邮箱
      *
@@ -109,14 +110,14 @@ public class CheckParamAspect {
         Boolean isMail = Boolean.FALSE;
         String mailReg = "^[a-zA-Z0-9_.-]+@[a-zA-Z0-9-]+(\\.[a-zA-Z0-9-]+)*\\.[a-zA-Z0-9]{2,6}$";//表示金额的正则表达式
         Pattern mailPattern = Pattern.compile(mailReg);
-        
+
         if (value != null && mailPattern.matcher(value.toString()).matches()) {
             isMail = Boolean.TRUE;
         }
-        
+
         return isMail;
     }
-    
+
     /**
      * 是否大于
      *
@@ -142,7 +143,7 @@ public class CheckParamAspect {
         }
         return isGreaterThan;
     }
-    
+
     /**
      * 是否大于等于
      *
@@ -168,7 +169,7 @@ public class CheckParamAspect {
         }
         return isGreaterThanEqual;
     }
-    
+
     /**
      * 是否少于
      *
@@ -194,7 +195,7 @@ public class CheckParamAspect {
         }
         return isLessThan;
     }
-    
+
     /**
      * 是否少于等于
      *
@@ -220,7 +221,7 @@ public class CheckParamAspect {
         }
         return isLessThanEqual;
     }
-    
+
     /**
      * 是否不等于
      *
@@ -246,7 +247,7 @@ public class CheckParamAspect {
         }
         return isNotEqual;
     }
-    
+
     @Around("execution(* com.xyz..*.service.*.*(..))")
     public Object check(ProceedingJoinPoint point)
             throws Throwable {
@@ -269,7 +270,7 @@ public class CheckParamAspect {
         obj = point.proceed();
         return obj;
     }
-    
+
     /**
      * 参数校验
      *
@@ -308,7 +309,7 @@ public class CheckParamAspect {
         }
         return msg;
     }
-    
+
     private Method getMethod(ProceedingJoinPoint joinPoint) {
         MethodSignature signature = (MethodSignature) joinPoint.getSignature();
         Method method = signature.getMethod();
@@ -325,7 +326,7 @@ public class CheckParamAspect {
         }
         return method;
     }
-    
+
     /**
      * 解析字段
      *
@@ -391,10 +392,10 @@ public class CheckParamAspect {
         fieldInfo.innerMsg = StringUtils.isBlank(innerMsg) ? defaultMsg : innerMsg;
         return fieldInfo;
     }
-    
-    
+
+
     // -=================== 对不同类型的值进行校验 止 =======================
-    
+
     /**
      * 判断是否符合参数规则
      *
@@ -412,15 +413,15 @@ public class CheckParamAspect {
         }
         return isCheck;
     }
-    
+
     /**
      * 获取方法
      *
      * @param joinPoint ProceedingJoinPoint
      * @return 方法
      */
-    
-    
+
+
     /**
      * 操作枚举，封装操作符和对应的校验规则
      */
@@ -449,7 +450,7 @@ public class CheckParamAspect {
          * 不为空
          */
         NOT_NULL("not null", CheckParamAspect::isNotNull),
-        
+
         /**
          * 金额
          */
@@ -462,27 +463,27 @@ public class CheckParamAspect {
          * 数字
          */
         IS_NUMBER("is number", CheckParamAspect::isNumber),
-        
+
         /**
          * 布尔型字符串
          * Spring框架已对此做了参数验证
          */
         @Deprecated
         IS_BOOL_STR("is bool string", CheckParamAspect::isBoolStr);
-        
+
         private String value;
-        
+
         /**
          * BiFunction：接收字段值(Object)和操作数(String)，返回是否符合规则(Boolean)
          */
         private BiFunction<Object, String, Boolean> fun;
-        
+
         Operator(String value, BiFunction<Object, String, Boolean> fun) {
             this.value = value;
             this.fun = fun;
         }
     }
-    
+
     /**
      * 字段信息
      */
@@ -508,6 +509,6 @@ public class CheckParamAspect {
          */
         Operator optEnum;
     }
-    
-    
+
+
 }

@@ -27,17 +27,17 @@ import java.util.Objects;
  */
 @Component
 public class SpringBootJunitTestUtil {
-    
+
     private MockMvc mvc;
-    
+
     @Autowired
     private WebApplicationContext context;
-    
+
     public void setupMockMvc()
             throws Exception {
         mvc = MockMvcBuilders.webAppContextSetup(context).build();
     }
-    
+
     /**
      * 模拟发送RequestBody请求
      * POST
@@ -58,10 +58,10 @@ public class SpringBootJunitTestUtil {
                 .andReturn()
                 .getResponse()
                 .getContentAsString();
-        
+
         return responseString;
     }
-    
+
     /**
      * 模拟发送RequestParam请求
      * POST
@@ -81,10 +81,10 @@ public class SpringBootJunitTestUtil {
                 .andReturn()
                 .getResponse()
                 .getContentAsString();
-        
+
         return responseString;
     }
-    
+
     /**
      * 模拟发送RequestParam请求
      * GET
@@ -104,10 +104,10 @@ public class SpringBootJunitTestUtil {
                 .andReturn()
                 .getResponse()
                 .getContentAsString();
-        
+
         return responseString;
     }
-    
+
     /**
      * SpringBoot模拟Rest请求时,传参数时需接收 MultiValueMap
      * 该方法只做转换, 将Map转为MultiValueMap
@@ -132,7 +132,7 @@ public class SpringBootJunitTestUtil {
         }
         return convertResult;
     }
-    
+
     /**
      * 控制台打印输出测试结果
      *
@@ -141,5 +141,5 @@ public class SpringBootJunitTestUtil {
     public void output(String str) {
         System.out.println("[测试结果]: \n" + JSONUtil.formatStandardJSON(str));
     }
-    
+
 }
