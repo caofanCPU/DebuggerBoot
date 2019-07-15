@@ -11,7 +11,7 @@ import org.springframework.stereotype.Service;
  * 该类用于统一封装其他serviceIml所需要的注入变量或 公用配置
  */
 @Service("msUrlConfigValueService")
-@DependsOn("initContextProperty")
+@DependsOn("initContextPropertyInitializer")
 public class MSUrlConfigValueService {
 
     @Value("${ms.file.url}")

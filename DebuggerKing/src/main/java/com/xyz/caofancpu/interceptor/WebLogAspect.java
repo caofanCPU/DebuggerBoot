@@ -1,9 +1,6 @@
 package com.xyz.caofancpu.interceptor;
 
 import com.alibaba.fastjson.JSONObject;
-import com.dianping.cat.Cat;
-import com.dianping.cat.message.Event;
-import com.dianping.cat.message.Transaction;
 import com.xyz.caofancpu.util.dataOperateUtils.JSONUtil;
 import com.xyz.caofancpu.util.streamOperateUtils.StreamUtil;
 import com.xyz.caofancpu.utils.DataHelper;
@@ -78,9 +75,6 @@ public class WebLogAspect {
                 + "请求Param参数=" + requestParam + "\n"
                 + "请求Body对象=" + requestBody + "\n");
         logger.info(requestSb.toString());
-        // CAT监控埋点
-        Transaction requestT = Cat.newTransaction("URL.BS", request.getRequestURL().toString());
-        Cat.logEvent("BS.请求", request.getRequestURL().toString(), Event.SUCCESS, requestSb.toString().replaceAll("\\s", ""));
         // 开始时间
         long startTime = System.currentTimeMillis();
         // 耗时, 字符串标识, @#为了便于标志区分
@@ -94,32 +88,10 @@ public class WebLogAspect {
                 + "响应耗时[" + execTime + "ms]" + "\n"
                 + "响应数据结果:\n"
         );
-        try {
-            result = proceedingJoinPoint.proceed();
-        } catch (Throwable throwable) {
-            String errMsg = Objects.nonNull(throwable.getMessage()) ? throwable.getMessage() : throwable.toString();
-            Cat.logEvent("BS.响应", request.getRequestURL().toString(), Event.SUCCESS,
-                    responseSb.append(errMsg).toString().replaceAll("\\s", "").replace(execTime, String.valueOf(System.currentTimeMillis() - startTime))
-            );
-            Cat.logError(throwable);
-            // 结束请求埋点
-            requestT.setStatus(errMsg);
-            requestT.complete();
-            // 抛出异常
-            throw throwable;
-        }
+        result = proceedingJoinPoint.proceed();
         // 处理完请求，返回内容
         responseSb.append(JSONUtil.formatStandardJSON(JSONObject.toJSONString(result)));
         logger.info(responseSb.toString().replace(execTime, String.valueOf(System.currentTimeMillis() - startTime)));
-        // CAT监控埋点
-        Transaction responseT = Cat.newTransaction("URL.BS", request.getRequestURL().toString());
-        Cat.logEvent("BS.响应", request.getRequestURL().toString(), Event.SUCCESS,
-                responseSb.toString().replaceAll("\\s", "").replace(execTime, String.valueOf(System.currentTimeMillis() - startTime))
-        );
-        responseT.setStatus(Transaction.SUCCESS);
-        responseT.complete();
-        requestT.setStatus(Transaction.SUCCESS);
-        requestT.complete();
         return result;
     }
 

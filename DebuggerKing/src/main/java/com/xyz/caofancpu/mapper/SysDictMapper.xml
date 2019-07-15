@@ -3,17 +3,17 @@
 <mapper namespace="com.xyz.caofancpu.mapper.SysDictMapper">
 
     <select id="getInitSysDictList" resultType="java.util.Map">
-        SELECT name, code FROM nz_sys_dict WHERE pid = 9999 ORDER BY sortId ASC
+        SELECT name, code FROM sys_config_dict WHERE pid = 9999 ORDER BY sort_id ASC
     </select>
 
     <select id="getSysDictList" resultType="java.util.Map">
-        SELECT name, code FROM nz_sys_dict WHERE 1 = 1 ORDER BY sortId ASC
+        SELECT name, code FROM sys_config_dict WHERE 1 = 1 ORDER BY sort_id ASC
     </select>
 
     <insert id="batchAddConfig" parameterType="java.util.List" useGeneratedKeys="true" keyProperty="id">
-        INSERT INTO nz_sys_dict (
+        INSERT INTO sys_config_dict (
         name,
-        caode
+        code
         )
         VALUES
         <foreach item="item" collection="list" index="index" separator=",">

@@ -11,13 +11,13 @@ import org.springframework.stereotype.Service;
  * 该类用于统一封装其他serviceIml所需要的注入变量或 公用配置
  */
 @Service("commonConfigValueService")
-@DependsOn("initContextProperty")
+@DependsOn("initContextPropertyInitializer")
 public class CommonConfigValueService {
 
     @Value("${app.name}")
     public String appName;
 
-    @Value("${file.url}")
+    @Value("${ms.file.url}")
     public String fileAccessUrl;
 
     @Value("${swagger.authorizationKey}")

@@ -11,3 +11,6 @@ maven数据库盐值加密
 4. _> java -cp jasypt-1.9.2.jar org.jasypt.intf.cli.JasyptPBEStringEncryptionCLI input=密码 password=盐值 algorithm=PBEWithMD5AndDES
 得到加密后的密码： WVYWDdudrjS+U6PaDhrZWw==
 注意： 每次执行结果都不一样
+
+java -cp jasypt-1.9.2.jar org.jasypt.intf.cli.JasyptPBEStringEncryptionCLI input='root' password='e!JdljyJ^e4I5oU' algorithm=PBEWithMD5AndDES
+

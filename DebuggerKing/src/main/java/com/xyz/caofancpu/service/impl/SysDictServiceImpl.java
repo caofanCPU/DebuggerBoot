@@ -41,8 +41,7 @@ public class SysDictServiceImpl implements SysDictService {
     public PageInfo<List<Map<String, Object>>> getSysDictList() {
         PageHelper.startPage(1, 10);
         List<Map<String, Object>> resultList = sysDictMapper.getSysDictList();
-        PageInfo<List<Map<String, Object>>> pageInfo = new PageInfo(resultList);
-        return pageInfo;
+        return (PageInfo<List<Map<String, Object>>>) new PageInfo(resultList);
     }
 }
 

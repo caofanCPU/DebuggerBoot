@@ -35,7 +35,7 @@ public class FileTaskService {
     private static final Logger logger = LoggerFactory.getLogger(FileTaskService.class);
 
     // 引入默认线程池
-    @Resource(name = "defaultThreadPool")
+    @Resource(name = "standardThreadPool")
     private ThreadPoolTaskExecutor defaultThreadPool;
 
     @Autowired
@@ -123,7 +123,8 @@ public class FileTaskService {
         List<List<T>> resultList = new ArrayList<>();
         int remaider = sourceList.size() % average;
         int number = sourceList.size() / average;
-        int offset = 0;//偏移量
+        // 偏移量
+        int offset = 0;
         for (int i = 0; i < average; i++) {
             List<T> value;
             if (remaider > 0) {
@@ -139,7 +140,7 @@ public class FileTaskService {
     }
 
 
-    public ResultBody exe() {
+    public ResultBody execute() {
         Map<Integer, Future<?>> taskResultMap = new HashMap<>();
         addToPool(taskResultMap, 1, this, "loadData", 1, new Class[]{Integer.class});
         addToPool(taskResultMap, 2, this, "loadData", 2, new Class[]{Integer.class});

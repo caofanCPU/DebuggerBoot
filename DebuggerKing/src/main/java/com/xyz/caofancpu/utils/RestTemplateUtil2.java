@@ -1,10 +1,6 @@
 package com.xyz.caofancpu.utils;
 
 import com.alibaba.fastjson.JSONObject;
-import com.dianping.cat.Cat;
-import com.dianping.cat.message.Event;
-import com.dianping.cat.message.Transaction;
-import com.xyz.caofancpu.model.CatContext;
 import com.xyz.caofancpu.util.dataOperateUtils.JSONUtil;
 import com.xyz.caofancpu.util.result.GlobalErrorInfoEnum;
 import com.xyz.caofancpu.util.result.GlobalErrorInfoException;
@@ -26,7 +22,6 @@ import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
 
 import javax.servlet.http.HttpServletRequest;
-import javax.validation.constraints.NotNull;
 import java.util.*;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
@@ -122,45 +117,22 @@ public class RestTemplateUtil2 {
         Map<String, Object> requestMap = removeNullElement(paramMap);
         String token = loadToken();
         String requestLog = showRequestLog(url, requestMap, token, HttpMethod.GET);
-        // CAT监控:MS请求埋点, 一定要在加载CATHeaders之前执行
-        Transaction requestT = Cat.newTransaction("URL.MS", url);
-        Cat.logEvent("MS.请求", url, Event.SUCCESS, requestLog.replaceAll("\\s", ""));
 
         HttpEntity<Map<String, Object>> httpEntity = loadHttpEntity(new HashMap<>(2, 0.5f), token);
         ResponseEntity<JSONObject> responseEntity = null;
         String requestUrl = loadUrl(url, requestMap);
-        // CAT监控: MS响应埋点
-        Transaction responseT = Cat.newTransaction("URL.MS", url);
         try {
             responseEntity = restTemplate.exchange(requestUrl, HttpMethod.GET, httpEntity, JSONObject.class);
         } catch (Exception e) {
             logger.error("调用微服务接口失败! 接口: {} \n原因: {}", url, e.getMessage());
-            // 响应监控先结束
-            responseT.setStatus(e.getMessage());
-            responseT.complete();
-
-            // 请求监控后结束
-            requestT.setStatus(e.getMessage());
-            requestT.complete();
             handleMSErrorMsg(msErrorMsg);
         }
         if (responseEntity == null) {
             logger.error("调用微服务接口失败! 接口: {} \n原因: {}", url, "响应为null");
-            responseT.setStatus("微服务响应为null");
-            responseT.complete();
-
-            requestT.setStatus("微服务响应为null");
-            requestT.complete();
             return handleMSErrorResult(msErrorMsg);
         }
         JSONObject responseJson = responseEntity.getBody();
         String responseLog = showResponseLog(url, responseJson.toJSONString());
-        Cat.logEvent("MS.响应", url, Event.SUCCESS, responseLog.replaceAll("\\s", ""));
-        responseT.setStatus(Transaction.SUCCESS);
-        responseT.complete();
-
-        requestT.setStatus(Transaction.SUCCESS);
-        requestT.complete();
         return convertResponse(url, responseJson);
     }
 
@@ -177,44 +149,20 @@ public class RestTemplateUtil2 {
         String token = loadToken();
         String requestLog = showRequestLog(url, bodyMap, token, HttpMethod.POST);
         // CAT监控:MS请求埋点, 一定要在加载CATHeaders之前执行
-        Transaction requestT = Cat.newTransaction("URL.MS", url);
-        Cat.logEvent("MS.请求", url, Event.SUCCESS, requestLog.replaceAll("\\s", ""));
-        // CAT监控:MS请求埋点, 一定要在加载CATHeaders之前执行
 
         HttpEntity<Map<String, Object>> httpEntity = loadHttpEntity(paramMap, token);
         JSONObject responseJson = null;
-        // CAT监控: MS响应埋点
-        Transaction responseT = Cat.newTransaction("URL.MS", url);
         try {
             responseJson = restTemplate.postForObject(url, httpEntity, JSONObject.class);
         } catch (Exception e) {
             logger.error("调用微服务接口失败! 接口: {} \n原因: {}", url, e.getMessage());
-            // 响应监控先结束
-            responseT.setStatus(e.getMessage());
-            responseT.complete();
-
-            // 请求监控后结束
-            requestT.setStatus(e.getMessage());
-            requestT.complete();
             handleMSErrorMsg(msErrorMsg);
         }
         if (responseJson == null) {
             logger.error("调用微服务接口失败! 接口: {} \n原因: {}", url, "响应为null");
-            responseT.setStatus("微服务响应为null");
-            responseT.complete();
-
-            requestT.setStatus("微服务响应为null");
-            requestT.complete();
             return handleMSErrorResult(msErrorMsg);
         }
         String responseLog = showResponseLog(url, responseJson.toJSONString());
-
-        Cat.logEvent("MS.响应", url, Event.SUCCESS, responseLog.replaceAll("\\s", ""));
-        responseT.setStatus(Transaction.SUCCESS);
-        responseT.complete();
-
-        requestT.setStatus(Transaction.SUCCESS);
-        requestT.complete();
         return convertResponse(url, responseJson);
     }
 
@@ -230,50 +178,24 @@ public class RestTemplateUtil2 {
         Map<String, Object> bodyMap = removeNullElement(paramMap);
         String token = loadToken();
         String requestLog = showRequestLog(url, bodyMap, token, HttpMethod.POST);
-        // CAT监控:MS请求埋点, 一定要在加载CATHeaders之前执行
-        Transaction requestT = Cat.newTransaction("URL.MS", url);
-        Cat.logEvent("MS.请求", url, Event.SUCCESS, requestLog.replaceAll("\\s", ""));
-
         HttpEntity<Map<String, Object>> httpEntity;
         if (Objects.nonNull(headers)) {
-            loadCatHttpHeaders(headers);
             httpEntity = new HttpEntity<>(bodyMap, headers);
         } else {
             httpEntity = loadHttpEntity(bodyMap, token);
         }
         JSONObject responseJson = null;
-        // CAT监控: MS响应埋点
-        Transaction responseT = Cat.newTransaction("URL.MS", url);
         try {
             responseJson = zuulRestTemplate.postForObject(url, httpEntity, JSONObject.class);
         } catch (Exception e) {
             logger.error("调用微服务接口失败! 接口: {} \n原因: {}", url, e.getMessage());
-            // 响应监控先结束
-            responseT.setStatus(e.getMessage());
-            responseT.complete();
-
-            // 请求监控后结束
-            requestT.setStatus(e.getMessage());
-            requestT.complete();
             handleMSErrorMsg(msErrorMsg);
         }
         if (responseJson == null) {
             logger.error("调用微服务接口失败! 接口: {} \n原因: {}", url, "响应为null");
-            responseT.setStatus("微服务响应为null");
-            responseT.complete();
-
-            requestT.setStatus("微服务响应为null");
-            requestT.complete();
             return handleMSErrorResult(msErrorMsg);
         }
-
         String responseLog = showResponseLog(url, responseJson.toJSONString());
-        Cat.logEvent("MS.响应", url, Event.SUCCESS, responseLog.replaceAll("\\s", ""));
-        responseT.setStatus(Transaction.SUCCESS);
-        responseT.complete();
-
-        requestT.setStatus(Transaction.SUCCESS);
-        requestT.complete();
         return convertResponse(url, responseJson);
     }
 
@@ -297,43 +219,19 @@ public class RestTemplateUtil2 {
         };
 
         String requestLog = showRequestLog(url, bodyLoggingMap, token, HttpMethod.POST);
-        // CAT监控:MS请求埋点, 一定要在加载CATHeaders之前执行
-        Transaction requestT = Cat.newTransaction("URL.MS", url);
-        Cat.logEvent("MS.请求", url, Event.SUCCESS, requestLog.replaceAll("\\s", ""));
-
         HttpEntity<List<?>> httpEntity = loadListHttpEntity(filteredList, token);
         JSONObject responseJson = null;
-        // CAT监控: MS响应埋点
-        Transaction responseT = Cat.newTransaction("URL.MS", url);
         try {
             responseJson = restTemplate.postForObject(url, httpEntity, JSONObject.class);
         } catch (Exception e) {
             logger.error("调用微服务接口失败! 接口: {} \n原因: {}", url, e.getMessage());
-            // 响应监控先结束
-            responseT.setStatus(e.getMessage());
-            responseT.complete();
-
-            // 请求监控后结束
-            requestT.setStatus(e.getMessage());
-            requestT.complete();
             handleMSErrorMsg(msErrorMsg);
         }
         if (responseJson == null) {
             logger.error("调用微服务接口失败! 接口: {} \n原因: {}", url, "响应为null");
-            responseT.setStatus("微服务响应为null");
-            responseT.complete();
-
-            requestT.setStatus("微服务响应为null");
-            requestT.complete();
             return handleMSErrorResult(msErrorMsg);
         }
         String responseLog = showResponseLog(url, responseJson.toJSONString());
-        Cat.logEvent("MS.响应", url, Event.SUCCESS, responseLog.replaceAll("\\s", ""));
-        responseT.setStatus(Transaction.SUCCESS);
-        responseT.complete();
-
-        requestT.setStatus(Transaction.SUCCESS);
-        requestT.complete();
         return convertResponse(url, responseJson);
     }
 
@@ -400,24 +298,8 @@ public class RestTemplateUtil2 {
         HttpHeaders headers = new HttpHeaders();
         headers.add("Authorization", token);
         headers.add("Content-Type", "application/json");
-        loadCatHttpHeaders(headers);
         HttpEntity<Map<String, Object>> httpEntity = new HttpEntity<>(paramMap, headers);
         return httpEntity;
-    }
-
-    /**
-     * 接入CAT监控
-     *
-     * @param headers
-     */
-    private void loadCatHttpHeaders(@NotNull HttpHeaders headers) {
-        String catFlag = "cat";
-        CatContext catContext = new CatContext();
-        // 请求CAT服务端获取消息ID, 同时在消息树中占坑
-        Cat.logRemoteCallClient(catContext);
-        headers.add(catFlag + Cat.Context.ROOT, catContext.getProperty(Cat.Context.ROOT));
-        headers.add(catFlag + Cat.Context.PARENT, catContext.getProperty(Cat.Context.PARENT));
-        headers.add(catFlag + Cat.Context.CHILD, catContext.getProperty(Cat.Context.CHILD));
     }
 
     /**
@@ -431,7 +313,6 @@ public class RestTemplateUtil2 {
         HttpHeaders headers = new HttpHeaders();
         headers.add("Authorization", token);
         headers.add("Content-Type", "application/json");
-        loadCatHttpHeaders(headers);
         HttpEntity<List<?>> httpEntity = new HttpEntity<>(paramList, headers);
         return httpEntity;
     }

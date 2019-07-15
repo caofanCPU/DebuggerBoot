@@ -32,9 +32,9 @@ spring:
   datasource:
     connection-test-query: select 1
     driverClassName: com.mysql.jdbc.Driver
-    url: jdbc:mysql://192.168.2.150:3306/bynz_test?useUnicode=true&characterEncoding=UTF-8&zeroDateTimeBehavior=convertToNull
+    url: jdbc:mysql://127.0.0.1:3306/spring_clould?useUnicode=true&characterEncoding=UTF-8&zeroDateTimeBehavior=convertToNull
     username: root
-    password: ENC(7q5tQ5gmPhEE7o+aAaDnVg==)
+    password: ENC(ISF7rTrUFxKY7SN/PNvvWg==)
 jasypt:
   encryptor:
     password: e!JdljyJ^e4I5oU
@@ -54,8 +54,8 @@ jasypt:
 task:
   handle:
     average:  10
-  rootPath: /data/xx
-  resultPath: /data/ff
+  rootPath: /work/xx
+  resultPath: /work/ff
 
 wx:
   domain: https://caofancpu.github.io

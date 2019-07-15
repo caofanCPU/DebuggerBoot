@@ -2,9 +2,6 @@ package com.xyz.caofancpu.interceptor;
 
 
 import com.alibaba.fastjson.JSONObject;
-import com.dianping.cat.Cat;
-import com.dianping.cat.message.Event;
-import com.dianping.cat.message.Transaction;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.ibatis.executor.statement.StatementHandler;
 import org.apache.ibatis.mapping.BoundSql;
@@ -53,21 +50,10 @@ public class MybatisSQLInterceptor implements Interceptor {
         // 拿到我们给sql传入的参数对象
         Object param = boundSql.getParameterObject();
         Object result;
-        Transaction t = Cat.newTransaction("SQL", sqlId);
         String sqlLog = "执行SQL: [" +
                 sql.replaceAll("\\s{2,}", StringUtils.SPACE).replaceAll(" ,", ",").replaceAll(" ;", ";") +
                 "]\n传入参数: [" + JSONObject.toJSONString(param) + "]";
-        Cat.logEvent("SQL.执行", sqlId, Event.SUCCESS, sqlLog);
-        try {
-            result = invocation.proceed();
-            t.setStatus(Transaction.SUCCESS);
-            t.complete();
-        } catch (Throwable e) {
-            t.setStatus(e);
-            Cat.logError(e);
-            t.complete();
-            throw e;
-        }
+        result = invocation.proceed();
         return result;
     }
 
