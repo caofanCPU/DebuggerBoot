@@ -112,9 +112,9 @@ public class MultiThreadPlayUtil {
                 try {
                     semaphore.acquire();
                     long waitTime = getRandomWaitTime(1);
-                    out("线程标识号码[" + this.threadNo + "]进入红灯区, 体验[" + waitTime + "ms]服务...");
+                    out("线程标识号码[" + this.threadNo + "]开始, 执行[" + waitTime + "ms]时间...");
                     Thread.sleep(waitTime);
-                    out("线程标识号码[" + this.threadNo + "]舒服完毕, 闲庭信步走出红灯区...");
+                    out("线程标识号码[" + this.threadNo + "]结束...");
                     semaphore.release();
                 } catch (InterruptedException e) {
                     e.printStackTrace();
@@ -151,9 +151,9 @@ public class MultiThreadPlayUtil {
             return new CyclicBarrier(commonLimitThreadThreshold >> 1,
                     () -> {
                         long waitTime = getRandomWaitTime(1);
-                        out("💗💗💗💗💗💗💗💗💗💗💗💗💗💗💗💗💗💗💗💗💗💗💗💗💗💗💗");
-                        out("💗💗💗💗💗💗💗💗一起打啵啵ΠΠ[" + waitTime + "]ms💗💗💗💗💗💗💗💗");
-                        out("💗💗💗💗💗💗💗💗💗💗💗💗💗💗💗💗💗💗💗💗💗💗💗💗💗💗💗");
+                        out("---------------------------------------------------");
+                        out("-----------------" + waitTime + "]ms---------------");
+                        out("---------------------------------------------------");
                     }
             );
         }
@@ -180,15 +180,15 @@ public class MultiThreadPlayUtil {
                 try {
                     Thread.sleep(getRandomWaitTime(1));
                     if (threadNo == 1) {
-                        out("线程编号[" + threadNo + "]-嘉宾[帝八哥]已就座, [" + (cyclicBarrier.getNumberWaiting() + 1) + "]人正在耐心等候...");
+                        out("线程编号[" + threadNo + "]已就绪, [" + (cyclicBarrier.getNumberWaiting() + 1) + "]个线程正在等待...");
                     } else {
-                        out("线程编号[" + threadNo + "]-嘉宾[帝八嫂]已就座, [" + (cyclicBarrier.getNumberWaiting() + 1) + "]人正在耐心等候...");
+                        out("线程编号[" + threadNo + "]已就绪, [" + (cyclicBarrier.getNumberWaiting() + 1) + "]个线程正在等待...");
                     }
                     cyclicBarrier.await();
                     if (threadNo == 2) {
-                        out("开始烛光晚餐...");
+                        out("开始...");
                         Thread.sleep(getRandomWaitTime(2));
-                        out("餐毕, 回家HIGH.....");
+                        out("结束.....");
                     }
                 } catch (InterruptedException e) {
                     e.printStackTrace();
@@ -224,9 +224,9 @@ public class MultiThreadPlayUtil {
                     } catch (InterruptedException e) {
                         e.printStackTrace();
                     }
-                    data = (V) ("帝八嫂" + i);
+                    data = (V) ("偶数" + i);
                 } else {
-                    data = (V) ("帝八哥" + i);
+                    data = (V) ("奇数" + i);
                 }
                 executorService.execute(new ExchangerRunnable<>(exchanger, i, data));
             }
@@ -266,9 +266,9 @@ public class MultiThreadPlayUtil {
             String taskDescription;
             for (int i = 1; i <= subThreadLimitNum; i++) {
                 if (i % 2 == 0) {
-                    taskDescription = "Power+Power+任务" + i;
+                    taskDescription = "[偶数]任务" + i;
                 } else {
-                    taskDescription = "打啵啵任务" + i;
+                    taskDescription = "[奇数]任务" + i;
                 }
                 executorService.execute(new CountDownLatchRunnable(countDownLatch, i, taskDescription));
             }
