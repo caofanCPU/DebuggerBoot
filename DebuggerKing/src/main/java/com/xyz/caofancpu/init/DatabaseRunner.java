@@ -17,6 +17,7 @@ public class DatabaseRunner implements CommandLineRunner {
 
     @Override
     public void run(String... strings) {
-        logger.info("帝八哥已就绪[Debugger].K.I.N.G");
+        logger.info("项目启动完成，请访问：http://localhost:8098/debuggerking/swagger-ui.html");
+        logger.info("SwaggerApi认证key：Authorization");
     }
 }

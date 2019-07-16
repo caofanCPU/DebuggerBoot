@@ -1,5 +1,6 @@
 package com.xyz.caofancpu.config;
 
+import com.xyz.caofancpu.util.dataOperateUtils.CollectorGenerateUtil;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -64,32 +65,30 @@ public class Swagger2Config {
     }
 
     private List<ApiKey> securitySchemes() {
-        return new ArrayList(2) {
-            {
-                add(new ApiKey(authKey, authKey, "header"));
-            }
-        };
+        List<ApiKey> apiKeys = CollectorGenerateUtil.initArrayList(list -> {
+            list.add(new ApiKey(authKey, authKey, "header"));
+            return list;
+        });
+        return apiKeys;
     }
 
     private List<SecurityContext> securityContexts() {
-        return new ArrayList(2) {
-            {
-                add(SecurityContext.builder()
-                        .securityReferences(defaultAuth())
-                        .build());
-            }
-        };
+        return CollectorGenerateUtil.initArrayList(list -> {
+            list.add(SecurityContext.builder()
+                    .securityReferences(defaultAuth())
+                    .build());
+            return list;
+        });
     }
 
     List<SecurityReference> defaultAuth() {
         AuthorizationScope authorizationScope = new AuthorizationScope("global", "accessEverything");
         AuthorizationScope[] authorizationScopes = new AuthorizationScope[1];
         authorizationScopes[0] = authorizationScope;
-        return new ArrayList(2) {
-            {
-                add(new SecurityReference(authKey, authorizationScopes));
-            }
-        };
+        return CollectorGenerateUtil.initArrayList(list -> {
+            list.add(new SecurityReference(authKey, authorizationScopes));
+            return list;
+        });
     }
 
     private List<Parameter> setHeaderToken() {

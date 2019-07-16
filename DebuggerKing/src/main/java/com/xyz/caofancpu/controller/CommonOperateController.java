@@ -8,6 +8,7 @@ import com.xyz.caofancpu.util.result.GlobalErrorInfoEnum;
 import com.xyz.caofancpu.util.result.GlobalErrorInfoException;
 import com.xyz.caofancpu.util.result.ResultBody;
 import com.xyz.caofancpu.utils.DataHelper;
+import io.swagger.annotations.Api;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -21,6 +22,7 @@ import java.util.List;
 import java.util.Map;
 
 @RestController
+@Api(description = "通用接口处理中心")
 public class CommonOperateController {
 
     /**
