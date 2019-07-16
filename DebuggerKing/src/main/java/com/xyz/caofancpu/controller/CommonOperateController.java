@@ -9,6 +9,7 @@ import com.xyz.caofancpu.util.result.GlobalErrorInfoException;
 import com.xyz.caofancpu.util.result.ResultBody;
 import com.xyz.caofancpu.utils.DataHelper;
 import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -22,7 +23,7 @@ import java.util.List;
 import java.util.Map;
 
 @RestController
-@Api(description = "通用接口处理中心")
+@Api(description = "CommonOperateController", tags = {"公共处理接口"})
 public class CommonOperateController {
 
     /**
@@ -36,6 +37,14 @@ public class CommonOperateController {
     @Resource(type = SysDictService.class)
     private transient SysDictService sysDictService;
 
+    @PostMapping("/sysDict/listByPage")
+    @ApiOperation(value = "获取系统配置列表", notes = "传参：无")
+    public ResultBody listSysDictByPage()
+            throws GlobalErrorInfoException {
+        PageInfo<List<Map<String, Object>>> resultPageInfo = sysDictService.getSysDictList();
+        return new ResultBody(resultPageInfo);
+    }
+
     /**
      * 上传附件
      *
@@ -44,6 +53,7 @@ public class CommonOperateController {
      * @return
      * @throws GlobalErrorInfoException
      */
+    @Deprecated
     @PostMapping("/attachment/upload")
     public ResultBody uploadAttachment(MultipartFile file, HttpServletRequest request)
             throws GlobalErrorInfoException {
@@ -66,18 +76,11 @@ public class CommonOperateController {
      * @return
      * @throws GlobalErrorInfoException
      */
+    @Deprecated
     @PostMapping("/attachment/getAccessUrl")
     public ResultBody getAccessUrl(@RequestParam(required = true) String attachmentName)
             throws GlobalErrorInfoException {
         String accessUrl = commonOperateService.getAttachmentAccessUrl(attachmentName);
         return new ResultBody(accessUrl);
     }
-
-    @PostMapping("/sysDict/listByPage")
-    public ResultBody listSysDictByPage()
-            throws GlobalErrorInfoException {
-        PageInfo<List<Map<String, Object>>> resultPageInfo = sysDictService.getSysDictList();
-        return new ResultBody(resultPageInfo);
-    }
-
 }
