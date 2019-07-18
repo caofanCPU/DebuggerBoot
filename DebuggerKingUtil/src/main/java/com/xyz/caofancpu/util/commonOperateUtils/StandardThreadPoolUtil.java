@@ -17,11 +17,11 @@ public class StandardThreadPoolUtil {
      * LOG
      */
     private static final Logger logger = LoggerFactory.getLogger(StandardThreadPoolUtil.class);
-    
+
     private static volatile ThreadPoolTaskExecutor threadPoolTaskExecutor;
-    
+
     private StandardThreadPoolUtil() {}
-    
+
     public static ThreadPoolTaskExecutor getInstance() {
         if (threadPoolTaskExecutor == null) {
             synchronized (ThreadPoolTaskExecutor.class) {
@@ -33,7 +33,7 @@ public class StandardThreadPoolUtil {
         }
         return threadPoolTaskExecutor;
     }
-    
+
     private static void init(ThreadPoolTaskExecutor threadPoolTaskExecutor) {
         //核心线程数
         threadPoolTaskExecutor.setCorePoolSize(16);
@@ -54,5 +54,5 @@ public class StandardThreadPoolUtil {
         //加载
         threadPoolTaskExecutor.initialize();
     }
-    
+
 }

@@ -17,7 +17,7 @@ import static com.xyz.caofancpu.util.StudyWaitingUtils.StudyUtil.outArray;
  */
 
 public class Beijing2019Interview {
-    
+
     public static void main(String[] args) {
 //        testThread();
 //        testInstanceConstruct();
@@ -26,10 +26,10 @@ public class Beijing2019Interview {
         unionTwoOrderedArray();
         commonTwoArray();
         differentTwoArray();
-        
+
     }
-    
-    
+
+
     /**
      * 两个数组求并集，去重
      */
@@ -38,7 +38,7 @@ public class Beijing2019Interview {
         int[] arrayB = new int[]{2, 4, 5};
         outArray(arrayA, "第1个递增数组arrayA = ");
         outArray(arrayB, "第2个递增数组arrayB = ");
-        
+
         int[] arrayUnion = new int[arrayA.length + arrayB.length];
         int indexA = 0;
         int indexB = 0;
@@ -68,7 +68,7 @@ public class Beijing2019Interview {
 //            out(arrayMerge[i] + ", ");
 //        }
     }
-    
+
     /**
      * 关于合并两个已然有序的数组，保证结果仍然有序
      */
@@ -77,7 +77,7 @@ public class Beijing2019Interview {
         int[] arrayB = new int[]{2, 4, 5};
         outArray(arrayA, "第1个递增数组arrayA = ");
         outArray(arrayB, "第2个递增数组arrayB = ");
-    
+
         int[] arrayMerge = new int[arrayA.length + arrayB.length];
         int indexA = 0;
         int indexB = 0;
@@ -103,7 +103,7 @@ public class Beijing2019Interview {
 //            out(arrayMerge[i] + ", ");
 //        }
     }
-    
+
     /**
      * 两个数组求交集，并去重
      */
@@ -112,7 +112,7 @@ public class Beijing2019Interview {
         int[] arrayB = new int[]{2, 4, 5};
         outArray(arrayA, "第1个递增数组arrayA = ");
         outArray(arrayB, "第2个递增数组arrayB = ");
-        
+
         int commonMaxLength = Math.min(arrayA.length, arrayB.length);
         if (commonMaxLength == 0) {
             return;
@@ -140,9 +140,8 @@ public class Beijing2019Interview {
 //            out(arrayCommon[i] + ", ");
 //        }
     }
-    
-    
-    
+
+
     /**
      * 两个数组相对于第一个数组求差集
      */
@@ -151,7 +150,7 @@ public class Beijing2019Interview {
         int[] arrayB = new int[]{2, 4, 5};
         outArray(arrayA, "第1个递增数组arrayA = ");
         outArray(arrayB, "第2个递增数组arrayB = ");
-        
+
         int[] arrayDifferentByFirst = new int[arrayA.length];
         int indexA = 0;
         int indexB = 0;
@@ -172,9 +171,9 @@ public class Beijing2019Interview {
 //        for (int i = 0; i < indexDifferent; i++) {
 //            out(arrayDifferentByFirst[i] + ", ");
 //        }
-        
+
     }
-    
+
     /**
      * 冒泡算法：保证数组是递增的
      *
@@ -194,9 +193,10 @@ public class Beijing2019Interview {
             }
         }
     }
-    
+
     /**
      * 交换数组元素
+     *
      * @param originArray
      * @param indexA
      * @param indexB
@@ -206,8 +206,8 @@ public class Beijing2019Interview {
         originArray[indexA] = originArray[indexB];
         originArray[indexB] = tempValue;
     }
-    
-    
+
+
     /**
      * 关于启动线程的测试
      */
@@ -217,12 +217,12 @@ public class Beijing2019Interview {
         });
         // 线程普通方法调用
         sxThread.run();
-        
+
         // 调用子线程执行run方法
         sxThread.start();
         out("线程");
     }
-    
+
     /**
      * 关于初始化子对象，静态块、构造函数的执行顺序问题
      */
@@ -232,47 +232,47 @@ public class Beijing2019Interview {
         sunB = new TestInstanceSunB();
         sunB.conclusion();
     }
-    
+
     /**
      * 父类
      */
     static class TestInstanceParentA {
-        
+
         public static int initValue = 20;
-        
+
         static {
             out("父类静态代码块执行之前的初始值为：" + initValue);
             out("父类静态代码块执行之后的初始值为：" + (initValue += 1));
         }
-        
+
         public TestInstanceParentA() {
             out("父类构造函数执行前的初始值为：" + initValue);
             out("父类构造函数执行后的初始值为：" + (initValue += 10));
         }
-        
+
     }
-    
+
     /**
      * 子类
      */
     static class TestInstanceSunB extends TestInstanceParentA {
-        
+
         static {
             out("子类静态代码块执行之前的初始值为：" + initValue);
             out("子类静态代码块执行之后的初始值为：" + (initValue += 100));
         }
-        
+
         public TestInstanceSunB() {
             out("子类构造函数执行前的初始值为：" + initValue);
             out("子类构造函数执行后的初始值为：" + (initValue += 1000));
         }
-        
+
         public static void conclusion() {
             out("继承机制下初始化子类的结论：\n"
                     + "1.首先是父类静态代码块->子类静态代码块->父类构造函数->子类构造函数\n"
                     + "2.此后便是父类构造函数->子类构造函数，因为静态代码块只会被执行一次，但是变量值是静态的，因而会一直保存！"
             );
-            
+
             out("父类静态代码块执行之前的初始值为：20\n" +
                     "父类静态代码块执行之后的初始值为：21\n" +
                     "子类静态代码块执行之前的初始值为：21\n" +
@@ -288,7 +288,7 @@ public class Beijing2019Interview {
                     "子类构造函数执行后的初始值为：2141"
             );
         }
-        
+
     }
-    
+
 }

@@ -23,7 +23,7 @@ public class StringTemplateUtil {
      * LOG
      */
     private static final Logger logger = LoggerFactory.getLogger(StringTemplateUtil.class);
-    
+
     public static String processTemplate(String templateContent, Object source) {
         if (Objects.isNull(templateContent)
                 || Objects.isNull(source)) {
@@ -32,7 +32,7 @@ public class StringTemplateUtil {
         Map<String, Object> paramMap = JSONObject.parseObject(JSONObject.toJSONString(source));
         return processTemplate(templateContent, paramMap);
     }
-    
+
     public static String processTemplate(String templateContent, Map<String, Object> paramMap) {
         if (Objects.isNull(templateContent)
                 || Objects.isNull(paramMap) || paramMap.isEmpty()) {
@@ -47,5 +47,5 @@ public class StringTemplateUtil {
         }
         return templateContent;
     }
-    
+
 }

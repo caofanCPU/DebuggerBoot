@@ -7,13 +7,10 @@ import java.util.Stack;
 /**
  * FileName: SortAlgorithmUtil
  * 快速排序
- *
- * @author: caofanCPU
- * @date: 2019/2/22 15:32
  */
 
 public class SortAlgorithmUtil {
-    
+
     public static void main(String[] args) {
 //        Integer[] originArray = getInitRandomArray(1000000);
         Integer[] originArray = new Integer[]{1, 4, 2, 3, 5};
@@ -48,7 +45,7 @@ public class SortAlgorithmUtil {
         out(Arrays.toString(originArrayCopy3));
         out("非递归归并排序消耗时间: [" + (endTime - startTime) + "ms]\n");
     }
-    
+
     /**
      * 测试使用数据量: [1, 5000000], 默认10000
      *
@@ -68,11 +65,11 @@ public class SortAlgorithmUtil {
         }
         return randomArray;
     }
-    
+
     public static void recursionFFTSort(Integer[] originArray) {
         doRecursionFFTSort(originArray, 0, originArray.length - 1);
     }
-    
+
     public static void doRecursionFFTSort(Integer[] originArray, int start, int end) {
         if (start >= end) {
             return;
@@ -83,11 +80,11 @@ public class SortAlgorithmUtil {
         // 排序中轴右边
         doRecursionFFTSort(originArray, midRoller + 1, end);
     }
-    
+
     public static void nonRecursionFFTSort(Integer[] originArray) {
         doNonRecursionFFTSort(originArray, 0, originArray.length - 1);
     }
-    
+
     public static void doNonRecursionFFTSort(Integer[] originArray, int start, int end) {
         if (start >= end) {
             return;
@@ -104,18 +101,18 @@ public class SortAlgorithmUtil {
                 stack.push(midRoller - 1);
                 stack.push(start);
             }
-            
+
             if (end > midRoller + 1) {
                 stack.push(end);
                 stack.push(midRoller + 1);
             }
         }
     }
-    
+
     public static void recursionMergerSort(Integer[] originArray) {
         doRecursionMergerSort(originArray, 0, originArray.length - 1);
     }
-    
+
     public static void doRecursionMergerSort(Integer[] originArray, int start, int end) {
         if (start >= end) {
             return;
@@ -125,11 +122,11 @@ public class SortAlgorithmUtil {
         doRecursionMergerSort(originArray, midRoller + 1, end);
         doMerge(originArray, start, midRoller, end);
     }
-    
+
     public static void nonRecursionMergerSort(Integer[] originArray) {
         doNonRecursionMergerSort(originArray, 0, originArray.length - 1);
     }
-    
+
     public static void doNonRecursionMergerSort(Integer[] originArray, int start, int end) {
         if (start >= end) {
             return;
@@ -144,16 +141,16 @@ public class SortAlgorithmUtil {
             }
             subLength <<= 1;
         }
-        
+
         // 循环一致化-for循环
         /*for (int subLength = 1; subLength <= originArray.length; subLength <<= 1) {
             for (int i = start; i + subLength <= end; i += (subLength << 1)) {
                 doMerge(originArray, i, i + subLength - 1, Math.min(i + (subLength << 1) - 1, originArray.length - 1));
             }
         }*/
-        
+
     }
-    
+
     public static void doMerge(Integer[] originArray, int start, int midRoller, int end) {
         Integer[] tempArray = new Integer[end - start + 1];
         int i = start;
@@ -177,8 +174,8 @@ public class SortAlgorithmUtil {
         }
         System.arraycopy(tempArray, 0, originArray, start, tempArray.length);
     }
-    
-    
+
+
     /**
      * @param originArray
      * @param start
@@ -195,7 +192,7 @@ public class SortAlgorithmUtil {
             if (end != start) {
                 originArray[start] = originArray[end];
             }
-    
+
             while (originArray[start] <= referredValue && start < end) {
                 start++;
             }
@@ -206,9 +203,9 @@ public class SortAlgorithmUtil {
         originArray[start] = referredValue;
         return start;
     }
-    
+
     public static void out(Object out) {
         System.out.print(out + "\n");
     }
-    
+
 }

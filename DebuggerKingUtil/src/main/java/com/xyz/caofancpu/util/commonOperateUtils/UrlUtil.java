@@ -12,16 +12,15 @@ import java.net.URLEncoder;
 
 /**
  * @author Ardy
- * @date 2015年5月18日 上午11:47:09
  */
 public class UrlUtil {
-    
+
     public static final String UTF_TYPE = "utf-8";
     /**
      * LOG
      */
     private static final Logger logger = LoggerFactory.getLogger(UrlUtil.class);
-    
+
     /**
      * 对URL进行指定格式的转码
      *
@@ -40,7 +39,7 @@ public class UrlUtil {
         }
         throw new GlobalErrorInfoException("URL参数不能为空!");
     }
-    
+
     /**
      * 对url地址以特定的编码进行解码
      *
@@ -59,7 +58,7 @@ public class UrlUtil {
         }
         throw new GlobalErrorInfoException("URL参数不能为空!");
     }
-    
+
     public static void main(String[] args) {
         String originUrl = "http://cwq.nongjicai.com/#/orderConfirm?orderId=10025";
         String encodeUrlByUTF = null;
@@ -78,5 +77,5 @@ public class UrlUtil {
         System.out.println(decodeUrlByUTF);
         Assert.isTrue(originUrl.equals(decodeUrlByUTF), "测试失败！");
     }
-    
+
 }

@@ -22,7 +22,7 @@ public class BeanConvertUtil {
      * LOG
      */
     private static final Logger logger = LoggerFactory.getLogger(BeanConvertUtil.class);
-    
+
     /**
      * 将Map中的数据替换Bean中属性
      * 约定：map.key === bean.property
@@ -49,7 +49,7 @@ public class BeanConvertUtil {
          * BeanUtils.copyProperties(targetObj, sourceMap);
          */
     }
-    
+
     /**
      * copyProperties包含populate的功能，但是copyProperties适用于从httpRequest中转换数据，
      * 故而平常不推荐使用
@@ -78,7 +78,7 @@ public class BeanConvertUtil {
         }
         return targetObj;
     }
-    
+
     /**
      * 将Bean中的属性替换Map中的数据
      * 约定：map.key === bean.property
@@ -109,7 +109,7 @@ public class BeanConvertUtil {
                     }
                 });
     }
-    
+
     /**
      * 非空检查
      *
@@ -123,7 +123,7 @@ public class BeanConvertUtil {
         }
         return true;
     }
-    
+
     /**
      * 获取时间转换器,支持String格式时间转为java.util.Date类型
      *
@@ -139,7 +139,7 @@ public class BeanConvertUtil {
         });
         return dateConverter;
     }
-    
+
     /**
      * 对象转String
      *
@@ -152,7 +152,7 @@ public class BeanConvertUtil {
         }
         return source.toString();
     }
-    
+
     /**
      * 转换为时间对象Date
      *
@@ -176,7 +176,7 @@ public class BeanConvertUtil {
             throw new GlobalErrorInfoRuntimeException("日期格式转换失败!");
         }
     }
-    
+
     /**
      * 对象转Integer
      *
@@ -189,7 +189,7 @@ public class BeanConvertUtil {
         }
         return Integer.parseInt(source.toString());
     }
-    
+
     /**
      * 对象转Long
      *
@@ -202,7 +202,7 @@ public class BeanConvertUtil {
         }
         return Long.parseLong(source.toString());
     }
-    
+
     /**
      * 对象转BigDecimal, 默认采用四舍五入保留2位小数
      *
@@ -223,7 +223,7 @@ public class BeanConvertUtil {
         }
         return new BigDecimal(source.toString()).setScale(newScale, roundingMode);
     }
-    
+
     /**
      * 对象转BigDecimal, 默认采用四舍五入保留2位小数
      *
@@ -236,5 +236,5 @@ public class BeanConvertUtil {
         }
         return convertToBigDecimal(source, 2, BigDecimal.ROUND_HALF_UP);
     }
-    
+
 }

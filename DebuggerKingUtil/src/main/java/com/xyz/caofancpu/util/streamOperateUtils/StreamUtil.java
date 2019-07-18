@@ -19,7 +19,7 @@ public class StreamUtil {
      * LOG
      */
     private static final Logger logger = LoggerFactory.getLogger(StreamUtil.class);
-    
+
     /**
      * List版本:根据指定字段过滤出目标属性
      *
@@ -51,7 +51,7 @@ public class StreamUtil {
                 .collect(Collectors.toList());
         return resultList;
     }
-    
+
     /**
      * Map版本:根据指定字段过滤出目标属性
      *
@@ -73,7 +73,7 @@ public class StreamUtil {
                 });
         return target;
     }
-    
+
     /**
      * List版本:根据指定字段剔除目标属性
      *
@@ -97,7 +97,7 @@ public class StreamUtil {
                 })
                 .collect(Collectors.toList());
     }
-    
+
     /**
      * Map版本:根据指定字段剔除目标属性
      *
@@ -114,7 +114,7 @@ public class StreamUtil {
                 .forEach(property -> source.remove(property));
         return source;
     }
-    
+
     /**
      * 剔除请求中值为null的参数
      *
@@ -133,7 +133,7 @@ public class StreamUtil {
         Map<String, Object> resultMap = tempStream.collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue));
         return resultMap;
     }
-    
+
     /**
      * 从Map种移除类型为文件MultipartFile/File的元素
      *
@@ -160,8 +160,8 @@ public class StreamUtil {
                 });
         return resultMap;
     }
-    
-    
+
+
     /**
      * 从Map种移除指定类型的元素
      *
@@ -190,7 +190,7 @@ public class StreamUtil {
                 });
         return resultList.toArray();
     }
-    
+
     /**
      * 根据排序关键key对应的值的hashCode进行排序
      * 注意: 强烈推荐 排序key对应的数据为id类型
@@ -214,11 +214,11 @@ public class StreamUtil {
                 .collect(Collectors.toList());
         return sortedList;*/
     }
-    
+
     public static void main(String[] args) {
         testListSort();
     }
-    
+
     @Ignore
     public static void testListSort() {
         List<Map<String, Object>> attachmentList = new ArrayList<Map<String, Object>>(10) {
@@ -258,7 +258,7 @@ public class StreamUtil {
         sort(attachmentList, "id", true);
         System.out.println("排序成功!");
     }
-    
+
     @Ignore
     public static void testFilterMapProperty() {
         Map<String, Object> sourceMap = new HashMap<String, Object>(4, 0.5f) {
@@ -277,7 +277,7 @@ public class StreamUtil {
         Map<String, Object> resultMap = removeProperty(sourceMap, targetPropertySet);
         System.out.println(resultMap.size());
     }
-    
+
     @Ignore
     public static void testFilterListProperty() {
         List<Map<String, Object>> sourceList = new ArrayList<Map<String, Object>>(12) {
@@ -320,7 +320,7 @@ public class StreamUtil {
         List<Map<String, Object>> resultList = filterProperty(sourceList, targetPropertySet);
         System.out.println(resultList.size());
     }
-    
+
     @Ignore
     public static void testStreamReturnSymbol() {
         Stream<Integer> sourceStream = Stream.of(1, 2, 3, 4, 5);
@@ -332,7 +332,7 @@ public class StreamUtil {
         });
         System.out.println("流结束后, 代码继续前行....");
     }
-    
+
     @Ignore
     public static void testRemoveNullElement() {
         Map<String, Object> paramsMap = new HashMap<String, Object>(4, 0.5f) {
@@ -344,7 +344,7 @@ public class StreamUtil {
         Map<String, Object> resultMap = removeNullElement(paramsMap);
         System.out.println(resultMap);
     }
-    
+
     @Ignore
     public static void testIntegerHashCode() {
         Integer a = Integer.valueOf(127);
@@ -356,6 +356,6 @@ public class StreamUtil {
         b = a.hashCode();
         Assert.isTrue(a == b, "不等于");
     }
-    
-    
+
+
 }

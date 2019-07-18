@@ -17,27 +17,27 @@ import java.util.List;
 @AllArgsConstructor
 @NoArgsConstructor
 public class BaseTree<C extends BaseTree> {
-    
+
     /**
      * 当前节点ID
      */
     private Long id;
-    
+
     /**
      * 当前节点父ID
      */
     private Long pid;
-    
+
     /**
      * 当前节点深度
      */
     private int depth;
-    
+
     /**
      * 当前节点的子集
      */
     private List<C> children = new ArrayList<>();
-    
+
     /**
      * 判断是否是叶子节点
      *
@@ -46,5 +46,5 @@ public class BaseTree<C extends BaseTree> {
     protected boolean hasChildren() {
         return CollectionUtil.isNotEmpty(children);
     }
-    
+
 }

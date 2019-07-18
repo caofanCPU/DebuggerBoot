@@ -6,33 +6,30 @@ import java.util.concurrent.*;
 
 /**
  * FileName: MultiThreadPlayUtil
- *
- * @author: caofanCPU
- * @date: 2019/3/1 15:28
  */
 
 public class MultiThreadPlayUtil {
-    
+
     // ====================静态变量========================
     public static ExecutorService executorService;
-    
+
     public static int commonLimitThreadThreshold = 4;
-    
+
     public static long randomSeed = System.currentTimeMillis();
-    
+
     // ====================静态方法=========================
     public static void out(String text) {
         System.out.println(text);
     }
-    
+
     public static void initThreadPool() {
         executorService = Executors.newCachedThreadPool();
     }
-    
+
     public static void shutdownThreadPool() {
         executorService.shutdown();
     }
-    
+
     public static long getRandomWaitTime(int rate) {
         if (rate < 1) {
             rate = 1;
@@ -40,51 +37,51 @@ public class MultiThreadPlayUtil {
         Random random = new Random(randomSeed);
         return (random.nextInt(9) + 2) * 1000 * rate;
     }
-    
+
     // ======================================================
-    
+
     public static void main(String[] args) {
         // must do: 初始化
         initThreadPool();
-    
+
         // you can replace
         // test Semaphore
 //        testSemaphoreDemo();
-    
+
         // test CyclicBarrier
 //        testCyclicBarrier();
-    
+
         // test Exchanger
 //        testExchanger();
-    
+
         // test CountDownLatch
         testCountDownLatch();
         // must do: 收尾
         // 此处关闭线程池, 使用的是shutdown()方法, 该方法会等到线程池任务执行完毕后才关闭线程池
         shutdownThreadPool();
     }
-    
+
     // ==================测试方法=========================
     public static void testSemaphoreDemo() {
         SemaphoreDemo semaphoreDemo = new SemaphoreDemo();
         semaphoreDemo.execute();
     }
-    
+
     public static void testCyclicBarrier() {
         CycleBarrierDemo cycleBarrierDemo = new CycleBarrierDemo();
         cycleBarrierDemo.execute();
     }
-    
+
     public static void testExchanger() {
         ExchangerDemo exchangerDemo = new ExchangerDemo();
         exchangerDemo.execute();
     }
-    
+
     public static void testCountDownLatch() {
         CountDownLatchDemo countDownLatchDemo = new CountDownLatchDemo();
         countDownLatchDemo.execute();
     }
-    
+
     // ==================测试DEMO类=============================
     static class SemaphoreDemo {
         public void execute() {
@@ -93,20 +90,20 @@ public class MultiThreadPlayUtil {
                 executorService.execute(new SemaphoreRunnable(monitorSemaphore, i));
             }
         }
-        
+
         public Semaphore getSemaphoreMonitor(int limitThreadNum) {
             return new Semaphore(limitThreadNum > 0 ? limitThreadNum : commonLimitThreadThreshold);
         }
-        
+
         class SemaphoreRunnable implements Runnable {
             private Semaphore semaphore;
             private int threadNo;
-            
+
             public SemaphoreRunnable(Semaphore semaphore, int threadNo) {
                 this.semaphore = semaphore;
                 this.threadNo = threadNo;
             }
-            
+
             @Override
             public void run() {
                 try {
@@ -122,7 +119,7 @@ public class MultiThreadPlayUtil {
             }
         }
     }
-    
+
     static class CycleBarrierDemo {
         public void execute() {
             final CyclicBarrier cyclicBarrier = getDefaultTaskedCycleBarrierMonitor();
@@ -138,15 +135,15 @@ public class MultiThreadPlayUtil {
                 executorService.execute(new CycleBarrierRunnable(cyclicBarrier, i));
             }
         }
-        
+
         public CyclicBarrier getDefaultCycleBarrierMonitor() {
             return new CyclicBarrier(commonLimitThreadThreshold >> 1);
         }
-        
+
         public CyclicBarrier getCustomerCycleBarrierMonitor(int limitThreadNum) {
             return new CyclicBarrier(limitThreadNum > 0 ? limitThreadNum : commonLimitThreadThreshold);
         }
-    
+
         public CyclicBarrier getDefaultTaskedCycleBarrierMonitor() {
             return new CyclicBarrier(commonLimitThreadThreshold >> 1,
                     () -> {
@@ -157,7 +154,7 @@ public class MultiThreadPlayUtil {
                     }
             );
         }
-        
+
         public CyclicBarrier getCustomerTaskedCycleBarrierMonitor(int limitThreadNum) {
             return new CyclicBarrier(limitThreadNum > 0 ? limitThreadNum : commonLimitThreadThreshold,
                     () -> {
@@ -165,16 +162,16 @@ public class MultiThreadPlayUtil {
                     }
             );
         }
-        
+
         class CycleBarrierRunnable implements Runnable {
             private CyclicBarrier cyclicBarrier;
             private int threadNo;
-            
+
             public CycleBarrierRunnable(CyclicBarrier cyclicBarrier, int threadNo) {
                 this.cyclicBarrier = cyclicBarrier;
                 this.threadNo = threadNo;
             }
-            
+
             @Override
             public void run() {
                 try {
@@ -197,14 +194,14 @@ public class MultiThreadPlayUtil {
                 }
             }
         }
-        
+
     }
-    
+
     static class ExchangerDemo<V> {
         public Exchanger<V> getExchanger() {
             return new Exchanger<>();
         }
-    
+
         public int getExchangeThreadNum(int limitThreadNum) {
             if (limitThreadNum < 2) {
                 return commonLimitThreadThreshold << 1;
@@ -212,7 +209,7 @@ public class MultiThreadPlayUtil {
             // 来一波骚操作
             return limitThreadNum >> 1 << 1;
         }
-        
+
         public void execute() {
             final Exchanger<V> exchanger = getExchanger();
             int limitThreadNum = getExchangeThreadNum(7);
@@ -231,18 +228,18 @@ public class MultiThreadPlayUtil {
                 executorService.execute(new ExchangerRunnable<>(exchanger, i, data));
             }
         }
-        
+
         class ExchangerRunnable<V> implements Runnable {
             private Exchanger<V> exchanger;
             private int threadNo;
             private V data;
-            
+
             public ExchangerRunnable(Exchanger<V> exchanger, int threadNo, V data) {
                 this.exchanger = exchanger;
                 this.threadNo = threadNo;
                 this.data = data;
             }
-            
+
             @Override
             public void run() {
                 try {
@@ -256,9 +253,9 @@ public class MultiThreadPlayUtil {
                 }
             }
         }
-        
+
     }
-    
+
     static class CountDownLatchDemo {
         public void execute() {
             int subThreadLimitNum = commonLimitThreadThreshold << 1;
@@ -281,25 +278,25 @@ public class MultiThreadPlayUtil {
                 e.printStackTrace();
             }
         }
-    
+
         public CountDownLatch getCountDownLatch(int subThreadLimitNum) {
             if (subThreadLimitNum < 1) {
                 subThreadLimitNum = commonLimitThreadThreshold;
             }
             return new CountDownLatch(subThreadLimitNum);
         }
-        
+
         class CountDownLatchRunnable implements Runnable {
             private CountDownLatch countDownLatch;
             private int threadNo;
             private String taskDescription;
-            
+
             public CountDownLatchRunnable(CountDownLatch countDownLatch, int threadNo, String taskDescription) {
                 this.countDownLatch = countDownLatch;
                 this.threadNo = threadNo;
                 this.taskDescription = taskDescription;
             }
-            
+
             @Override
             public void run() {
                 try {

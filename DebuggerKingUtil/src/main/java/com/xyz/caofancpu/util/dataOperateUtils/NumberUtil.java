@@ -11,9 +11,9 @@ import java.math.BigDecimal;
  * @author
  */
 public class NumberUtil {
-    
+
     private static final Logger logger = LoggerFactory.getLogger(NumberUtil.class);
-    
+
     /**
      * 汉语中数字大写
      */
@@ -41,7 +41,7 @@ public class NumberUtil {
      * 特殊字符：零元整
      */
     private static final String CN_ZEOR_FULL = "零元" + CN_FULL;
-    
+
     /**
      * 获取指定位数的随机数
      *
@@ -54,7 +54,7 @@ public class NumberUtil {
         }
         return (int) ((Math.random() * 9 + 1) * Math.pow(10, digit - 1));
     }
-    
+
     public static String convertToCN(BigDecimal numberOfMoney) {
         StringBuffer sb = new StringBuffer();
         // -1, 0, or 1 as the value of this BigDecimal is negative, zero, or
@@ -129,10 +129,10 @@ public class NumberUtil {
         }
         return sb.toString();
     }
-    
+
     public static String parseMoneyCN(String str) {
         BigDecimal numberOfMoney = new BigDecimal(str);
         return convertToCN(numberOfMoney);
     }
-    
+
 }

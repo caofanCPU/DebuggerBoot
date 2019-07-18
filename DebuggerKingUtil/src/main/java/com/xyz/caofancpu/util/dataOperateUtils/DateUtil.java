@@ -21,27 +21,27 @@ public class DateUtil {
      * LOG
      */
     private static final Logger logger = LoggerFactory.getLogger(DateUtil.class);
-    
+
     public static String date2StrForSimpleNU(Date date) {
         return date2Str(date, FORMAT_SIMPLE_DETAIL);
     }
-    
+
     public static String date2StrForSimple(Date date) {
         return date2Str(date, FORMAT_SIMPLE);
     }
-    
+
     public static String date2StrForSimpleCN(Date date) {
         return date2Str(date, FORMAT_SIMPLE_CN);
     }
-    
+
     public static String date2StrForSimpleDetail(Date date) {
         return date2Str(date, FORMAT_SIMPLE_DETAIL);
     }
-    
+
     public static String date2StrForSimpleDetailPrecise(Date date) {
         return date2Str(date, FORMAT_SIMPLE_DETAIL_PRECISE);
     }
-    
+
     public static String date2Str(Date date, String format) {
         if (Objects.nonNull(date)) {
             SimpleDateFormat sdf = new SimpleDateFormat(format);
@@ -50,7 +50,7 @@ public class DateUtil {
             return "";
         }
     }
-    
+
     /**
      * 根据起始时间, 计算结束时间
      *

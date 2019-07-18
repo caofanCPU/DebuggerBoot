@@ -15,11 +15,11 @@ import java.util.Map;
  */
 
 public class LeetcodeDebugger {
-    
+
     public static void main(String[] args) {
         testAddTwoNumber();
     }
-    
+
     public static void testAddTwoNumber() {
         int[] originArray = new int[]{1, 5, 7, 9, 2, 0};
         int targetSum = 9;
@@ -29,7 +29,7 @@ public class LeetcodeDebugger {
         int[] arrayViewResult = new int[]{originArray[arrayResult[0]], originArray[arrayResult[1]], targetSum};
         StudyUtil.outArray(arrayViewResult, "索引对应的元素值及目标数字：");
     }
-    
+
     /**
      * 给定一个数组及一个目标数字，求数组中满足两数之和的元素下表
      * 假定条件：
@@ -54,7 +54,7 @@ public class LeetcodeDebugger {
 //                }
 //            }
 //        }
-        
+
         /*暴力法的缺点，寻找元素时需要遍历数组，浪费大量时间，而哈希表可以把寻找元素的时间缩减到常数*/
         // 2.哈希表-->HashMap，注意包含key比包含值要快一点
         Map<Integer, Integer> numberMap = new HashMap<>(originArray.length);
@@ -64,9 +64,9 @@ public class LeetcodeDebugger {
             }
             numberMap.put(originArray[i], i);
         }
-        
+
         throw new RuntimeException("原始数组与目标数字无匹配解！");
     }
-    
-    
+
+
 }

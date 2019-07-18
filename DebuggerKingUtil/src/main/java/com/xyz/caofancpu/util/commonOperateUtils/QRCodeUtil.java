@@ -25,19 +25,19 @@ public class QRCodeUtil {
      * LOG
      */
     private static final Logger logger = LoggerFactory.getLogger(QRCodeUtil.class);
-    
+
     private static final String CHARSET = "utf-8";
     private static final String FORMAT = "JPG";
-    
+
     // 二维码尺寸
     private static final int QRCODE_SIZE = 300;
-    
+
     // LOGO宽度
     private static final int LOGO_WIDTH = 60;
-    
+
     // LOGO高度
     private static final int LOGO_HEIGHT = 60;
-    
+
     public static BufferedImage createImage(String content, String logoPath, boolean needCompress)
             throws Exception {
         Hashtable<EncodeHintType, Object> hints = new Hashtable<EncodeHintType, Object>();
@@ -61,7 +61,7 @@ public class QRCodeUtil {
         QRCodeUtil.insertImage(image, logoPath, needCompress);
         return image;
     }
-    
+
     /**
      * 插入LOGO
      *
@@ -103,7 +103,7 @@ public class QRCodeUtil {
         graph.draw(shape);
         graph.dispose();
     }
-    
+
     /**
      * 生成二维码(内嵌LOGO)
      * 二维码文件名随机，文件名可能会有重复
@@ -122,7 +122,7 @@ public class QRCodeUtil {
         ImageIO.write(image, FORMAT, new File(destPath + "/" + fileName));
         return fileName;
     }
-    
+
     /**
      * 生成二维码(内嵌LOGO)
      * 调用者指定二维码文件名
@@ -145,7 +145,7 @@ public class QRCodeUtil {
         ImageIO.write(image, FORMAT, new File(destPath + "/" + fileName));
         return fileName;
     }
-    
+
     /**
      * 当文件夹不存在时，mkdirs会自动创建多层目录，区别于mkdir．
      * (mkdir如果父目录不存在则会抛出异常)
@@ -158,7 +158,7 @@ public class QRCodeUtil {
             file.mkdirs();
         }
     }
-    
+
     /**
      * 生成二维码(内嵌LOGO)
      *
@@ -171,7 +171,7 @@ public class QRCodeUtil {
             throws Exception {
         return QRCodeUtil.encode(content, logoPath, destPath, false);
     }
-    
+
     /**
      * 生成二维码
      *
@@ -184,7 +184,7 @@ public class QRCodeUtil {
             throws Exception {
         return QRCodeUtil.encode(content, null, destPath, needCompress);
     }
-    
+
     /**
      * 生成二维码
      *
@@ -196,7 +196,7 @@ public class QRCodeUtil {
             throws Exception {
         return QRCodeUtil.encode(content, null, destPath, false);
     }
-    
+
     /**
      * 生成二维码(内嵌LOGO)
      *
@@ -211,7 +211,7 @@ public class QRCodeUtil {
         BufferedImage image = QRCodeUtil.createImage(content, logoPath, needCompress);
         ImageIO.write(image, FORMAT, output);
     }
-    
+
     /**
      * 生成二维码
      *
@@ -223,7 +223,7 @@ public class QRCodeUtil {
             throws Exception {
         QRCodeUtil.encode(content, null, output, false);
     }
-    
+
     /**
      * 解析二维码
      *
@@ -247,7 +247,7 @@ public class QRCodeUtil {
         String resultStr = result.getText();
         return resultStr;
     }
-    
+
     /**
      * 解析二维码
      *
@@ -259,7 +259,7 @@ public class QRCodeUtil {
             throws Exception {
         return QRCodeUtil.decode(new File(path));
     }
-    
+
     public static void main(String[] args)
             throws Exception {
         String text = "http://www.baidu.com";

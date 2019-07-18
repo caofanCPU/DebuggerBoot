@@ -7,16 +7,13 @@ import java.util.Map;
 
 /**
  * FileName: CollectorGenerateUtil
- *
- * @author: caofanCPU
- * @date: 2019/3/4 12:15
  */
 
 public class CollectorGenerateUtil {
-    
+
     @FunctionalInterface
     public interface HashMapGeneratorInterface<K, V> {
-        
+
         /**
          * 该函数名称, 入参, 返回值不影响任意
          *
@@ -24,12 +21,12 @@ public class CollectorGenerateUtil {
          * @return
          */
         Map<K, V> process(Map<K, V> hashMap);
-        
+
     }
-    
+
     @FunctionalInterface
     public interface ArrayListGeneratorInterface<E> {
-        
+
         /**
          * 该函数名称, 入参, 返回值不影响任意
          *
@@ -38,23 +35,23 @@ public class CollectorGenerateUtil {
          */
         List<E> process(List<E> arrayList);
     }
-    
+
     public static <K, V> Map<K, V> initHashMap(int capacity, float loadFactor, HashMapGeneratorInterface<K, V> hashMapGenerator) {
         return hashMapGenerator.process(new HashMap(capacity, loadFactor));
     }
-    
+
     public static <K, V> Map<K, V> initHashMap(float loadFactor, HashMapGeneratorInterface<K, V> hashMapGenerator) {
         return hashMapGenerator.process(new HashMap<>(1 << 4, loadFactor));
     }
-    
+
     public static <K, V> Map<K, V> initHashMap(int capacity, HashMapGeneratorInterface<K, V> hashMapGenerator) {
         return hashMapGenerator.process(new HashMap<>(capacity, 0.75f));
     }
-    
+
     public static <K, V> Map<K, V> initHashMap(HashMapGeneratorInterface<K, V> hashMapGenerator) {
         return hashMapGenerator.process(new HashMap<>(1 << 4, 0.75f));
     }
-    
+
     /**
      * hashMap底层已对初始化容量做了 最近的2^n幂处理
      *
@@ -79,10 +76,10 @@ public class CollectorGenerateUtil {
     public static <E> List<E> initArrayList(int capacity, ArrayListGeneratorInterface<E> arrayListGeneratorInterface) {
         return arrayListGeneratorInterface.process(new ArrayList<>(capacity));
     }
-    
+
     public static <E> List<E> initArrayList(ArrayListGeneratorInterface<E> arrayListGeneratorInterface) {
         return arrayListGeneratorInterface.process(new ArrayList<>());
     }
-    
-    
+
+
 }

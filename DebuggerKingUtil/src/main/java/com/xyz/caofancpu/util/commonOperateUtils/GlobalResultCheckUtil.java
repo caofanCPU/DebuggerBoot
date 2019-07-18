@@ -18,7 +18,7 @@ public class GlobalResultCheckUtil {
      * LOG
      */
     private static final Logger logger = LoggerFactory.getLogger(GlobalResultCheckUtil.class);
-    
+
     /**
      * 微服务接口调用统一处理
      * 响应成功, 不做任何处理
@@ -34,5 +34,5 @@ public class GlobalResultCheckUtil {
         }
         throw new GlobalErrorInfoException(resultBody.getCode(), resultBody.getMsg());
     }
-    
+
 }

@@ -19,12 +19,12 @@ import java.util.stream.Collectors;
  * Created by caofanCPU on 2018/8/6.
  */
 public class JSONUtil {
-    
+
     /**
      * LOG
      */
     private static final Logger logger = LoggerFactory.getLogger(JSONUtil.class);
-    
+
     /**
      * 推荐使用
      * ResultBody.getData()为数组时, 转化为List<Map<String, Object>>
@@ -41,7 +41,7 @@ public class JSONUtil {
         tempList.forEach((item -> resultList.add(item)));
         return resultList;
     }
-    
+
     public static String formatStandardJSON(String jsonStr) {
         String start = "    ";
         // 用户标记层级
@@ -116,7 +116,7 @@ public class JSONUtil {
     public static Object deserializeJSON(String jsonStr, Class<? extends Serializable> clazz) {
         return JSONObject.parseObject(jsonStr, clazz);
     }
-    
+
     /**
      * 利用序列化深拷贝复杂对象
      *
@@ -138,7 +138,7 @@ public class JSONUtil {
         String jsonString = JSONObject.toJSONString(object, SerializerFeature.WriteClassName);
         return formatStandardJSON(jsonString);
     }
-    
+
     /**
      * 对象解析为JSONArray
      * 可能出现:  com.alibaba.fastjson.JSONException: autoType is not support ...
@@ -166,7 +166,7 @@ public class JSONUtil {
                 .map(item -> JSONObject.parseObject(JSONObject.toJSONString(item), clazz))
                 .collect(Collectors.toList());
     }
-    
+
     /**
      * JSONArray转List, 用Map<String, Object>接收
      *
@@ -187,7 +187,7 @@ public class JSONUtil {
                 .forEach(item -> resultList.add(JSONObject.parseObject(JSONObject.toJSONString(item))));
         return resultList;
     }
-    
+
     /**
      * List转JSONArray
      *
@@ -207,7 +207,7 @@ public class JSONUtil {
                 .forEach(item -> resultArray.add(item));
         return resultArray;
     }
-    
+
     /**
      * Map<String, Object> 转 JSONObject
      *
@@ -223,7 +223,7 @@ public class JSONUtil {
         }
         return JSONObject.parseObject(JSONObject.toJSONString(sourceMap));
     }
-    
+
     /**
      * JSONObject 转 Map<String, Object>
      * JSONObject是Map的子类
@@ -242,7 +242,7 @@ public class JSONUtil {
         }
         return jsonObject;
     }
-    
+
     /**
      * Map转Bean
      *

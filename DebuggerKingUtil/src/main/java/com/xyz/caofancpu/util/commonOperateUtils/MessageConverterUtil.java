@@ -15,7 +15,7 @@ public class MessageConverterUtil {
      * LOG
      */
     private static final Logger logger = LoggerFactory.getLogger(MessageConverterUtil.class);
-    
+
     /**
      * 将JSON字符串转为消息对象
      *
@@ -30,5 +30,5 @@ public class MessageConverterUtil {
         }
         return JSONObject.parseObject(jsonString, clazz);
     }
-    
+
 }

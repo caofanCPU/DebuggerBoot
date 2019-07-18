@@ -11,24 +11,24 @@ public enum GlobalErrorInfoRuntimeEnum implements ErrorInfoInterface {
     NumberFormatException("RE_NFE08", "数字格式错误"),
     SecurityException("RE_SE09", "安全异常"),
     UnsupportedOperationException("RE_UOE10", "操作不被支持"),
-    
+
     ;
-    
-    
+
+
     private String code;
-    
+
     private String msg;
-    
+
     GlobalErrorInfoRuntimeEnum(String code, String msg) {
         this.code = code;
         this.msg = msg;
     }
-    
+
     @Override
     public String getCode() {
         return this.code;
     }
-    
+
     @Override
     public String getMsg() {
         return this.msg;

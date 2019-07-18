@@ -18,19 +18,18 @@ import static com.xyz.caofancpu.util.StudyWaitingUtils.VerbalExpressionUtil.exec
 
 /**
  * FileName: StringTemplateUtil
- * @Author:   caofanCPU
- * @Date:     2018/11/15 17:00
  */
 public class BeautySQLStringUtil {
-    
+
     /**
      * LOG
      */
     private static final Logger logger = LoggerFactory.getLogger(BeautySQLStringUtil.class);
-    
+
     public static final String FILE_BASE_PATH = "/Users/htuser-085/Desktop/CAOFAN/IDEA-WORK/DebuggerBoot/DebuggerKingUtil/src/main/java/com/xyz/caofancpu/util/dataOperateUtils/SQLString";
 
-    public static void main(String[] args) throws Exception {
+    public static void main(String[] args)
+            throws Exception {
         VerbalExpression splitRegex = VerbalExpression.regex()
                 .capt().find(".").oneOrMore()
                 .or("、").oneOrMore()
@@ -70,12 +69,12 @@ public class BeautySQLStringUtil {
         }
         return Arrays.asList(srcContent.split(splitRegex.toString()));
     }
-    
+
     public static String formatSQL(String srcSQL, VerbalExpression mappingRegex, String replacer) {
         if (StringUtils.isEmpty(srcSQL) || Objects.isNull(mappingRegex)) {
             return StringUtils.EMPTY;
         }
         return VerbalExpressionUtil.executePatternRex(mappingRegex, srcSQL, replacer);
     }
-    
+
 }

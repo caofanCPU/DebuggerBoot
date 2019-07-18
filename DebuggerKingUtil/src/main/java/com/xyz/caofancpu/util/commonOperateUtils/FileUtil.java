@@ -15,12 +15,12 @@ import java.util.UUID;
  * Created by caofanCPU on 2018/2/26.
  */
 public class FileUtil {
-    
+
     /**
      * LOG
      */
     private static final Logger logger = LoggerFactory.getLogger(FileUtil.class);
-    
+
     /**
      * 生成唯一序列标识
      *
@@ -29,7 +29,7 @@ public class FileUtil {
     public static String getUuid() {
         return UUID.randomUUID().toString().replaceAll("-", "");
     }
-    
+
     /**
      * 将文件转成base64 字符串
      *
@@ -42,7 +42,7 @@ public class FileUtil {
         byte[] buffer = FileUtils.readFileToByteArray(new File(path));
         return Base64.encodeBase64String(buffer);
     }
-    
+
     /**
      * 保存字符串到指定文件
      *
@@ -55,7 +55,7 @@ public class FileUtil {
         File file = new File(fileFullPath);
         FileUtils.writeStringToFile(file, content);
     }
-    
+
     /**
      * 复制文件
      *
@@ -69,13 +69,13 @@ public class FileUtil {
         File destFile = new File(destFileFullPath);
         FileUtils.copyFile(sourceFile, destFile);
     }
-    
+
     public static String readFileToString(String fileFullPath)
             throws IOException {
         File file = new File(fileFullPath);
         return FileUtils.readFileToString(file);
     }
-    
+
     /**
      * 将base64字符解码保存文件
      *
@@ -83,13 +83,13 @@ public class FileUtil {
      * @param fileFullPath
      * @throws Exception
      */
-    
+
     public static void decodeBase64WithSave(String base64Code, String fileFullPath)
             throws IOException {
         byte[] buffer = Base64.decodeBase64(base64Code);
         FileUtils.writeByteArrayToFile(new File(fileFullPath), buffer);
     }
-    
+
     /**
      * 文件反序列化到对象
      *
@@ -124,7 +124,7 @@ public class FileUtil {
         T result = JSONObject.parseObject(JSONObject.toJSONString(sourceObj), clazz);
         return result;
     }
-    
+
     /**
      * 对象序列化到文件
      *
@@ -147,9 +147,9 @@ public class FileUtil {
             IOUtils.closeQuietly(fos);
         }
     }
-    
+
     public static void main(String[] args) {
-    
+
     }
-    
+
 }

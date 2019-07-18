@@ -10,7 +10,7 @@ import java.util.Objects;
  * 要求：想实现树操作的元素需继承BaseTree
  */
 public class BaseTreeUtil {
-    
+
     /**
      * 对于给定的列表， 顺序遍历父节点->子节点，遍历到的元素添加到结果收集容器中
      *
@@ -30,7 +30,7 @@ public class BaseTreeUtil {
                     }
                 });
     }
-    
+
     /**
      * 收集末级节点
      * 对于给定的列表， 顺序遍历父节点->子节点，只将叶子节点添加到结果收集容器中
@@ -55,5 +55,5 @@ public class BaseTreeUtil {
                     }
                 });
     }
-    
+
 }

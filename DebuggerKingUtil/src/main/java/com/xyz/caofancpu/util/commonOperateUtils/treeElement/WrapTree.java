@@ -38,7 +38,7 @@ class WrapTree<I extends Comparable, E extends Serializable> {
      * 树元素子节点集合
      */
     private List<WrapTree<I, E>> childElements;
-    
+
     boolean hasChildren() {
         return CollectionUtil.isNotEmpty(childElements);
     }
