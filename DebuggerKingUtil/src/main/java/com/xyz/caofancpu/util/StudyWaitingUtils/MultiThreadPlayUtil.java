@@ -40,8 +40,32 @@ public class MultiThreadPlayUtil {
 
     // ======================================================
 
+    public static void outMechaineAvailableProcessors() {
+        int cpuCount = Runtime.getRuntime().availableProcessors();
+        out(cpuCount + "");
+    }
+
+    public static void testThreadPoolExecutor() {
+        int COUNT_BITS = Integer.SIZE - 3;
+        int CAPACITY = (1 << COUNT_BITS) - 1;
+        int RUNNING = -1 << COUNT_BITS;
+        int SHUTDOWN = 0 << COUNT_BITS;
+        int STOP = 1 << COUNT_BITS;
+        int TIDYING = 2 << COUNT_BITS;
+        int TERMINATED = 3 << COUNT_BITS;
+        out(COUNT_BITS + "-->"
+                + RUNNING + "-->"
+                + SHUTDOWN + "-->"
+                + STOP + "-->"
+                + TIDYING + "-->"
+                + TERMINATED + "-->");
+        out((RUNNING & ~CAPACITY) + "");
+    }
+
     public static void main(String[] args) {
-        // must do: 初始化
+        testThreadPoolExecutor();
+
+        /*// must do: 初始化
         initThreadPool();
 
         // you can replace
@@ -58,7 +82,7 @@ public class MultiThreadPlayUtil {
         testCountDownLatch();
         // must do: 收尾
         // 此处关闭线程池, 使用的是shutdown()方法, 该方法会等到线程池任务执行完毕后才关闭线程池
-        shutdownThreadPool();
+        shutdownThreadPool();*/
     }
 
     // ==================测试方法=========================
