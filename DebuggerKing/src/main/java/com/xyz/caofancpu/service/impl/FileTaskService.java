@@ -5,8 +5,8 @@ import com.xyz.caofancpu.model.MiniAttachment;
 import com.xyz.caofancpu.service.CommonOperateService;
 import com.xyz.caofancpu.service.configValue.CommonConfigValueService;
 import com.xyz.caofancpu.util.commonOperateUtils.FileUtil;
+import com.xyz.caofancpu.util.multiThreadUtils.RemoteInvokeHelper;
 import com.xyz.caofancpu.util.multiThreadUtils.RemoteRequestTask;
-import com.xyz.caofancpu.util.multiThreadUtils.RemoteServiceHelper;
 import com.xyz.caofancpu.util.result.ResultBody;
 import io.swagger.annotations.Api;
 import org.apache.commons.collections.CollectionUtils;
@@ -208,7 +208,7 @@ public class FileTaskService {
     private void addToPool(
             Map<Integer, Future<?>> taskResultMap, Integer taskNo, Object executeService,
             String executeMethod, Object params, Class<?>... paramClass) {
-        RemoteServiceHelper remoteService = new RemoteServiceHelper(executeService, executeMethod, params, paramClass);
+        RemoteInvokeHelper remoteService = new RemoteInvokeHelper(executeService, executeMethod, params, paramClass);
         RemoteRequestTask task = new RemoteRequestTask(remoteService);
         taskResultMap.put(taskNo, defaultThreadPool.submit(task));
     }

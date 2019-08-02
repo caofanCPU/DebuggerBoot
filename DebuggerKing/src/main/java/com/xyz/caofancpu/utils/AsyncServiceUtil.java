@@ -2,8 +2,8 @@ package com.xyz.caofancpu.utils;
 
 import com.xyz.caofancpu.message.kafka.KafkaMessage;
 import com.xyz.caofancpu.message.kafka.KafkaSender;
-import com.xyz.caofancpu.thread.task.DebuggerKingRunnable;
-import com.xyz.caofancpu.thread.task.DemoRunnableTask;
+import com.xyz.caofancpu.util.multiThreadUtils.DebuggerKingRunnable;
+import com.xyz.caofancpu.util.multiThreadUtils.DemoRunnableTask;
 import io.swagger.annotations.Api;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

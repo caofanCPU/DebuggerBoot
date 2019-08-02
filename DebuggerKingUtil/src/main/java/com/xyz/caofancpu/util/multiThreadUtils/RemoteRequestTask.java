@@ -3,23 +3,23 @@ package com.xyz.caofancpu.util.multiThreadUtils;
 import java.util.concurrent.Callable;
 
 public class RemoteRequestTask<K> implements Callable<K> {
-    private RemoteService remoteService;
+    private RemoteInvoke remoteInvoke;
 
-    public RemoteRequestTask(RemoteService remoteService) {
-        this.remoteService = remoteService;
+    public RemoteRequestTask(RemoteInvoke remoteInvoke) {
+        this.remoteInvoke = remoteInvoke;
     }
 
-    public RemoteService getRemoteService() {
-        return remoteService;
+    public RemoteInvoke getRemoteInvoke() {
+        return remoteInvoke;
     }
 
-    public void setRemoteService(RemoteServiceHelper remoteService) {
-        this.remoteService = remoteService;
+    public void setRemoteInvoke(RemoteInvokeHelper remoteInvoke) {
+        this.remoteInvoke = remoteInvoke;
     }
 
     @Override
     public K call() {
-        K k = (K) remoteService.invoke();
+        K k = (K) remoteInvoke.invoke();
         return k;
     }
 }

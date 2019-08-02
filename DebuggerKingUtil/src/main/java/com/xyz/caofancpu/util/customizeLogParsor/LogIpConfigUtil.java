@@ -15,6 +15,9 @@ import java.net.UnknownHostException;
 import java.util.Enumeration;
 import java.util.Objects;
 
+/**
+ * 日志IP获取工具类
+ */
 public class LogIpConfigUtil extends ClassicConverter {
     private static final Logger logger = LoggerFactory.getLogger(LogIpConfigUtil.class);
 

@@ -10,7 +10,7 @@ import java.util.concurrent.ConcurrentHashMap;
 
 /**
  * Created by caofanCPU on 2018/8/3.
- * 从properties配置文件中读取配置
+ * 从配置文件中读取配置
  */
 @Configuration
 //声明前缀
