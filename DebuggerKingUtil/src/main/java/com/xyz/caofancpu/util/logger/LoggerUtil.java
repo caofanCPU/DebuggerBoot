@@ -83,7 +83,7 @@ public class LoggerUtil {
             } else {
                 value = params[index + 1];
             }
-            sb.append(key).append(":[").append(value).append("];");
+            sb.append(key).append(":[").append(value).append("]$");
         }
         return sb;
     }
