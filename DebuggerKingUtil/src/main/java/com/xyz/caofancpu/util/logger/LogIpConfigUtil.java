@@ -1,4 +1,4 @@
-package com.xyz.caofancpu.utils;
+package com.xyz.caofancpu.util.logger;
 
 import ch.qos.logback.classic.pattern.ClassicConverter;
 import ch.qos.logback.classic.spi.ILoggingEvent;

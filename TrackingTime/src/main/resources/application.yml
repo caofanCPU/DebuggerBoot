@@ -2,9 +2,6 @@
 app:
   name: www.caofanCPU.com
 
-application:
-  version: 1.0.0
-
 #注册中心配置
 eureka:
   client:

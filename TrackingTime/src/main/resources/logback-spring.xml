@@ -1,23 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!-- Logback configuration. See http://logback.qos.ch/manual/index.html -->
 <configuration scan="true" scanPeriod="10 seconds">
-
-    <include resource="org/springframework/boot/logging/logback/base.xml"/>
-    <!--    -->
-    <!--    <conversionRule conversionWord="clr" converterClass="org.springframework.boot.logging.logback.ColorConverter" />-->
-    <!--    <conversionRule conversionWord="wex" converterClass="org.springframework.boot.logging.logback.WhitespaceThrowableProxyConverter" />-->
-    <!--    <conversionRule conversionWord="wEx" converterClass="org.springframework.boot.logging.logback.ExtendedWhitespaceThrowableProxyConverter" />-->
-
-    <!--    &lt;!&ndash;-->
-    <!--    BLACK, BLUE, BRIGHT_BLACK, BRIGHT_BLUE, BRIGHT_CYAN, BRIGHT_GREEN, BRIGHT_MAGENTA, BRIGHT_RED,-->
-    <!--    BRIGHT_WHITE, BRIGHT_YELLOW, CYAN, DEFAULT, GREEN, MAGENTA, RED, WHITE, YELLOW-->
-    <!--    &ndash;&gt;-->
-
-    <!--    &lt;!&ndash;控制台彩色日志格式, 参见  org.springframework.boot.logging.logback包下的defaults.xml &ndash;&gt;-->
-    <!--    <property name="CONSOLE_LOG_PATTERN" value="%clr(%d{yyyy-MM-dd HH:mm:ss.SSS}){faint} %clr(${LOG_LEVEL_PATTERN:-%5p}) %clr([%X{traceId}]){cyan} %clr(%ip:${port}){faint} %clr([%thread]){magenta} %clr(%-40.40logger{39}){cyan} - %msg%n${LOG_EXCEPTION_CONVERSION_WORD:-%wEx}"/>-->
-
-
     <conversionRule conversionWord="ip" converterClass="com.xyz.caofancpu.util.logger.LogIpConfigUtil"/>
+    <include resource="org/springframework/boot/logging/logback/base.xml"/>
     <springProperty scope="context" name="port" source="server.port"/>
     <property name="LOG_PATH" value="/work/cf"/>
     <property name="APP_DIR" value="debugger-king"/>

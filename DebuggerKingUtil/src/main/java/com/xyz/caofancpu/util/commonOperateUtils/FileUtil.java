@@ -1,11 +1,10 @@
 package com.xyz.caofancpu.util.commonOperateUtils;
 
 import com.alibaba.fastjson.JSONObject;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.codec.binary.Base64;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.IOUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import java.io.*;
 import java.lang.reflect.InvocationTargetException;
@@ -14,12 +13,8 @@ import java.util.UUID;
 /**
  * Created by caofanCPU on 2018/2/26.
  */
+@Slf4j
 public class FileUtil {
-
-    /**
-     * LOG
-     */
-    private static final Logger logger = LoggerFactory.getLogger(FileUtil.class);
 
     /**
      * 生成唯一序列标识
@@ -115,7 +110,7 @@ public class FileUtil {
         } catch (IOException e) {
             // ignore
         } catch (ClassNotFoundException e) {
-            logger.error("反序列化文件出错, 原因: {}", e);
+            log.error("反序列化文件出错, 原因: {}", e);
             throw new IOException("反序列化的目的类不存在!");
         } finally {
             IOUtils.closeQuietly(ois);
@@ -146,10 +141,6 @@ public class FileUtil {
             IOUtils.closeQuietly(oos);
             IOUtils.closeQuietly(fos);
         }
-    }
-
-    public static void main(String[] args) {
-
     }
 
 }
