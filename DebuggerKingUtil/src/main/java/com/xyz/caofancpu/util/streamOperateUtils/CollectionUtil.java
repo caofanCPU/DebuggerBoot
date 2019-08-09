@@ -70,13 +70,6 @@ public class CollectionUtil extends CollectionUtils {
     }
 
     /**
-     * 去重
-     */
-    public static <E> List<E> distinctList(Collection<E> source) {
-        return source.stream().filter(Objects::nonNull).distinct().collect(Collectors.toList());
-    }
-
-    /**
      * 根据集合元素中指定的字段进行去重，返回去重后的元素集合
      *
      * @param coll
