@@ -1,6 +1,7 @@
 package com.xyz.caofancpu.init;
 
 import com.xyz.caofancpu.mapper.SysDictMapper;
+import com.xyz.caofancpu.util.streamOperateUtils.CollectionUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -95,11 +96,10 @@ public class InitContextPropertyInitializer {
     public void readYamlProperty() {
         try {
             logger.info("读取初始化yaml配置变量...");
-            PropertySource yamlPropertySource = new YamlPropertySourceLoader()
-                    .load(YAML_PROPERTY_SOURCE,
-                            new ClassPathResource("config/config-demo.yml"),
-                            null);
-            configurableEnvironment.getPropertySources().addFirst(yamlPropertySource);
+            List<PropertySource<?>> propertySourceList = new YamlPropertySourceLoader().load(YAML_PROPERTY_SOURCE, new ClassPathResource("config/config-demo.yml"));
+            if (CollectionUtil.isNotEmpty(propertySourceList)) {
+                configurableEnvironment.getPropertySources().addFirst(propertySourceList.get(0));
+            }
         } catch (Exception e) {
             logger.error(e.getMessage());
             return;

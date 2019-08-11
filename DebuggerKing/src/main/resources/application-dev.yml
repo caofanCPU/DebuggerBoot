@@ -26,7 +26,8 @@ logging:
         web: debug
 #模拟服务所在网关路由/nginx配置
 server:
-  context-path: /debuggerking
+  servlet:
+    context-path: /debuggerking
 #数据库配置
 spring:
   datasource:

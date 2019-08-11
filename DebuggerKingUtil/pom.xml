@@ -9,7 +9,11 @@
     <packaging>jar</packaging>
 
     <name>DebuggerKingUtil</name>
-    <description>useful utils for business processing code</description>
+    <description>Useful utils for processing business</description>
+
+    <properties>
+        <code.zxin.version>3.3.2</code.zxin.version>
+    </properties>
 
     <dependencies>
 
@@ -58,6 +62,12 @@
             <groupId>org.springframework</groupId>
             <artifactId>spring-web</artifactId>
             <version>3.2.16.RELEASE</version>
+            <exclusions>
+                <exclusion>
+                    <artifactId>spring-core</artifactId>
+                    <groupId>org.springframework</groupId>
+                </exclusion>
+            </exclusions>
         </dependency>
 
         <!--通用IO操作-->
@@ -92,12 +102,12 @@
         <dependency>
             <groupId>com.google.zxing</groupId>
             <artifactId>core</artifactId>
-            <version>3.1.0</version>
+            <version>${code.zxin.version}</version>
         </dependency>
         <dependency>
             <groupId>com.google.zxing</groupId>
             <artifactId>javase</artifactId>
-            <version>3.1.0</version>
+            <version>${code.zxin.version}</version>
         </dependency>
 
         <!--bean操作-->
@@ -105,6 +115,12 @@
             <groupId>commons-beanutils</groupId>
             <artifactId>commons-beanutils</artifactId>
             <version>1.9.3</version>
+            <exclusions>
+                <exclusion>
+                    <artifactId>commons-collections</artifactId>
+                    <groupId>commons-collections</groupId>
+                </exclusion>
+            </exclusions>
         </dependency>
 
         <!--spring核心-->
@@ -131,20 +147,6 @@
 
     </dependencies>
 
-    <!--发布配置: 注意,nexus仓库属性支持发布, 允许覆盖更新等-->
-    <!--替代方案: 本地安装, 供自身引用-->
-    <distributionManagement>
-        <!-- 两个ID必须与 setting.xml中的<server><id>nexus-releases</id></server>保持一致 -->
-        <repository>
-            <id>nexus-releases</id>
-            <url>http://nexus.ovfintech.com:9090/nexus/content/groups/public/</url>
-        </repository>
-        <snapshotRepository>
-            <id>nexus-snapshots</id>
-            <url>http://nexus.ovfintech.com:9090/nexus/content/groups/public-snapshots</url>
-        </snapshotRepository>
-    </distributionManagement>
-
     <build>
         <plugins>
             <plugin>
@@ -162,7 +164,20 @@
                     <target>8</target>
                 </configuration>
             </plugin>
-
+            <!--源码打包-->
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-source-plugin</artifactId>
+                <version>2.1.2</version>
+                <executions>
+                    <execution>
+                        <id>attach-sources</id>
+                        <goals>
+                            <goal>jar</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
         </plugins>
         <!--从以下配置中, 推荐将Mapper的XML映射文件放入resources资源目录中, 并修改好model与mapper的映射关系-->
         <resources>

@@ -1,13 +1,10 @@
 package com.xyz.caofancpu.utils;
 
-import com.xyz.caofancpu.message.kafka.KafkaMessage;
-import com.xyz.caofancpu.message.kafka.KafkaSender;
 import com.xyz.caofancpu.util.multiThreadUtils.DebuggerKingRunnable;
 import com.xyz.caofancpu.util.multiThreadUtils.DemoRunnableTask;
 import io.swagger.annotations.Api;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
 import org.springframework.stereotype.Component;
@@ -29,13 +26,6 @@ public class AsyncServiceUtil {
 
     @Resource(name = "standardThreadPool")
     private ThreadPoolTaskExecutor pool;
-
-    @Autowired
-    private transient KafkaSender kafkaSender;
-
-    public void sendKafkaMSG(KafkaMessage kafkaMessage) {
-        kafkaSender.sendMessage(kafkaMessage);
-    }
 
     @Async
     public void execute(Object... objects) {
