@@ -10,13 +10,23 @@ import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang3.ArrayUtils;
 import org.apache.commons.lang3.StringUtils;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.HashMap;
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Map;
 import java.util.Map.Entry;
+import java.util.Objects;
+import java.util.Set;
+import java.util.TreeSet;
 import java.util.function.BiFunction;
 import java.util.function.BinaryOperator;
 import java.util.function.Function;
 import java.util.function.Supplier;
-import java.util.stream.Collector;
 import java.util.stream.Collectors;
 import java.util.stream.StreamSupport;
 
@@ -83,13 +93,6 @@ public class CollectionUtil extends CollectionUtils {
         return coll.stream()
                 .filter(Objects::nonNull)
                 .collect(Collectors.collectingAndThen(Collectors.toCollection(() -> new TreeSet<>(distinctComparator)), ArrayList::new));
-    }
-
-    /**
-     * 转换
-     */
-    public static <E, A, R> R collect(Collection<E> source, Collector<? super E, A, R> collector) {
-        return source.stream().filter(Objects::nonNull).collect(collector);
     }
 
     /**
@@ -171,7 +174,7 @@ public class CollectionUtil extends CollectionUtils {
     /**
      * 转换为Map-Value
      */
-    public static <E, K, V> Map<K, V> transMap(@NonNull Iterable<E> values, Function<? super E, ? extends K> kFunction, Function<? super E, ? extends V> vFunction) {
+    public static <E, K, V> Map<K, V> transToMap(@NonNull Iterable<E> values, Function<? super E, ? extends K> kFunction, Function<? super E, ? extends V> vFunction) {
         return StreamSupport.stream(values.spliterator(), Boolean.FALSE)
                 .filter(Objects::nonNull)
                 .collect(Collectors.toMap(kFunction, vFunction));
@@ -184,6 +187,32 @@ public class CollectionUtil extends CollectionUtils {
         return StreamSupport.stream(values.spliterator(), Boolean.FALSE)
                 .filter(Objects::nonNull)
                 .collect(Collectors.toMap(kFunction, vFunction, nonDuplicateKey(), mapColl));
+    }
+
+    /**
+     * 可以将两层嵌套List，转换为Map<K, List<V>>，按照K叠加List<V>
+     *
+     * @param mapColl
+     * @param values
+     * @param kFunction
+     * @param vFunction
+     * @param <E>
+     * @param <K>
+     * @param <V>
+     * @param <M>
+     * @return
+     */
+    public static <E, K, V, M extends Map<K, List<V>>> M transToMapByMerge(Supplier<M> mapColl, Iterable<E> values, Function<? super E, K> kFunction, Function<? super E, List<V>> vFunction) {
+        if (Objects.isNull(values)) {
+            return mapColl.get();
+        }
+        return StreamSupport.stream(values.spliterator(), Boolean.FALSE)
+                .filter(Objects::nonNull)
+                .collect(Collectors.toMap(kFunction, vFunction, (list1, list2) -> {
+                    list1.addAll(list2);
+                    return list1;
+                }, mapColl));
+
     }
 
     /**
