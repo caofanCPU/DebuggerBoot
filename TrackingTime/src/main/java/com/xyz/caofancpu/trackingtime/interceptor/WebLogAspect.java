@@ -1,6 +1,5 @@
 package com.xyz.caofancpu.trackingtime.interceptor;
 
-import com.alibaba.fastjson.JSONObject;
 import com.xyz.caofancpu.trackingtime.utils.DataHelper;
 import com.xyz.caofancpu.util.dataOperateUtils.JSONUtil;
 import com.xyz.caofancpu.util.streamOperateUtils.StreamUtil;
@@ -58,14 +57,13 @@ public class WebLogAspect {
         Map<String, Object> originRequestParamMap = DataHelper.getParameterMap(request);
         Map<String, Object> filteredFileValueMap = StreamUtil.removeSpecifiedElement(originRequestParamMap,
                 new Class[]{MultipartFile.class, File.class});
-        String requestParam = JSONUtil.formatStandardJSON(JSONObject.toJSONString(filteredFileValueMap));
+        String requestParam = JSONUtil.formatStandardJSON(JSONUtil.toJSONStringWithDateFormat(filteredFileValueMap));
         // 入参为文件时, 不打印log
         Object[] originBodyParamArray = proceedingJoinPoint.getArgs();
-        Object[] filteredFileValueArray = StreamUtil.removeSpecifiedElement(originBodyParamArray,
-                new Class[]{MultipartFile.class, File.class});
+        Object[] filteredFileValueArray = StreamUtil.removeSpecifiedElement(originBodyParamArray, new Class[]{MultipartFile.class, File.class});
         String requestBody;
         try {
-            requestBody = JSONUtil.formatStandardJSON(JSONObject.toJSONString(filteredFileValueArray));
+            requestBody = JSONUtil.formatStandardJSON(JSONUtil.toJSONStringWithDateFormat(filteredFileValueArray));
         } catch (Exception e) {
             logger.info("入参为文件(InputStreamSource)或HttpRequest等类型, 打印对象地址信息");
             requestBody = Arrays.toString(proceedingJoinPoint.getArgs());
@@ -94,7 +92,7 @@ public class WebLogAspect {
         );
         result = proceedingJoinPoint.proceed();
         // 处理完请求，返回内容
-        responseSb.append(JSONUtil.formatStandardJSON(JSONObject.toJSONString(result)));
+        responseSb.append(JSONUtil.formatStandardJSON(JSONUtil.toJSONStringWithDateFormat(result)));
         logger.info(responseSb.toString().replace(execTime, String.valueOf(System.currentTimeMillis() - startTime)));
         return result;
     }

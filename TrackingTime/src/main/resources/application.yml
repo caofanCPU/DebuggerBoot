@@ -1,9 +1,9 @@
 #应用配置
 app:
-  name: www.caofanCPU.com
+  name: trackingtime.caofancpu.com
 
 application:
-  version: 1.0.0
+  version: 0.0.1
 
 #注册中心配置
 eureka:
@@ -40,7 +40,7 @@ server:
 spring:
   #服务部署名
   application:
-    name: service-debuggerking
+    name: service-trackingtime
   jackson:
     date-format: yyyy-MM-dd HH:mm:ss
     time-zone: GMT+8

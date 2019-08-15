@@ -1,4 +1,6 @@
-package com.xyz.caofancpu.trackingtime.constant;
+package com.xyz.caofancpu.trackingtime.constant.enums;
+
+import lombok.Getter;
 
 import java.util.Arrays;
 import java.util.Comparator;
@@ -7,7 +9,7 @@ import java.util.List;
 /**
  * 可以替换策略模式的枚举用法
  */
-public enum FlexibleEnum {
+public enum FlexibleDemoEnum {
     FIRST_LEVEL(1, "1级工程师") {
         @Override
         void process() {
@@ -45,32 +47,26 @@ public enum FlexibleEnum {
 
     ;
 
-    private int value;
+    @Getter
+    private Integer value;
+    @Getter
     private String title;
 
-    FlexibleEnum(int value, String title) {
+    FlexibleDemoEnum(Integer value, String title) {
         this.value = value;
         this.title = title;
     }
 
     public static void main(String[] args) {
-        List<FlexibleEnum> flexibleEnums = Arrays.asList(FlexibleEnum.values());
-        flexibleEnums.sort(Comparator.comparing(FlexibleEnum::getValue).reversed());
-        flexibleEnums.forEach(FlexibleEnum::process);
+        List<FlexibleDemoEnum> flexibleDemoEnums = Arrays.asList(FlexibleDemoEnum.values());
+        flexibleDemoEnums.sort(Comparator.comparing(FlexibleDemoEnum::getValue).reversed());
+        flexibleDemoEnums.forEach(FlexibleDemoEnum::process);
     }
 
     /**
      * 定义枚举实例的抽象行为，由实例自行发挥处理
      */
     abstract void process();
-
-    public int getValue() {
-        return value;
-    }
-
-    public String getTitle() {
-        return title;
-    }
 
     public void out(String text) {
         System.out.println("头衔[" + this.getTitle() + "](Rank-" + this.getValue() + "), 特征: " + text);

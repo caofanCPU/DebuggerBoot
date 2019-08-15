@@ -42,6 +42,10 @@ public class JSONUtil {
         return resultList;
     }
 
+    public static String toJSONStringWithDateFormat(Object data) {
+        return JSONObject.toJSONStringWithDateFormat(data, DateUtil.DATETIME_FORMAT_SIMPLE_DETAIL);
+    }
+
     public static String formatStandardJSON(String jsonStr) {
         String start = "    ";
         // 用户标记层级

@@ -14,6 +14,12 @@ import org.springframework.stereotype.Service;
 @DependsOn("initContextPropertyInitializer")
 public class CommonConfigValueService {
 
+    @Value("${server.servlet.context-path}")
+    public String contentPath;
+
+    @Value("${server.port}")
+    public String serverPort;
+
     @Value("${app.name}")
     public String appName;
 

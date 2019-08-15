@@ -1,6 +1,10 @@
 package com.xyz.caofancpu.trackingtime.model;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+import lombok.experimental.Accessors;
 
 import java.io.Serializable;
 
@@ -10,6 +14,10 @@ import java.io.Serializable;
  * @author caofanCPU
  * 附件
  */
+@Data
+@Accessors(chain = true)
+@NoArgsConstructor
+@AllArgsConstructor
 public class Attachment implements Serializable {
 
     private String name;
@@ -27,72 +35,4 @@ public class Attachment implements Serializable {
     private String createTime;
 
     private String accessUrl;
-
-    public Attachment() {
-    }
-
-    public Attachment(String name, Integer sortId) {
-        this.name = name;
-        this.sortId = sortId;
-    }
-
-    public String getAccessUrl() {
-        return accessUrl;
-    }
-
-    public void setAccessUrl(String accessUrl) {
-        this.accessUrl = accessUrl;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public String getBusId() {
-        return busId;
-    }
-
-    public void setBusId(String busId) {
-        this.busId = busId;
-    }
-
-    public String getType() {
-        return type;
-    }
-
-    public void setType(String type) {
-        this.type = type;
-    }
-
-    public Integer getSortId() {
-        return sortId;
-    }
-
-    public void setSortId(Integer sortId) {
-        this.sortId = sortId;
-    }
-
-    public String getCreateTime() {
-        return createTime;
-    }
-
-    public void setCreateTime(String createTime) {
-        this.createTime = createTime;
-    }
-
-    @Override
-    public String toString() {
-        return "Attachment{" +
-                "name='" + name + '\'' +
-                ", busId='" + busId + '\'' +
-                ", type='" + type + '\'' +
-                ", sortId=" + sortId +
-                ", createTime=" + createTime +
-                ", accessUrl='" + accessUrl + '\'' +
-                '}';
-    }
 }

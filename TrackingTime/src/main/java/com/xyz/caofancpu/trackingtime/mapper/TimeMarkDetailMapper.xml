@@ -1,0 +1,104 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.xyz.caofancpu.trackingtime.mapper.TimeMarkDetailMapper">
+
+    <!--auto generated Code-->
+    <resultMap id="AllColumnMap" type="com.xyz.caofancpu.trackingtime.model.TimeMarkDetail">
+        <result column="id" property="id"/>
+        <result column="mark_content_id" property="markContentId"/>
+        <result column="content" property="content"/>
+        <result column="content_signature" property="contentSignature"/>
+        <result column="encrypt_type" property="encryptType"/>
+        <result column="create_time" property="createTime"/>
+        <result column="update_time" property="updateTime"/>
+    </resultMap>
+
+    <!--auto generated Code-->
+    <sql id="all_column">
+        id,
+        mark_content_id,
+        content,
+        content_signature,
+        encrypt_type,
+        create_time,
+        update_time
+    </sql>
+
+    <!--auto generated Code-->
+    <insert id="insert">
+        INSERT INTO time_mark_detail
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="pojo.id != null">id,</if>
+            <if test="pojo.markContentId != null">mark_content_id,</if>
+            <if test="pojo.content != null">content,</if>
+            <if test="pojo.contentSignature != null">content_signature,</if>
+            <if test="pojo.encryptType != null">encrypt_type,</if>
+            <if test="pojo.createTime != null">create_time,</if>
+            <if test="pojo.updateTime != null">update_time,</if>
+        </trim>
+        VALUES
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="pojo.id != null">#{pojo.id},</if>
+            <if test="pojo.markContentId != null">#{pojo.markContentId},</if>
+            <if test="pojo.content != null">#{pojo.content},</if>
+            <if test="pojo.contentSignature != null">#{pojo.contentSignature},</if>
+            <if test="pojo.encryptType != null">#{pojo.encryptType},</if>
+            <if test="pojo.createTime != null">#{pojo.createTime},</if>
+            <if test="pojo.updateTime != null">#{pojo.updateTime},</if>
+        </trim>
+    </insert>
+
+    <!--auto generated Code-->
+    <insert id="insertList">
+        INSERT INTO time_mark_detail(
+        <include refid="all_column"/>
+        )VALUES
+        <foreach collection="pojos" item="pojo" index="index" separator=",">
+            (
+            #{pojo.id},
+            #{pojo.markContentId},
+            #{pojo.content},
+            #{pojo.contentSignature},
+            #{pojo.encryptType},
+            #{pojo.createTime},
+            #{pojo.updateTime}
+            )
+        </foreach>
+    </insert>
+
+    <!--auto generated Code-->
+    <update id="update">
+        UPDATE time_mark_detail
+        <set>
+            <if test="pojo.id != null">id = #{pojo.id},</if>
+            <if test="pojo.markContentId != null">mark_content_id = #{pojo.markContentId},</if>
+            <if test="pojo.content != null">content = #{pojo.content},</if>
+            <if test="pojo.contentSignature != null">content_signature = #{pojo.contentSignature},</if>
+            <if test="pojo.encryptType != null">encrypt_type = #{pojo.encryptType},</if>
+            <if test="pojo.createTime != null">create_time = #{pojo.createTime},</if>
+        </set>
+        WHERE id = #{pojo.id}
+    </update>
+
+    <!--auto generated Code-->
+    <select id="select" resultMap="AllColumnMap">
+        SELECT
+        <include refid="all_column"/>
+        FROM time_mark_detail
+        <where>
+            <if test="pojo.id != null">AND id = #{pojo.id}</if>
+            <if test="pojo.markContentId != null">AND mark_content_id = #{pojo.markContentId}</if>
+            <if test="pojo.content != null">AND content = #{pojo.content}</if>
+            <if test="pojo.contentSignature != null">AND content_signature = #{pojo.contentSignature}</if>
+            <if test="pojo.encryptType != null">AND encrypt_type = #{pojo.encryptType}</if>
+            <if test="pojo.createTime != null">AND create_time = #{pojo.createTime}</if>
+            <if test="pojo.updateTime != null">AND update_time = #{pojo.updateTime}</if>
+        </where>
+        LIMIT 1000
+    </select>
+
+    <!--auto generated Code-->
+    <delete id="delete">
+        DELETE FROM time_mark_detail where id = #{id}
+    </delete>
+</mapper>

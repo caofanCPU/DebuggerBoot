@@ -1,0 +1,97 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.xyz.caofancpu.trackingtime.mapper.TimeBlockMapper">
+
+    <!--auto generated Code-->
+    <resultMap id="AllColumnMap" type="com.xyz.caofancpu.trackingtime.model.TimeBlock">
+        <result column="id" property="id"/>
+        <result column="user_id" property="userId"/>
+        <result column="start_time" property="startTime"/>
+        <result column="end_time" property="endTime"/>
+        <result column="create_time" property="createTime"/>
+        <result column="update_time" property="updateTime"/>
+    </resultMap>
+
+    <!--auto generated Code-->
+    <sql id="all_column">
+        id,
+        user_id,
+        start_time,
+        end_time,
+        create_time,
+        update_time
+    </sql>
+
+    <!--auto generated Code-->
+    <insert id="insert">
+        INSERT INTO time_block
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="pojo.id != null">id,</if>
+            <if test="pojo.userId != null">user_id,</if>
+            <if test="pojo.startTime != null">start_time,</if>
+            <if test="pojo.endTime != null">end_time,</if>
+            <if test="pojo.createTime != null">create_time,</if>
+            <if test="pojo.updateTime != null">update_time,</if>
+        </trim>
+        VALUES
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="pojo.id != null">#{pojo.id},</if>
+            <if test="pojo.userId != null">#{pojo.userId},</if>
+            <if test="pojo.startTime != null">#{pojo.startTime},</if>
+            <if test="pojo.endTime != null">#{pojo.endTime},</if>
+            <if test="pojo.createTime != null">#{pojo.createTime},</if>
+            <if test="pojo.updateTime != null">#{pojo.updateTime},</if>
+        </trim>
+    </insert>
+
+    <!--auto generated Code-->
+    <insert id="insertList">
+        INSERT INTO time_block(
+        <include refid="all_column"/>
+        )VALUES
+        <foreach collection="pojos" item="pojo" index="index" separator=",">
+            (
+            #{pojo.id},
+            #{pojo.userId},
+            #{pojo.startTime},
+            #{pojo.endTime},
+            #{pojo.createTime},
+            #{pojo.updateTime}
+            )
+        </foreach>
+    </insert>
+
+    <!--auto generated Code-->
+    <update id="update">
+        UPDATE time_block
+        <set>
+            <if test="pojo.id != null">id = #{pojo.id},</if>
+            <if test="pojo.userId != null">user_id = #{pojo.userId},</if>
+            <if test="pojo.startTime != null">start_time = #{pojo.startTime},</if>
+            <if test="pojo.endTime != null">end_time = #{pojo.endTime},</if>
+            <if test="pojo.createTime != null">create_time = #{pojo.createTime},</if>
+        </set>
+        WHERE id = #{pojo.id}
+    </update>
+
+    <!--auto generated Code-->
+    <select id="select" resultMap="AllColumnMap">
+        SELECT
+        <include refid="all_column"/>
+        FROM time_block
+        <where>
+            <if test="pojo.id != null">AND id = #{pojo.id}</if>
+            <if test="pojo.userId != null">AND user_id = #{pojo.userId}</if>
+
+            <if test="pojo.startTime != null and pojo.startTime != ''">AND start_time <![CDATA[>=]]> #{pojo.startTime}</if>
+            <if test="pojo.endTime != null and pojo.endTime != ''">AND end_time <![CDATA[<=]]> #{pojo.endTime}</if>
+
+        </where>
+        LIMIT 1000
+    </select>
+
+    <!--auto generated Code-->
+    <delete id="delete">
+        DELETE FROM time_block where id = #{id}
+    </delete>
+</mapper>

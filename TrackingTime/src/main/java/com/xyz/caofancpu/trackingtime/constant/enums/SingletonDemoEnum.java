@@ -1,14 +1,16 @@
-package com.xyz.caofancpu.trackingtime.constant;
+package com.xyz.caofancpu.trackingtime.constant.enums;
+
+import lombok.Getter;
 
 import java.util.Arrays;
 
 /**
- * FileName: SingletonEnum
+ * FileName: SingletonDemoEnum
  * Author:   caofanCPU
  * Date:     2018/9/7 16:43
  */
 
-public enum SingletonEnum {
+public enum SingletonDemoEnum {
 
     REST_TEMPLATE(1, "restTemplate"),
     STANDARD_THREAD_POOL(2, "standardThreadPool"),
@@ -16,35 +18,28 @@ public enum SingletonEnum {
 
     ;
 
+    @Getter
     private Integer singletonInstanceId;
-
+    @Getter
     private String singletonInstanceName;
 
-    SingletonEnum(Integer singletonInstanceId, String singletonInstanceName) {
+    SingletonDemoEnum(Integer singletonInstanceId, String singletonInstanceName) {
         this.singletonInstanceId = singletonInstanceId;
         this.singletonInstanceName = singletonInstanceName;
     }
 
-    public static SingletonEnum getInstanceById(Integer singletonInstanceId) {
-        return Arrays.stream(SingletonEnum.values())
+    public static SingletonDemoEnum getInstanceById(Integer singletonInstanceId) {
+        return Arrays.stream(SingletonDemoEnum.values())
                 .filter(item -> item.getSingletonInstanceId().equals(singletonInstanceId))
                 .findFirst()
                 .orElse(null);
     }
 
-    public static SingletonEnum getInstanceById(String singletonInstanceName) {
-        return Arrays.stream(SingletonEnum.values())
+    public static SingletonDemoEnum getInstanceById(String singletonInstanceName) {
+        return Arrays.stream(SingletonDemoEnum.values())
                 .filter(item -> item.getSingletonInstanceName().equals(singletonInstanceName))
                 .findFirst()
                 .orElse(null);
-    }
-
-    public Integer getSingletonInstanceId() {
-        return singletonInstanceId;
-    }
-
-    public String getSingletonInstanceName() {
-        return singletonInstanceName;
     }
 
 }

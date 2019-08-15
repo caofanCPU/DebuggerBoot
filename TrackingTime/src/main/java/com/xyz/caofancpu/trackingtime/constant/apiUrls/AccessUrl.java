@@ -1,0 +1,20 @@
+package com.xyz.caofancpu.trackingtime.constant.apiUrls;
+
+/**
+ * 访问API
+ */
+public class AccessUrl {
+
+    public static final String TIME_BLACK_APPLY_ID = "/timeBlack/applyId";
+    public static final String TIME_BLACK_SAVE = "/timeBlack/save";
+    public static final String TIME_BLACK_UPDATE = "/timeBlack/update";
+    public static final String TIME_MARK_SAVE = "/timeMark/save";
+    public static final String TIME_MARK_UPDATE = "/timeMark/update";
+
+    public static final String USER_REGISTER = "/user/register";
+    public static final String USER_LOGIN = "/user/login";
+    public static final String USER_UPDATE_INFO = "/user/updateInfo";
+    public static final String USER_ENCRYPTION_GET_PUBKEY = "/user/encryption/getPubKey";
+    public static final String USER_ENCRYPTION_GET_PRIKEY = "/user/encryption/getPriKey";
+
+}

@@ -1,0 +1,125 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.xyz.caofancpu.trackingtime.mapper.TimeMarkContentMapper">
+
+    <!--auto generated Code-->
+    <resultMap id="AllColumnMap" type="com.xyz.caofancpu.trackingtime.model.TimeMarkContent">
+        <result column="id" property="id"/>
+        <result column="time_block_id" property="timeBlockId"/>
+        <result column="title" property="title"/>
+        <result column="author_id" property="authorId"/>
+        <result column="author_name" property="authorName"/>
+        <result column="keyword" property="keyword"/>
+        <result column="sign_code_url" property="signCodeUrl"/>
+        <result column="status" property="status"/>
+        <result column="create_time" property="createTime"/>
+        <result column="update_time" property="updateTime"/>
+    </resultMap>
+
+    <!--auto generated Code-->
+    <sql id="all_column">
+        id,
+        time_block_id,
+        title,
+        author_id,
+        author_name,
+        keyword,
+        sign_code_url,
+        status,
+        create_time,
+        update_time
+    </sql>
+
+    <!--auto generated Code-->
+    <insert id="insert">
+        INSERT INTO time_mark_content
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="pojo.id != null">id,</if>
+            <if test="pojo.timeBlockId != null">time_block_id,</if>
+            <if test="pojo.title != null">title,</if>
+            <if test="pojo.authorId != null">author_id,</if>
+            <if test="pojo.authorName != null">author_name,</if>
+            <if test="pojo.keyword != null">keyword,</if>
+            <if test="pojo.signCodeUrl != null">sign_code_url,</if>
+            <if test="pojo.status != null">status,</if>
+            <if test="pojo.createTime != null">create_time,</if>
+            <if test="pojo.updateTime != null">update_time,</if>
+        </trim>
+        VALUES
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="pojo.id != null">#{pojo.id},</if>
+            <if test="pojo.timeBlockId != null">#{pojo.timeBlockId},</if>
+            <if test="pojo.title != null">#{pojo.title},</if>
+            <if test="pojo.authorId != null">#{pojo.authorId},</if>
+            <if test="pojo.authorName != null">#{pojo.authorName},</if>
+            <if test="pojo.keyword != null">#{pojo.keyword},</if>
+            <if test="pojo.signCodeUrl != null">#{pojo.signCodeUrl},</if>
+            <if test="pojo.status != null">#{pojo.status},</if>
+            <if test="pojo.createTime != null">#{pojo.createTime},</if>
+            <if test="pojo.updateTime != null">#{pojo.updateTime},</if>
+        </trim>
+    </insert>
+
+    <!--auto generated Code-->
+    <insert id="insertList">
+        INSERT INTO time_mark_content(
+        <include refid="all_column"/>
+        )VALUES
+        <foreach collection="pojos" item="pojo" index="index" separator=",">
+            (
+            #{pojo.id},
+            #{pojo.timeBlockId},
+            #{pojo.title},
+            #{pojo.authorId},
+            #{pojo.authorName},
+            #{pojo.keyword},
+            #{pojo.signCodeUrl},
+            #{pojo.status},
+            #{pojo.createTime},
+            #{pojo.updateTime}
+            )
+        </foreach>
+    </insert>
+
+    <!--auto generated Code-->
+    <update id="update">
+        UPDATE time_mark_content
+        <set>
+            <if test="pojo.id != null">id = #{pojo.id},</if>
+            <if test="pojo.timeBlockId != null">time_block_id = #{pojo.timeBlockId},</if>
+            <if test="pojo.title != null">title = #{pojo.title},</if>
+            <if test="pojo.authorId != null">author_id = #{pojo.authorId},</if>
+            <if test="pojo.authorName != null">author_name = #{pojo.authorName},</if>
+            <if test="pojo.keyword != null">keyword = #{pojo.keyword},</if>
+            <if test="pojo.signCodeUrl != null">sign_code_url = #{pojo.signCodeUrl},</if>
+            <if test="pojo.status != null">status = #{pojo.status},</if>
+            <if test="pojo.createTime != null">create_time = #{pojo.createTime},</if>
+        </set>
+        WHERE id = #{pojo.id}
+    </update>
+
+    <!--auto generated Code-->
+    <select id="select" resultMap="AllColumnMap">
+        SELECT
+        <include refid="all_column"/>
+        FROM time_mark_content
+        <where>
+            <if test="pojo.id != null">AND id = #{pojo.id}</if>
+            <if test="pojo.timeBlockId != null">AND time_block_id = #{pojo.timeBlockId}</if>
+            <if test="pojo.title != null">AND title = #{pojo.title}</if>
+            <if test="pojo.authorId != null">AND author_id = #{pojo.authorId}</if>
+            <if test="pojo.authorName != null">AND author_name = #{pojo.authorName}</if>
+            <if test="pojo.keyword != null">AND keyword = #{pojo.keyword}</if>
+            <if test="pojo.signCodeUrl != null">AND sign_code_url = #{pojo.signCodeUrl}</if>
+            <if test="pojo.status != null">AND status = #{pojo.status}</if>
+            <if test="pojo.createTime != null">AND create_time = #{pojo.createTime}</if>
+            <if test="pojo.updateTime != null">AND update_time = #{pojo.updateTime}</if>
+        </where>
+        LIMIT 1000
+    </select>
+
+    <!--auto generated Code-->
+    <delete id="delete">
+        DELETE FROM time_mark_content where id = #{id}
+    </delete>
+</mapper>
