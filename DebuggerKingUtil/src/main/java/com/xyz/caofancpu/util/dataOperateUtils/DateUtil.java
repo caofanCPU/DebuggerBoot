@@ -1,14 +1,17 @@
 package com.xyz.caofancpu.util.dataOperateUtils;
 
+import com.xyz.caofancpu.util.commonOperateUtils.NormalUseUtil;
 import lombok.NonNull;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.lang3.tuple.MutablePair;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.time.MonthDay;
 import java.time.ZoneId;
+import java.time.ZoneOffset;
 import java.time.format.DateTimeFormatter;
 import java.time.temporal.ChronoUnit;
 import java.util.Date;
@@ -43,16 +46,121 @@ import java.util.Date;
  */
 @Slf4j
 public class DateUtil {
-    public final static String DATETIME_FORMAT_SIMPLE_DETAIL = "yyyy-MM-dd HH:mm:ss";
-    public final static String DATETIME_FORMAT_SIMPLE_DETAIL_PRECISE = "yyyy-MM-dd HH:mm:ss:SSS";
+    public final static String DATETIME_FORMAT_SIMPLE = "yyyy-MM-dd HH:mm:ss";
+    public final static String DATETIME_FORMAT_DETAIL = "yyyy-MM-dd HH:mm:ss:SSS";
+    public final static String DATETIME_FORMAT_CN = "yyyy年MM月dd日HH时mm分ss秒";
 
     public final static String DATE_FORMAT_SIMPLE = "yyyy-MM-dd";
-    public final static String DATE_FORMAT_SIMPLE_FOR_BANK = "yyyyMMdd";
-    public final static String DATE_FORMAT_SIMPLE_CN = "yyyy年MM月dd日";
+    public final static String DATE_FORMAT_FOR_BANK = "yyyyMMdd";
+    public final static String DATE_FORMAT_CN = "yyyy年MM月dd日";
 
     public final static String TIME_FORMAT_SIMPLE = "HH:mm:ss";
-    public final static String TIME_FORMAT_SIMPLE_DETAIL_PRECISE = "HH:mm:ss:SSS";
-    public final static String TIME_FORMAT_SIMPLE_CN = "HH点mm分ss秒";
+    public final static String TIME_FORMAT_DETAIL = "HH:mm:ss:SSS";
+    public final static String TIME_FORMAT_CN = "HH点mm分ss秒";
+
+    public final static ZoneOffset DEFAULT_ZONE_OFFSET = ZoneOffset.of("+8");
+
+    private final static int MAX_HOUR = 23;
+    private final static int MAX_MINUTE_SECOND = 59;
+    private final static int MIN_HOUR_MINUTE_SECOND = 0;
+
+    /**
+     * 获取查询起始日期+时间, yyyy-MM-dd 00:00:00
+     *
+     * @return
+     */
+    public static Date getTodayQueryStartDate() {
+        return parseStandardDateTimeStr(getTodayStartDateTime());
+    }
+
+    /**
+     * 获取查询结束日期+时间, yyyy-MM-dd 00:00:00
+     *
+     * @return
+     */
+    public static Date getTodayQueryEndDate() {
+        return parseStandardDateTimeStr(getTodayEndDateTime());
+    }
+
+    /**
+     * 获取今天起始日期+时间, yyyy-MM-dd 00:00:00
+     *
+     * @return
+     */
+    public static String getTodayStartDateTime() {
+        return LocalDateTime.now()
+                .withHour(MIN_HOUR_MINUTE_SECOND)
+                .withMinute(MIN_HOUR_MINUTE_SECOND)
+                .withSecond(MIN_HOUR_MINUTE_SECOND)
+                .format(DateTimeFormatter.ofPattern(DATETIME_FORMAT_SIMPLE));
+    }
+
+    /**
+     * 获取今天起始日期+时间, yyyy-MM-dd 23:59:59
+     *
+     * @return
+     */
+    public static String getTodayEndDateTime() {
+        return LocalDateTime.now()
+                .withHour(MAX_HOUR)
+                .withMinute(MAX_MINUTE_SECOND)
+                .withSecond(MAX_MINUTE_SECOND)
+                .format(DateTimeFormatter.ofPattern(DATETIME_FORMAT_SIMPLE));
+    }
+
+    /**
+     * 检测目标时间段与参考时间段是否重叠
+     *
+     * @param targetPairDateTimePair
+     * @param referPairDateTimePair
+     * @return
+     */
+    public static boolean hasRepeatByJavaUtilDate(MutablePair<Date, Date> targetPairDateTimePair, MutablePair<Date, Date> referPairDateTimePair) {
+        Date targetLeft = targetPairDateTimePair.getLeft();
+        Date targetRight = targetPairDateTimePair.getRight();
+        if (targetLeft.after(targetRight)) {
+            targetPairDateTimePair.setLeft(targetRight);
+            targetPairDateTimePair.setRight(targetLeft);
+            targetLeft = targetPairDateTimePair.getLeft();
+            targetRight = targetPairDateTimePair.getRight();
+        }
+        Date referLeft = referPairDateTimePair.getLeft();
+        Date referRight = referPairDateTimePair.getRight();
+        if (referLeft.after(referRight)) {
+            referPairDateTimePair.setLeft(referRight);
+            referPairDateTimePair.setRight(referLeft);
+            referLeft = referPairDateTimePair.getLeft();
+            referRight = referPairDateTimePair.getRight();
+        }
+        return !(targetLeft.compareTo(referRight) >= 0 || targetRight.compareTo(referLeft) <= 0);
+    }
+
+    /**
+     * 检测目标时间段与参考时间段是否重叠
+     *
+     * @param targetPairDateTimeStrPair
+     * @param referPairDateTimeStrPair
+     * @return
+     */
+    public static boolean hasRepeat(MutablePair<String, String> targetPairDateTimeStrPair, MutablePair<String, String> referPairDateTimeStrPair) {
+        String targetLeft = targetPairDateTimeStrPair.getLeft();
+        String targetRight = targetPairDateTimeStrPair.getRight();
+        if (dateTimeAfter(targetLeft, targetRight)) {
+            targetPairDateTimeStrPair.setLeft(targetRight);
+            targetPairDateTimeStrPair.setRight(targetLeft);
+            targetLeft = targetPairDateTimeStrPair.getLeft();
+            targetRight = targetPairDateTimeStrPair.getRight();
+        }
+        String referLeft = referPairDateTimeStrPair.getLeft();
+        String referRight = referPairDateTimeStrPair.getRight();
+        if (dateTimeAfter(referLeft, referRight)) {
+            referPairDateTimeStrPair.setLeft(referRight);
+            referPairDateTimeStrPair.setRight(referLeft);
+            referLeft = referPairDateTimeStrPair.getLeft();
+            referRight = referPairDateTimeStrPair.getRight();
+        }
+        return !(targetLeft.compareTo(referRight) >= 0 || targetRight.compareTo(referLeft) <= 0);
+    }
 
     /**
      * 获取系统当前日期+时间
@@ -62,7 +170,7 @@ public class DateUtil {
      */
     public static String getCurrentDateTime(String format) {
         if (StringUtils.isBlank(format)) {
-            format = DATETIME_FORMAT_SIMPLE_DETAIL;
+            format = DATETIME_FORMAT_SIMPLE;
         }
         return LocalDateTime.now().format(DateTimeFormatter.ofPattern(format));
     }
@@ -102,9 +210,39 @@ public class DateUtil {
      */
     public static String parseJavaUtilDate(@NonNull Date date, String format) {
         if (StringUtils.isBlank(format)) {
-            format = DATETIME_FORMAT_SIMPLE_DETAIL;
+            format = DATETIME_FORMAT_SIMPLE;
         }
         return LocalDateTime.ofInstant(date.toInstant(), ZoneId.systemDefault()).format(DateTimeFormatter.ofPattern(format));
+    }
+
+    /**
+     * 将日期+时间转换为java.util.date
+     *
+     * @param dateTimeStr
+     * @return
+     */
+    public static Date parseStandardDateTimeStr(String dateTimeStr) {
+        return new Date(parseStandardMilliSeconds(dateTimeStr));
+    }
+
+    /**
+     * 将日期+时间转换为毫秒
+     *
+     * @param dateTimeStr
+     * @return
+     */
+    public static long parseStandardMilliSeconds(String dateTimeStr) {
+        return parseStandardDateTime(dateTimeStr).toInstant(DEFAULT_ZONE_OFFSET).toEpochMilli();
+    }
+
+    /**
+     * 将日期+时间转换为秒
+     *
+     * @param dateTimeStr
+     * @return
+     */
+    public static long parseStandardSeconds(String dateTimeStr) {
+        return parseStandardDateTime(dateTimeStr).toEpochSecond(DEFAULT_ZONE_OFFSET);
     }
 
     /**
@@ -114,7 +252,7 @@ public class DateUtil {
      * @return
      */
     public static LocalDateTime parseStandardDateTime(String dateTimeStr) {
-        return LocalDateTime.parse(dateTimeStr, DateTimeFormatter.ofPattern(DATETIME_FORMAT_SIMPLE_DETAIL));
+        return LocalDateTime.parse(dateTimeStr, DateTimeFormatter.ofPattern(DATETIME_FORMAT_SIMPLE));
     }
 
     /**
@@ -145,7 +283,7 @@ public class DateUtil {
      * @return
      */
     public static String convertDateTimeFormat(String dateTimeStr, String format) {
-        if (StringUtils.isBlank(dateTimeStr) || StringUtils.isBlank(format) || format == DATETIME_FORMAT_SIMPLE_DETAIL) {
+        if (StringUtils.isBlank(dateTimeStr) || StringUtils.isBlank(format) || format == DATETIME_FORMAT_SIMPLE) {
             return dateTimeStr;
         }
         return parseStandardDateTime(dateTimeStr).format(DateTimeFormatter.ofPattern(format));
@@ -232,7 +370,7 @@ public class DateUtil {
             return dateTimeStr;
         }
         if (StringUtils.isBlank(format)) {
-            format = DATETIME_FORMAT_SIMPLE_DETAIL;
+            format = DATETIME_FORMAT_SIMPLE;
         }
         if (years == 0) {
             return convertDateTimeFormat(dateTimeStr, format);
@@ -252,7 +390,7 @@ public class DateUtil {
             return dateTimeStr;
         }
         if (StringUtils.isBlank(format)) {
-            format = DATETIME_FORMAT_SIMPLE_DETAIL;
+            format = DATETIME_FORMAT_SIMPLE;
         }
         if (months == 0) {
             return convertDateTimeFormat(dateTimeStr, format);
@@ -272,7 +410,7 @@ public class DateUtil {
             return dateTimeStr;
         }
         if (StringUtils.isBlank(format)) {
-            format = DATETIME_FORMAT_SIMPLE_DETAIL;
+            format = DATETIME_FORMAT_SIMPLE;
         }
         if (weeks == 0) {
             return convertDateTimeFormat(dateTimeStr, format);
@@ -292,7 +430,7 @@ public class DateUtil {
             return dateTimeStr;
         }
         if (StringUtils.isBlank(format)) {
-            format = DATETIME_FORMAT_SIMPLE_DETAIL;
+            format = DATETIME_FORMAT_SIMPLE;
         }
         if (day == 0) {
             return convertDateTimeFormat(dateTimeStr, format);
@@ -313,7 +451,7 @@ public class DateUtil {
             return dateTimeStr;
         }
         if (StringUtils.isBlank(format)) {
-            format = DATETIME_FORMAT_SIMPLE_DETAIL;
+            format = DATETIME_FORMAT_SIMPLE;
         }
         if (hour == 0) {
             return convertDateTimeFormat(dateTimeStr, format);
@@ -334,7 +472,7 @@ public class DateUtil {
             return dateTimeStr;
         }
         if (StringUtils.isBlank(format)) {
-            format = DATETIME_FORMAT_SIMPLE_DETAIL;
+            format = DATETIME_FORMAT_SIMPLE;
         }
         if (minutes == 0) {
             return convertDateTimeFormat(dateTimeStr, format);
@@ -356,7 +494,7 @@ public class DateUtil {
             return dateTimeStr;
         }
         if (StringUtils.isBlank(format)) {
-            format = DATETIME_FORMAT_SIMPLE_DETAIL;
+            format = DATETIME_FORMAT_SIMPLE;
         }
         if (seconds == 0) {
             return convertDateTimeFormat(dateTimeStr, format);
@@ -366,14 +504,13 @@ public class DateUtil {
 
     /**
      * 比较目标日期+时间是否早于参考日期+时间
-     * 注意: 相等也算在早于范围之内
      *
      * @param targetDateTimeStr
      * @param referDateTimeStr
      * @return
      */
     public static boolean dateTimeBefore(String targetDateTimeStr, String referDateTimeStr) {
-        return parseStandardDateTime(referDateTimeStr).compareTo(parseStandardDateTime(targetDateTimeStr)) <= 0;
+        return parseStandardDateTime(targetDateTimeStr).compareTo(parseStandardDateTime(referDateTimeStr)) < 0;
     }
 
     /**
@@ -389,14 +526,13 @@ public class DateUtil {
 
     /**
      * 比较目标日期是否早于参考日期
-     * 注意: 相等也算在早于范围之内
      *
      * @param targetDateStr
      * @param referDateStr
      * @return
      */
     public static boolean dateBefore(String targetDateStr, String referDateStr) {
-        return parseStandardDate(referDateStr).compareTo(parseStandardDate(targetDateStr)) <= 0;
+        return parseStandardDate(targetDateStr).compareTo(parseStandardDate(referDateStr)) < 0;
     }
 
     /**
@@ -412,14 +548,13 @@ public class DateUtil {
 
     /**
      * 比较目标时间是否早于参考时间
-     * 注意: 相等也算在早于范围之内
      *
      * @param targetTimeStr
      * @param referTimeStr
      * @return
      */
     public static boolean timeBefore(String targetTimeStr, String referTimeStr) {
-        return parseStandardTime(referTimeStr).compareTo(parseStandardTime(targetTimeStr)) <= 0;
+        return parseStandardTime(targetTimeStr).compareTo(parseStandardTime(referTimeStr)) < 0;
     }
 
     /**
@@ -467,27 +602,37 @@ public class DateUtil {
     }
 
     public static void main(String[] args) {
-        out(getCurrentDateTime(DATETIME_FORMAT_SIMPLE_DETAIL) + "\n" + getCurrentDate(DATE_FORMAT_SIMPLE) + "\n" + getCurrentTime(TIME_FORMAT_SIMPLE));
-        out(getCurrentTime(TIME_FORMAT_SIMPLE_CN));
-        out(parseJavaUtilDate(new Date(), TIME_FORMAT_SIMPLE_DETAIL_PRECISE));
-        out(String.valueOf(dateAfter("2019-08-15 20:38:33", "2019-08-25 20:38:33")));
-        out(String.valueOf(dateTimeDiffDays("2019-08-15 20:38:33", "2019-08-05 20:38:33")));
+//        NormalUseUtil.out(getCurrentDateTime(DATETIME_FORMAT_SIMPLE) + "\n" + getCurrentDate(DATE_FORMAT_SIMPLE) + "\n" + getCurrentTime(TIME_FORMAT_SIMPLE));
+//        NormalUseUtil.out(getCurrentTime(TIME_FORMAT_CN));
+//        NormalUseUtil.out(parseJavaUtilDate(new Date(), TIME_FORMAT_DETAIL));
+//        NormalUseUtil.out(String.valueOf(dateAfter("2019-08-15 20:38:33", "2019-08-25 20:38:33")));
+//        NormalUseUtil.out(String.valueOf(dateTimeDiffDays("2019-08-15 20:38:33", "2019-08-05 20:38:33")));
+//        NormalUseUtil.out(convertDateTimeFormat(getCurrentDateTime(DATETIME_FORMAT_SIMPLE), DATE_FORMAT_CN));
+//        NormalUseUtil.out(convertDateFormat(getCurrentDate(DATE_FORMAT_SIMPLE), DATE_FORMAT_FOR_BANK));
+//        NormalUseUtil.out(convertTimeFormat(getCurrentTime(TIME_FORMAT_SIMPLE), TIME_FORMAT_CN));
+//        NormalUseUtil.out(getAndAddYear(getCurrentDateTime(DATETIME_FORMAT_SIMPLE), DATETIME_FORMAT_SIMPLE, 1));
+//        NormalUseUtil.out(getAndAddMonth(getCurrentDateTime(DATETIME_FORMAT_SIMPLE), DATE_FORMAT_SIMPLE, 2));
+//        NormalUseUtil.out(getAndAddWeek(getCurrentDateTime(DATETIME_FORMAT_SIMPLE), DATETIME_FORMAT_DETAIL, 2));
+//        NormalUseUtil.out(getAndAddDay(getCurrentDateTime(DATETIME_FORMAT_SIMPLE), DATE_FORMAT_SIMPLE, -15));
+//        NormalUseUtil.out(getAndAddHour(getCurrentDateTime(DATETIME_FORMAT_SIMPLE), DATETIME_FORMAT_SIMPLE, 20));
+//        NormalUseUtil.out(getAndAddMinute(getCurrentDateTime(DATETIME_FORMAT_SIMPLE), DATETIME_FORMAT_SIMPLE, 40));
+//        NormalUseUtil.out(getAndAddSecond(getCurrentDateTime(DATETIME_FORMAT_SIMPLE), DATETIME_FORMAT_SIMPLE, 240));
+//        NormalUseUtil.out(getTodayStartDateTime());
+//        NormalUseUtil.out(getTodayEndDateTime());
 
-        out(convertDateTimeFormat(getCurrentDateTime(DATETIME_FORMAT_SIMPLE_DETAIL), DATE_FORMAT_SIMPLE_CN));
-        out(convertDateFormat(getCurrentDate(DATE_FORMAT_SIMPLE), DATE_FORMAT_SIMPLE_FOR_BANK));
-        out(convertTimeFormat(getCurrentTime(TIME_FORMAT_SIMPLE), TIME_FORMAT_SIMPLE_CN));
+        NormalUseUtil.out(String.valueOf(
+                hasRepeat(
+                        new MutablePair<>("2019-08-15 20:00:16", "2019-08-15 20:00:18"),
+                        new MutablePair<>("2019-08-15 20:00:16", "2019-08-15 20:00:18")
+                )
+        ));
+        NormalUseUtil.out(String.valueOf(
+                hasRepeatByJavaUtilDate(
+                        new MutablePair<>(parseStandardDateTimeStr("2019-08-15 20:00:18"), parseStandardDateTimeStr("2019-08-15 20:00:16")),
+                        new MutablePair<>(parseStandardDateTimeStr("2019-08-15 20:00:18"), parseStandardDateTimeStr("2019-08-15 20:00:16"))
+                )
+        ));
 
-        out(getAndAddYear(getCurrentDateTime(DATETIME_FORMAT_SIMPLE_DETAIL), DATETIME_FORMAT_SIMPLE_DETAIL, 1));
-        out(getAndAddMonth(getCurrentDateTime(DATETIME_FORMAT_SIMPLE_DETAIL), DATE_FORMAT_SIMPLE, 2));
-        out(getAndAddWeek(getCurrentDateTime(DATETIME_FORMAT_SIMPLE_DETAIL), DATETIME_FORMAT_SIMPLE_DETAIL_PRECISE, 2));
-        out(getAndAddDay(getCurrentDateTime(DATETIME_FORMAT_SIMPLE_DETAIL), DATE_FORMAT_SIMPLE, -15));
-        out(getAndAddHour(getCurrentDateTime(DATETIME_FORMAT_SIMPLE_DETAIL), DATETIME_FORMAT_SIMPLE_DETAIL, 20));
-        out(getAndAddMinute(getCurrentDateTime(DATETIME_FORMAT_SIMPLE_DETAIL), DATETIME_FORMAT_SIMPLE_DETAIL, 40));
-        out(getAndAddSecond(getCurrentDateTime(DATETIME_FORMAT_SIMPLE_DETAIL), DATETIME_FORMAT_SIMPLE_DETAIL, 240));
-    }
-
-    public static void out(String text) {
-        System.out.println(text);
     }
 
 }

@@ -132,10 +132,10 @@ public class BeanConvertUtil {
     public static DateConverter loadDateConverter() {
         DateConverter dateConverter = new DateConverter(null);
         dateConverter.setPatterns(new String[]{
-                DateUtil.DATETIME_FORMAT_SIMPLE_DETAIL_PRECISE,
-                DateUtil.DATETIME_FORMAT_SIMPLE_DETAIL,
+                DateUtil.DATETIME_FORMAT_DETAIL,
+                DateUtil.DATETIME_FORMAT_SIMPLE,
                 DateUtil.DATE_FORMAT_SIMPLE,
-                DateUtil.DATE_FORMAT_SIMPLE_CN
+                DateUtil.DATE_FORMAT_CN
         });
         return dateConverter;
     }
@@ -168,7 +168,7 @@ public class BeanConvertUtil {
         if (source instanceof Long) {
             return new Date(convertToLong(source));
         }
-        SimpleDateFormat sdf = new SimpleDateFormat(DateUtil.DATETIME_FORMAT_SIMPLE_DETAIL);
+        SimpleDateFormat sdf = new SimpleDateFormat(DateUtil.DATETIME_FORMAT_SIMPLE);
         try {
             return sdf.parse(source.toString());
         } catch (Exception e) {

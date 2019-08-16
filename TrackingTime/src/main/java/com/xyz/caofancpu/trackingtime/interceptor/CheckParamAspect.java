@@ -248,7 +248,7 @@ public class CheckParamAspect {
         return isNotEqual;
     }
 
-    @Around("execution(* com.xyz..*.service.*.*(..))")
+    @Around("execution(* com.xyz..*.service..*.*.*(..))")
     public Object check(ProceedingJoinPoint point)
             throws Throwable {
         Object obj;

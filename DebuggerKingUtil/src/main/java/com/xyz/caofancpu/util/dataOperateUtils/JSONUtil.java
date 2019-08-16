@@ -43,7 +43,7 @@ public class JSONUtil {
     }
 
     public static String toJSONStringWithDateFormat(Object data) {
-        return JSONObject.toJSONStringWithDateFormat(data, DateUtil.DATETIME_FORMAT_SIMPLE_DETAIL);
+        return JSONObject.toJSONStringWithDateFormat(data, DateUtil.DATETIME_FORMAT_SIMPLE);
     }
 
     public static String formatStandardJSON(String jsonStr) {

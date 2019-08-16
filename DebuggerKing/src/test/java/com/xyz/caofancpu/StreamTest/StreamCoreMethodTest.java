@@ -1,7 +1,7 @@
 package com.xyz.caofancpu.StreamTest;
 
 import com.alibaba.fastjson.JSONObject;
-import com.xyz.caofancpu.util.commonOperateUtils.SystemOutUtil;
+import com.xyz.caofancpu.util.commonOperateUtils.NormalUseUtil;
 import com.xyz.caofancpu.util.dataOperateUtils.JSONUtil;
 import org.apache.commons.collections.CollectionUtils;
 
@@ -279,7 +279,7 @@ public class StreamCoreMethodTest {
 
 
     public static void viewData(String msg, Object data) {
-        SystemOutUtil.out(msg + "\n" + JSONUtil.formatStandardJSON(JSONObject.toJSONString(data)));
+        NormalUseUtil.out(msg + "\n" + JSONUtil.formatStandardJSON(JSONObject.toJSONString(data)));
     }
 
 }

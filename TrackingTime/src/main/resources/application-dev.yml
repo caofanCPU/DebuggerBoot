@@ -18,8 +18,9 @@ logging:
     com:
       xyz:
         caofancpu:
-          #DTO数据库操作日志级别
-          mapper: debug
+          trackingtime:
+            #DTO数据库操作日志级别
+            mapper: debug
     org:
       springframework:
         #Spring框架日志级别

@@ -25,7 +25,7 @@ public class ScheduleProcessor {
     @Scheduled(cron = "0 0/1 * * * ?")
     public void doSchedule() {
         logger.info("\n"
-                + DateUtil.parseJavaUtilDate(new Date(), DateUtil.DATETIME_FORMAT_SIMPLE_DETAIL)
+                + DateUtil.parseJavaUtilDate(new Date(), DateUtil.DATETIME_FORMAT_SIMPLE)
                 + ".007  帝八哥 2018 --- [           Debugger] K.I.N.G :"
                 + " Demo定时任务第[" + count + "]次执行...");
         count++;

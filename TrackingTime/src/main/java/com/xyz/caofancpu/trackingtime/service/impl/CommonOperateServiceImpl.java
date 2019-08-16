@@ -91,7 +91,7 @@ public class CommonOperateServiceImpl implements CommonOperateService {
 
         attachment.setType(type);
         attachment.setName(path);
-        attachment.setCreateTime(DateUtil.parseJavaUtilDate(new Date(), DateUtil.DATETIME_FORMAT_SIMPLE_DETAIL));
+        attachment.setCreateTime(DateUtil.parseJavaUtilDate(new Date(), DateUtil.DATETIME_FORMAT_SIMPLE));
 
         logger.info("\n客户端于[{}]上传文件：[{}]", attachment.getCreateTime(), attachment.getName());
     }

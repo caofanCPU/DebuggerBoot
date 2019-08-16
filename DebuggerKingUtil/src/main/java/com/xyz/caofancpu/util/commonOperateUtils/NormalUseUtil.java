@@ -1,10 +1,10 @@
 package com.xyz.caofancpu.util.commonOperateUtils;
 
 /**
- * FileName: SystemOutUtil
+ * FileName: NormalUseUtil
  */
 
-public class SystemOutUtil {
+public class NormalUseUtil {
 
     public static void out(String text) {
         System.out.println(text);
