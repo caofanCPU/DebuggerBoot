@@ -4,6 +4,7 @@ import com.alibaba.fastjson.JSONObject;
 import com.xyz.caofancpu.util.dataOperateUtils.JSONUtil;
 import com.xyz.caofancpu.util.streamOperateUtils.StreamUtil;
 import com.xyz.caofancpu.utils.DataHelper;
+import lombok.extern.slf4j.Slf4j;
 import org.aspectj.lang.JoinPoint;
 import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.annotation.AfterReturning;
@@ -11,8 +12,6 @@ import org.aspectj.lang.annotation.Around;
 import org.aspectj.lang.annotation.Aspect;
 import org.aspectj.lang.annotation.Before;
 import org.aspectj.lang.annotation.Pointcut;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.core.annotation.Order;
 import org.springframework.stereotype.Component;
 import org.springframework.web.context.request.RequestContextHolder;
@@ -30,9 +29,8 @@ import java.util.Objects;
 @Component
 @Aspect
 @Order(2)
+@Slf4j
 public class WebLogAspect {
-
-    private Logger logger = LoggerFactory.getLogger(this.getClass());
 
     /**
      * 日志切面
@@ -67,7 +65,7 @@ public class WebLogAspect {
         try {
             requestBody = JSONUtil.formatStandardJSON(JSONObject.toJSONString(filteredFileValueArray));
         } catch (Exception e) {
-            logger.info("入参为文件(InputStreamSource)或HttpRequest等类型, 打印对象地址信息");
+            log.info("入参为文件(InputStreamSource)或HttpRequest等类型, 打印对象地址信息");
             requestBody = Arrays.toString(proceedingJoinPoint.getArgs());
         }
         StringBuilder requestSb = new StringBuilder();
@@ -78,7 +76,7 @@ public class WebLogAspect {
                 + "请求接口=" + requestInterface + "\n"
                 + "请求Param参数=" + requestParam + "\n"
                 + "请求Body对象=" + requestBody + "\n");
-        logger.info(requestSb.toString());
+        log.info(requestSb.toString());
         // 开始时间
         long startTime = System.currentTimeMillis();
         // 耗时, 字符串标识, @#为了便于标志区分
@@ -95,7 +93,7 @@ public class WebLogAspect {
         result = proceedingJoinPoint.proceed();
         // 处理完请求，返回内容
         responseSb.append(JSONUtil.formatStandardJSON(JSONObject.toJSONString(result)));
-        logger.info(responseSb.toString().replace(execTime, String.valueOf(System.currentTimeMillis() - startTime)));
+        log.info(responseSb.toString().replace(execTime, String.valueOf(System.currentTimeMillis() - startTime)));
         return result;
     }
 
@@ -126,7 +124,7 @@ public class WebLogAspect {
                 try {
                     inet = InetAddress.getLocalHost();
                 } catch (UnknownHostException e) {
-                    logger.error("获取IP异常 : {}", e);
+                    log.error("获取IP异常 : {}", e);
                 }
                 if (Objects.nonNull(inet)) {
                     ipAddress = inet.getHostAddress();

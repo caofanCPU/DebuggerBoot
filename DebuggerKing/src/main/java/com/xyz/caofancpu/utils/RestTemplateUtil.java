@@ -5,9 +5,8 @@ import com.xyz.caofancpu.util.dataOperateUtils.JSONUtil;
 import com.xyz.caofancpu.util.result.GlobalErrorInfoEnum;
 import com.xyz.caofancpu.util.result.GlobalErrorInfoException;
 import com.xyz.caofancpu.util.result.ResultBody;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
@@ -35,10 +34,8 @@ import java.util.stream.Stream;
  * Created by caofanCPU on 2018/8/6.
  */
 @Component
+@Slf4j
 public class RestTemplateUtil {
-
-    private static Logger logger = LoggerFactory.getLogger(RestTemplateUtil.class);
-
     @Value("${authorization.user-profile.key}")
     private String authKey;
 
@@ -67,7 +64,7 @@ public class RestTemplateUtil {
                 .filter((entry) -> entry.getValue() != null);
         // 2.从流中恢复map
         Map<String, Object> resultMap = tempStream.collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue));
-        logger.info("完成请求参数中null值的剔除");
+        log.info("完成请求参数中null值的剔除");
         return resultMap;
     }
 
@@ -112,11 +109,11 @@ public class RestTemplateUtil {
             String requestUrl = loadUrl(url, requestMap);
             responseEntity = restTemplate.exchange(requestUrl, HttpMethod.GET, httpEntity, JSONObject.class);
         } catch (RestClientException e) {
-            logger.error("调用微服务接口失败! 接口: {} \n原因: {}", url, e.getMessage());
+            log.error("调用微服务接口失败! 接口: {} \n原因: {}", url, e.getMessage());
             throw new GlobalErrorInfoException(GlobalErrorInfoEnum.GLOBAL_MS_MSG);
         }
         if (responseEntity == null) {
-            logger.error("调用微服务接口失败! 接口: {} \n原因: {}", url, "响应为null");
+            log.error("调用微服务接口失败! 接口: {} \n原因: {}", url, "响应为null");
             return new ResultBody(GlobalErrorInfoEnum.GLOBAL_MS_MSG);
         }
         JSONObject responseJson = responseEntity.getBody();
@@ -176,11 +173,11 @@ public class RestTemplateUtil {
         try {
             responseJson = restTemplate.postForObject(url, httpEntity, JSONObject.class);
         } catch (RestClientException e) {
-            logger.error("调用微服务接口失败! 接口: {} \n原因: {}", url, e.getMessage());
+            log.error("调用微服务接口失败! 接口: {} \n原因: {}", url, e.getMessage());
             throw new GlobalErrorInfoException(GlobalErrorInfoEnum.GLOBAL_MS_MSG);
         }
         if (responseJson == null) {
-            logger.error("调用微服务接口失败! 接口: {} \n原因: {}", url, "响应为null");
+            log.error("调用微服务接口失败! 接口: {} \n原因: {}", url, "响应为null");
             return new ResultBody(new GlobalErrorInfoException(GlobalErrorInfoEnum.GLOBAL_MS_MSG));
         }
         showResponseLog(url, responseJson.toJSONString());
@@ -210,11 +207,11 @@ public class RestTemplateUtil {
         try {
             responseJson = restTemplate.postForObject(url, httpEntity, JSONObject.class);
         } catch (RestClientException e) {
-            logger.error("调用微服务接口失败! 接口: {} \n原因: {}", url, e.getMessage());
+            log.error("调用微服务接口失败! 接口: {} \n原因: {}", url, e.getMessage());
             throw new GlobalErrorInfoException(GlobalErrorInfoEnum.GLOBAL_MS_MSG);
         }
         if (responseJson == null) {
-            logger.error("调用微服务接口失败! 接口: {} \n原因: {}", url, "响应为null");
+            log.error("调用微服务接口失败! 接口: {} \n原因: {}", url, "响应为null");
             return new ResultBody(new GlobalErrorInfoException(GlobalErrorInfoEnum.GLOBAL_MS_MSG));
         }
         showResponseLog(url, responseJson.toJSONString());
@@ -264,7 +261,7 @@ public class RestTemplateUtil {
                 && Boolean.FALSE.toString().equals(paramMap.get(fileOperateLoggingKey))) {
             return;
         }
-        logger.info("\n[请求微服务接口]:\n"
+        log.info("\n[请求微服务接口]:\n"
                 + "请求url=" + url + "\n"
                 + "请求方式=" + StringUtils.upperCase(httpMethod.name()) + "\n"
                 + "请求参数paramsMap=" + JSONUtil.formatStandardJSON(new JSONObject(paramMap).toJSONString()) + "\n"
@@ -288,7 +285,7 @@ public class RestTemplateUtil {
         try {
             request = ((ServletRequestAttributes) RequestContextHolder.getRequestAttributes()).getRequest();
         } catch (Exception e) {
-            logger.info("[提示]无HttpServletRequest信息, 加载token为null");
+            log.info("[提示]无HttpServletRequest信息, 加载token为null");
             return null;
         }
         if (Objects.isNull(request)) {
@@ -304,7 +301,7 @@ public class RestTemplateUtil {
      * @param jsonString
      */
     public void showResponseLog(String url, String jsonString) {
-        logger.info("\n[微服务响应]:\n"
+        log.info("\n[微服务响应]:\n"
                 + "接口url=" + url + "\n"
                 + "接口响应:\n" + JSONUtil.formatStandardJSON(jsonString)
         );

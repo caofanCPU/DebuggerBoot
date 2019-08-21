@@ -1,9 +1,8 @@
 package com.xyz.caofancpu.util.commonOperateUtils;
 
 import com.xyz.caofancpu.util.result.GlobalErrorInfoException;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.util.Assert;
 
 import java.io.UnsupportedEncodingException;
@@ -11,16 +10,11 @@ import java.net.URLDecoder;
 import java.net.URLEncoder;
 
 /**
- * @author Ardy
+ * @author caofanCPU
  */
+@Slf4j
 public class UrlUtil {
-
     public static final String UTF_TYPE = "utf-8";
-    /**
-     * LOG
-     */
-    private static final Logger logger = LoggerFactory.getLogger(UrlUtil.class);
-
     /**
      * 对URL进行指定格式的转码
      *
@@ -34,7 +28,7 @@ public class UrlUtil {
             try {
                 return URLEncoder.encode(url, contextType);
             } catch (UnsupportedEncodingException e) {
-                logger.error("url编码失败, 原因: {}", e);
+                log.error("url编码失败, 原因: {}", e);
             }
         }
         throw new GlobalErrorInfoException("URL参数不能为空!");
@@ -53,7 +47,7 @@ public class UrlUtil {
             try {
                 return URLDecoder.decode(url, contextType);
             } catch (UnsupportedEncodingException e) {
-                logger.error("URL解码失败, 原因: {}", e);
+                log.error("URL解码失败, 原因: {}", e);
             }
         }
         throw new GlobalErrorInfoException("URL参数不能为空!");

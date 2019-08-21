@@ -1,19 +1,18 @@
 package com.xyz.caofancpu.trackingtime.interceptor;
 
 import com.alibaba.fastjson.JSONObject;
-import com.xyz.caofancpu.trackingtime.annotion.Check;
+import com.xyz.caofancpu.trackingtime.annotation.Check;
 import com.xyz.caofancpu.util.dataOperateUtils.JSONUtil;
 import com.xyz.caofancpu.util.dataOperateUtils.ReflectionUtil;
 import com.xyz.caofancpu.util.result.CustomerErrorInfo;
 import com.xyz.caofancpu.util.result.GlobalErrorInfoException;
 import com.xyz.caofancpu.util.result.ResultBody;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.annotation.Around;
 import org.aspectj.lang.annotation.Aspect;
 import org.aspectj.lang.reflect.MethodSignature;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.core.annotation.Order;
 import org.springframework.stereotype.Component;
 import org.springframework.util.CollectionUtils;
@@ -26,10 +25,8 @@ import java.util.regex.Pattern;
 @Aspect
 @Component
 @Order(2)
+@Slf4j
 public class CheckParamAspect {
-
-    private static final Logger logger = LoggerFactory.getLogger(CheckParamAspect.class);
-
     // -====================== 常量 =========================
 
     private static final String SEPARATOR = ":";
@@ -261,7 +258,7 @@ public class CheckParamAspect {
                     + "响应耗时[0ms]" + "\n"
                     + "响应数据结果:\n"
                     + JSONUtil.formatStandardJSON(JSONObject.toJSONString(new ResultBody().fail(msg))));
-            logger.info(sb.toString());
+            log.info(sb.toString());
             // 这里可以返回自己封装的返回类
             CustomerErrorInfo errInfo = new CustomerErrorInfo("501", msg);
             throw new GlobalErrorInfoException(errInfo);
@@ -321,7 +318,7 @@ public class CheckParamAspect {
                         .getDeclaredMethod(joinPoint.getSignature().getName(),
                                 method.getParameterTypes());
             } catch (SecurityException | NoSuchMethodException e) {
-                logger.error("反射获取方法失败，{}" + e.getMessage());
+                log.error("反射获取方法失败，{}" + e.getMessage());
             }
         }
         return method;

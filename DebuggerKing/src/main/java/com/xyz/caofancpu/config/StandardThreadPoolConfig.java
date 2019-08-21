@@ -1,7 +1,6 @@
 package com.xyz.caofancpu.config;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.scheduling.annotation.EnableAsync;
@@ -18,13 +17,11 @@ import java.util.concurrent.ThreadPoolExecutor;
 
 @Configuration
 @EnableAsync
+@Slf4j
 public class StandardThreadPoolConfig {
-
-    private static final Logger logger = LoggerFactory.getLogger(StandardThreadPoolConfig.class);
-
     @Bean(name = "standardThreadPool")
     public ThreadPoolTaskExecutor standardThreadPool() {
-        logger.info("初始化服务线程池");
+        log.info("初始化服务线程池");
         ThreadPoolTaskExecutor executor = new ThreadPoolTaskExecutor();
         // 核心线程数目
         executor.setCorePoolSize(16);
@@ -40,7 +37,7 @@ public class StandardThreadPoolConfig {
         executor.setKeepAliveSeconds(60);
         // 初始化
         executor.initialize();
-        logger.info("完成服务线程池启动");
+        log.info("完成服务线程池启动");
         return executor;
     }
 

@@ -8,7 +8,6 @@ import java.util.Map;
 /**
  * FileName: CollectorGenerateUtil
  */
-
 public class CollectorGenerateUtil {
 
     @FunctionalInterface

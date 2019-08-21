@@ -9,10 +9,9 @@ import com.xyz.caofancpu.util.multiThreadUtils.RemoteInvokeHelper;
 import com.xyz.caofancpu.util.multiThreadUtils.RemoteRequestTask;
 import com.xyz.caofancpu.util.result.ResultBody;
 import io.swagger.annotations.Api;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
 import org.springframework.stereotype.Service;
@@ -34,9 +33,8 @@ import java.util.concurrent.Future;
  */
 @Service("fileTaskService")
 @Api(description = "文件任务服务")
+@Slf4j
 public class FileTaskService {
-
-    private static final Logger logger = LoggerFactory.getLogger(FileTaskService.class);
 
     // 引入默认线程池
     @Resource(name = "standardThreadPool")
@@ -73,7 +71,7 @@ public class FileTaskService {
                     .forEach(future -> {
                         while (true) {
                             if (future.isDone() && !future.isCancelled()) {
-                                logger.info("任务执行OK");
+                                log.info("任务执行OK");
                                 completedTaskList.add(future);
                                 break;
                             }
@@ -109,10 +107,10 @@ public class FileTaskService {
                                         try {
                                             FileUtil.copyFile(mini.getFilePath(), destFileFullPath);
                                         } catch (IOException e) {
-                                            logger.error("拷贝文件失败, 文件原名: [{}], {}", sourceFileName, e.getMessage());
+                                            log.error("拷贝文件失败, 文件原名: [{}], {}", sourceFileName, e.getMessage());
                                             return;
                                         }
-                                        logger.info("拷贝文件成功!", sourceFileName);
+                                        log.info("拷贝文件成功!", sourceFileName);
                                     }
                                 });
                     }

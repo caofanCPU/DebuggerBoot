@@ -1,6 +1,6 @@
 package com.xyz.caofancpu.trackingtime.service.impl;
 
-import com.xyz.caofancpu.trackingtime.annotion.Check;
+import com.xyz.caofancpu.trackingtime.annotation.Check;
 import com.xyz.caofancpu.trackingtime.constant.enums.SuccessStatusEnum;
 import com.xyz.caofancpu.trackingtime.mapper.TimeBlockMapper;
 import com.xyz.caofancpu.trackingtime.model.TimeBlock;
@@ -8,6 +8,7 @@ import com.xyz.caofancpu.trackingtime.view.TimeBlockVO;
 import com.xyz.caofancpu.util.dataOperateUtils.DateUtil;
 import com.xyz.caofancpu.util.result.GlobalErrorInfoException;
 import com.xyz.caofancpu.util.streamOperateUtils.CollectionUtil;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.tuple.MutablePair;
 import org.springframework.stereotype.Service;
 
@@ -17,6 +18,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 @Service
+@Slf4j
 public class TimeBlockService {
 
     @Resource

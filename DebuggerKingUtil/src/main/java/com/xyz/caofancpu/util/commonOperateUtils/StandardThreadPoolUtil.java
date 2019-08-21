@@ -1,7 +1,6 @@
 package com.xyz.caofancpu.util.commonOperateUtils;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
 
 import java.util.concurrent.ThreadPoolExecutor;
@@ -11,13 +10,8 @@ import java.util.concurrent.ThreadPoolExecutor;
  * Author:   caofanCPU
  * Date:     2018/9/7 16:58
  */
-
+@Slf4j
 public class StandardThreadPoolUtil {
-    /**
-     * LOG
-     */
-    private static final Logger logger = LoggerFactory.getLogger(StandardThreadPoolUtil.class);
-
     private static volatile ThreadPoolTaskExecutor threadPoolTaskExecutor;
 
     private StandardThreadPoolUtil() {}

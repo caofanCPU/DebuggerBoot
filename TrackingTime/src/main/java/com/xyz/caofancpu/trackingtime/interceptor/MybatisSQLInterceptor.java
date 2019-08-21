@@ -25,7 +25,6 @@ import java.util.Properties;
  * 对那个类的哪个方法进行拦截，
  * 防止方法重载需要声明参数类型以及个数
  *
- * @since 0.0.1
  */
 
 @Intercepts({@Signature(type = StatementHandler.class, method = "prepare", args = {Connection.class, Integer.class})})

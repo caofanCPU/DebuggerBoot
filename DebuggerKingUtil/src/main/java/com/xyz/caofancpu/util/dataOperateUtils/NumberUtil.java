@@ -1,7 +1,6 @@
 package com.xyz.caofancpu.util.dataOperateUtils;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import lombok.extern.slf4j.Slf4j;
 
 import java.math.BigDecimal;
 
@@ -10,21 +9,17 @@ import java.math.BigDecimal;
  *
  * @author
  */
+@Slf4j
 public class NumberUtil {
-
-    private static final Logger logger = LoggerFactory.getLogger(NumberUtil.class);
 
     /**
      * 汉语中数字大写
      */
-    private static final String[] CN_UPPER_NUMBER = {"零", "壹", "贰", "叁", "肆",
-            "伍", "陆", "柒", "捌", "玖"};
+    private static final String[] CN_UPPER_NUMBER = {"零", "壹", "贰", "叁", "肆", "伍", "陆", "柒", "捌", "玖"};
     /**
      * 汉语中货币单位大写，这样的设计类似于占位符
      */
-    private static final String[] CN_UPPER_MONETRAY_UNIT = {"分", "角", "元",
-            "拾", "佰", "仟", "万", "拾", "佰", "仟", "亿", "拾", "佰", "仟", "兆", "拾",
-            "佰", "仟"};
+    private static final String[] CN_UPPER_MONETRAY_UNIT = {"分", "角", "元", "拾", "佰", "仟", "万", "拾", "佰", "仟", "亿", "拾", "佰", "仟", "兆", "拾", "佰", "仟"};
     /**
      * 特殊字符：整
      */
@@ -40,7 +35,7 @@ public class NumberUtil {
     /**
      * 特殊字符：零元整
      */
-    private static final String CN_ZEOR_FULL = "零元" + CN_FULL;
+    private static final String CN_ZERO_FULL = "零元" + CN_FULL;
 
     /**
      * 获取指定位数的随机数
@@ -57,17 +52,15 @@ public class NumberUtil {
 
     public static String convertToCN(BigDecimal numberOfMoney) {
         StringBuffer sb = new StringBuffer();
-        // -1, 0, or 1 as the value of this BigDecimal is negative, zero, or
-        // positive.
         int signum = numberOfMoney.signum();
-        // 零元整的情况
+        // 零元整
         if (signum == 0) {
-            return CN_ZEOR_FULL;
+            return CN_ZERO_FULL;
         }
-        //这里会进行金额的四舍五入
+        // 金额的四舍五入
         long number = numberOfMoney.movePointRight(MONEY_PRECISION)
                 .setScale(0, 4).abs().longValue();
-        // 得到小数点后两位值
+        // 小数点后两位值
         long scale = number % 100;
         int numUnit = 0;
         int numIndex = 0;

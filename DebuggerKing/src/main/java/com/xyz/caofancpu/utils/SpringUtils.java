@@ -12,7 +12,10 @@ import org.springframework.stereotype.Component;
 @Component
 public class SpringUtils implements ApplicationContextAware {
 
-    private static ApplicationContext applicationContext; // Spring应用上下文环境
+    /**
+     * Spring应用上下文环境
+     */
+    private static ApplicationContext applicationContext;
 
     public static ApplicationContext getApplicationContext() {
         return applicationContext;

@@ -4,9 +4,8 @@ import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.alibaba.fastjson.serializer.SerializerFeature;
 import com.xyz.caofancpu.util.result.GlobalErrorInfoRuntimeException;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.collections.CollectionUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -18,12 +17,8 @@ import java.util.stream.Collectors;
 /**
  * Created by caofanCPU on 2018/8/6.
  */
+@Slf4j
 public class JSONUtil {
-
-    /**
-     * LOG
-     */
-    private static final Logger logger = LoggerFactory.getLogger(JSONUtil.class);
 
     /**
      * 推荐使用
@@ -181,7 +176,7 @@ public class JSONUtil {
     public static List<Map<String, Object>> arrayShiftToMap(Object jsonArray)
             throws GlobalErrorInfoRuntimeException {
         if (Objects.isNull(jsonArray)) {
-            logger.error("JSONArray转List<Map>, 源数据不能为空!");
+            log.error("JSONArray转List<Map>, 源数据不能为空!");
             throw new GlobalErrorInfoRuntimeException("源数据不能为空!");
         }
         JSONArray array = parseJSONArray(jsonArray);
@@ -202,7 +197,7 @@ public class JSONUtil {
     public static JSONArray shiftToJSONArray(List<?> sourceList)
             throws GlobalErrorInfoRuntimeException {
         if (CollectionUtils.isEmpty(sourceList)) {
-            logger.error("List转JSONArray, 源数据不能为空!");
+            log.error("List转JSONArray, 源数据不能为空!");
             throw new GlobalErrorInfoRuntimeException("源数据不能为空!");
         }
         JSONArray resultArray = new JSONArray();
@@ -222,7 +217,7 @@ public class JSONUtil {
     public static JSONObject mapShiftToJSON(Map<String, Object> sourceMap)
             throws GlobalErrorInfoRuntimeException {
         if (Objects.isNull(sourceMap) || 0 == sourceMap.size()) {
-            logger.error("Map转JSONObject, 源数据数据不能为空!");
+            log.error("Map转JSONObject, 源数据数据不能为空!");
             throw new GlobalErrorInfoRuntimeException("源数据数据不能为空!");
         }
         return JSONObject.parseObject(JSONObject.toJSONString(sourceMap));
@@ -241,7 +236,7 @@ public class JSONUtil {
     public static Map<String, Object> JSONShiftToMap(JSONObject jsonObject)
             throws GlobalErrorInfoRuntimeException {
         if (Objects.isNull(jsonObject)) {
-            logger.error("JSONObject转Map, 源数据数据不能为空!");
+            log.error("JSONObject转Map, 源数据数据不能为空!");
             throw new GlobalErrorInfoRuntimeException("源数据数据不能为空!");
         }
         return jsonObject;
@@ -259,7 +254,7 @@ public class JSONUtil {
     public static <T> T mapToBean(Object sourceObject, Class<T> clazz)
             throws GlobalErrorInfoRuntimeException {
         if (Objects.isNull(sourceObject) || Objects.isNull(clazz)) {
-            logger.error("Map转Bean, 源数据数据不能为空!");
+            log.error("Map转Bean, 源数据数据不能为空!");
             throw new GlobalErrorInfoRuntimeException("源数据数据不能为空!");
         }
         return JSONObject.parseObject(JSONObject.toJSONString(sourceObject), clazz);

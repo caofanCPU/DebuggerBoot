@@ -2,8 +2,7 @@ package com.xyz.caofancpu.util.logger;
 
 import ch.qos.logback.classic.pattern.ClassicConverter;
 import ch.qos.logback.classic.spi.ILoggingEvent;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
 
@@ -15,9 +14,8 @@ import java.net.UnknownHostException;
 import java.util.Enumeration;
 import java.util.Objects;
 
+@Slf4j
 public class LogIpConfigUtil extends ClassicConverter {
-    private static final Logger logger = LoggerFactory.getLogger(LogIpConfigUtil.class);
-
     /**
      * 获取真实ip
      */
@@ -39,7 +37,7 @@ public class LogIpConfigUtil extends ClassicConverter {
                 try {
                     inet = InetAddress.getLocalHost();
                 } catch (UnknownHostException e) {
-                    logger.error("获取IP异常 : {}", e);
+                    log.error("获取IP异常 : {}", e);
                 }
                 if (Objects.nonNull(inet)) {
                     ipAddress = inet.getHostAddress();
@@ -89,7 +87,7 @@ public class LogIpConfigUtil extends ClassicConverter {
                 }
             }
         } catch (SocketException ex) {
-            logger.error("获取日志Ip异常", ex);
+            log.error("获取日志Ip异常", ex);
             ip = "127.0.0.1";
 
         }
@@ -114,7 +112,7 @@ public class LogIpConfigUtil extends ClassicConverter {
         try {
             return InetAddress.getLocalHost().getHostAddress();
         } catch (UnknownHostException e) {
-            logger.error("获取日志Ip异常", e);
+            log.error("获取日志Ip异常", e);
         }
         return "127.0.0.1";
     }

@@ -1,7 +1,6 @@
 package com.xyz.caofancpu.utils;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
 import org.springframework.util.concurrent.ListenableFuture;
 
@@ -15,16 +14,15 @@ import java.util.concurrent.ThreadPoolExecutor;
  * Author:   caofanCPU
  * Date:     2018/11/17 16:47
  */
-
+@Slf4j
 public class VisibleThreadPoolTaskExecutorHelper extends ThreadPoolTaskExecutor {
-    private static final Logger logger = LoggerFactory.getLogger(VisibleThreadPoolTaskExecutorHelper.class);
 
     private void showThreadPoolInfo(String prefix) {
         ThreadPoolExecutor threadPoolExecutor = getThreadPoolExecutor();
         if (Objects.isNull(threadPoolExecutor)) {
             return;
         }
-        logger.info("\n线程前缀:[{}]\n执行动作:[{}]\n任务总数:[{}]\n已完成任务数:[{}]\n当前处理任务数量[{}]\n待办任务队列数量[{}]",
+        log.info("\n线程前缀:[{}]\n执行动作:[{}]\n任务总数:[{}]\n已完成任务数:[{}]\n当前处理任务数量[{}]\n待办任务队列数量[{}]",
                 this.getThreadNamePrefix(),
                 prefix,
                 threadPoolExecutor.getTaskCount(),

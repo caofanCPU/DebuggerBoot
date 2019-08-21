@@ -12,9 +12,8 @@ import com.xyz.caofancpu.util.result.CustomerErrorInfo;
 import com.xyz.caofancpu.util.result.GlobalErrorInfoException;
 import com.xyz.caofancpu.util.result.ResultBody;
 import com.xyz.caofancpu.utils.RestTemplateUtil;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.DependsOn;
 import org.springframework.stereotype.Service;
@@ -41,15 +40,8 @@ import java.util.UUID;
  */
 @Service("commonOperateService")
 @DependsOn("initContextPropertyInitializer")
+@Slf4j
 public class CommonOperateServiceImpl implements CommonOperateService {
-
-    /**
-     * LOG
-     */
-    private static final Logger logger = LoggerFactory.getLogger(CommonOperateServiceImpl.class);
-
-    private static final String COMMA_SEPARATOR = ",";
-
     @Resource
     private RestTemplateUtil restTemplateUtil;
 
@@ -69,7 +61,7 @@ public class CommonOperateServiceImpl implements CommonOperateService {
         try {
             bytes = file.getBytes();
         } catch (IOException e) {
-            logger.error("获取文件二进制流失败, {}", e.getMessage());
+            log.error("获取文件二进制流失败, {}", e.getMessage());
             throw new GlobalErrorInfoException(new CustomerErrorInfo("文件上传失败, 请重试!"));
         }
 
@@ -94,7 +86,7 @@ public class CommonOperateServiceImpl implements CommonOperateService {
         attachment.setName(path);
         attachment.setCreateTime(DateUtil.parseJavaUtilDate(new Date(), DateUtil.DATETIME_FORMAT_SIMPLE));
 
-        logger.info("\n客户端于[{}]上传文件：[{}]", attachment.getCreateTime(), attachment.getName());
+        log.info("\n客户端于[{}]上传文件：[{}]", attachment.getCreateTime(), attachment.getName());
     }
 
     @Override
@@ -114,7 +106,7 @@ public class CommonOperateServiceImpl implements CommonOperateService {
         GlobalResultCheckUtil.handleMSResultBody(resultBody);
         JSONObject jsonObject = JSONObject.parseObject(JSONObject.toJSONString(resultBody));
         String accessUrl = jsonObject.getString("data");
-        logger.info("查询文件访问Url:\n输入文件名[{}]\n输出Url[{}]", attachmentName, accessUrl);
+        log.info("查询文件访问Url:\n输入文件名[{}]\n输出Url[{}]", attachmentName, accessUrl);
         return accessUrl;
     }
 
@@ -130,7 +122,7 @@ public class CommonOperateServiceImpl implements CommonOperateService {
         try {
             request = ((ServletRequestAttributes) RequestContextHolder.getRequestAttributes()).getRequest();
         } catch (Exception e) {
-            logger.info("[提示]无HttpServletRequest信息, 加载token为null");
+            log.info("[提示]无HttpServletRequest信息, 加载token为null");
             return null;
         }
         if (Objects.isNull(request)) {

@@ -1,5 +1,6 @@
 package com.xyz.caofancpu.util.multiThreadUtils;
 
+import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.MDC;
 
@@ -8,6 +9,7 @@ import java.security.SecureRandom;
 /**
  * 线程追踪工具
  */
+@Slf4j
 public class ThreadTraceUtil {
     private static final String TRACE_ID_KEY = "ThreadTraceId";
     private static final String ALPHABET = "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz";

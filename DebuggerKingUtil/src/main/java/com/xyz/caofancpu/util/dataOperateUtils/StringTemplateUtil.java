@@ -1,8 +1,7 @@
 package com.xyz.caofancpu.util.dataOperateUtils;
 
 import com.alibaba.fastjson.JSONObject;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import lombok.extern.slf4j.Slf4j;
 
 import java.util.Map;
 import java.util.Objects;
@@ -15,14 +14,10 @@ import java.util.regex.Pattern;
  * Author:   caofanCPU
  * Date:     2018/11/15 17:00
  */
-
+@Slf4j
 public class StringTemplateUtil {
     public static final String TEMPLATE_KEY_PRIFIX = "\\$\\{";
     public static final String TEMPLATE_KEY_SUFFIX = "\\}";
-    /**
-     * LOG
-     */
-    private static final Logger logger = LoggerFactory.getLogger(StringTemplateUtil.class);
 
     public static String processTemplate(String templateContent, Object source) {
         if (Objects.isNull(templateContent)

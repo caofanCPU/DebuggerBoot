@@ -5,8 +5,7 @@ import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import com.xyz.caofancpu.mapper.SysDictMapper;
 import com.xyz.caofancpu.service.SysDictService;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.DependsOn;
 import org.springframework.stereotype.Service;
@@ -21,12 +20,8 @@ import java.util.Map;
  */
 @Service("sysDictService")
 @DependsOn("initContextPropertyInitializer")
+@Slf4j
 public class SysDictServiceImpl implements SysDictService {
-
-    /**
-     * LOG
-     */
-    private static final Logger logger = LoggerFactory.getLogger(SysDictServiceImpl.class);
 
     @SuppressWarnings("SpringJavaInjectionPointsAutowiringInspection")
     @Autowired

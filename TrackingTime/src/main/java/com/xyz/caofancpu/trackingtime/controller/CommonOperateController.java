@@ -10,8 +10,7 @@ import com.xyz.caofancpu.util.result.GlobalErrorInfoException;
 import com.xyz.caofancpu.util.result.ResultBody;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
@@ -24,13 +23,8 @@ import java.util.Map;
 
 @RestController
 @Api(description = "CommonOperateController", tags = {"公共处理接口"})
+@Slf4j
 public class CommonOperateController {
-
-    /**
-     * LOG
-     */
-    private static final Logger logger = LoggerFactory.getLogger(CommonOperateController.class);
-
     @Resource
     private transient CommonOperateService commonOperateService;
 
@@ -62,7 +56,7 @@ public class CommonOperateController {
         try {
             DataHelper.putDataIntoEntity(map, attachment);
         } catch (Exception e) {
-            logger.error("MAP转换到Attachment出错: \n", e);
+            log.error("MAP转换到Attachment出错: \n", e);
             throw new GlobalErrorInfoException(GlobalErrorInfoEnum.INTERNAL_ERROR);
         }
         commonOperateService.uploadAttachment(attachment, file);

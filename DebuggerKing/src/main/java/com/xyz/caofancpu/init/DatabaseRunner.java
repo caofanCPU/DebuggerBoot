@@ -1,7 +1,6 @@
 package com.xyz.caofancpu.init;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.core.annotation.Order;
 import org.springframework.stereotype.Component;
@@ -11,13 +10,11 @@ import org.springframework.stereotype.Component;
  */
 @Component
 @Order(value = 1)
+@Slf4j
 public class DatabaseRunner implements CommandLineRunner {
-
-    private final Logger logger = LoggerFactory.getLogger(DatabaseRunner.class);
-
     @Override
     public void run(String... strings) {
-        logger.info("项目启动完成，请访问：http://localhost:8098/debuggerking/swagger-ui.html");
-        logger.info("SwaggerApi认证key：Authorization");
+        log.info("项目启动完成，请访问：http://localhost:8098/debuggerking/swagger-ui.html");
+        log.info("SwaggerApi认证key：Authorization");
     }
 }

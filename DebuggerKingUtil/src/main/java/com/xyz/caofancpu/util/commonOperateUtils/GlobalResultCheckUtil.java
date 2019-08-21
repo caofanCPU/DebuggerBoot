@@ -2,8 +2,7 @@ package com.xyz.caofancpu.util.commonOperateUtils;
 
 import com.xyz.caofancpu.util.result.GlobalErrorInfoException;
 import com.xyz.caofancpu.util.result.ResultBody;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import lombok.extern.slf4j.Slf4j;
 
 import java.util.Objects;
 
@@ -12,13 +11,8 @@ import java.util.Objects;
  * Author:   caofanCPU
  * Date:     2018/11/14 12:21
  */
-
+@Slf4j
 public class GlobalResultCheckUtil {
-    /**
-     * LOG
-     */
-    private static final Logger logger = LoggerFactory.getLogger(GlobalResultCheckUtil.class);
-
     /**
      * 微服务接口调用统一处理
      * 响应成功, 不做任何处理

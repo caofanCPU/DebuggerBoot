@@ -3,8 +3,7 @@ package com.xyz.caofancpu.utils;
 import com.xyz.caofancpu.util.multiThreadUtils.DebuggerKingRunnable;
 import com.xyz.caofancpu.util.multiThreadUtils.DemoRunnableTask;
 import io.swagger.annotations.Api;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
 import org.springframework.stereotype.Component;
@@ -20,10 +19,8 @@ import java.util.concurrent.CountDownLatch;
 @Component
 @Async(value = "standardThreadPool")
 @Api(description = "异步服务中心")
+@Slf4j
 public class AsyncServiceUtil {
-
-    private static final Logger logger = LoggerFactory.getLogger(AsyncServiceUtil.class);
-
     @Resource(name = "standardThreadPool")
     private ThreadPoolTaskExecutor pool;
 
@@ -63,7 +60,7 @@ public class AsyncServiceUtil {
     }
 
     private void error(Object object, Exception e) {
-        logger.error("error...");
+        log.error("error...");
         // do something, for example, push error message into Redis by Queue
     }
 }

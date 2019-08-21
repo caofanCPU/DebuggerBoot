@@ -11,8 +11,6 @@ import com.google.zxing.client.j2se.BufferedImageLuminanceSource;
 import com.google.zxing.common.BitMatrix;
 import com.google.zxing.common.HybridBinarizer;
 import com.google.zxing.qrcode.decoder.ErrorCorrectionLevel;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import javax.imageio.ImageIO;
 import java.awt.*;
@@ -27,21 +25,22 @@ import java.util.Random;
  * 二维码工具类
  */
 public class QRCodeUtil {
-    /**
-     * LOG
-     */
-    private static final Logger logger = LoggerFactory.getLogger(QRCodeUtil.class);
-
     private static final String CHARSET = "utf-8";
     private static final String FORMAT = "JPG";
 
-    // 二维码尺寸
-    private static final int QRCODE_SIZE = 300;
+    /**
+     * 二维码尺寸
+     */
+    private static final int QR_CODE_SIZE = 300;
 
-    // LOGO宽度
+    /**
+     * LOGO宽度
+     */
     private static final int LOGO_WIDTH = 60;
 
-    // LOGO高度
+    /**
+     * LOGO高度
+     */
     private static final int LOGO_HEIGHT = 60;
 
     public static BufferedImage createImage(String content, String logoPath, boolean needCompress)
@@ -50,8 +49,7 @@ public class QRCodeUtil {
         hints.put(EncodeHintType.ERROR_CORRECTION, ErrorCorrectionLevel.H);
         hints.put(EncodeHintType.CHARACTER_SET, CHARSET);
         hints.put(EncodeHintType.MARGIN, 1);
-        BitMatrix bitMatrix = new MultiFormatWriter()
-                .encode(content, BarcodeFormat.QR_CODE, QRCODE_SIZE, QRCODE_SIZE, hints);
+        BitMatrix bitMatrix = new MultiFormatWriter().encode(content, BarcodeFormat.QR_CODE, QR_CODE_SIZE, QR_CODE_SIZE, hints);
         int width = bitMatrix.getWidth();
         int height = bitMatrix.getHeight();
         BufferedImage image = new BufferedImage(width, height, BufferedImage.TYPE_INT_RGB);
@@ -85,7 +83,8 @@ public class QRCodeUtil {
         Image src = ImageIO.read(new File(logoPath));
         int width = src.getWidth(null);
         int height = src.getHeight(null);
-        if (needCompress) { // 压缩LOGO
+        // 压缩LOGO
+        if (needCompress) {
             if (width > LOGO_WIDTH) {
                 width = LOGO_WIDTH;
             }
@@ -101,8 +100,8 @@ public class QRCodeUtil {
         }
         // 插入LOGO
         Graphics2D graph = source.createGraphics();
-        int x = (QRCODE_SIZE - width) / 2;
-        int y = (QRCODE_SIZE - height) / 2;
+        int x = (QR_CODE_SIZE - width) / 2;
+        int y = (QR_CODE_SIZE - height) / 2;
         graph.drawImage(src, x, y, width, height, null);
         Shape shape = new RoundRectangle2D.Float(x, y, width, width, 6, 6);
         graph.setStroke(new BasicStroke(3f));
@@ -140,9 +139,7 @@ public class QRCodeUtil {
      * @param needCompress 是否压缩LOGO
      * @throws Exception
      */
-    public static String encode(
-            String content, String logoPath, String destPath,
-            String fileName, boolean needCompress)
+    public static String encode(String content, String logoPath, String destPath, String fileName, boolean needCompress)
             throws Exception {
         BufferedImage image = QRCodeUtil.createImage(content, logoPath, needCompress);
         mkdirs(destPath);

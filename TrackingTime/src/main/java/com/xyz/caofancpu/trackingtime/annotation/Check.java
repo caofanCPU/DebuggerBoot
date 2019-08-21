@@ -1,4 +1,4 @@
-package com.xyz.caofancpu.trackingtime.annotion;
+package com.xyz.caofancpu.trackingtime.annotation;
 
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;

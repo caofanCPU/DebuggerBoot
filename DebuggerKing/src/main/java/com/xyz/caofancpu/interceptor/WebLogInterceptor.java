@@ -3,6 +3,7 @@ package com.xyz.caofancpu.interceptor;
 import com.alibaba.fastjson.JSONObject;
 import com.xyz.caofancpu.util.dataOperateUtils.JSONUtil;
 import com.xyz.caofancpu.utils.DataHelper;
+import lombok.extern.slf4j.Slf4j;
 import org.aspectj.lang.JoinPoint;
 import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.annotation.AfterReturning;
@@ -10,8 +11,6 @@ import org.aspectj.lang.annotation.Around;
 import org.aspectj.lang.annotation.Aspect;
 import org.aspectj.lang.annotation.Before;
 import org.aspectj.lang.annotation.Pointcut;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.core.annotation.Order;
 import org.springframework.stereotype.Component;
 import org.springframework.web.context.request.RequestContextHolder;
@@ -29,11 +28,8 @@ import java.util.Objects;
 @Component
 @Aspect
 @Order(10)
+@Slf4j
 public class WebLogInterceptor {
-
-    private Logger logger = LoggerFactory.getLogger(this.getClass());
-
-
     /**
      * 日志切面
      */
@@ -54,7 +50,7 @@ public class WebLogInterceptor {
         try {
             requestBody = JSONUtil.formatStandardJSON(JSONObject.toJSONString(joinPoint.getArgs()));
         } catch (Exception e) {
-            logger.info("入参为文件(InputStreamSource)或HttpRequest等类型, 打印对象地址信息");
+            log.info("入参为文件(InputStreamSource)或HttpRequest等类型, 打印对象地址信息");
             requestBody = Arrays.toString(joinPoint.getArgs());
         }
         StringBuilder sb = new StringBuilder();
@@ -65,7 +61,7 @@ public class WebLogInterceptor {
                 + "请求接口=" + requestInterface + "\n"
                 + "请求Param参数=" + requestParam + "\n"
                 + "请求Body对象=" + requestBody + "\n");
-        logger.info(sb.toString());
+        log.info(sb.toString());
     }
 
     @Around("webLog()")
@@ -79,7 +75,7 @@ public class WebLogInterceptor {
                 + "响应耗时[" + (System.currentTimeMillis() - startTime) + "ms]" + "\n"
                 + "响应数据结果:\n"
                 + JSONUtil.formatStandardJSON(JSONObject.toJSONString(result)));
-        logger.info(sb.toString());
+        log.info(sb.toString());
         return result;
     }
 
@@ -89,7 +85,7 @@ public class WebLogInterceptor {
         sb.append("\n\n[后台响应结果]:\n"
                 + "响应数据结果:\n"
                 + JSONUtil.formatStandardJSON(JSONObject.toJSONString(returnValue)));
-        logger.info(sb.toString());
+        log.info(sb.toString());
     }
 
     /**
@@ -114,7 +110,7 @@ public class WebLogInterceptor {
                 try {
                     inet = InetAddress.getLocalHost();
                 } catch (UnknownHostException e) {
-                    logger.error("获取IP异常 : {}", e);
+                    log.error("获取IP异常 : {}", e);
                 }
                 if (Objects.nonNull(inet)) {
                     ipAddress = inet.getHostAddress();

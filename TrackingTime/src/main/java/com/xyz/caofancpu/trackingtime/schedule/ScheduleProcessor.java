@@ -1,8 +1,8 @@
 package com.xyz.caofancpu.trackingtime.schedule;
 
+import com.xyz.caofancpu.util.commonOperateUtils.NormalUseUtil;
 import com.xyz.caofancpu.util.dataOperateUtils.DateUtil;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.scheduling.annotation.EnableScheduling;
 import org.springframework.scheduling.annotation.Scheduled;
@@ -14,17 +14,16 @@ import java.util.Date;
  */
 @Configuration
 @EnableScheduling
+@Slf4j
 public class ScheduleProcessor {
-
     private static int count = 1;
-    private final Logger logger = LoggerFactory.getLogger(ScheduleProcessor.class);
 
     /**
      * 1分钟跑一次
      */
     @Scheduled(cron = "0 0/1 * * * ?")
     public void doSchedule() {
-        logger.info("\n"
+        log.info("\n"
                 + DateUtil.parseJavaUtilDate(new Date(), DateUtil.DATETIME_FORMAT_SIMPLE)
                 + ".007  帝八哥 2018 --- [           Debugger] K.I.N.G :"
                 + " Demo定时任务第[" + count + "]次执行...");
@@ -35,7 +34,7 @@ public class ScheduleProcessor {
      * 常用Cron表达式
      */
     private void outNormalCronExpression() {
-        System.out.println("Cron表达式范例：\n" +
+        NormalUseUtil.out("Cron表达式范例：\n" +
                 "             每隔5秒执行一次：*/5 * * * * ?\n" +
                 "             每隔1分钟执行一次：0 */1 * * * ?\n" +
                 "             每天23点执行一次：0 0 23 * * ?\n" +

@@ -1,15 +1,14 @@
 package com.xyz.caofancpu.util.multiThreadUtils;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import lombok.extern.slf4j.Slf4j;
 
 import java.util.concurrent.ConcurrentLinkedDeque;
 
 /**
  *
  */
+@Slf4j
 public class DebuggerKingRunnable implements Runnable {
-    private static final Logger logger = LoggerFactory.getLogger(DebuggerKingRunnable.class);
 
     private Runnable task;
     private String taskDescription;
@@ -30,7 +29,7 @@ public class DebuggerKingRunnable implements Runnable {
         try {
             handle();
         } catch (Exception e) {
-            logger.error("error...", e);
+            log.error("error...", e);
         } finally {
             after();
         }

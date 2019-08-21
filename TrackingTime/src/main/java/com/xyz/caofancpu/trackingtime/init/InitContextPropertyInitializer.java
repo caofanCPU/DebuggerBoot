@@ -2,8 +2,7 @@ package com.xyz.caofancpu.trackingtime.init;
 
 import com.xyz.caofancpu.trackingtime.mapper.SysDictMapper;
 import com.xyz.caofancpu.util.streamOperateUtils.CollectionUtil;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.env.YamlPropertySourceLoader;
 import org.springframework.context.annotation.Configuration;
@@ -24,18 +23,20 @@ import java.util.Properties;
  * @author caofanCPU
  */
 @Configuration("initContextPropertyInitializer")
+@Slf4j
 public class InitContextPropertyInitializer {
 
-    public static final String PROPERTY_KEY = "name";
-    public static final String PROPERTY_VALUE = "code";
-    public static final String DB_PROPERTY_SOURCE = "dbPropertySource";
-    public static final String YAML_PROPERTY_SOURCE = "yamlPropertySource";
+    private static final String PROPERTY_KEY = "name";
+    private static final String PROPERTY_VALUE = "code";
+    private static final String DB_PROPERTY_SOURCE = "dbPropertySource";
+    private static final String YAML_PROPERTY_SOURCE = "yamlPropertySource";
+
     /**
      * 约定大于配置, properties文件配置
      */
     @Deprecated
-    public static final String PROPERTIES_PROPERTY_SOURCE = "propertiesPropertySource";
-    private static final Logger logger = LoggerFactory.getLogger(InitContextPropertyInitializer.class);
+    private static final String PROPERTIES_PROPERTY_SOURCE = "propertiesPropertySource";
+
     @Autowired
     private transient SysDictMapper sysDictMapper;
 
@@ -77,16 +78,16 @@ public class InitContextPropertyInitializer {
         Properties dbProperty = new Properties();
         PropertiesPropertySource dbPropertySource = new PropertiesPropertySource(DB_PROPERTY_SOURCE, dbProperty);
         try {
-            logger.info("读取初始化数据库配置变量...");
+            log.info("读取初始化数据库配置变量...");
             List<Map<String, Object>> initDbPropertyList = sysDictMapper.getInitSysDictList();
             initDbPropertyList.forEach(item -> dbProperty.put(item.get(PROPERTY_KEY), item.get(PROPERTY_VALUE)));
             // 在队尾添加数据库的配置属性，即最后使用数据库配置属性
             configurableEnvironment.getPropertySources().addLast(dbPropertySource);
         } catch (Exception e) {
-            logger.error(e.getMessage());
+            log.error(e.getMessage());
             return;
         }
-        logger.info("完成数据库配置初始化!");
+        log.info("完成数据库配置初始化!");
     }
 
     /**
@@ -95,15 +96,15 @@ public class InitContextPropertyInitializer {
      */
     public void readYamlProperty() {
         try {
-            logger.info("读取初始化yaml配置变量...");
+            log.info("读取初始化yaml配置变量...");
             List<PropertySource<?>> propertySourceList = new YamlPropertySourceLoader().load(YAML_PROPERTY_SOURCE, new ClassPathResource("config/config-demo.yml"));
             if (CollectionUtil.isNotEmpty(propertySourceList)) {
                 configurableEnvironment.getPropertySources().addFirst(propertySourceList.get(0));
             }
         } catch (Exception e) {
-            logger.error(e.getMessage());
+            log.error(e.getMessage());
             return;
         }
-        logger.info("完成yaml配置变量初始化!");
+        log.info("完成yaml配置变量初始化!");
     }
 }

@@ -2,11 +2,10 @@ package com.xyz.caofancpu.util.dataOperateUtils;
 
 
 import com.xyz.caofancpu.util.result.GlobalErrorInfoRuntimeException;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.beanutils.BeanUtils;
 import org.apache.commons.beanutils.ConvertUtils;
 import org.apache.commons.beanutils.converters.DateConverter;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import java.math.BigDecimal;
 import java.text.SimpleDateFormat;
@@ -17,12 +16,8 @@ import java.util.Objects;
 /**
  * Created by caofanCPU on 2018/8/10.
  */
+@Slf4j
 public class BeanConvertUtil {
-    /**
-     * LOG
-     */
-    private static final Logger logger = LoggerFactory.getLogger(BeanConvertUtil.class);
-
     /**
      * 将Map中的数据替换Bean中属性
      * 约定：map.key === bean.property
@@ -40,7 +35,7 @@ public class BeanConvertUtil {
         try {
             BeanUtils.populate(targetObj, sourceMap);
         } catch (Exception e) {
-            logger.error("Map替换Bean, 对象属性复制失败: \n", e);
+            log.error("Map替换Bean, 对象属性复制失败: \n", e);
             throw new GlobalErrorInfoRuntimeException("对象属性复制失败!");
         }
         /**
@@ -66,14 +61,14 @@ public class BeanConvertUtil {
         try {
             targetObj = clazz.newInstance();
         } catch (Exception e) {
-            logger.error("对象属性复制失败: \n", e);
+            log.error("对象属性复制失败: \n", e);
             throw new GlobalErrorInfoRuntimeException("对象属性复制失败, 原因: 目标类不存在");
         }
         ConvertUtils.register(loadDateConverter(), Date.class);
         try {
             BeanUtils.copyProperties(targetObj, sourceObj);
         } catch (Exception e) {
-            logger.error("对象属性复制失败: \n", e);
+            log.error("对象属性复制失败: \n", e);
             throw new GlobalErrorInfoRuntimeException("对象属性复制失败!");
         }
         return targetObj;
@@ -98,7 +93,7 @@ public class BeanConvertUtil {
         try {
             sourceMap = BeanUtils.describe(sourceObj);
         } catch (Exception e) {
-            logger.error("Bean替换Map, 对象转Map失败: \n", e);
+            log.error("Bean替换Map, 对象转Map失败: \n", e);
             throw new GlobalErrorInfoRuntimeException("对象转Map失败!");
         }
         sourceMap.remove(classFeatureKey);
@@ -118,10 +113,7 @@ public class BeanConvertUtil {
      * @return
      */
     public static boolean validate(Map<String, Object> map, Object obj) {
-        if (Objects.isNull(map) || map.isEmpty() || Objects.isNull(obj)) {
-            return false;
-        }
-        return true;
+        return !(Objects.isNull(map) || map.isEmpty() || Objects.isNull(obj));
     }
 
     /**
@@ -147,10 +139,7 @@ public class BeanConvertUtil {
      * @return
      */
     public static String convertToString(Object source) {
-        if (Objects.isNull(source)) {
-            return null;
-        }
-        return source.toString();
+        return Objects.isNull(source) ? null : source.toString();
     }
 
     /**
@@ -172,7 +161,7 @@ public class BeanConvertUtil {
         try {
             return sdf.parse(source.toString());
         } catch (Exception e) {
-            logger.error("日期格式转换失败, 目标格式:yyyy-MM-dd HH:mm:ss\n", e);
+            log.error("日期格式转换失败, 目标格式:yyyy-MM-dd HH:mm:ss\n", e);
             throw new GlobalErrorInfoRuntimeException("日期格式转换失败!");
         }
     }

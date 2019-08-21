@@ -25,6 +25,7 @@ public final class ThreadPoolManager {
     private static final int SIZE_WORK_QUEUE = 128;
     // 任务调度周期
     private static final int PERIOD_TASK_QOS = 100;
+
     private static ThreadPoolManager sThreadPoolManager = new ThreadPoolManager();
     // 任务缓冲队列
     private final Queue<Runnable> mTaskQueue = new LinkedList<>();
