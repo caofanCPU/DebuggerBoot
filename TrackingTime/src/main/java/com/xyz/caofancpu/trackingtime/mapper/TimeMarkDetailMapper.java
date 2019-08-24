@@ -13,9 +13,9 @@ import java.util.List;
 @Mapper
 public interface TimeMarkDetailMapper {
 
-    int insert(@Param("pojo") TimeMarkDetail pojo);
+    int insert(TimeMarkDetail pojo);
 
-    int insertList(@Param("pojos") List<TimeMarkDetail> pojo);
+    int insertList(@Param("pojos") List<TimeMarkDetail> pojos);
 
     List<TimeMarkDetail> select(@Param("pojo") TimeMarkDetail pojo);
 

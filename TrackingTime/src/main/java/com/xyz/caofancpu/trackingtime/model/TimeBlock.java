@@ -19,7 +19,7 @@ import java.util.Date;
 @ApiModel
 public class TimeBlock {
 
-    @ApiModelProperty(value = "主键Id", name = "id", example = "10")
+    @ApiModelProperty(value = "主键Id", name = "id", example = "98789")
     private Long id;
 
     @ApiModelProperty(value = "用户ID", name = "id", example = "15928")

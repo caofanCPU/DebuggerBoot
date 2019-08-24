@@ -12,9 +12,9 @@ import java.util.List;
 @Mapper
 public interface TimeMarkContentMapper {
 
-    int insert(@Param("pojo") TimeMarkContent pojo);
+    int insert(TimeMarkContent pojo);
 
-    int insertList(@Param("pojos") List<TimeMarkContent> pojo);
+    int insertList(@Param("pojos") List<TimeMarkContent> pojos);
 
     List<TimeMarkContent> select(@Param("pojo") TimeMarkContent pojo);
 

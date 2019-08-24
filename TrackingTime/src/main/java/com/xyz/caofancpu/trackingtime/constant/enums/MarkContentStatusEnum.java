@@ -3,11 +3,9 @@ package com.xyz.caofancpu.trackingtime.constant.enums;
 import lombok.Getter;
 
 import java.util.Arrays;
-import java.util.Comparator;
-import java.util.List;
 
 /**
- * 可以替换策略模式的枚举用法
+ * 内容状态机
  */
 public enum MarkContentStatusEnum {
     CREATED(0, "已创建"),
@@ -26,12 +24,6 @@ public enum MarkContentStatusEnum {
     MarkContentStatusEnum(Integer value, String title) {
         this.value = value;
         this.title = title;
-    }
-
-    public static void main(String[] args) {
-        List<MarkContentStatusEnum> flexibleDemoEnums = Arrays.asList(MarkContentStatusEnum.values());
-        flexibleDemoEnums.sort(Comparator.comparing(MarkContentStatusEnum::getValue).reversed());
-        flexibleDemoEnums.forEach(MarkContentStatusEnum::next);
     }
 
     public MarkContentStatusEnum find(Integer value) {

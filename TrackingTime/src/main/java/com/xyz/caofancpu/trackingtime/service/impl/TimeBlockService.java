@@ -24,15 +24,11 @@ public class TimeBlockService {
     @Resource
     private TimeBlockMapper timeBlockMapper;
 
-    public int insert(TimeBlock timeBlock) {
-        return timeBlockMapper.insert(timeBlock);
-    }
-
     public int insertList(List<TimeBlock> timeBlockList) {
         return timeBlockMapper.insertList(timeBlockList);
     }
 
-    public List<TimeBlock> select(TimeBlock timeBlock) {
+    public List<TimeBlock> queryList(TimeBlock timeBlock) {
         return timeBlockMapper.select(timeBlock);
     }
 
@@ -40,15 +36,15 @@ public class TimeBlockService {
         return timeBlockMapper.update(timeBlock);
     }
 
-    @Check({"userId not null:用户ID不能为空", "startTime not null:开始时间不能为空", "endTime not null:结束时间不能为空"})
+    @Check({"userId not empty:用户ID不能为空", "startTime not empty:开始时间不能为空", "endTime not empty:结束时间不能为空"})
     public TimeBlockVO applyBlockId(TimeBlock timeBlock)
             throws GlobalErrorInfoException {
         TimeBlock query = new TimeBlock().setUserId(timeBlock.getUserId())
                 .setStartTime(DateUtil.getTodayQueryStartDate())
                 .setEndTime(DateUtil.getTodayQueryEndDate());
-        List<TimeBlock> timeBlockList = select(query);
+        List<TimeBlock> timeBlockList = queryList(query);
         if (CollectionUtil.isEmpty(timeBlockList)) {
-            insert(timeBlock);
+            timeBlockMapper.insert(timeBlock);
             return new TimeBlockVO().setCreateStatus(SuccessStatusEnum.SUCCESSFUL.getValue()).setTimeBlock(timeBlock);
         }
         MutablePair<Date, Date> referPairDateTimePair = new MutablePair<>(timeBlock.getStartTime(), timeBlock.getEndTime());
@@ -60,7 +56,7 @@ public class TimeBlockService {
                 })
                 .collect(Collectors.toList());
         if (CollectionUtil.isEmpty(repeatBlockList)) {
-            insert(timeBlock);
+            timeBlockMapper.insert(timeBlock);
             return new TimeBlockVO().setCreateStatus(SuccessStatusEnum.SUCCESSFUL.getValue()).setTimeBlock(timeBlock);
         }
         return new TimeBlockVO().setCreateStatus(SuccessStatusEnum.FAILED.getValue()).setRepeatBlockList(repeatBlockList);

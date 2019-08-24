@@ -4,38 +4,19 @@ import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.alibaba.fastjson.serializer.SerializerFeature;
 import com.xyz.caofancpu.util.result.GlobalErrorInfoRuntimeException;
+import com.xyz.caofancpu.util.streamOperateUtils.CollectionUtil;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.commons.collections.CollectionUtils;
 
 import java.io.Serializable;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
-import java.util.stream.Collectors;
 
 /**
  * Created by caofanCPU on 2018/8/6.
  */
 @Slf4j
 public class JSONUtil {
-
-    /**
-     * 推荐使用
-     * ResultBody.getData()为数组时, 转化为List<Map<String, Object>>
-     *
-     * @param source
-     * @return
-     */
-    public static List<Map<String, Object>> parseList(Object source) {
-        List<Map> tempList = new ArrayList();
-        if (source instanceof ArrayList) {
-            tempList = (ArrayList) source;
-        }
-        List<Map<String, Object>> resultList = new ArrayList<>();
-        tempList.forEach((item -> resultList.add(item)));
-        return resultList;
-    }
 
     public static String toJSONStringWithDateFormat(Object data) {
         return JSONObject.toJSONStringWithDateFormat(data, DateUtil.DATETIME_FORMAT_SIMPLE);
@@ -139,31 +120,14 @@ public class JSONUtil {
     }
 
     /**
-     * 对象解析为JSONArray
-     * 可能出现:  com.alibaba.fastjson.JSONException: autoType is not support ...
-     * 解决办法: 配置JVM启动参数: -Dfastjson.parser.autoTypeAccept=序列化对象包根目录1. , 序列化对象包根目录2. 等
-     * 说明: Spring Boot / Spring + Tomcat 启动默认支持 自动类型解析的
+     * Object转List, 用Bean接收
      *
      * @param jsonArray
      * @return
      */
-    public static JSONArray parseJSONArray(Object jsonArray) {
-        String jsonString = serializeJSON(jsonArray);
-        return JSONObject.parseArray(jsonString);
-    }
-
-    /**
-     * JSONArray转List, 用Bean接收
-     *
-     * @param jsonArray
-     * @return
-     */
-    public static <T> List<T> arrayShiftToBean(Object jsonArray, Class<T> clazz) {
+    public static <T> List<T> convertToList(Object jsonArray, Class<T> clazz) {
         JSONArray array = parseJSONArray(jsonArray);
-        return array.stream()
-                .filter(Objects::nonNull)
-                .map(item -> JSONObject.parseObject(JSONObject.toJSONString(item), clazz))
-                .collect(Collectors.toList());
+        return CollectionUtil.transToList(array, item -> JSONObject.parseObject(JSONObject.toJSONString(item), clazz));
     }
 
     /**
@@ -173,18 +137,14 @@ public class JSONUtil {
      * @return
      * @throws GlobalErrorInfoRuntimeException
      */
-    public static List<Map<String, Object>> arrayShiftToMap(Object jsonArray)
+    public static List<Map<String, Object>> convertToList(Object jsonArray)
             throws GlobalErrorInfoRuntimeException {
         if (Objects.isNull(jsonArray)) {
             log.error("JSONArray转List<Map>, 源数据不能为空!");
             throw new GlobalErrorInfoRuntimeException("源数据不能为空!");
         }
         JSONArray array = parseJSONArray(jsonArray);
-        List<Map<String, Object>> resultList = new ArrayList<>();
-        array.stream()
-                .filter(Objects::nonNull)
-                .forEach(item -> resultList.add(JSONObject.parseObject(JSONObject.toJSONString(item))));
-        return resultList;
+        return CollectionUtil.transToList(array, item -> JSONObject.parseObject(JSONObject.toJSONString(item)));
     }
 
     /**
@@ -194,56 +154,24 @@ public class JSONUtil {
      * @return
      * @throws GlobalErrorInfoRuntimeException
      */
-    public static JSONArray shiftToJSONArray(List<?> sourceList)
+    public static JSONArray convertToJSONArray(List<?> sourceList)
             throws GlobalErrorInfoRuntimeException {
-        if (CollectionUtils.isEmpty(sourceList)) {
+        if (CollectionUtil.isEmpty(sourceList)) {
             log.error("List转JSONArray, 源数据不能为空!");
             throw new GlobalErrorInfoRuntimeException("源数据不能为空!");
         }
         JSONArray resultArray = new JSONArray();
-        sourceList.stream()
-                .filter(Objects::nonNull)
-                .forEach(item -> resultArray.add(item));
+        sourceList.forEach(item -> {
+            if (Objects.nonNull(item)) {
+                resultArray.add(item);
+            }
+        });
         return resultArray;
     }
 
     /**
-     * Map<String, Object> 转 JSONObject
-     *
-     * @param sourceMap
-     * @return
-     * @throws GlobalErrorInfoRuntimeException
-     */
-    public static JSONObject mapShiftToJSON(Map<String, Object> sourceMap)
-            throws GlobalErrorInfoRuntimeException {
-        if (Objects.isNull(sourceMap) || 0 == sourceMap.size()) {
-            log.error("Map转JSONObject, 源数据数据不能为空!");
-            throw new GlobalErrorInfoRuntimeException("源数据数据不能为空!");
-        }
-        return JSONObject.parseObject(JSONObject.toJSONString(sourceMap));
-    }
-
-    /**
-     * JSONObject 转 Map<String, Object>
-     * JSONObject是Map的子类
-     *
-     * @param jsonObject
-     * @return
-     * @throws GlobalErrorInfoRuntimeException
-     * @since 0.0.1
-     */
-    @Deprecated
-    public static Map<String, Object> JSONShiftToMap(JSONObject jsonObject)
-            throws GlobalErrorInfoRuntimeException {
-        if (Objects.isNull(jsonObject)) {
-            log.error("JSONObject转Map, 源数据数据不能为空!");
-            throw new GlobalErrorInfoRuntimeException("源数据数据不能为空!");
-        }
-        return jsonObject;
-    }
-
-    /**
-     * Map转Bean
+     * 复制源对象属性到目标类
+     * 根据属性名称匹配, 支持map转bean, bean之间互转, bean中嵌套集合转化
      *
      * @param sourceObject
      * @param clazz
@@ -251,12 +179,30 @@ public class JSONUtil {
      * @return
      * @throws GlobalErrorInfoRuntimeException
      */
-    public static <T> T mapToBean(Object sourceObject, Class<T> clazz)
+    public static <T> T copyProperties(Object sourceObject, Class<T> clazz)
             throws GlobalErrorInfoRuntimeException {
-        if (Objects.isNull(sourceObject) || Objects.isNull(clazz)) {
-            log.error("Map转Bean, 源数据数据不能为空!");
-            throw new GlobalErrorInfoRuntimeException("源数据数据不能为空!");
+        if (Objects.isNull(sourceObject)) {
+            log.error("属性复制, 源数据不能为空!");
+            throw new GlobalErrorInfoRuntimeException("源数据不能为空!");
+        }
+        if (Objects.isNull(clazz)) {
+            log.error("属性复制, 目标类对象不能为空!");
+            throw new GlobalErrorInfoRuntimeException("目标类对象不能为空!");
         }
         return JSONObject.parseObject(JSONObject.toJSONString(sourceObject), clazz);
+    }
+
+    /**
+     * 对象解析为JSONArray
+     * 可能出现:  com.alibaba.fastjson.JSONException: autoType is not support ...
+     * 解决办法: 配置JVM启动参数: -Dfastjson.parser.autoTypeAccept=序列化对象包根目录1. , 序列化对象包根目录2. 等
+     * 说明: Spring Boot / Spring + Tomcat 启动默认支持 自动类型解析的
+     *
+     * @param jsonArray
+     * @return
+     */
+    private static JSONArray parseJSONArray(Object jsonArray) {
+        String jsonString = serializeJSON(jsonArray);
+        return JSONObject.parseArray(jsonString);
     }
 }

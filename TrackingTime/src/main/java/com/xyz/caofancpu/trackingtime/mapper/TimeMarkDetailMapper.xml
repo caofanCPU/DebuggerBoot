@@ -25,26 +25,20 @@
     </sql>
 
     <!--auto generated Code-->
-    <insert id="insert">
+    <insert id="insert" useGeneratedKeys="true" keyProperty="id" parameterType="com.xyz.caofancpu.trackingtime.model.TimeMarkDetail">
         INSERT INTO time_mark_detail
         <trim prefix="(" suffix=")" suffixOverrides=",">
-            <if test="pojo.id != null">id,</if>
-            <if test="pojo.markContentId != null">mark_content_id,</if>
-            <if test="pojo.content != null">content,</if>
-            <if test="pojo.contentSignature != null">content_signature,</if>
-            <if test="pojo.encryptType != null">encrypt_type,</if>
-            <if test="pojo.createTime != null">create_time,</if>
-            <if test="pojo.updateTime != null">update_time,</if>
+            <if test="markContentId != null">mark_content_id,</if>
+            <if test="content != null">content,</if>
+            <if test="contentSignature != null">content_signature,</if>
+            <if test="encryptType != null">encrypt_type,</if>
         </trim>
         VALUES
         <trim prefix="(" suffix=")" suffixOverrides=",">
-            <if test="pojo.id != null">#{pojo.id},</if>
-            <if test="pojo.markContentId != null">#{pojo.markContentId},</if>
-            <if test="pojo.content != null">#{pojo.content},</if>
-            <if test="pojo.contentSignature != null">#{pojo.contentSignature},</if>
-            <if test="pojo.encryptType != null">#{pojo.encryptType},</if>
-            <if test="pojo.createTime != null">#{pojo.createTime},</if>
-            <if test="pojo.updateTime != null">#{pojo.updateTime},</if>
+            <if test="markContentId != null">#{markContentId},</if>
+            <if test="content != null">#{content},</if>
+            <if test="contentSignature != null">#{contentSignature},</if>
+            <if test="encryptType != null">#{encryptType},</if>
         </trim>
     </insert>
 

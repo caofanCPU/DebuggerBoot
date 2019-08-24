@@ -5,6 +5,7 @@ import com.ulisesbocchio.jasyptspringboot.annotation.EnableEncryptableProperties
 import org.mybatis.spring.annotation.MapperScan;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.transaction.annotation.EnableTransactionManagement;
 import springfox.documentation.swagger2.annotations.EnableSwagger2;
 
 @SpringBootApplication(scanBasePackages = {"com.xyz.caofancpu"})
@@ -13,6 +14,7 @@ import springfox.documentation.swagger2.annotations.EnableSwagger2;
 @MapperScan("com.xyz..*.mapper")
 @EnableEncryptableProperties
 @EnableSwagger2
+@EnableTransactionManagement
 public class TrackingTimeApplication {
     /**
      * 对象解析为JSONArray

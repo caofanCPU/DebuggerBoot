@@ -1,6 +1,5 @@
-package com.xyz.caofancpu.trackingtime.model;
+package com.xyz.caofancpu.trackingtime.view;
 
-import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -10,19 +9,22 @@ import lombok.experimental.Accessors;
 import java.util.Date;
 
 /**
- * 时间印记签名主表
+ * 内容VO
  */
 @Data
-@Accessors(chain = true)
 @NoArgsConstructor
 @AllArgsConstructor
-@ApiModel
-public class TimeMarkContent {
-    @ApiModelProperty(value = "主键Id", name = "id", example = "1")
-    private Long id;
-
+@Accessors(chain = true)
+public class TimeMarkContentVO {
     @ApiModelProperty(value = "时间区块ID", name = "timeBlockId", example = "98789")
-    private Long timeBlockId;
+    public Long timeBlockId;
+    @ApiModelProperty(value = "内容主Id", name = "id", example = "101")
+    private Long id;
+    @ApiModelProperty(value = "起始时间", name = "startTime", example = "2019-08-12 12:11:10")
+    private Date startTime;
+
+    @ApiModelProperty(value = "结束时间", name = "endTime", example = "2019-08-12 13:14:15")
+    private Date endTime;
 
     @ApiModelProperty(value = "标题", name = "title", example = "今晚打老虎")
     private String title;
@@ -40,7 +42,16 @@ public class TimeMarkContent {
     private String signCodeUrl;
 
     @ApiModelProperty(value = "状态：0;1;-1;9", name = "status", example = "9")
-    private Integer status;
+    private int status;
+
+    @ApiModelProperty(value = "内容", name = "content", example = "周星特异功能到澳门, 豪赌成功竟成神")
+    private String content;
+
+    @ApiModelProperty(value = "内容签名", name = "contentSignature", example = "SRC-ginna78XDJEKj--ln")
+    private String contentSignature;
+
+    @ApiModelProperty(value = "加密类型:0;1;2", name = "encryptType", example = "SRC-ginna78XDJEKj--ln")
+    private Integer encryptType;
 
     @ApiModelProperty(value = "创建时间", name = "createTime", example = "2019-08-12 13:14:15")
     private Date createTime;

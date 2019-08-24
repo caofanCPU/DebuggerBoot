@@ -26,6 +26,7 @@ import java.util.TreeSet;
 import java.util.function.BiFunction;
 import java.util.function.BinaryOperator;
 import java.util.function.Function;
+import java.util.function.Predicate;
 import java.util.function.Supplier;
 import java.util.stream.Collectors;
 import java.util.stream.StreamSupport;
@@ -59,6 +60,27 @@ public class CollectionUtil extends CollectionUtils {
      */
     public static <E, R> List<R> transToList(Collection<E> source, Function<? super E, ? extends R> mapper) {
         return source.stream().filter(Objects::nonNull).map(mapper).collect(Collectors.toList());
+    }
+
+    /**
+     * 转换为List, 并且元素转换后得到新的元素为List, 底层默认使用ArrayList
+     */
+    public static <E, R> List<R> transToListWithFlatMap(Collection<E> source, Function<? super E, ? extends List<R>> mapper) {
+        return source.stream().filter(Objects::nonNull).map(mapper).flatMap(List::stream).collect(Collectors.toList());
+    }
+
+    /**
+     * 根据元素字段满足一定条件执行过滤, 并转换为Set
+     */
+    public static <F, T> Set<F> filterAndTransSet(Collection<T> coll, Predicate<? super T> predicate, Function<? super T, ? extends F> mapper) {
+        return coll.stream().filter(Objects::nonNull).filter(predicate).map(mapper).collect(Collectors.toSet());
+    }
+
+    /**
+     * 根据元素字段满足一定条件执行过滤, 并转换为List
+     */
+    public static <F, T> List<F> filterAndTransList(Collection<T> coll, Predicate<? super T> predicate, Function<? super T, ? extends F> mapper) {
+        return coll.stream().filter(Objects::nonNull).filter(predicate).map(mapper).collect(Collectors.toList());
     }
 
     /**
@@ -232,15 +254,15 @@ public class CollectionUtil extends CollectionUtils {
     /**
      * 按照指定分隔符将数组元素拼接为字符串
      *
-     * @param list
+     * @param coll
      * @param separator
      * @return
      */
-    public static <T> String join(List<T> list, String separator) {
-        if (CollectionUtil.isEmpty(list)) {
+    public static <T> String join(Collection<T> coll, String separator) {
+        if (CollectionUtil.isEmpty(coll)) {
             return StringUtils.EMPTY;
         }
-        List<String> stringList = transToList(list, Object::toString);
+        List<String> stringList = transToList(coll, Object::toString);
         if (Objects.isNull(separator)) {
             separator = StringUtils.EMPTY;
         }
@@ -267,52 +289,102 @@ public class CollectionUtil extends CollectionUtils {
     /**
      * 在List中根据指定字段(函数)查找元素，找到任意一个就返回，找不到就返回null
      *
-     * @param list
+     * @param coll
      * @param function
      * @param value
      * @return
      */
-    public static <T, F> T findAny(List<T> list, Function<? super T, ? extends F> function, @NonNull F value) {
-        return list.stream().filter(item -> value.equals(function.apply(item))).findAny().orElse(null);
+    public static <T, F> T findAny(Collection<T> coll, Function<? super T, ? extends F> function, @NonNull F value) {
+        return coll.stream().filter(item -> value.equals(function.apply(item))).findAny().orElse(null);
     }
 
     /**
      * 在List中根据自定字段(函数)查找元素，返回找到的第一个元素，找不到就返回null
      *
-     * @param list
+     * @param coll
      * @param function
      * @param value
      * @return
      */
-    public static <T, F> T findFirst(List<T> list, Function<? super T, ? extends F> function, @NonNull F value) {
-        return list.stream().filter(item -> value.equals(function.apply(item))).findFirst().orElse(null);
-    }
-
-
-    /**
-     * 判断元素在list中存在至少一个值，存在就立马返回
-     *
-     * @param list
-     * @param function
-     * @param value
-     * @return
-     */
-    public static <T, F> boolean existAtLeastOne(List<T> list, Function<? super T, ? extends F> function, @NonNull F value) {
-        return list.stream().anyMatch(item -> value.equals(function.apply(item)));
+    public static <T, F> T findFirst(Collection<T> coll, Function<? super T, ? extends F> function, @NonNull F value) {
+        return coll.stream().filter(item -> value.equals(function.apply(item))).findFirst().orElse(null);
     }
 
     /**
      * 判断元素在list中是否存在
      *
-     * @param list
+     * @param coll
+     * @param predicate
+     * @return
+     */
+    public static <T> T findFirst(Collection<T> coll, Predicate<? super T> predicate) {
+        return coll.stream().filter(predicate).findFirst().orElse(null);
+    }
+
+    /**
+     * 从list里根据唯一字段值 查找所有满足条件不为Null的元素
+     *
+     * @param coll
      * @param function
      * @param value
      * @return
      */
-    public static <T, F> Boolean exist(List<T> list, Function<? super T, ? extends F> function, @NonNull F value) {
-        return list.stream().allMatch(item -> value.equals(function.apply(item)));
+    public static <T, F> List<T> findAll(Collection<T> coll, Function<? super T, ? extends F> function, @NonNull F value) {
+        if (isEmpty(coll)) {
+            return Lists.newArrayList();
+        }
+        return coll.stream()
+                .filter(Objects::nonNull)
+                .filter(item -> value.equals(function.apply(item)))
+                .collect(Collectors.toList());
     }
 
+    /**
+     * 判断元素在list中是否存在
+     *
+     * @param coll
+     * @param predicate
+     * @return
+     */
+    public static <T> List<T> findAll(Collection<T> coll, Predicate<? super T> predicate) {
+        return coll.stream().filter(predicate).collect(Collectors.toList());
+    }
+
+    /**
+     * 判断元素在list中存在至少一个值，存在就立马返回
+     *
+     * @param coll
+     * @param function
+     * @param value
+     * @return
+     */
+    public static <T, F> boolean existAtLeastOne(Collection<T> coll, Function<? super T, ? extends F> function, @NonNull F value) {
+        return coll.stream().anyMatch(item -> value.equals(function.apply(item)));
+    }
+
+    /**
+     * 判断元素在list中是否存在
+     *
+     * @param coll
+     * @param function
+     * @param value
+     * @return
+     */
+    public static <T, F> boolean exist(Collection<T> coll, Function<? super T, ? extends F> function, @NonNull F value) {
+        return coll.stream().allMatch(item -> value.equals(function.apply(item)));
+    }
+
+    /**
+     * 判断元素在list中是否存在
+     *
+     * @param coll
+     * @param predicate
+     * @return
+     */
+    public static <T> boolean exist(Collection<T> coll, Predicate<? super T> predicate) {
+        T existFirstOne = coll.stream().filter(predicate).findFirst().orElse(null);
+        return Objects.nonNull(existFirstOne);
+    }
 
     /**
      * Map键值对反转
@@ -365,24 +437,6 @@ public class CollectionUtil extends CollectionUtils {
     }
 
     /**
-     * 从list里根据唯一字段值 查找所有满足条件的元素
-     *
-     * @param list
-     * @param function
-     * @param value
-     * @return
-     */
-    public static <T, F> List<T> findAll(List<T> list, Function<? super T, ? extends F> function, @NonNull F value) {
-        if (isEmpty(list)) {
-            return Lists.newArrayList();
-        }
-        return list.stream()
-                .filter(Objects::nonNull)
-                .filter(item -> value.equals(function.apply(item)))
-                .collect(Collectors.toList());
-    }
-
-    /**
      * 针对复杂Map中，查找key匹配函数的键值对集合
      * 不满足匹配函数条件时返回空
      *
@@ -391,7 +445,7 @@ public class CollectionUtil extends CollectionUtils {
      * @param value
      * @return
      */
-    public static <K, V, T> List<Map.Entry<K, V>> find(Map<K, V> srcMap, Function<? super K, ? extends T> kFunction, @NonNull T value) {
+    public static <K, V, T> List<Map.Entry<K, V>> findInMap(Map<K, V> srcMap, Function<? super K, ? extends T> kFunction, @NonNull T value) {
         if (isEmpty(srcMap)) {
             return null;
         }
@@ -416,7 +470,7 @@ public class CollectionUtil extends CollectionUtils {
      * @param value
      * @return
      */
-    public static <K, V, T> Map.Entry<K, V> findOne(Map<K, V> srcMap, Function<? super K, ? extends T> kFunction, @NonNull T value) {
+    public static <K, V, T> Map.Entry<K, V> findOneInMap(Map<K, V> srcMap, Function<? super K, ? extends T> kFunction, @NonNull T value) {
         if (isEmpty(srcMap)) {
             return null;
         }
@@ -437,7 +491,7 @@ public class CollectionUtil extends CollectionUtils {
      * @return
      */
     public static <K, V, T> V findOneValue(Map<K, V> srcMap, Function<? super K, ? extends T> kFunction, @NonNull T value) {
-        Entry<K, V> resultEntry = findOne(srcMap, kFunction, value);
+        Entry<K, V> resultEntry = findOneInMap(srcMap, kFunction, value);
         return Objects.isNull(resultEntry) ? null : resultEntry.getValue();
     }
 

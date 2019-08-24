@@ -1,6 +1,7 @@
 package com.xyz.caofancpu.util.dataOperateUtils;
 
 import com.alibaba.fastjson.JSONObject;
+import com.xyz.caofancpu.util.commonOperateUtils.NormalUseUtil;
 import lombok.extern.slf4j.Slf4j;
 
 import java.util.Map;
@@ -38,7 +39,7 @@ public class StringTemplateUtil {
             String regex = TEMPLATE_KEY_PRIFIX + entry.getKey() + TEMPLATE_KEY_SUFFIX;
             Pattern pattern = Pattern.compile(regex);
             Matcher matcher = pattern.matcher(templateContent);
-            templateContent = matcher.replaceAll(BeanConvertUtil.convertToString(entry.getValue()));
+            templateContent = matcher.replaceAll(NormalUseUtil.convertToString(entry.getValue()));
         }
         return templateContent;
     }

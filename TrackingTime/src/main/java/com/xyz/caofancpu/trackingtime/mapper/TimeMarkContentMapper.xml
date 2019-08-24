@@ -31,32 +31,26 @@
     </sql>
 
     <!--auto generated Code-->
-    <insert id="insert">
+    <insert id="insert" useGeneratedKeys="true" keyProperty="id" parameterType="com.xyz.caofancpu.trackingtime.model.TimeMarkContent">
         INSERT INTO time_mark_content
         <trim prefix="(" suffix=")" suffixOverrides=",">
-            <if test="pojo.id != null">id,</if>
-            <if test="pojo.timeBlockId != null">time_block_id,</if>
-            <if test="pojo.title != null">title,</if>
-            <if test="pojo.authorId != null">author_id,</if>
-            <if test="pojo.authorName != null">author_name,</if>
-            <if test="pojo.keyword != null">keyword,</if>
-            <if test="pojo.signCodeUrl != null">sign_code_url,</if>
-            <if test="pojo.status != null">status,</if>
-            <if test="pojo.createTime != null">create_time,</if>
-            <if test="pojo.updateTime != null">update_time,</if>
+            <if test="timeBlockId != null">time_block_id,</if>
+            <if test="title != null">title,</if>
+            <if test="authorId != null">author_id,</if>
+            <if test="authorName != null">author_name,</if>
+            <if test="keyword != null">keyword,</if>
+            <if test="signCodeUrl != null">sign_code_url,</if>
+            <if test="status != null">status,</if>
         </trim>
         VALUES
         <trim prefix="(" suffix=")" suffixOverrides=",">
-            <if test="pojo.id != null">#{pojo.id},</if>
-            <if test="pojo.timeBlockId != null">#{pojo.timeBlockId},</if>
-            <if test="pojo.title != null">#{pojo.title},</if>
-            <if test="pojo.authorId != null">#{pojo.authorId},</if>
-            <if test="pojo.authorName != null">#{pojo.authorName},</if>
-            <if test="pojo.keyword != null">#{pojo.keyword},</if>
-            <if test="pojo.signCodeUrl != null">#{pojo.signCodeUrl},</if>
-            <if test="pojo.status != null">#{pojo.status},</if>
-            <if test="pojo.createTime != null">#{pojo.createTime},</if>
-            <if test="pojo.updateTime != null">#{pojo.updateTime},</if>
+            <if test="timeBlockId != null">#{timeBlockId},</if>
+            <if test="title != null">#{title},</if>
+            <if test="authorId != null">#{authorId},</if>
+            <if test="authorName != null">#{authorName},</if>
+            <if test="keyword != null">#{keyword},</if>
+            <if test="signCodeUrl != null">#{signCodeUrl},</if>
+            <if test="status != null">#{status},</if>
         </trim>
     </insert>
 

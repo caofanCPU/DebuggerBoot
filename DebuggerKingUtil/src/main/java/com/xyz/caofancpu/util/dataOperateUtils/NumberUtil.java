@@ -3,6 +3,7 @@ package com.xyz.caofancpu.util.dataOperateUtils;
 import lombok.extern.slf4j.Slf4j;
 
 import java.math.BigDecimal;
+import java.util.Objects;
 
 /**
  * Created by caofanCPU on 2018/7/3.
@@ -126,6 +127,40 @@ public class NumberUtil {
     public static String parseMoneyCN(String str) {
         BigDecimal numberOfMoney = new BigDecimal(str);
         return convertToCN(numberOfMoney);
+    }
+
+    /**
+     * 对象转BigDecimal, 默认采用四舍五入保留2位小数
+     *
+     * @param source
+     * @param newScale
+     * @param roundingMode
+     * @return
+     */
+    public static BigDecimal convertToBigDecimal(Object source, int newScale, int roundingMode) {
+        if (Objects.isNull(source)) {
+            return null;
+        }
+        if (newScale <= 0) {
+            newScale = 2;
+        }
+        if (roundingMode <= 0) {
+            roundingMode = BigDecimal.ROUND_HALF_UP;
+        }
+        return new BigDecimal(source.toString()).setScale(newScale, roundingMode);
+    }
+
+    /**
+     * 对象转BigDecimal, 默认采用四舍五入保留2位小数
+     *
+     * @param source
+     * @return
+     */
+    public static BigDecimal convertToDefaultBigDecimal(Object source) {
+        if (Objects.isNull(source)) {
+            return null;
+        }
+        return convertToBigDecimal(source, 2, BigDecimal.ROUND_HALF_UP);
     }
 
 }

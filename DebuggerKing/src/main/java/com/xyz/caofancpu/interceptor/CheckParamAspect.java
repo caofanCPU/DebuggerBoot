@@ -40,7 +40,7 @@ public class CheckParamAspect {
      */
     private static Boolean isNotNull(Object value, String operatorNum) {
         Boolean isNotNull = Boolean.TRUE;
-        Boolean isStringNull = (value instanceof String) && StringUtils.isEmpty((String) value);
+        Boolean isStringNull = (value instanceof String) && StringUtils.isBlank((String) value);
         Boolean isCollectionNull = (value instanceof Collection) && CollectionUtils.isEmpty((Collection) value);
         if (value == null) {
             isNotNull = Boolean.FALSE;
@@ -444,10 +444,9 @@ public class CheckParamAspect {
          */
         NOT_EQUAL("!=", CheckParamAspect::isNotEqual),
         /**
-         * 不为空
+         * 不为空(包含null || "" || "   ")
          */
-        NOT_NULL("not null", CheckParamAspect::isNotNull),
-
+        NOT_NULL("not empty", CheckParamAspect::isNotNull),
         /**
          * 金额
          */
