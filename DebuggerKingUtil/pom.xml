@@ -12,56 +12,80 @@
     <description>Useful utils for processing business</description>
 
     <properties>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
+
+        <maven-surefire-plugin.version>2.18.1</maven-surefire-plugin.version>
+        <maven-compiler-plugin.version>3.8.0</maven-compiler-plugin.version>
+        <maven-source-plugin.version>2.1.2</maven-source-plugin.version>
+
+        <java.version>1.8</java.version>
+        <spring.version>5.1.8.RELEASE</spring.version>
+        <springboot.version>2.1.2.RELEASE</springboot.version>
+        <spring-cloud.version>Greenwich.SR1</spring-cloud.version>
+        <javax.servlet.version>3.1.0</javax.servlet.version>
+
+        <mysql-connector-java.version>5.1.46</mysql-connector-java.version>
+        <mybatis.version>3.4.6</mybatis.version>
+        <mybatis-spring.version>1.3.2</mybatis-spring.version>
+        <mybatis-spring-boot.version>1.3.2</mybatis-spring-boot.version>
+        <jedis.version>2.9.0</jedis.version>
+        <redisson.version>3.10.0</redisson.version>
+        <spring-boot-starter-data-redis.version>2.1.1.RELEASE</spring-boot-starter-data-redis.version>
+        <netty.version>4.1.6.Final</netty.version>
+        <spring-kafka.version>2.2.8.RELEASE</spring-kafka.version>
+
+        <commons-beanutils.version>1.9.3</commons-beanutils.version>
+        <commons-lang3.version>3.8.1</commons-lang3.version>
+        <commons-collections.version>3.2.2</commons-collections.version>
+        <commons-io.version>1.3.2</commons-io.version>
+        <commons-codec.version>1.10</commons-codec.version>
+        <string-template.version>4.0.2</string-template.version>
+        <slf4j.version>1.7.25</slf4j.version>
+        <logback.version>1.2.3</logback.version>
+        <lomok.version>1.18.8</lomok.version>
+        <swagger.version>2.9.2</swagger.version>
+
+        <jasypt.version>1.18</jasypt.version>
+        <fastjson.version>1.2.54</fastjson.version>
+        <guava.version>20.0</guava.version>
         <code.zxin.version>3.3.2</code.zxin.version>
+        <pinyin4j.version>2.5.0</pinyin4j.version>
+        <pagehelper.version>1.2.10</pagehelper.version>
+        <java.verbal.expressions.version>1.4</java.verbal.expressions.version>
+
     </properties>
 
     <dependencies>
 
+        <!--spring核心-->
         <dependency>
-            <groupId>com.belerweb</groupId>
-            <artifactId>pinyin4j</artifactId>
-            <version>2.5.0</version>
+            <groupId>org.springframework</groupId>
+            <artifactId>spring-core</artifactId>
+            <version>${spring.version}</version>
+            <scope>compile</scope>
         </dependency>
 
+        <!--spring组件-->
         <dependency>
-            <groupId>com.google.guava</groupId>
-            <artifactId>guava</artifactId>
-            <version>18.0</version>
+            <groupId>org.springframework</groupId>
+            <artifactId>spring-context</artifactId>
+            <version>${spring.version}</version>
+            <scope>compile</scope>
         </dependency>
 
-        <!--正则表达式神器 -->
+        <!--http基础-->
         <dependency>
-            <groupId>ru.lanwen.verbalregex</groupId>
-            <artifactId>java-verbal-expressions</artifactId>
-            <version>1.4</version>
-        </dependency>
-
-        <dependency>
-            <groupId>org.projectlombok</groupId>
-            <artifactId>lombok</artifactId>
-            <optional>true</optional>
-            <version>1.16.20</version>
-        </dependency>
-
-        <!--logger-->
-        <dependency>
-            <groupId>org.slf4j</groupId>
-            <artifactId>slf4j-api</artifactId>
-            <version>1.7.25</version>
-        </dependency>
-
-        <!--base64-->
-        <dependency>
-            <groupId>commons-codec</groupId>
-            <artifactId>commons-codec</artifactId>
-            <version>1.10</version>
+            <groupId>javax.servlet</groupId>
+            <artifactId>javax.servlet-api</artifactId>
+            <version>${javax.servlet.version}</version>
         </dependency>
 
         <!--spring-web-->
         <dependency>
             <groupId>org.springframework</groupId>
             <artifactId>spring-web</artifactId>
-            <version>3.2.16.RELEASE</version>
+            <version>${spring.version}</version>
             <exclusions>
                 <exclusion>
                     <artifactId>spring-core</artifactId>
@@ -70,32 +94,72 @@
             </exclusions>
         </dependency>
 
+        <dependency>
+            <groupId>com.belerweb</groupId>
+            <artifactId>pinyin4j</artifactId>
+            <version>${pinyin4j.version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>com.google.guava</groupId>
+            <artifactId>guava</artifactId>
+            <version>${guava.version}</version>
+        </dependency>
+
+        <!--正则表达式神器 -->
+        <dependency>
+            <groupId>ru.lanwen.verbalregex</groupId>
+            <artifactId>java-verbal-expressions</artifactId>
+            <version>${java.verbal.expressions.version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>org.projectlombok</groupId>
+            <artifactId>lombok</artifactId>
+            <optional>true</optional>
+            <version>${lomok.version}</version>
+        </dependency>
+
+        <!--logger-->
+        <dependency>
+            <groupId>org.slf4j</groupId>
+            <artifactId>slf4j-api</artifactId>
+            <version>${slf4j.version}</version>
+        </dependency>
+
+        <!--base64-->
+        <dependency>
+            <groupId>commons-codec</groupId>
+            <artifactId>commons-codec</artifactId>
+            <version>${commons-codec.version}</version>
+        </dependency>
+
         <!--通用IO操作-->
         <dependency>
-            <groupId>org.apache.commons</groupId>
+            <groupId>commons-io</groupId>
             <artifactId>commons-io</artifactId>
-            <version>1.3.2</version>
+            <version>${commons-io.version}</version>
         </dependency>
 
         <!--通用工具包lang3-->
         <dependency>
             <groupId>org.apache.commons</groupId>
             <artifactId>commons-lang3</artifactId>
-            <version>3.3.2</version>
+            <version>${commons-lang3.version}</version>
         </dependency>
 
         <!--通用集合操作-->
         <dependency>
             <groupId>commons-collections</groupId>
             <artifactId>commons-collections</artifactId>
-            <version>3.2.1</version>
+            <version>${commons-collections.version}</version>
         </dependency>
 
         <!--阿里巴巴JSON-->
         <dependency>
             <groupId>com.alibaba</groupId>
             <artifactId>fastjson</artifactId>
-            <version>1.2.47</version>
+            <version>${fastjson.version}</version>
         </dependency>
 
         <!--二维码-->
@@ -114,7 +178,7 @@
         <dependency>
             <groupId>commons-beanutils</groupId>
             <artifactId>commons-beanutils</artifactId>
-            <version>1.9.3</version>
+            <version>${commons-beanutils.version}</version>
             <exclusions>
                 <exclusion>
                     <artifactId>commons-collections</artifactId>
@@ -123,26 +187,11 @@
             </exclusions>
         </dependency>
 
-        <!--spring核心-->
-        <dependency>
-            <groupId>org.springframework</groupId>
-            <artifactId>spring-core</artifactId>
-            <version>5.0.7.RELEASE</version>
-            <scope>compile</scope>
-        </dependency>
-
-        <!--http基础-->
-        <dependency>
-            <groupId>javax.servlet</groupId>
-            <artifactId>javax.servlet-api</artifactId>
-            <version>3.1.0</version>
-        </dependency>
-
         <!--用于封装统一日志XML解析工具类-->
         <dependency>
             <groupId>ch.qos.logback</groupId>
             <artifactId>logback-classic</artifactId>
-            <version>1.2.3</version>
+            <version>${logback.version}</version>
         </dependency>
 
     </dependencies>
@@ -152,23 +201,33 @@
             <plugin>
                 <groupId>org.springframework.boot</groupId>
                 <artifactId>spring-boot-maven-plugin</artifactId>
-                <version>1.5.8.RELEASE</version>
+                <version>${springboot.version}</version>
+            </plugin>
+
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-surefire-plugin</artifactId>
+                <version>${maven-surefire-plugin.version}</version>
+                <configuration>
+                    <skipTests>true</skipTests>
+                </configuration>
             </plugin>
 
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-compiler-plugin</artifactId>
-                <version>3.7.0</version>
+                <version>${maven-compiler-plugin.version}</version>
                 <configuration>
                     <source>8</source>
                     <target>8</target>
                 </configuration>
             </plugin>
+
             <!--源码打包-->
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-source-plugin</artifactId>
-                <version>2.1.2</version>
+                <version>${maven-source-plugin.version}</version>
                 <executions>
                     <execution>
                         <id>attach-sources</id>
@@ -179,6 +238,7 @@
                 </executions>
             </plugin>
         </plugins>
+
         <!--从以下配置中, 推荐将Mapper的XML映射文件放入resources资源目录中, 并修改好model与mapper的映射关系-->
         <resources>
             <!--Mapper对应的xml映射文件-->

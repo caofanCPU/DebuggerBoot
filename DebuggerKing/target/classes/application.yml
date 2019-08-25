@@ -2,6 +2,9 @@
 app:
   name: www.caofanCPU.com
 
+application:
+  version: 1.0.0
+
 #注册中心配置
 eureka:
   client:
@@ -10,8 +13,9 @@ eureka:
     leaseExpirationDurationInSeconds: 10
     leaseRenewalIntervalInSeconds: 5
 #文件访问系统配置
-file:
-  url: http://SERVICE-FILE
+ms:
+  file:
+    url: http://SERVICE-FILE
 #日志系统配置
 logging:
   config: classpath:logback-spring.xml
@@ -32,11 +36,37 @@ ribbon:
 #服务部署端口
 server:
   port: 8098
+#排除部分装配, 加速启动
+management:
+  add-application-context-header: false
 #Spring配置
 spring:
   #服务部署名
   application:
     name: service-debuggerking
+  mvc:
+    formcontent:
+      filter:
+        enabled: false
+  # 可选禁用的
+  # org.springframework.boot.autoconfigure.websocket.WebSocketAutoConfiguration,\
+  # org.springframework.boot.autoconfigure.websocket.WebSocketMessagingAutoConfiguration,\
+  autoconfigure:
+    exclude: org.springframework.boot.autoconfigure.admin.SpringApplicationAdminJmxAutoConfiguration,\
+      org.springframework.boot.autoconfigure.jmx.JmxAutoConfiguration,\
+      org.springframework.boot.autoconfigure.gson.GsonAutoConfiguration,\
+      org.springframework.boot.autoconfigure.jdbc.DataSourceAutoConfiguration,\
+      org.springframework.boot.autoconfigure.jdbc.XADataSourceAutoConfiguration,\
+      org.springframework.boot.autoconfigure.jdbc.JndiDataSourceAutoConfiguration,\
+      org.springframework.boot.autoconfigure.transaction.jta.JtaAutoConfiguration,\
+      org.springframework.boot.autoconfigure.freemarker.FreeMarkerAutoConfiguration,\
+      org.springframework.boot.autoconfigure.groovy.template.GroovyTemplateAutoConfiguration,\
+      org.springframework.boot.autoconfigure.mustache.MustacheAutoConfiguration,\
+      org.springframework.boot.autoconfigure.mail.MailSenderAutoConfiguration,\
+      org.springframework.boot.autoconfigure.mail.MailSenderValidatorAutoConfiguration,\
+      org.springframework.boot.actuate.autoconfigure.TraceRepositoryAutoConfiguration,\
+      org.springframework.boot.actuate.autoconfigure.TraceWebFilterAutoConfiguration,\
+      org.springframework.boot.actuate.autoconfigure.MetricFilterAutoConfiguration
   jackson:
     date-format: yyyy-MM-dd HH:mm:ss
     time-zone: GMT+8
@@ -69,5 +99,6 @@ fileOperate:
     key: openFileOperateLogging
     value: false
 
+
 # 部署运行命令
-#    nohup java -server -Xmx512M -Xms512M -XX:NewRatio=2 -Xdebug -Xrunjdwp:transport=dt_socket,server=y,suspend=n,address=58084 -jar XXX.jar &
+#    nohup java -server -Xmx512M -Xms512M -multipliers:NewRatio=2 -Xdebug -Xrunjdwp:transport=dt_socket,server=y,suspend=n,address=58084 -jar XXX.jar &

@@ -5,7 +5,7 @@
     <include resource="org/springframework/boot/logging/logback/base.xml"/>
     <springProperty scope="context" name="port" source="server.port"/>
     <property name="LOG_PATH" value="/work/cf"/>
-    <property name="APP_DIR" value="debugger-king"/>
+    <property name="APP_DIR" value="tracking-time"/>
 
     <appender name="INFO_FILE" class="ch.qos.logback.core.rolling.RollingFileAppender">
         <File>${LOG_PATH}/${APP_DIR}/info.log</File>
