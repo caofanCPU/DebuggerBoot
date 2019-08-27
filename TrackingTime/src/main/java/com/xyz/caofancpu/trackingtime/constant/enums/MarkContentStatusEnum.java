@@ -1,5 +1,6 @@
 package com.xyz.caofancpu.trackingtime.constant.enums;
 
+import com.xyz.caofancpu.util.commonOperateUtils.enumType.IEnum;
 import lombok.Getter;
 
 import java.util.Arrays;
@@ -7,7 +8,7 @@ import java.util.Arrays;
 /**
  * 内容状态机
  */
-public enum MarkContentStatusEnum {
+public enum MarkContentStatusEnum implements IEnum {
     CREATED(0, "已创建"),
     PUBLISHED(1, "已发布"),
 
@@ -19,11 +20,11 @@ public enum MarkContentStatusEnum {
     @Getter
     private Integer value;
     @Getter
-    private String title;
+    private String name;
 
-    MarkContentStatusEnum(Integer value, String title) {
+    MarkContentStatusEnum(Integer value, String name) {
         this.value = value;
-        this.title = title;
+        this.name = name;
     }
 
     public MarkContentStatusEnum find(Integer value) {

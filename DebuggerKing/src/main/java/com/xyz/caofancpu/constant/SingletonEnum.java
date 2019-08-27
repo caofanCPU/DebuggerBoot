@@ -1,50 +1,27 @@
 package com.xyz.caofancpu.constant;
 
-import java.util.Arrays;
+import com.xyz.caofancpu.util.commonOperateUtils.enumType.IEnum;
+import lombok.Getter;
 
 /**
- * FileName: SingletonEnum
- * Author:   caofanCPU
- * Date:     2018/9/7 16:43
+ * 单例对象枚举类
+ *
+ * @author caofanCPU
  */
-
-public enum SingletonEnum {
+public enum SingletonEnum implements IEnum {
 
     REST_TEMPLATE(1, "restTemplate"),
     STANDARD_THREAD_POOL(2, "standardThreadPool"),
 
-
     ;
 
-    private Integer singletonInstanceId;
+    @Getter
+    private Integer value;
+    @Getter
+    private String name;
 
-    private String singletonInstanceName;
-
-    SingletonEnum(Integer singletonInstanceId, String singletonInstanceName) {
-        this.singletonInstanceId = singletonInstanceId;
-        this.singletonInstanceName = singletonInstanceName;
+    SingletonEnum(Integer value, String name) {
+        this.value = value;
+        this.name = name;
     }
-
-    public static SingletonEnum getInstanceById(Integer singletonInstanceId) {
-        return Arrays.stream(SingletonEnum.values())
-                .filter(item -> item.getSingletonInstanceId().equals(singletonInstanceId))
-                .findFirst()
-                .orElse(null);
-    }
-
-    public static SingletonEnum getInstanceById(String singletonInstanceName) {
-        return Arrays.stream(SingletonEnum.values())
-                .filter(item -> item.getSingletonInstanceName().equals(singletonInstanceName))
-                .findFirst()
-                .orElse(null);
-    }
-
-    public Integer getSingletonInstanceId() {
-        return singletonInstanceId;
-    }
-
-    public String getSingletonInstanceName() {
-        return singletonInstanceName;
-    }
-
 }

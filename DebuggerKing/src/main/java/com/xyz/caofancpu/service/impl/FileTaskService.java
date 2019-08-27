@@ -8,9 +8,9 @@ import com.xyz.caofancpu.util.commonOperateUtils.FileUtil;
 import com.xyz.caofancpu.util.multiThreadUtils.RemoteInvokeHelper;
 import com.xyz.caofancpu.util.multiThreadUtils.RemoteRequestTask;
 import com.xyz.caofancpu.util.result.ResultBody;
+import com.xyz.caofancpu.util.streamOperateUtils.CollectionUtil;
 import io.swagger.annotations.Api;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
@@ -54,18 +54,16 @@ public class FileTaskService {
         List<Future> completedTaskList = new ArrayList<>();
         Integer average = (int) Math.ceil(fileInfoList.size() * 1.0 / commonConfigValueService.taskHandleAverage);
         List<List<FileClassifiedResult>> groupedTaskList = balancedGroupingByTask(fileInfoList, average);
-        if (CollectionUtils.isEmpty(groupedTaskList)) {
+        if (CollectionUtil.isEmpty(groupedTaskList)) {
             return;
         }
         groupedTaskList.stream()
                 .filter(Objects::nonNull)
                 .forEach(item -> {
-                    Future<?> future = defaultThreadPool.submit(() -> {
-                        handleFileCopy(item);
-                    });
+                    Future<?> future = defaultThreadPool.submit(() -> handleFileCopy(item));
                     futureList.add(future);
                 });
-        if (CollectionUtils.isNotEmpty(futureList)) {
+        if (CollectionUtil.isNotEmpty(futureList)) {
             futureList.stream()
                     .filter(Objects::nonNull)
                     .forEach(future -> {
@@ -81,7 +79,7 @@ public class FileTaskService {
     }
 
     private void handleFileCopy(List<FileClassifiedResult> fileClassifiedResultList) {
-        if (CollectionUtils.isEmpty(fileClassifiedResultList)) {
+        if (CollectionUtil.isEmpty(fileClassifiedResultList)) {
             return;
         }
         fileClassifiedResultList.stream()
@@ -92,7 +90,7 @@ public class FileTaskService {
                     commonOperateService.createParentDir(destFileParentPath);
                     // 2.
                     List<MiniAttachment> attachmentList = item.getAttachmentList();
-                    if (CollectionUtils.isNotEmpty(attachmentList)) {
+                    if (CollectionUtil.isNotEmpty(attachmentList)) {
                         attachmentList.stream()
                                 .filter(Objects::nonNull)
                                 .forEach(mini -> {
@@ -119,19 +117,19 @@ public class FileTaskService {
 
 
     public <T> List<List<T>> balancedGroupingByTask(List<T> sourceList, Integer average) {
-        if (CollectionUtils.isEmpty(sourceList)) {
+        if (CollectionUtil.isEmpty(sourceList)) {
             return new ArrayList<>();
         }
         List<List<T>> resultList = new ArrayList<>();
-        int remaider = sourceList.size() % average;
+        int remain = sourceList.size() % average;
         int number = sourceList.size() / average;
         // 偏移量
         int offset = 0;
         for (int i = 0; i < average; i++) {
             List<T> value;
-            if (remaider > 0) {
+            if (remain > 0) {
                 value = sourceList.subList(i * number + offset, (i + 1) * number + offset + 1);
-                remaider--;
+                remain--;
                 offset++;
             } else {
                 value = sourceList.subList(i * number + offset, (i + 1) * number + offset);
@@ -140,7 +138,6 @@ public class FileTaskService {
         }
         return resultList;
     }
-
 
     public ResultBody execute() {
         Map<Integer, Future<?>> taskResultMap = new HashMap<>();
@@ -192,7 +189,7 @@ public class FileTaskService {
         return new ResultBody().fail(StringUtils.EMPTY);
     }
 
-    public boolean checkResult(Future task) {
+    private boolean checkResult(Future task) {
         try {
             return (Boolean) task.get();
         } catch (InterruptedException e) {
@@ -207,9 +204,7 @@ public class FileTaskService {
         return 1;
     }
 
-    private void addToPool(
-            Map<Integer, Future<?>> taskResultMap, Integer taskNo, Object executeService,
-            String executeMethod, Object params, Class<?>... paramClass) {
+    private void addToPool(Map<Integer, Future<?>> taskResultMap, Integer taskNo, Object executeService, String executeMethod, Object params, Class<?>... paramClass) {
         RemoteInvokeHelper remoteService = new RemoteInvokeHelper(executeService, executeMethod, params, paramClass);
         RemoteRequestTask task = new RemoteRequestTask(remoteService);
         taskResultMap.put(taskNo, defaultThreadPool.submit(task));

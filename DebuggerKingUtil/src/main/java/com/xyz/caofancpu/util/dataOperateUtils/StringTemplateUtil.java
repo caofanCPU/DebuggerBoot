@@ -2,6 +2,7 @@ package com.xyz.caofancpu.util.dataOperateUtils;
 
 import com.alibaba.fastjson.JSONObject;
 import com.xyz.caofancpu.util.commonOperateUtils.NormalUseUtil;
+import com.xyz.caofancpu.util.streamOperateUtils.CollectionUtil;
 import lombok.extern.slf4j.Slf4j;
 
 import java.util.Map;
@@ -30,8 +31,7 @@ public class StringTemplateUtil {
     }
 
     public static String processTemplate(String templateContent, Map<String, Object> paramMap) {
-        if (Objects.isNull(templateContent)
-                || Objects.isNull(paramMap) || paramMap.isEmpty()) {
+        if (Objects.isNull(templateContent) || CollectionUtil.isEmpty(paramMap)) {
             return templateContent;
         }
         Set<Map.Entry<String, Object>> entrySet = paramMap.entrySet();

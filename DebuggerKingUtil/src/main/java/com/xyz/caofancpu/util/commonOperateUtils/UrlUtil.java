@@ -15,6 +15,7 @@ import java.net.URLEncoder;
 @Slf4j
 public class UrlUtil {
     public static final String UTF_TYPE = "utf-8";
+
     /**
      * 对URL进行指定格式的转码
      *

@@ -1,8 +1,11 @@
 package com.xyz.caofancpu.trackingtime.controller;
 
 import com.xyz.caofancpu.trackingtime.constant.apiUrls.AccessUrl;
+import com.xyz.caofancpu.trackingtime.constant.enums.SuccessStatusEnum;
 import com.xyz.caofancpu.trackingtime.model.TimeBlock;
+import com.xyz.caofancpu.trackingtime.model.TimeBlock22;
 import com.xyz.caofancpu.trackingtime.service.impl.TimeBlockService;
+import com.xyz.caofancpu.util.dataOperateUtils.JSONUtil;
 import com.xyz.caofancpu.util.result.GlobalErrorInfoException;
 import com.xyz.caofancpu.util.result.ResultBody;
 import io.swagger.annotations.Api;
@@ -24,8 +27,10 @@ public class TimeBlockController {
 
     @PostMapping(AccessUrl.TIME_BLACK_APPLY_ID)
     @ApiOperation(value = "获取时间区块ID", notes = "传参：userId, startTime, endTime")
-    public ResultBody applyTimeBlockId(@RequestBody TimeBlock timeBlock)
+    public ResultBody applyTimeBlockId(@RequestBody TimeBlock22 timeBlock22)
             throws GlobalErrorInfoException {
+        TimeBlock timeBlock = JSONUtil.copyProperties(timeBlock22, TimeBlock.class);
+        timeBlock.setStatus(SuccessStatusEnum.SUCCESSFUL);
         return new ResultBody(timeBlockService.applyBlockId(timeBlock));
     }
 

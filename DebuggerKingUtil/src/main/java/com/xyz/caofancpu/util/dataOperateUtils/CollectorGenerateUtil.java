@@ -10,31 +10,6 @@ import java.util.Map;
  */
 public class CollectorGenerateUtil {
 
-    @FunctionalInterface
-    public interface HashMapGeneratorInterface<K, V> {
-
-        /**
-         * 该函数名称, 入参, 返回值不影响任意
-         *
-         * @param hashMap
-         * @return
-         */
-        Map<K, V> process(Map<K, V> hashMap);
-
-    }
-
-    @FunctionalInterface
-    public interface ArrayListGeneratorInterface<E> {
-
-        /**
-         * 该函数名称, 入参, 返回值不影响任意
-         *
-         * @param arrayList
-         * @return
-         */
-        List<E> process(List<E> arrayList);
-    }
-
     public static <K, V> Map<K, V> initHashMap(int capacity, float loadFactor, HashMapGeneratorInterface<K, V> hashMapGenerator) {
         return hashMapGenerator.process(new HashMap(capacity, loadFactor));
     }
@@ -78,6 +53,31 @@ public class CollectorGenerateUtil {
 
     public static <E> List<E> initArrayList(ArrayListGeneratorInterface<E> arrayListGeneratorInterface) {
         return arrayListGeneratorInterface.process(new ArrayList<>());
+    }
+
+    @FunctionalInterface
+    public interface HashMapGeneratorInterface<K, V> {
+
+        /**
+         * 该函数名称, 入参, 返回值不影响任意
+         *
+         * @param hashMap
+         * @return
+         */
+        Map<K, V> process(Map<K, V> hashMap);
+
+    }
+
+    @FunctionalInterface
+    public interface ArrayListGeneratorInterface<E> {
+
+        /**
+         * 该函数名称, 入参, 返回值不影响任意
+         *
+         * @param arrayList
+         * @return
+         */
+        List<E> process(List<E> arrayList);
     }
 
 

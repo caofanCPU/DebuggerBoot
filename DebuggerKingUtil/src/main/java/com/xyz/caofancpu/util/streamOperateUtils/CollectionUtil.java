@@ -43,7 +43,7 @@ public class CollectionUtil extends CollectionUtils {
      * @return 判断结果
      */
     public static boolean isEmpty(Map source) {
-        return (source == null || source.isEmpty());
+        return source == null || source.isEmpty();
     }
 
     /**
@@ -311,7 +311,7 @@ public class CollectionUtil extends CollectionUtils {
     }
 
     /**
-     * 判断元素在list中是否存在
+     * 根据指定条件查找元素，返回找到的第一个元素，找不到就返回null
      *
      * @param coll
      * @param predicate

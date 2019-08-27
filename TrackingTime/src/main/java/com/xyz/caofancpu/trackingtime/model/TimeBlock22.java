@@ -1,6 +1,5 @@
 package com.xyz.caofancpu.trackingtime.model;
 
-import com.xyz.caofancpu.trackingtime.constant.enums.SuccessStatusEnum;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.AllArgsConstructor;
@@ -18,7 +17,7 @@ import java.util.Date;
 @NoArgsConstructor
 @AllArgsConstructor
 @ApiModel
-public class TimeBlock {
+public class TimeBlock22 {
 
     @ApiModelProperty(value = "主键Id", name = "id", example = "98789")
     private Long id;
@@ -37,8 +36,5 @@ public class TimeBlock {
 
     @ApiModelProperty(value = "更新时间", name = "updateTime", example = "2019-08-12 13:14:15")
     private Date updateTime;
-
-    @ApiModelProperty(value = "状态", name = "status", example = "98789")
-    private SuccessStatusEnum status;
 
 }

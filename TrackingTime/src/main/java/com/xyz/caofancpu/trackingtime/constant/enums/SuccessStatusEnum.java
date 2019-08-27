@@ -1,11 +1,12 @@
 package com.xyz.caofancpu.trackingtime.constant.enums;
 
+import com.xyz.caofancpu.util.commonOperateUtils.enumType.IEnum;
 import lombok.Getter;
 
 /**
  * 成功与否状态枚举
  */
-public enum SuccessStatusEnum {
+public enum SuccessStatusEnum implements IEnum {
 
     SUCCESSFUL(1, "Success"),
     FAILED(0, "Failed"),
@@ -16,10 +17,10 @@ public enum SuccessStatusEnum {
     @Getter
     private Integer value;
     @Getter
-    private String title;
+    private String name;
 
-    SuccessStatusEnum(Integer value, String title) {
+    SuccessStatusEnum(Integer value, String name) {
         this.value = value;
-        this.title = title;
+        this.name = name;
     }
 }

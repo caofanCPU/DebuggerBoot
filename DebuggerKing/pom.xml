@@ -49,7 +49,7 @@
         <jasypt.version>1.18</jasypt.version>
         <swagger.version>2.9.2</swagger.version>
         <fastjson.version>1.2.54</fastjson.version>
-        <pagehelper.version>1.2.10</pagehelper.version>
+        <pagehelper.version>1.2.12</pagehelper.version>
 
         <common-util.version>1.0.0-SNAPSHOT</common-util.version>
     </properties>
@@ -215,8 +215,8 @@
 
         <!--MD5等加密工具-->
         <dependency>
-            <groupId>org.springframework.security</groupId>
-            <artifactId>spring-security-core</artifactId>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-security</artifactId>
         </dependency>
 
         <!--解析配置-->
@@ -275,12 +275,6 @@
             <version>${netty.version}</version>
         </dependency>
 
-        <dependency>
-            <groupId>org.mybatis</groupId>
-            <artifactId>mybatis</artifactId>
-            <version>${mybatis.version}</version>
-        </dependency>
-
         <!-- #***********************************************# -->
         <dependency>
             <groupId>org.apache.commons</groupId>
@@ -306,18 +300,6 @@
             <version>${fastjson.version}</version>
         </dependency>
 
-        <dependency>
-            <groupId>commons-beanutils</groupId>
-            <artifactId>commons-beanutils</artifactId>
-            <version>${commons-beanutils.version}</version>
-            <exclusions>
-                <exclusion>
-                    <artifactId>commons-collections</artifactId>
-                    <groupId>commons-collections</groupId>
-                </exclusion>
-            </exclusions>
-        </dependency>
-
         <!--分页插件-->
         <dependency>
             <groupId>com.github.pagehelper</groupId>
@@ -327,6 +309,10 @@
                 <exclusion>
                     <artifactId>spring-boot-autoconfigure</artifactId>
                     <groupId>org.springframework.boot</groupId>
+                </exclusion>
+                <exclusion>
+                    <artifactId>mybatis-spring-boot-starter</artifactId>
+                    <groupId>org.mybatis.spring.boot</groupId>
                 </exclusion>
             </exclusions>
         </dependency>
@@ -350,7 +336,6 @@
             <version>${lomok.version}</version>
         </dependency>
 
-        <!-- Swagger2界面API，注意：2.7.0版本有坑！ -->
         <dependency>
             <groupId>io.springfox</groupId>
             <artifactId>springfox-swagger2</artifactId>
@@ -371,15 +356,6 @@
             <groupId>io.springfox</groupId>
             <artifactId>springfox-swagger-ui</artifactId>
             <version>${swagger.version}</version>
-        </dependency>
-        <!--
-            自定义swagger-ui页面渲染
-            http://${host}:${port}/docs.html
-        -->
-        <dependency>
-            <groupId>com.github.caspar-chen</groupId>
-            <artifactId>swagger-ui-layer</artifactId>
-            <version>0.0.6</version>
         </dependency>
 
         <!-- #***********************************************# -->

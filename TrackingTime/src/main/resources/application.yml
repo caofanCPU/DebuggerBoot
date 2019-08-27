@@ -23,9 +23,19 @@ logging:
 mybatis:
   configuration:
     map-underscore-to-camel-case: true
+  type-handlers-package: com.xyz.caofancpu.util.commonOperateUtils.enumType.mybatis
   type-aliases-package: com.xyz..*.model
 # mapper.xml文件置于Resource中的mybatis文件映射配置
 # mapper-locations: classpath*:mybatis/**/*.xml
+
+#pagehelper的配置
+pagehelper:
+  helperDialect: mysql
+  offsetAsPageNum: true
+  reasonable: true
+  autoRuntimeDialect: true
+  params: count=countSql
+  supportMethodsArguments: true
 
 
 #资源路径键名配置
