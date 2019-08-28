@@ -33,6 +33,7 @@ public interface CommonOperateService {
             throws GlobalErrorInfoException;
 
     void closeFileOperateLogging(Map<String, Object> paramMap);
+
     /**
      * 获取TOKEN
      *

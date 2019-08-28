@@ -6,7 +6,6 @@ import com.xyz.caofancpu.util.result.GlobalErrorInfoRuntimeException;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.ibatis.type.BaseTypeHandler;
 import org.apache.ibatis.type.JdbcType;
-import org.apache.ibatis.type.MappedTypes;
 
 import java.sql.CallableStatement;
 import java.sql.PreparedStatement;
@@ -19,17 +18,21 @@ import java.util.Objects;
  *
  * @author caofanCPU
  */
-@MappedTypes({IEnum.class})
 @Slf4j
 public class MybatisEnumTypeHandler<E extends Enum<E> & IEnum> extends BaseTypeHandler<IEnum> {
 
-    private Class<E> enumType;
+    private final Class<E> type;
+    private final E[] enums;
 
-    public MybatisEnumTypeHandler(Class<E> enumType) {
-        if (Objects.isNull(enumType)) {
-            throw new GlobalErrorInfoRuntimeException("参数非法, 类型不能为空");
+    public MybatisEnumTypeHandler(Class<E> type) {
+        if (Objects.isNull(type)) {
+            throw new IllegalArgumentException("Type argument cannot be null");
         }
-        this.enumType = enumType;
+        this.type = type;
+        this.enums = type.getEnumConstants();
+        if (Objects.isNull(this.enums)) {
+            throw new IllegalArgumentException(type.getSimpleName() + " does not represent an enum type.");
+        }
     }
 
     @Override
@@ -41,27 +44,30 @@ public class MybatisEnumTypeHandler<E extends Enum<E> & IEnum> extends BaseTypeH
     @Override
     public E getNullableResult(ResultSet rs, String columnName)
             throws SQLException {
-        return rs.wasNull() ? null : valueOf(rs.getInt(columnName));
+        int value = rs.getInt(columnName);
+        return rs.wasNull() ? null : valueOf(value);
     }
 
     @Override
     public E getNullableResult(ResultSet rs, int columnIndex)
             throws SQLException {
-        return rs.wasNull() ? null : valueOf(rs.getInt(columnIndex));
+        int value = rs.getInt(columnIndex);
+        return rs.wasNull() ? null : valueOf(value);
     }
 
     @Override
     public E getNullableResult(CallableStatement cs, int columnIndex)
             throws SQLException {
-        return cs.wasNull() ? null : valueOf(cs.getInt(columnIndex));
+        int value = cs.getInt(columnIndex);
+        return cs.wasNull() ? null : valueOf(value);
     }
 
     private E valueOf(int value) {
         try {
-            return EnumUtil.getEnumByValue(enumType, value);
-        } catch (Exception e) {
-            log.error("枚举转换异常: 值[{}]无法转换为枚举类[{}]", value, enumType.getSimpleName());
-            throw new GlobalErrorInfoRuntimeException("枚举转换异常");
+            return EnumUtil.getEnum(enums, IEnum::getValue, value);
+        } catch (Exception ex) {
+            log.error("枚举转换异常: 值[{}]无法转换为枚举类[{}]", value, type.getSimpleName());
+            throw new GlobalErrorInfoRuntimeException("Cannot convert " + value + " to " + type.getSimpleName() + " by ordinal value.");
         }
     }
 }

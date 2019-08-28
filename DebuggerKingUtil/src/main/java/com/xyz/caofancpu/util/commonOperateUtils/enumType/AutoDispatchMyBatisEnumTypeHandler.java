@@ -18,7 +18,7 @@ import java.util.Objects;
 @SuppressWarnings("unchecked")
 public class AutoDispatchMyBatisEnumTypeHandler<E extends Enum<E>> extends BaseTypeHandler<E> {
 
-    private BaseTypeHandler typeHandler = null;
+    private BaseTypeHandler typeHandler;
 
     public AutoDispatchMyBatisEnumTypeHandler(Class<E> enumType) {
         if (Objects.isNull(enumType)) {

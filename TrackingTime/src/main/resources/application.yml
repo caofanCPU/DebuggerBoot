@@ -23,7 +23,7 @@ logging:
 mybatis:
   configuration:
     map-underscore-to-camel-case: true
-  type-handlers-package: com.xyz.caofancpu.util.commonOperateUtils.enumType.mybatis
+    default-enum-type-handler: org.apache.ibatis.type.EnumOrdinalTypeHandler
   type-aliases-package: com.xyz..*.model
 # mapper.xml文件置于Resource中的mybatis文件映射配置
 # mapper-locations: classpath*:mybatis/**/*.xml
@@ -77,9 +77,9 @@ spring:
       org.springframework.boot.actuate.autoconfigure.TraceRepositoryAutoConfiguration,\
       org.springframework.boot.actuate.autoconfigure.TraceWebFilterAutoConfiguration,\
       org.springframework.boot.actuate.autoconfigure.MetricFilterAutoConfiguration
-  jackson:
-    date-format: yyyy-MM-dd HH:mm:ss
-    time-zone: GMT+8
+  #  jackson:
+  #    date-format: yyyy-MM-dd HH:mm:ss
+  #    time-zone: GMT+8
   profiles:
     #当前环境
     active: dev

@@ -13,7 +13,7 @@ import org.apache.commons.lang3.tuple.MutablePair;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
-import java.util.Date;
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -40,19 +40,19 @@ public class TimeBlockService {
     public TimeBlockVO applyBlockId(TimeBlock timeBlock)
             throws GlobalErrorInfoException {
         TimeBlock query = new TimeBlock().setUserId(timeBlock.getUserId())
-                .setStartTime(DateUtil.getTodayQueryStartDate())
-                .setEndTime(DateUtil.getTodayQueryEndDate());
+                .setStartTime(DateUtil.getTodayQueryStartLocalDateTime())
+                .setEndTime(DateUtil.getTodayQueryEndLocalDateTime());
         List<TimeBlock> timeBlockList = queryList(query);
         if (CollectionUtil.isEmpty(timeBlockList)) {
             timeBlockMapper.insert(timeBlock);
             return new TimeBlockVO().setCreateStatus(SuccessStatusEnum.SUCCESSFUL.getValue()).setTimeBlock(timeBlock);
         }
-        MutablePair<Date, Date> referPairDateTimePair = new MutablePair<>(timeBlock.getStartTime(), timeBlock.getEndTime());
+        MutablePair<LocalDateTime, LocalDateTime> referPairDateTimePair = new MutablePair<>(timeBlock.getStartTime(), timeBlock.getEndTime());
         List<TimeBlock> repeatBlockList = timeBlockList.stream()
                 .filter(item -> {
                     // 过滤出重复区块
-                    MutablePair<Date, Date> targetPairDateTimePair = new MutablePair<>(item.getStartTime(), item.getEndTime());
-                    return DateUtil.hasRepeatByJavaUtilDate(targetPairDateTimePair, referPairDateTimePair);
+                    MutablePair<LocalDateTime, LocalDateTime> targetPairDateTimePair = new MutablePair<>(item.getStartTime(), item.getEndTime());
+                    return DateUtil.hasRepeatByLocaleDateTime(targetPairDateTimePair, referPairDateTimePair);
                 })
                 .collect(Collectors.toList());
         if (CollectionUtil.isEmpty(repeatBlockList)) {

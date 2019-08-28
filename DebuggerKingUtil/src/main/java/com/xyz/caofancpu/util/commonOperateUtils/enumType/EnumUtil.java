@@ -4,6 +4,7 @@ import com.xyz.caofancpu.util.streamOperateUtils.CollectionUtil;
 import lombok.NonNull;
 
 import java.util.Arrays;
+import java.util.function.Function;
 
 /**
  * IEnum枚举工具类
@@ -12,28 +13,34 @@ import java.util.Arrays;
  */
 public class EnumUtil {
 
+
     /**
-     * 根据枚举值查找枚举类, 找不到则返回null
+     * 根据枚举指定mapper查找枚举类, 找不到则返回null
      *
      * @param enumList
+     * @param mapper
      * @param value
+     * @param <V>
      * @param <E>
      * @return
      */
-    public static <E extends Enum<E> & IEnum> E getEnumByValue(E[] enumList, @NonNull Integer value) {
-        return CollectionUtil.findFirst(Arrays.asList(enumList), IEnum::getValue, value);
+    public static <V, E extends Enum<E> & IEnum> E getEnum(E[] enumList, @NonNull Function<E, V> mapper, @NonNull V value) {
+        return CollectionUtil.findFirst(Arrays.asList(enumList), mapper, value);
     }
 
     /**
      * 根据枚举值查找枚举类, 找不到则返回null
      *
      * @param clazz
+     * @param mapper
      * @param value
+     * @param <V>
      * @param <E>
      * @return
      */
-    public static <E extends Enum<E> & IEnum> E getEnumByValue(Class<E> clazz, @NonNull Integer value) {
-        return getEnumByValue(clazz.getEnumConstants(), value);
+    public static <V, E extends Enum<E> & IEnum> E getEnum(Class<E> clazz, @NonNull Function<E, V> mapper, @NonNull V value) {
+        return getEnum(clazz.getEnumConstants(), mapper, value);
     }
+
 
 }

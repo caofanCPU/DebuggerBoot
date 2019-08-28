@@ -1,7 +1,7 @@
 package com.xyz.caofancpu.trackingtime.interceptor;
 
 
-import com.alibaba.fastjson.JSONObject;
+import com.xyz.caofancpu.util.dataOperateUtils.JSONUtil;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.ibatis.executor.statement.StatementHandler;
 import org.apache.ibatis.mapping.BoundSql;
@@ -24,7 +24,6 @@ import java.util.Properties;
  * 首先通过注解定义该拦截器的切入点，
  * 对那个类的哪个方法进行拦截，
  * 防止方法重载需要声明参数类型以及个数
- *
  */
 
 @Intercepts({@Signature(type = StatementHandler.class, method = "prepare", args = {Connection.class, Integer.class})})
@@ -55,7 +54,7 @@ public class MybatisSQLInterceptor implements Interceptor {
         Object result;
         String sqlLog = "执行SQL: [" +
                 sql.replaceAll("\\s{2,}", StringUtils.SPACE).replaceAll(" ,", ",").replaceAll(" ;", ";") +
-                "]\n传入参数: [" + JSONObject.toJSONString(param) + "]";
+                "]\n传入参数: [" + JSONUtil.toJSONStringWithDateFormatAndEnumToString(param) + "]";
         result = invocation.proceed();
         return result;
     }

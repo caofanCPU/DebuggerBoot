@@ -19,6 +19,7 @@ public enum MarkContentStatusEnum implements IEnum {
 
     @Getter
     private Integer value;
+
     @Getter
     private String name;
 
@@ -49,5 +50,13 @@ public enum MarkContentStatusEnum implements IEnum {
 
     public MarkContentStatusEnum clear() {
         return MarkContentStatusEnum.DELETED;
+    }
+
+    /**
+     * 强制: 枚举的toString方法只有value
+     */
+    @Override
+    public String toString() {
+        return "" + value;
     }
 }

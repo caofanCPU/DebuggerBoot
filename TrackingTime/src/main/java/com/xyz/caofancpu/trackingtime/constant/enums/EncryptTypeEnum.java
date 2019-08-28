@@ -17,6 +17,7 @@ public enum EncryptTypeEnum implements IEnum {
 
     @Getter
     private Integer value;
+
     @Getter
     private String name;
 
@@ -27,5 +28,13 @@ public enum EncryptTypeEnum implements IEnum {
 
     public EncryptTypeEnum find(Integer value) {
         return Arrays.stream(EncryptTypeEnum.values()).findAny().orElse(EncryptTypeEnum.NAKED);
+    }
+
+    /**
+     * 强制: 枚举的toString方法只有value
+     */
+    @Override
+    public String toString() {
+        return "" + value;
     }
 }

@@ -7,7 +7,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.experimental.Accessors;
 
-import java.util.Date;
+import java.time.LocalDateTime;
 
 /**
  * 时间印记签名主表
@@ -43,9 +43,9 @@ public class TimeMarkContent {
     private Integer status;
 
     @ApiModelProperty(value = "创建时间", name = "createTime", example = "2019-08-12 13:14:15")
-    private Date createTime;
+    private LocalDateTime createTime;
 
     @ApiModelProperty(value = "更新时间", name = "updateTime", example = "2019-08-12 13:14:15")
-    private Date updateTime;
+    private LocalDateTime updateTime;
 
 }

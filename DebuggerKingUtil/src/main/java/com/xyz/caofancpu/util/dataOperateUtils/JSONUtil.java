@@ -22,6 +22,10 @@ public class JSONUtil {
         return JSONObject.toJSONStringWithDateFormat(data, DateUtil.DATETIME_FORMAT_SIMPLE);
     }
 
+    public static String toJSONStringWithDateFormatAndEnumToString(Object data) {
+        return JSONObject.toJSONStringWithDateFormat(data, DateUtil.DATETIME_FORMAT_SIMPLE, SerializerFeature.WriteEnumUsingToString);
+    }
+
     public static String formatStandardJSON(String jsonStr) {
         String start = "    ";
         // 用户标记层级

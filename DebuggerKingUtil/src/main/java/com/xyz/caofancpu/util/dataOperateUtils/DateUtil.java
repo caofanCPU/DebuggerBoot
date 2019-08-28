@@ -69,6 +69,7 @@ public class DateUtil {
      *
      * @return
      */
+    @Deprecated
     public static Date getTodayQueryStartDate() {
         return parseStandardDateTimeStr(getTodayStartDateTime());
     }
@@ -78,8 +79,33 @@ public class DateUtil {
      *
      * @return
      */
+    @Deprecated
     public static Date getTodayQueryEndDate() {
         return parseStandardDateTimeStr(getTodayEndDateTime());
+    }
+
+    /**
+     * 获取今天起始日期+时间, yyyy-MM-dd 00:00:00
+     *
+     * @return
+     */
+    public static LocalDateTime getTodayQueryStartLocalDateTime() {
+        return LocalDateTime.now()
+                .withHour(MIN_HOUR_MINUTE_SECOND)
+                .withMinute(MIN_HOUR_MINUTE_SECOND)
+                .withSecond(MIN_HOUR_MINUTE_SECOND);
+    }
+
+    /**
+     * 获取今天起始日期+时间, yyyy-MM-dd 23:59:59
+     *
+     * @return
+     */
+    public static LocalDateTime getTodayQueryEndLocalDateTime() {
+        return LocalDateTime.now()
+                .withHour(MAX_HOUR)
+                .withMinute(MAX_MINUTE_SECOND)
+                .withSecond(MAX_MINUTE_SECOND);
     }
 
     /**
@@ -115,6 +141,34 @@ public class DateUtil {
      * @param referPairDateTimePair
      * @return
      */
+    public static boolean hasRepeatByLocaleDateTime(MutablePair<LocalDateTime, LocalDateTime> targetPairDateTimePair, MutablePair<LocalDateTime, LocalDateTime> referPairDateTimePair) {
+        LocalDateTime targetLeft = targetPairDateTimePair.getLeft();
+        LocalDateTime targetRight = targetPairDateTimePair.getRight();
+        if (targetLeft.compareTo(targetRight) < 0) {
+            targetPairDateTimePair.setLeft(targetRight);
+            targetPairDateTimePair.setRight(targetLeft);
+            targetLeft = targetPairDateTimePair.getLeft();
+            targetRight = targetPairDateTimePair.getRight();
+        }
+        LocalDateTime referLeft = referPairDateTimePair.getLeft();
+        LocalDateTime referRight = referPairDateTimePair.getRight();
+        if (referLeft.compareTo(referRight) < 0) {
+            referPairDateTimePair.setLeft(referRight);
+            referPairDateTimePair.setRight(referLeft);
+            referLeft = referPairDateTimePair.getLeft();
+            referRight = referPairDateTimePair.getRight();
+        }
+        return !(targetLeft.compareTo(referRight) >= 0 || targetRight.compareTo(referLeft) <= 0);
+    }
+
+    /**
+     * 检测目标时间段与参考时间段是否重叠
+     *
+     * @param targetPairDateTimePair
+     * @param referPairDateTimePair
+     * @return
+     */
+    @Deprecated
     public static boolean hasRepeatByJavaUtilDate(MutablePair<Date, Date> targetPairDateTimePair, MutablePair<Date, Date> referPairDateTimePair) {
         Date targetLeft = targetPairDateTimePair.getLeft();
         Date targetRight = targetPairDateTimePair.getRight();
@@ -208,6 +262,7 @@ public class DateUtil {
      * @param format
      * @return String
      */
+    @Deprecated
     public static String parseJavaUtilDate(@NonNull Date date, String format) {
         if (StringUtils.isBlank(format)) {
             format = DATETIME_FORMAT_SIMPLE;
@@ -221,6 +276,7 @@ public class DateUtil {
      * @param dateTimeStr
      * @return
      */
+    @Deprecated
     public static Date parseStandardDateTimeStr(String dateTimeStr) {
         return new Date(parseStandardMilliSeconds(dateTimeStr));
     }
@@ -283,7 +339,7 @@ public class DateUtil {
      * @return
      */
     public static String convertDateTimeFormat(String dateTimeStr, String format) {
-        if (StringUtils.isBlank(dateTimeStr) || StringUtils.isBlank(format) || format == DATETIME_FORMAT_SIMPLE) {
+        if (StringUtils.isBlank(dateTimeStr) || StringUtils.isBlank(format) || DATETIME_FORMAT_SIMPLE.equals(format)) {
             return dateTimeStr;
         }
         return parseStandardDateTime(dateTimeStr).format(DateTimeFormatter.ofPattern(format));
