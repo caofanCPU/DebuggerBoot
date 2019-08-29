@@ -18,6 +18,7 @@ import java.util.Set;
  *
  */
 @Slf4j
+@Deprecated
 public class StringToEnumConverterFactory<E extends Enum> implements ConverterFactory<String, E> {
     private final Map<Class, Converter> nameToEnumConverterMap = Maps.newHashMap();
 

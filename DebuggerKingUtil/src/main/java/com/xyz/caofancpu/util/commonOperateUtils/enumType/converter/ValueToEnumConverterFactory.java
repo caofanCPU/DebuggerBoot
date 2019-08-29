@@ -16,6 +16,7 @@ import java.util.Objects;
  *
  */
 @Slf4j
+@Deprecated
 public class ValueToEnumConverterFactory<E extends Enum> implements ConverterFactory<Integer, E> {
     private final Map<Class, Converter> valueToEnumConverterMap = Maps.newHashMap();
 

@@ -15,7 +15,9 @@ import com.fasterxml.jackson.datatype.jsr310.ser.LocalDateTimeSerializer;
 import com.fasterxml.jackson.datatype.jsr310.ser.LocalTimeSerializer;
 import com.fasterxml.jackson.module.paramnames.ParameterNamesModule;
 import com.google.common.collect.Lists;
+import com.xyz.caofancpu.util.commonOperateUtils.enumType.EnumRequestJSONConverterUtil;
 import com.xyz.caofancpu.util.commonOperateUtils.enumType.EnumResponseJSONConverterUtil;
+import org.springframework.boot.jackson.JsonComponentModule;
 import org.springframework.http.converter.json.Jackson2ObjectMapperBuilder;
 import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter;
 
@@ -29,7 +31,7 @@ import java.util.TimeZone;
 /**
  * 自定义消息转换器工具类
  * 1.过滤null字段
- * 2.自定义响应枚举转换
+ * 2.自定义响应枚举转换 + 请求枚举转换
  * 3.时间处理(包含时区): "2019-12-31 13:14:15", 当前限定只支持LocalXXX, 首推LocalDateTime
  * 4.jackson底层默认UTF8编码
  *
@@ -44,7 +46,8 @@ public class MappingJackson2HttpMessageConverterUtil {
                         .json()
                         .serializationInclusion(JsonInclude.Include.NON_NULL)
                         .modules(Lists.newArrayList(
-                                new SimpleModule().addSerializer(Enum.class, EnumResponseJSONConverterUtil.build()),
+                                new Jdk8Module(),
+                                new ParameterNamesModule(),
                                 new JavaTimeModule()
                                         .addSerializer(LocalDateTime.class, new LocalDateTimeSerializer(DateTimeFormatter.ofPattern(DateUtil.DATETIME_FORMAT_SIMPLE)))
                                         .addSerializer(LocalDate.class, new LocalDateSerializer(DateTimeFormatter.ofPattern(DateUtil.DATE_FORMAT_SIMPLE)))
@@ -52,8 +55,9 @@ public class MappingJackson2HttpMessageConverterUtil {
                                         .addDeserializer(LocalDateTime.class, new LocalDateTimeDeserializer(DateTimeFormatter.ofPattern(DateUtil.DATETIME_FORMAT_SIMPLE)))
                                         .addDeserializer(LocalDate.class, new LocalDateDeserializer(DateTimeFormatter.ofPattern(DateUtil.DATE_FORMAT_SIMPLE)))
                                         .addDeserializer(LocalTime.class, new LocalTimeDeserializer(DateTimeFormatter.ofPattern(DateUtil.TIME_FORMAT_SIMPLE))),
-                                new ParameterNamesModule(),
-                                new Jdk8Module()
+                                new SimpleModule().addSerializer(Enum.class, EnumResponseJSONConverterUtil.build())
+                                        .addDeserializer(Enum.class, EnumRequestJSONConverterUtil.build()),
+                                new JsonComponentModule()
                                 )
                         )
                         .featuresToDisable(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS)

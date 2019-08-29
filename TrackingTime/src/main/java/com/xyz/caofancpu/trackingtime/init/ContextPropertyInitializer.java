@@ -24,7 +24,7 @@ import java.util.Properties;
  */
 @Configuration("initContextPropertyInitializer")
 @Slf4j
-public class InitContextPropertyInitializer {
+public class ContextPropertyInitializer {
 
     private static final String PROPERTY_KEY = "name";
     private static final String PROPERTY_VALUE = "code";

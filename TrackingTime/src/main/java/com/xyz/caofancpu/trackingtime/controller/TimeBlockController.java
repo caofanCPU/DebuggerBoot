@@ -26,9 +26,7 @@ public class TimeBlockController {
     @ApiOperation(value = "获取时间区块ID", notes = "传参：userId, startTime, endTime")
     public ResultBody applyTimeBlockId(@RequestBody TimeBlock timeBlock)
             throws GlobalErrorInfoException {
-//        timeBlock.setStatus(SuccessStatusEnum.SUCCESSFUL);
         return new ResultBody(timeBlockService.applyBlockId(timeBlock));
     }
-
 
 }

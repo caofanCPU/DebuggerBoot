@@ -1,0 +1,116 @@
+package com.xyz.caofancpu.util.commonOperateUtils.enumType.converter;
+
+import com.fasterxml.jackson.core.JsonParser;
+import com.fasterxml.jackson.databind.BeanProperty;
+import com.fasterxml.jackson.databind.DeserializationContext;
+import com.fasterxml.jackson.databind.JsonDeserializer;
+import com.fasterxml.jackson.databind.JsonMappingException;
+import com.fasterxml.jackson.databind.deser.ContextualDeserializer;
+import com.xyz.caofancpu.util.commonOperateUtils.enumType.IEnum;
+import com.xyz.caofancpu.util.result.GlobalErrorInfoRuntimeException;
+import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang3.StringUtils;
+
+import java.io.IOException;
+import java.util.EnumSet;
+import java.util.Objects;
+
+/**
+ * @author caofanCPU
+ */
+@Slf4j
+public class EnumRequestJSONConverter<E extends Enum<E>> extends JsonDeserializer<E> implements
+        ContextualDeserializer {
+
+    private Class<E> enumType;
+
+    public EnumRequestJSONConverter() {
+    }
+
+    private EnumRequestJSONConverter(Class<E> enumType) {
+        this.enumType = enumType;
+    }
+
+    @Override
+    public E deserialize(JsonParser jsonParser, DeserializationContext deserializationContext)
+            throws IOException {
+        String source = jsonParser.getText();
+        if (StringUtils.isBlank(source)) {
+            log.error("接口传参枚举转换错误, 原因: 目标枚举类[{}]不存在空值", this.enumType.getSimpleName());
+            return null;
+        }
+        return IEnum.class.isAssignableFrom(enumType) ? this.customEnumParse(enumType, source) : this.originEnumParse(enumType, source);
+    }
+
+    @Override
+    @SuppressWarnings("unchecked")
+    public JsonDeserializer<?> createContextual(DeserializationContext deserializationContext, BeanProperty beanProperty)
+            throws JsonMappingException {
+        Class<?> rawClass = deserializationContext.getContextualType().getRawClass();
+        return new EnumRequestJSONConverter(rawClass);
+    }
+
+    /**
+     * 转换顺序: value -> name -> viewName
+     *
+     * @param enumType
+     * @param source
+     * @return
+     */
+    private E customEnumParse(Class<E> enumType, String source) {
+        Integer value = null;
+        E resultEnum = null;
+        try {
+            value = Integer.parseInt(source);
+        } catch (Exception e) {
+            // do nothing
+        }
+        E[] enumConstants = enumType.getEnumConstants();
+        for (int i = 0; i < enumConstants.length; i++) {
+            if (!(enumConstants[i] instanceof IEnum)) {
+                continue;
+            }
+            IEnum temp = (IEnum) enumConstants[i];
+            if ((Objects.nonNull(value) && value.equals(temp.getValue())
+                    || source.equals(temp.getName())
+                    || source.equals(temp.getViewName()))) {
+                resultEnum = enumConstants[i];
+            }
+        }
+        if (Objects.isNull(resultEnum)) {
+            log.error("接口传参枚举转换错误, 原因: 传值[{}], 目标枚举类[{}]", source, this.enumType.getSimpleName());
+            throw new GlobalErrorInfoRuntimeException("参数非法, [" + this.enumType.getSimpleName() + "]不存在枚举值[" + source + "]");
+        }
+        return resultEnum;
+    }
+
+    private E originEnumParse(Class<E> enumType, String source) {
+        if (source.isEmpty()) {
+            return null;
+        }
+        source = source.trim();
+        try {
+            return (E) Enum.valueOf(enumType, source);
+        } catch (Exception ex) {
+            return findEnum(enumType, source);
+        }
+    }
+
+    private E findEnum(Class<E> enumType, String source) {
+        String name = getLettersAndDigits(source);
+        for (E candidate : EnumSet.allOf(enumType)) {
+            if (getLettersAndDigits(candidate.name()).equals(name)) {
+                return candidate;
+            }
+        }
+        throw new IllegalArgumentException("No enum constant "
+                + this.enumType.getCanonicalName() + "." + source);
+    }
+
+    private String getLettersAndDigits(String name) {
+        StringBuilder canonicalName = new StringBuilder(name.length());
+        name.chars().map((c) -> (char) c).filter(Character::isLetterOrDigit)
+                .map(Character::toLowerCase).forEach(canonicalName::append);
+        return canonicalName.toString();
+    }
+}
