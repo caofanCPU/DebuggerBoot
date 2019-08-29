@@ -15,7 +15,7 @@ import com.fasterxml.jackson.datatype.jsr310.ser.LocalDateTimeSerializer;
 import com.fasterxml.jackson.datatype.jsr310.ser.LocalTimeSerializer;
 import com.fasterxml.jackson.module.paramnames.ParameterNamesModule;
 import com.google.common.collect.Lists;
-import com.xyz.caofancpu.util.commonOperateUtils.enumType.EnumJSONConverter;
+import com.xyz.caofancpu.util.commonOperateUtils.enumType.EnumResponseJSONConverterUtil;
 import org.springframework.http.converter.json.Jackson2ObjectMapperBuilder;
 import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter;
 
@@ -38,14 +38,13 @@ import java.util.TimeZone;
 public class MappingJackson2HttpMessageConverterUtil {
 
     @SuppressWarnings("unchecked")
-
     public static MappingJackson2HttpMessageConverter build() {
         return new MappingJackson2HttpMessageConverter(
                 Jackson2ObjectMapperBuilder
                         .json()
                         .serializationInclusion(JsonInclude.Include.NON_NULL)
                         .modules(Lists.newArrayList(
-                                new SimpleModule().addSerializer(Enum.class, new EnumJSONConverter()),
+                                new SimpleModule().addSerializer(Enum.class, EnumResponseJSONConverterUtil.build()),
                                 new JavaTimeModule()
                                         .addSerializer(LocalDateTime.class, new LocalDateTimeSerializer(DateTimeFormatter.ofPattern(DateUtil.DATETIME_FORMAT_SIMPLE)))
                                         .addSerializer(LocalDate.class, new LocalDateSerializer(DateTimeFormatter.ofPattern(DateUtil.DATE_FORMAT_SIMPLE)))

@@ -1,7 +1,9 @@
 package com.xyz.caofancpu.trackingtime.config;
 
+import com.xyz.caofancpu.util.commonOperateUtils.enumType.EnumRequestJSONConverterUtil;
 import com.xyz.caofancpu.util.dataOperateUtils.MappingJackson2HttpMessageConverterUtil;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.format.FormatterRegistry;
 import org.springframework.http.converter.HttpMessageConverter;
 import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
@@ -27,7 +29,7 @@ public class WebConfig implements WebMvcConfigurer {
 
     /**
      * 剔除响应对象中为NULL的字段
-     * 枚举类转换: viewName > name
+     * 响应枚举类转换: viewName > name
      *
      * @param converters
      */
@@ -48,4 +50,17 @@ public class WebConfig implements WebMvcConfigurer {
         converters.add(defaultMappingJackson2HttpMessageConverter);
     }
 
+    /**
+     * 请求枚举转换: value -> name -> viewName
+     *
+     * @param registry
+     */
+    @Override
+    public void addFormatters(FormatterRegistry registry) {
+//        WebConversionService registry1 = (WebConversionService) registry;
+        registry.removeConvertible(String.class, Enum.class);
+        registry.removeConvertible(Integer.class, Enum.class);
+        registry.addConverterFactory(EnumRequestJSONConverterUtil.buildValueToEnumConverterFactory());
+        registry.addConverterFactory(EnumRequestJSONConverterUtil.buildStringToEnumConverterFactory());
+    }
 }

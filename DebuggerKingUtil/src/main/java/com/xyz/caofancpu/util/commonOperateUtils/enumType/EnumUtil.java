@@ -13,7 +13,6 @@ import java.util.function.Function;
  */
 public class EnumUtil {
 
-
     /**
      * 根据枚举指定mapper查找枚举类, 找不到则返回null
      *
@@ -24,7 +23,7 @@ public class EnumUtil {
      * @param <E>
      * @return
      */
-    public static <V, E extends Enum<E> & IEnum> E getEnum(E[] enumList, @NonNull Function<E, V> mapper, @NonNull V value) {
+    public static <V, E extends IEnum> E getEnum(E[] enumList, @NonNull Function<E, V> mapper, @NonNull V value) {
         return CollectionUtil.findFirst(Arrays.asList(enumList), mapper, value);
     }
 
@@ -38,9 +37,8 @@ public class EnumUtil {
      * @param <E>
      * @return
      */
-    public static <V, E extends Enum<E> & IEnum> E getEnum(Class<E> clazz, @NonNull Function<E, V> mapper, @NonNull V value) {
+    public static <V, E extends IEnum> E getEnum(Class<E> clazz, @NonNull Function<E, V> mapper, @NonNull V value) {
         return getEnum(clazz.getEnumConstants(), mapper, value);
     }
-
 
 }

@@ -23,7 +23,7 @@ logging:
 mybatis:
   configuration:
     map-underscore-to-camel-case: true
-    default-enum-type-handler: org.apache.ibatis.type.EnumOrdinalTypeHandler
+    default-enum-type-handler: com.xyz.caofancpu.trackingtime.interceptor.EnumToDBHandler
   type-aliases-package: com.xyz..*.model
 # mapper.xml文件置于Resource中的mybatis文件映射配置
 # mapper-locations: classpath*:mybatis/**/*.xml

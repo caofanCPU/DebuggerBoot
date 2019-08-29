@@ -19,12 +19,12 @@ import java.util.Objects;
  * @author caofanCPU
  */
 @Slf4j
-public class MybatisEnumTypeHandler<E extends Enum<E> & IEnum> extends BaseTypeHandler<IEnum> {
+public class BaseMybatisEnumTypeHandler<E extends Enum<E> & IEnum> extends BaseTypeHandler<IEnum> {
 
     private final Class<E> type;
     private final E[] enums;
 
-    public MybatisEnumTypeHandler(Class<E> type) {
+    public BaseMybatisEnumTypeHandler(Class<E> type) {
         if (Objects.isNull(type)) {
             throw new IllegalArgumentException("Type argument cannot be null");
         }

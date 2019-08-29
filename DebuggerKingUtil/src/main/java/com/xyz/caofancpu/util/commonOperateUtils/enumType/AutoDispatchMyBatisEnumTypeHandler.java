@@ -1,6 +1,6 @@
 package com.xyz.caofancpu.util.commonOperateUtils.enumType;
 
-import com.xyz.caofancpu.util.commonOperateUtils.enumType.mybatis.MybatisEnumTypeHandler;
+import com.xyz.caofancpu.util.commonOperateUtils.enumType.mybatis.BaseMybatisEnumTypeHandler;
 import com.xyz.caofancpu.util.result.GlobalErrorInfoRuntimeException;
 import org.apache.ibatis.type.BaseTypeHandler;
 import org.apache.ibatis.type.EnumOrdinalTypeHandler;
@@ -24,8 +24,8 @@ public class AutoDispatchMyBatisEnumTypeHandler<E extends Enum<E>> extends BaseT
         if (Objects.isNull(enumType)) {
             throw new GlobalErrorInfoRuntimeException("参数非法, 类型不能为空");
         }
-        if (IEnum.class.isAssignableFrom(enumType)) {
-            typeHandler = new MybatisEnumTypeHandler(enumType);
+        if (enumType.isAssignableFrom(IEnum.class)) {
+            typeHandler = new BaseMybatisEnumTypeHandler(enumType);
         } else {
             typeHandler = new EnumOrdinalTypeHandler(enumType);
         }
