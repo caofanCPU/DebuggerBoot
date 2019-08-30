@@ -19,12 +19,13 @@ ms:
 #日志系统配置
 logging:
   config: classpath:logback-spring.xml
-#Mybatis配置
+#Mybatis配置(==> com.xyz.caofancpu.trackingtime.config.MyBatisConfig)
 mybatis:
   configuration:
     map-underscore-to-camel-case: true
-    default-enum-type-handler: com.xyz.caofancpu.trackingtime.interceptor.EnumToDBHandler
+    default-enum-type-handler: com.xyz.caofancpu.util.commonOperateUtils.enumType.AutoDispatchMyBatisEnumTypeHandler
   type-aliases-package: com.xyz..*.model
+
 # mapper.xml文件置于Resource中的mybatis文件映射配置
 # mapper-locations: classpath*:mybatis/**/*.xml
 

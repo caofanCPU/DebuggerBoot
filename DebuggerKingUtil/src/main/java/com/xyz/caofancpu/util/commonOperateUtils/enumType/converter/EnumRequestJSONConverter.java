@@ -66,15 +66,15 @@ public class EnumRequestJSONConverter<E extends Enum<E>> extends JsonDeserialize
             // do nothing
         }
         E[] enumConstants = enumType.getEnumConstants();
-        for (int i = 0; i < enumConstants.length; i++) {
-            if (!(enumConstants[i] instanceof IEnum)) {
+        for (E enumConstant : enumConstants) {
+            if (!(enumConstant instanceof IEnum)) {
                 continue;
             }
-            IEnum temp = (IEnum) enumConstants[i];
+            IEnum temp = (IEnum) enumConstant;
             if ((Objects.nonNull(value) && value.equals(temp.getValue())
                     || source.equals(temp.getName())
                     || source.equals(temp.getViewName()))) {
-                resultEnum = enumConstants[i];
+                resultEnum = enumConstant;
             }
         }
         if (Objects.isNull(resultEnum)) {

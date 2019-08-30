@@ -21,7 +21,7 @@
 
         <java.version>1.8</java.version>
         <springboot.version>2.1.2.RELEASE</springboot.version>
-        <mybatis-spring-boot.version>1.3.2</mybatis-spring-boot.version>
+        <mybatis-spring-boot.version>2.1.0</mybatis-spring-boot.version>
 
         <commons-lang3.version>3.8.1</commons-lang3.version>
         <commons-collections.version>3.2.2</commons-collections.version>

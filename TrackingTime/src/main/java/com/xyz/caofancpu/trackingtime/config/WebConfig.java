@@ -32,7 +32,7 @@ public class WebConfig implements WebMvcConfigurer {
      */
     @Bean(name = "customerMappingJackson2HttpMessageConverter")
     public HttpMessageConverter customerMappingJackson2HttpMessageConverter() {
-        log.info("DebuggerKing....枚举响应转换器初始化完成!");
+        log.info("DebuggerKing....枚举请求&&响应转换器初始化完成!");
         return MappingJackson2HttpMessageConverterUtil.build();
     }
 }

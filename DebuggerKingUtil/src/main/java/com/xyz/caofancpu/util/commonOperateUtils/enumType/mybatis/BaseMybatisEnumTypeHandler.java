@@ -1,6 +1,5 @@
 package com.xyz.caofancpu.util.commonOperateUtils.enumType.mybatis;
 
-import com.xyz.caofancpu.util.commonOperateUtils.enumType.EnumUtil;
 import com.xyz.caofancpu.util.commonOperateUtils.enumType.IEnum;
 import com.xyz.caofancpu.util.result.GlobalErrorInfoRuntimeException;
 import lombok.extern.slf4j.Slf4j;
@@ -19,12 +18,13 @@ import java.util.Objects;
  * @author caofanCPU
  */
 @Slf4j
-public class BaseMybatisEnumTypeHandler<E extends Enum<E> & IEnum> extends BaseTypeHandler<IEnum> {
+public class BaseMybatisEnumTypeHandler<E extends Enum<E>> extends BaseTypeHandler<E> {
 
     private final Class<E> type;
     private final E[] enums;
 
     public BaseMybatisEnumTypeHandler(Class<E> type) {
+        log.info("创建数据库枚举转换器");
         if (Objects.isNull(type)) {
             throw new IllegalArgumentException("Type argument cannot be null");
         }
@@ -36,14 +36,16 @@ public class BaseMybatisEnumTypeHandler<E extends Enum<E> & IEnum> extends BaseT
     }
 
     @Override
-    public void setNonNullParameter(PreparedStatement ps, int i, IEnum parameter, JdbcType jdbcType)
+    public void setNonNullParameter(PreparedStatement ps, int i, E parameter, JdbcType jdbcType)
             throws SQLException {
-        ps.setInt(i, parameter.getValue());
+        log.info("设置值");
+        ps.setInt(i, ((IEnum) parameter).getValue());
     }
 
     @Override
     public E getNullableResult(ResultSet rs, String columnName)
             throws SQLException {
+        log.info("获取值");
         int value = rs.getInt(columnName);
         return rs.wasNull() ? null : valueOf(value);
     }
@@ -51,6 +53,7 @@ public class BaseMybatisEnumTypeHandler<E extends Enum<E> & IEnum> extends BaseT
     @Override
     public E getNullableResult(ResultSet rs, int columnIndex)
             throws SQLException {
+        log.info("获取值");
         int value = rs.getInt(columnIndex);
         return rs.wasNull() ? null : valueOf(value);
     }
@@ -58,16 +61,26 @@ public class BaseMybatisEnumTypeHandler<E extends Enum<E> & IEnum> extends BaseT
     @Override
     public E getNullableResult(CallableStatement cs, int columnIndex)
             throws SQLException {
+        log.info("获取值");
         int value = cs.getInt(columnIndex);
         return cs.wasNull() ? null : valueOf(value);
     }
 
     private E valueOf(int value) {
-        try {
-            return EnumUtil.getEnum(enums, IEnum::getValue, value);
-        } catch (Exception ex) {
-            log.error("枚举转换异常: 值[{}]无法转换为枚举类[{}]", value, type.getSimpleName());
-            throw new GlobalErrorInfoRuntimeException("Cannot convert " + value + " to " + type.getSimpleName() + " by ordinal value.");
+        E resultEnum = null;
+        for (E enumConstant : enums) {
+            if (!(enumConstant instanceof IEnum)) {
+                continue;
+            }
+            IEnum temp = (IEnum) enumConstant;
+            if (value == temp.getValue()) {
+                resultEnum = enumConstant;
+            }
         }
+        if (Objects.isNull(resultEnum)) {
+            log.error("枚举转换异常: 值[{}]无法转换为枚举类[{}]", value, type.getSimpleName());
+            throw new GlobalErrorInfoRuntimeException("Cannot convert " + value + " to " + type.getSimpleName() + " by enum value.");
+        }
+        return resultEnum;
     }
 }

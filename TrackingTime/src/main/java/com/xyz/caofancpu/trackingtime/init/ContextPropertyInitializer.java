@@ -84,7 +84,7 @@ public class ContextPropertyInitializer {
             // 在队尾添加数据库的配置属性，即最后使用数据库配置属性
             configurableEnvironment.getPropertySources().addLast(dbPropertySource);
         } catch (Exception e) {
-            log.error(e.getMessage());
+            log.warn(e.getMessage());
             return;
         }
         log.info("完成数据库配置初始化!");
@@ -102,7 +102,7 @@ public class ContextPropertyInitializer {
                 configurableEnvironment.getPropertySources().addFirst(propertySourceList.get(0));
             }
         } catch (Exception e) {
-            log.error(e.getMessage());
+            log.warn(e.getMessage());
             return;
         }
         log.info("完成yaml配置变量初始化!");

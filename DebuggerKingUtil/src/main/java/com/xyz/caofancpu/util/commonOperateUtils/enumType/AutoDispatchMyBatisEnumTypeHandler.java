@@ -24,7 +24,7 @@ public class AutoDispatchMyBatisEnumTypeHandler<E extends Enum<E>> extends BaseT
         if (Objects.isNull(enumType)) {
             throw new GlobalErrorInfoRuntimeException("参数非法, 类型不能为空");
         }
-        if (enumType.isAssignableFrom(IEnum.class)) {
+        if (IEnum.class.isAssignableFrom(enumType)) {
             typeHandler = new BaseMybatisEnumTypeHandler(enumType);
         } else {
             typeHandler = new EnumOrdinalTypeHandler(enumType);

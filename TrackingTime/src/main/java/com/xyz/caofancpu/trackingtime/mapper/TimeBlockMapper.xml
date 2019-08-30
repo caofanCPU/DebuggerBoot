@@ -19,7 +19,8 @@
         start_time,
         end_time,
         create_time,
-        update_time
+        update_time,
+        status
     </sql>
 
     <!--auto generated Code-->
@@ -36,7 +37,7 @@
             <if test="userId != null">#{userId},</if>
             <if test="startTime != null">#{startTime},</if>
             <if test="endTime != null">#{endTime},</if>
-            <if test="status != null">status,</if>
+            <if test="status != null">#{status},</if>
         </trim>
     </insert>
 

@@ -48,6 +48,7 @@ public class TimeBlockService {
             return new TimeBlockVO().setCreateStatus(SuccessStatusEnum.SUCCESSFUL.getValue()).setTimeBlock(timeBlock);
         }
         MutablePair<LocalDateTime, LocalDateTime> referPairDateTimePair = new MutablePair<>(timeBlock.getStartTime(), timeBlock.getEndTime());
+        // todo
         List<TimeBlock> repeatBlockList = timeBlockList.stream()
                 .filter(item -> {
                     // 过滤出重复区块
