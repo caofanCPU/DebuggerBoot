@@ -11,6 +11,10 @@ import java.io.IOException;
 import java.util.Objects;
 
 /**
+ * 响应字段枚举类型序列化处理器
+ * 如果发现是自定义IEnum的子类, 走自定义枚举转换: viewName -> name -> Enum.name()
+ * 否则, 取Enum.name()
+ *
  * @author caofanCPU
  */
 @Slf4j
@@ -25,7 +29,10 @@ public class EnumResponseJSONConverter<E extends Enum<E>> extends JsonSerializer
         if (enumInstance instanceof IEnum) {
             // 自定义
             IEnum temp = (IEnum) enumInstance;
-            name = StringUtils.isBlank(temp.getViewName()) ? temp.getName() : temp.getViewName();
+            name = StringUtils.isNotBlank(temp.getViewName()) ? temp.getViewName() : temp.getName();
+            if (StringUtils.isBlank(name)) {
+                name = enumInstance.name();
+            }
         } else {
             // 默认
             name = enumInstance.name();

@@ -1,7 +1,8 @@
 package com.xyz.caofancpu.util.commonOperateUtils.enumType;
 
-import com.xyz.caofancpu.util.commonOperateUtils.enumType.mybatis.BaseMybatisEnumTypeHandler;
+import com.xyz.caofancpu.util.commonOperateUtils.enumType.converter.BaseMybatisEnumTypeHandler;
 import com.xyz.caofancpu.util.result.GlobalErrorInfoRuntimeException;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.ibatis.type.BaseTypeHandler;
 import org.apache.ibatis.type.EnumOrdinalTypeHandler;
 import org.apache.ibatis.type.JdbcType;
@@ -16,6 +17,7 @@ import java.util.Objects;
  * 枚举类型自动转换器
  */
 @SuppressWarnings("unchecked")
+@Slf4j
 public class AutoDispatchMyBatisEnumTypeHandler<E extends Enum<E>> extends BaseTypeHandler<E> {
 
     private BaseTypeHandler typeHandler;
@@ -26,8 +28,10 @@ public class AutoDispatchMyBatisEnumTypeHandler<E extends Enum<E>> extends BaseT
         }
         if (IEnum.class.isAssignableFrom(enumType)) {
             typeHandler = new BaseMybatisEnumTypeHandler(enumType);
+            log.info("创建枚举类型: [{}]的自定义DB转换器: [{}]", enumType.getSimpleName(), typeHandler.getClass().getSimpleName());
         } else {
             typeHandler = new EnumOrdinalTypeHandler(enumType);
+            log.info("创建枚举类型: [{}]的默认DB转换器: [{}]", enumType.getSimpleName(), typeHandler.getClass().getSimpleName());
         }
     }
 

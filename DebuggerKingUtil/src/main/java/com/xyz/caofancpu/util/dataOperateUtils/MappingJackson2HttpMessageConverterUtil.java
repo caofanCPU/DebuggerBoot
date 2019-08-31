@@ -55,6 +55,7 @@ public class MappingJackson2HttpMessageConverterUtil {
                                         .addDeserializer(LocalDateTime.class, new LocalDateTimeDeserializer(DateTimeFormatter.ofPattern(DateUtil.DATETIME_FORMAT_SIMPLE)))
                                         .addDeserializer(LocalDate.class, new LocalDateDeserializer(DateTimeFormatter.ofPattern(DateUtil.DATE_FORMAT_SIMPLE)))
                                         .addDeserializer(LocalTime.class, new LocalTimeDeserializer(DateTimeFormatter.ofPattern(DateUtil.TIME_FORMAT_SIMPLE))),
+                                // 请求响应中枚举类型的序列化转换器
                                 new SimpleModule().addSerializer(Enum.class, EnumResponseJSONConverterUtil.build())
                                         .addDeserializer(Enum.class, EnumRequestJSONConverterUtil.build()),
                                 new JsonComponentModule()

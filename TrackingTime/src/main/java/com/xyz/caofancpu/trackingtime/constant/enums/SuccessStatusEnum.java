@@ -23,12 +23,4 @@ public enum SuccessStatusEnum implements IEnum {
         this.value = value;
         this.name = name;
     }
-
-    /**
-     * 强制: 枚举的toString方法只有value
-     */
-    @Override
-    public String toString() {
-        return "" + value;
-    }
 }

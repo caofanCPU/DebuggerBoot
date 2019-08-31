@@ -1,4 +1,4 @@
-package com.xyz.caofancpu.util.commonOperateUtils.enumType.mybatis;
+package com.xyz.caofancpu.util.commonOperateUtils.enumType.converter;
 
 import com.xyz.caofancpu.util.commonOperateUtils.enumType.IEnum;
 import com.xyz.caofancpu.util.result.GlobalErrorInfoRuntimeException;
@@ -24,7 +24,6 @@ public class BaseMybatisEnumTypeHandler<E extends Enum<E>> extends BaseTypeHandl
     private final E[] enums;
 
     public BaseMybatisEnumTypeHandler(Class<E> type) {
-        log.info("创建数据库枚举转换器");
         if (Objects.isNull(type)) {
             throw new IllegalArgumentException("Type argument cannot be null");
         }
@@ -38,14 +37,12 @@ public class BaseMybatisEnumTypeHandler<E extends Enum<E>> extends BaseTypeHandl
     @Override
     public void setNonNullParameter(PreparedStatement ps, int i, E parameter, JdbcType jdbcType)
             throws SQLException {
-        log.info("设置值");
         ps.setInt(i, ((IEnum) parameter).getValue());
     }
 
     @Override
     public E getNullableResult(ResultSet rs, String columnName)
             throws SQLException {
-        log.info("获取值");
         int value = rs.getInt(columnName);
         return rs.wasNull() ? null : valueOf(value);
     }
@@ -53,7 +50,6 @@ public class BaseMybatisEnumTypeHandler<E extends Enum<E>> extends BaseTypeHandl
     @Override
     public E getNullableResult(ResultSet rs, int columnIndex)
             throws SQLException {
-        log.info("获取值");
         int value = rs.getInt(columnIndex);
         return rs.wasNull() ? null : valueOf(value);
     }
@@ -61,7 +57,6 @@ public class BaseMybatisEnumTypeHandler<E extends Enum<E>> extends BaseTypeHandl
     @Override
     public E getNullableResult(CallableStatement cs, int columnIndex)
             throws SQLException {
-        log.info("获取值");
         int value = cs.getInt(columnIndex);
         return cs.wasNull() ? null : valueOf(value);
     }

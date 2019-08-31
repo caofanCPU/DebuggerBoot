@@ -6,7 +6,7 @@ import com.xyz.caofancpu.util.commonOperateUtils.enumType.converter.ValueToEnumC
 import org.springframework.core.convert.converter.ConverterFactory;
 
 /**
- * 枚举响应转换器
+ * 枚举请求转换器
  *
  * @author caofanCPU
  */

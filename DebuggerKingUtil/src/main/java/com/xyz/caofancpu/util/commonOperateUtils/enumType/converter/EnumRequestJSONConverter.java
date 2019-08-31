@@ -16,6 +16,10 @@ import java.util.EnumSet;
 import java.util.Objects;
 
 /**
+ * 请求字段对应枚举类型序列化处理器
+ * 如果发现是自定义IEnum的子类, 走自定义枚举转换: value -> name -> viewName
+ * 否则, 走默认枚举转换: Enum.original() -> Enum.name(), 参见: StringToEnumIgnoringCaseConverterFactory
+ *
  * @author caofanCPU
  */
 @Slf4j
@@ -90,7 +94,7 @@ public class EnumRequestJSONConverter<E extends Enum<E>> extends JsonDeserialize
         }
         source = source.trim();
         try {
-            return (E) Enum.valueOf(enumType, source);
+            return Enum.valueOf(enumType, source);
         } catch (Exception ex) {
             return findEnum(enumType, source);
         }
