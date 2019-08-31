@@ -65,7 +65,7 @@ public class DateUtil {
     private final static int MIN_HOUR_MINUTE_SECOND = 0;
 
     /**
-     * 获取查询起始日期+时间, yyyy-MM-dd 00:00:00
+     * 获取当日查询最早起始日期+时间, yyyy-MM-dd 00:00:00
      *
      * @return
      */
@@ -75,7 +75,7 @@ public class DateUtil {
     }
 
     /**
-     * 获取查询结束日期+时间, yyyy-MM-dd 00:00:00
+     * 获取当日查询最晚结束日期+时间, yyyy-MM-dd 23:59:59
      *
      * @return
      */
@@ -85,7 +85,7 @@ public class DateUtil {
     }
 
     /**
-     * 获取今天起始日期+时间, yyyy-MM-dd 00:00:00
+     * 获取当日查询最早起始日期+时间, yyyy-MM-dd 00:00:00
      *
      * @return
      */
@@ -97,7 +97,7 @@ public class DateUtil {
     }
 
     /**
-     * 获取今天起始日期+时间, yyyy-MM-dd 23:59:59
+     * 获取当日查询最晚结束日期+时间, yyyy-MM-dd 23:59:59
      *
      * @return
      */
@@ -109,7 +109,7 @@ public class DateUtil {
     }
 
     /**
-     * 获取今天起始日期+时间, yyyy-MM-dd 00:00:00
+     * 获取当日最早起始日期+时间, yyyy-MM-dd 00:00:00
      *
      * @return
      */
@@ -122,7 +122,7 @@ public class DateUtil {
     }
 
     /**
-     * 获取今天起始日期+时间, yyyy-MM-dd 23:59:59
+     * 获取当日最晚结束日期+时间, yyyy-MM-dd 23:59:59
      *
      * @return
      */

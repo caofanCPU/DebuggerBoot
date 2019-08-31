@@ -19,15 +19,6 @@ import org.mybatis.spring.boot.autoconfigure.ConfigurationCustomizer;
 public class MyBatisConfig {
 
     /**
-     * 方式三: 设置sqlSessionFactory属性
-     * 依赖: @AutoConfigureAfter(MybatisAutoConfiguration.class)
-     *
-     * @deprecated 不推荐
-     */
-//    @Resource
-    private SqlSessionFactory sqlSessionFactory;
-
-    /**
      * 方式二: 个性化设置默认枚举转换类
      * <p>
      * mybatis-spring-boot-start支持配置自定义枚举转换器, 不推荐用此方式
@@ -38,6 +29,16 @@ public class MyBatisConfig {
         log.info("自定义枚举转换器注册成功!");
         return configuration -> configuration.setDefaultEnumTypeHandler(AutoDispatchMyBatisEnumTypeHandler.class);
     }
+
+
+    /**
+     * 方式三: 设置sqlSessionFactory属性
+     * 依赖: @AutoConfigureAfter(MybatisAutoConfiguration.class)
+     *
+     * @deprecated 不推荐
+     */
+//    @Resource
+    private SqlSessionFactory sqlSessionFactory;
 
     /**
      * 注册自定义枚举转换器

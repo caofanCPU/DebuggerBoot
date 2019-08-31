@@ -32,7 +32,9 @@ import java.util.TimeZone;
  * 自定义消息转换器工具类
  * 1.过滤null字段
  * 2.自定义响应枚举转换 + 请求枚举转换
- * 3.时间处理(包含时区): "2019-12-31 13:14:15", 当前限定只支持LocalXXX, 首推LocalDateTime
+ * 3.时间处理(包含时区): "2019-12-31 13:14:15"
+ *   当前限定只支持LocalXXX, 首推LocalDateTime
+ *   也可考虑使用Instant
  * 4.jackson底层默认UTF8编码
  *
  * @author caofanCPU
@@ -55,9 +57,9 @@ public class MappingJackson2HttpMessageConverterUtil {
                                         .addDeserializer(LocalDateTime.class, new LocalDateTimeDeserializer(DateTimeFormatter.ofPattern(DateUtil.DATETIME_FORMAT_SIMPLE)))
                                         .addDeserializer(LocalDate.class, new LocalDateDeserializer(DateTimeFormatter.ofPattern(DateUtil.DATE_FORMAT_SIMPLE)))
                                         .addDeserializer(LocalTime.class, new LocalTimeDeserializer(DateTimeFormatter.ofPattern(DateUtil.TIME_FORMAT_SIMPLE))),
-                                // 请求响应中枚举类型的序列化转换器
-                                new SimpleModule().addSerializer(Enum.class, EnumResponseJSONConverterUtil.build())
-                                        .addDeserializer(Enum.class, EnumRequestJSONConverterUtil.build()),
+                                // 请求枚举类型的反序列化转换器 + 响应枚举类型的序列化转换器
+                                new SimpleModule().addDeserializer(Enum.class, EnumRequestJSONConverterUtil.build())
+                                        .addSerializer(Enum.class, EnumResponseJSONConverterUtil.build()),
                                 new JsonComponentModule()
                                 )
                         )

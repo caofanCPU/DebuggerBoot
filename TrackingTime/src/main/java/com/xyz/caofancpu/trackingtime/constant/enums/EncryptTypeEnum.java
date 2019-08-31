@@ -30,11 +30,4 @@ public enum EncryptTypeEnum implements IEnum {
         return Arrays.stream(EncryptTypeEnum.values()).findAny().orElse(EncryptTypeEnum.NAKED);
     }
 
-    /**
-     * 强制: 枚举的toString方法只有value
-     */
-    @Override
-    public String toString() {
-        return "" + value;
-    }
 }

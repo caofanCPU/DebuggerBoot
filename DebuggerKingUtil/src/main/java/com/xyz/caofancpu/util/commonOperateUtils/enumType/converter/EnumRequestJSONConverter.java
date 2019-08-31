@@ -40,7 +40,7 @@ public class EnumRequestJSONConverter<E extends Enum<E>> extends JsonDeserialize
             throws IOException {
         String source = jsonParser.getText();
         if (StringUtils.isBlank(source)) {
-            log.error("接口传参枚举转换错误, 原因: 目标枚举类[{}]不存在空值", this.enumType.getSimpleName());
+            log.warn("请求传参枚举字段为空, 则目标枚举类[{}]转换为null", this.enumType.getSimpleName());
             return null;
         }
         return IEnum.class.isAssignableFrom(enumType) ? this.customEnumParse(enumType, source) : this.originEnumParse(enumType, source);
@@ -82,7 +82,7 @@ public class EnumRequestJSONConverter<E extends Enum<E>> extends JsonDeserialize
             }
         }
         if (Objects.isNull(resultEnum)) {
-            log.error("接口传参枚举转换错误, 原因: 传值[{}], 目标枚举类[{}]", source, this.enumType.getSimpleName());
+            log.error("请求传参枚举转换错误, 原因: 传值[{}], 目标枚举类[{}]", source, this.enumType.getSimpleName());
             throw new GlobalErrorInfoRuntimeException("参数非法, [" + this.enumType.getSimpleName() + "]不存在枚举值[" + source + "]");
         }
         return resultEnum;

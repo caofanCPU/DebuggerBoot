@@ -52,11 +52,4 @@ public enum MarkContentStatusEnum implements IEnum {
         return MarkContentStatusEnum.DELETED;
     }
 
-    /**
-     * 强制: 枚举的toString方法只有value
-     */
-    @Override
-    public String toString() {
-        return "" + value;
-    }
 }
