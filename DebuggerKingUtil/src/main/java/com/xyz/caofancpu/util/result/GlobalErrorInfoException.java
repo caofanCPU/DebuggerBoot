@@ -1,15 +1,19 @@
 package com.xyz.caofancpu.util.result;
 
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.EqualsAndHashCode;
+import lombok.experimental.Accessors;
+
+@Data
+@AllArgsConstructor
+@Accessors(chain = true)
+@EqualsAndHashCode(callSuper = true)
 public class GlobalErrorInfoException extends Exception implements ErrorInfoInterface {
 
     private String code;
 
     private String msg;
-
-    public GlobalErrorInfoException(String code, String msg) {
-        this.code = code;
-        this.msg = msg;
-    }
 
     public GlobalErrorInfoException(ErrorInfoInterface infoInterface) {
         this.code = infoInterface.getCode();
@@ -27,20 +31,7 @@ public class GlobalErrorInfoException extends Exception implements ErrorInfoInte
     }
 
     @Override
-    public String getCode() {
-        return code;
-    }
-
-    public void setCode(String code) {
-        this.code = code;
-    }
-
-    @Override
-    public String getMsg() {
-        return msg;
-    }
-
-    public void setMsg(String msg) {
-        this.msg = msg;
+    public String getMessage() {
+        return this.getMsg();
     }
 }

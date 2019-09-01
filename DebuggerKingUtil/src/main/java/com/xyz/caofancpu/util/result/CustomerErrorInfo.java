@@ -1,9 +1,13 @@
 package com.xyz.caofancpu.util.result;
 
+import lombok.Getter;
+
 public class CustomerErrorInfo implements ErrorInfoInterface {
 
+    @Getter
     private String code;
 
+    @Getter
     private String msg;
 
     public CustomerErrorInfo(String code, String msg) {
@@ -17,17 +21,7 @@ public class CustomerErrorInfo implements ErrorInfoInterface {
     }
 
     @Override
-    public String getCode() {
-        return this.code;
-    }
-
-    @Override
-    public String getMsg() {
-        return this.msg;
-    }
-
-    @Override
     public String getMessage() {
-        return this.msg;
+        return this.getMsg();
     }
 }

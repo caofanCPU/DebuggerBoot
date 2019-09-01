@@ -1,5 +1,7 @@
 package com.xyz.caofancpu.util.result;
 
+import lombok.Getter;
+
 public enum GlobalErrorInfoEnum implements ErrorInfoInterface {
     SUCCESS("200", "成功"),
     INTERNAL_ERROR("500", "服务器内部错误"),
@@ -10,9 +12,10 @@ public enum GlobalErrorInfoEnum implements ErrorInfoInterface {
 
     ;
 
-
+    @Getter
     private String code;
 
+    @Getter
     private String msg;
 
     GlobalErrorInfoEnum(String code, String msg) {
@@ -21,12 +24,7 @@ public enum GlobalErrorInfoEnum implements ErrorInfoInterface {
     }
 
     @Override
-    public String getCode() {
-        return this.code;
-    }
-
-    @Override
-    public String getMsg() {
-        return this.msg;
+    public String getMessage() {
+        return this.getMsg();
     }
 }

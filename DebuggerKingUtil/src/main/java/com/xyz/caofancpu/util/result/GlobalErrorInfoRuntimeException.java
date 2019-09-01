@@ -32,6 +32,6 @@ public class GlobalErrorInfoRuntimeException extends RuntimeException implements
      */
     @Override
     public String getMessage() {
-        return this.msg;
+        return this.getMsg();
     }
 }

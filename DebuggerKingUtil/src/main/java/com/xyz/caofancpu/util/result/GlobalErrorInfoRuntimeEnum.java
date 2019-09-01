@@ -1,5 +1,7 @@
 package com.xyz.caofancpu.util.result;
 
+import lombok.Getter;
+
 public enum GlobalErrorInfoRuntimeEnum implements ErrorInfoInterface {
     NullPointerException("RE_NPE01", "空指针错误"),
     ClassCastException("RE_CCE02", "类型转换失败"),
@@ -14,9 +16,10 @@ public enum GlobalErrorInfoRuntimeEnum implements ErrorInfoInterface {
 
     ;
 
-
+    @Getter
     private String code;
 
+    @Getter
     private String msg;
 
     GlobalErrorInfoRuntimeEnum(String code, String msg) {
@@ -24,13 +27,9 @@ public enum GlobalErrorInfoRuntimeEnum implements ErrorInfoInterface {
         this.msg = msg;
     }
 
-    @Override
-    public String getCode() {
-        return this.code;
-    }
 
     @Override
-    public String getMsg() {
-        return this.msg;
+    public String getMessage() {
+        return this.getMsg();
     }
 }
