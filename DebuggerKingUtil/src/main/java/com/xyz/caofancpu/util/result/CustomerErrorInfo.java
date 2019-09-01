@@ -25,4 +25,9 @@ public class CustomerErrorInfo implements ErrorInfoInterface {
     public String getMsg() {
         return this.msg;
     }
+
+    @Override
+    public String getMessage() {
+        return this.msg;
+    }
 }
