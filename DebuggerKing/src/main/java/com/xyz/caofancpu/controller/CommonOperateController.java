@@ -4,10 +4,10 @@ import com.github.pagehelper.PageInfo;
 import com.xyz.caofancpu.model.Attachment;
 import com.xyz.caofancpu.service.CommonOperateService;
 import com.xyz.caofancpu.service.SysDictService;
-import com.xyz.caofancpu.util.result.GlobalErrorInfoEnum;
+import com.xyz.caofancpu.util.commonOperateUtils.HttpStaticHandleUtil;
+import com.xyz.caofancpu.util.dataOperateUtils.JSONUtil;
 import com.xyz.caofancpu.util.result.GlobalErrorInfoException;
 import com.xyz.caofancpu.util.result.ResultBody;
-import com.xyz.caofancpu.utils.DataHelper;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import lombok.extern.slf4j.Slf4j;
@@ -51,14 +51,8 @@ public class CommonOperateController {
     @PostMapping("/attachment/upload")
     public ResultBody uploadAttachment(MultipartFile file, HttpServletRequest request)
             throws GlobalErrorInfoException {
-        Attachment attachment = new Attachment();
-        Map<String, Object> map = DataHelper.getParameterMap(request);
-        try {
-            DataHelper.putDataIntoEntity(map, attachment);
-        } catch (Exception e) {
-            log.error("MAP转换到Attachment出错: \n", e);
-            throw new GlobalErrorInfoException(GlobalErrorInfoEnum.INTERNAL_ERROR);
-        }
+        Map<String, Object> requestParamMap = HttpStaticHandleUtil.getParameterMap(request);
+        Attachment attachment = JSONUtil.copyProperties(requestParamMap, Attachment.class);
         commonOperateService.uploadAttachment(attachment, file);
         return new ResultBody(attachment);
     }

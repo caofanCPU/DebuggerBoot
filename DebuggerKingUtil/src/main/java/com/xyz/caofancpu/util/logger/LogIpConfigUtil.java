@@ -2,6 +2,7 @@ package com.xyz.caofancpu.util.logger;
 
 import ch.qos.logback.classic.pattern.ClassicConverter;
 import ch.qos.logback.classic.spi.ILoggingEvent;
+import com.xyz.caofancpu.util.commonOperateUtils.SymbolConstantUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
@@ -16,71 +17,69 @@ import java.util.Objects;
 
 @Slf4j
 public class LogIpConfigUtil extends ClassicConverter {
+
+    private static final String LOCALHOST = "127.0.0.1";
+
     /**
      * 获取真实ip
      */
     public static String getIpAddress() {
         ServletRequestAttributes attributes = (ServletRequestAttributes) RequestContextHolder.getRequestAttributes();
+        if (Objects.isNull(attributes)) {
+            return LOCALHOST;
+        }
         HttpServletRequest request = attributes.getRequest();
         String ipAddress = request.getHeader("x-forwarded-for");
-        if (ipAddress == null || ipAddress.length() == 0 || "unknown".equalsIgnoreCase(ipAddress)) {
+        if (Objects.isNull(ipAddress) || ipAddress.length() == 0 || "unknown".equalsIgnoreCase(ipAddress)) {
             ipAddress = request.getHeader("Proxy-Client-IP");
         }
-        if (ipAddress == null || ipAddress.length() == 0 || "unknown".equalsIgnoreCase(ipAddress)) {
+        if (Objects.isNull(ipAddress) || ipAddress.length() == 0 || "unknown".equalsIgnoreCase(ipAddress)) {
             ipAddress = request.getHeader("WL-Proxy-Client-IP");
         }
-        if (ipAddress == null || ipAddress.length() == 0 || "unknown".equalsIgnoreCase(ipAddress)) {
+        if (Objects.isNull(ipAddress) || ipAddress.length() == 0 || "unknown".equalsIgnoreCase(ipAddress)) {
             ipAddress = request.getRemoteAddr();
-            if ("127.0.0.1".equals(ipAddress) || "0:0:0:0:0:0:0:1".equals(ipAddress)) {
-                //根据网卡取本机配置的IP
+            if (LOCALHOST.equals(ipAddress) || "0:0:0:0:0:0:0:1".equals(ipAddress)) {
+                // 根据网卡取本机配置的IP
                 InetAddress inet = null;
                 try {
                     inet = InetAddress.getLocalHost();
                 } catch (UnknownHostException e) {
-                    log.error("获取IP异常 : {}", e);
+                    log.error("获取IP异常: " + e);
                 }
                 if (Objects.nonNull(inet)) {
                     ipAddress = inet.getHostAddress();
                 }
             }
         }
-        //对于通过多个代理的情况，第一个IP为客户端真实IP,多个IP按照','分割
-        if (Objects.nonNull(ipAddress) && ipAddress.length() > 15) {
-            if (ipAddress.indexOf(",") > 0) {
-                ipAddress = ipAddress.substring(0, ipAddress.indexOf(","));
-            }
-        }
+        // 多个代理时, 第一个IP为客户端真实IP
+        String[] ipAddressArr = ipAddress.split(SymbolConstantUtil.ENGLISH_COMMA);
+        ipAddress = ipAddressArr[0];
         return ipAddress;
     }
 
     @Override
     public String convert(ILoggingEvent event) {
-        if (isWindowsOS()) {
-            return getWindowsIp();
-        } else {
-            return getLinuxLocalIp();
-        }
+        return isWindowsOS() ? getWindowsIp() : getLinuxLocalIp();
     }
 
     /**
      * 获取Linux下的IP地址
      *
      * @return IP地址
-     * @throws SocketException
      */
     private String getLinuxLocalIp() {
-        String ip = "";
+        String ip = LOCALHOST;
         try {
             for (Enumeration<NetworkInterface> en = NetworkInterface.getNetworkInterfaces(); en.hasMoreElements(); ) {
-                NetworkInterface intf = en.nextElement();
-                String name = intf.getName();
+                NetworkInterface net = en.nextElement();
+                String name = net.getName();
                 if (!name.contains("docker") && !name.contains("lo")) {
-                    for (Enumeration<InetAddress> enumIpAddr = intf.getInetAddresses(); enumIpAddr.hasMoreElements(); ) {
+                    for (Enumeration<InetAddress> enumIpAddr = net.getInetAddresses(); enumIpAddr.hasMoreElements(); ) {
                         InetAddress inetAddress = enumIpAddr.nextElement();
                         if (!inetAddress.isLoopbackAddress()) {
-                            String ipaddress = inetAddress.getHostAddress();
-                            if (!ipaddress.contains("::") && !ipaddress.contains("0:0:") && !ipaddress.contains("fe80")) {
-                                ip = ipaddress;
+                            String ipAddress = inetAddress.getHostAddress();
+                            if (!ipAddress.contains("::") && !ipAddress.contains("0:0:") && !ipAddress.contains("fe80")) {
+                                ip = ipAddress;
                             }
                         }
                     }
@@ -88,8 +87,6 @@ public class LogIpConfigUtil extends ClassicConverter {
             }
         } catch (SocketException ex) {
             log.error("获取日志Ip异常", ex);
-            ip = "127.0.0.1";
-
         }
         return ip;
     }
@@ -100,12 +97,7 @@ public class LogIpConfigUtil extends ClassicConverter {
      * @return
      */
     private boolean isWindowsOS() {
-        boolean isWindowsOS = false;
-        String osName = System.getProperty("os.name");
-        if (osName.toLowerCase().indexOf("windows") > -1) {
-            isWindowsOS = true;
-        }
-        return isWindowsOS;
+        return System.getProperty("os.name").toLowerCase().contains("windows");
     }
 
     private String getWindowsIp() {
@@ -114,7 +106,7 @@ public class LogIpConfigUtil extends ClassicConverter {
         } catch (UnknownHostException e) {
             log.error("获取日志Ip异常", e);
         }
-        return "127.0.0.1";
+        return LOCALHOST;
     }
 
 
