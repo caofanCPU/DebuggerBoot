@@ -377,11 +377,10 @@ public class CollectionUtil extends CollectionUtils {
         if (CollectionUtil.isEmpty(coll)) {
             return StringUtils.EMPTY;
         }
-        List<String> stringList = transToList(coll, Object::toString);
         if (Objects.isNull(separator)) {
             separator = StringUtils.EMPTY;
         }
-        return stringList.stream().filter(Objects::nonNull).collect(Collectors.joining(separator));
+        return coll.stream().filter(Objects::nonNull).map(Object::toString).collect(Collectors.joining(separator));
     }
 
     /**
