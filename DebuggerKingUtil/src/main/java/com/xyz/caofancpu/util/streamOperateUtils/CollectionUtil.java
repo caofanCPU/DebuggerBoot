@@ -30,7 +30,7 @@ import java.util.stream.Collectors;
 import java.util.stream.StreamSupport;
 
 /**
- * 集合工具类
+ * 集合工具类: https://dzone.com/articles/functional-programming-patterns-with-java-8
  */
 public class CollectionUtil extends CollectionUtils {
 
