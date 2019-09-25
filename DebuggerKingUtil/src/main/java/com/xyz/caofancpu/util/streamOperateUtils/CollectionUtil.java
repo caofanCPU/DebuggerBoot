@@ -1,9 +1,7 @@
 package com.xyz.caofancpu.util.streamOperateUtils;
 
 
-import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.Lists;
-import com.google.common.collect.Maps;
 import lombok.NonNull;
 import net.sourceforge.pinyin4j.PinyinHelper;
 import org.apache.commons.collections.CollectionUtils;
@@ -37,19 +35,22 @@ import java.util.stream.StreamSupport;
 public class CollectionUtil extends CollectionUtils {
 
     /**
-     * map判空
+     * Map判空
      *
-     * @param source 数据源
-     * @return 判断结果
+     * @param sourceMap 数据源
+     * @return boolean 判断结果
      */
-    public static boolean isEmpty(Map source) {
-        return source == null || source.isEmpty();
+    public static boolean isEmpty(Map sourceMap) {
+        return Objects.isNull(sourceMap) || sourceMap.isEmpty();
     }
+
 
     /**
      * 转换为Set, 底层默认使用HashSet
      *
-     * @return Set
+     * @param source 数据源
+     * @param mapper 字段执行函数
+     * @return HashSet
      */
     public static <E, R> Set<R> transToSet(Collection<E> source, Function<? super E, ? extends R> mapper) {
         return source.stream().filter(Objects::nonNull).map(mapper).collect(Collectors.toSet());
@@ -57,56 +58,135 @@ public class CollectionUtil extends CollectionUtils {
 
     /**
      * 转换为List, 底层默认使用ArrayList
+     *
+     * @param source 数据源
+     * @param mapper 字段执行函数
+     * @return ArrayList
      */
     public static <E, R> List<R> transToList(Collection<E> source, Function<? super E, ? extends R> mapper) {
         return source.stream().filter(Objects::nonNull).map(mapper).collect(Collectors.toList());
     }
 
     /**
-     * 转换为List, 并且元素转换后得到新的元素为List, 底层默认使用ArrayList
-     */
-    public static <E, R> List<R> transToListWithFlatMap(Collection<E> source, Function<? super E, ? extends List<R>> mapper) {
-        return source.stream().filter(Objects::nonNull).map(mapper).flatMap(List::stream).collect(Collectors.toList());
-    }
-
-    /**
-     * 根据元素字段满足一定条件执行过滤, 并转换为Set
-     */
-    public static <F, T> Set<F> filterAndTransSet(Collection<T> coll, Predicate<? super T> predicate, Function<? super T, ? extends F> mapper) {
-        return coll.stream().filter(Objects::nonNull).filter(predicate).map(mapper).collect(Collectors.toSet());
-    }
-
-    /**
-     * 根据元素字段满足一定条件执行过滤, 并转换为List
-     */
-    public static <F, T> List<F> filterAndTransList(Collection<T> coll, Predicate<? super T> predicate, Function<? super T, ? extends F> mapper) {
-        return coll.stream().filter(Objects::nonNull).filter(predicate).map(mapper).collect(Collectors.toList());
-    }
-
-    /**
      * 转换为指定的集合，常用Set/List，HashSet/ArrayList，LinkedSet/LinkedList
      *
-     * @param resultColl
-     * @param source
-     * @param mapper
+     * @param resultColl 指定集合容器
+     * @param source     数据源
+     * @param mapper     字段执行函数
+     * @return C
      */
     public static <E, R, C extends Collection<R>> C transToCollection(Supplier<C> resultColl, Collection<E> source, Function<? super E, ? extends R> mapper) {
         return source.stream().filter(Objects::nonNull).map(mapper).collect(Collectors.toCollection(resultColl));
     }
 
     /**
-     * 转换为去重的List
+     * 两层嵌套Collection折叠平铺为List, 底层默认使用ArrayList
+     * 多层嵌套的可以通过重复调用此方法完成平铺
+     *
+     * @param source 两层嵌套List数据源
+     * @param mapper 外层元素获取内Collection的执行函数
+     * @return 平铺后收集到的List
+     */
+    public static <E, R> List<R> transToListWithFlatMap(Collection<E> source, Function<? super E, ? extends List<R>> mapper) {
+        return source.stream().filter(Objects::nonNull).map(mapper).flatMap(List::stream).collect(Collectors.toList());
+    }
+
+
+    /**
+     * 根据元素字段满足一定条件执行过滤, 并转换为Set
+     *
+     * @param coll      原始数据源
+     * @param predicate 筛选条件
+     * @param mapper    对筛选出元素进行计算的函数
+     * @return HashSet
+     */
+    public static <F, T> Set<F> filterAndTransSet(Collection<T> coll, Predicate<? super T> predicate, Function<? super T, ? extends F> mapper) {
+        return coll.stream().filter(Objects::nonNull).filter(predicate).map(mapper).collect(Collectors.toSet());
+    }
+
+    /**
+     * 踢除满足条件removePredicate的元素字段 并转换为Set
+     * 本方法与{@link #filterAndTransSet}筛选逻辑是相反的, 结果是互补的
+     *
+     * @param coll            原始数据源
+     * @param removePredicate 筛选条件
+     * @param mapper          对筛选出元素进行计算的函数
+     * @return HashSet
+     */
+    public static <F, T> Set<F> removeAndTransSet(Collection<T> coll, Predicate<? super T> removePredicate, Function<? super T, ? extends F> mapper) {
+        return coll.stream().filter(Objects::nonNull).filter(item -> !removePredicate.test(item)).map(mapper).collect(Collectors.toSet());
+    }
+
+    /**
+     * 根据元素字段满足一定条件执行过滤, 并转换为List
+     *
+     * @param coll      原始数据源
+     * @param predicate 筛选条件
+     * @param mapper    对筛选出元素进行计算的函数
+     * @return ArrayList
+     */
+    public static <F, T> List<F> filterAndTransList(Collection<T> coll, Predicate<? super T> predicate, Function<? super T, ? extends F> mapper) {
+        return coll.stream().filter(Objects::nonNull).filter(predicate).map(mapper).collect(Collectors.toList());
+    }
+
+    /**
+     * 踢除满足条件removePredicate的元素字段 并转换为List
+     * 本方法与{@link #filterAndTransList}筛选逻辑是相反的, 结果是互补的
+     *
+     * @param coll            原始数据源
+     * @param removePredicate 筛选条件
+     * @param mapper          对筛选出元素进行计算的函数
+     * @return ArrayList
+     */
+    public static <F, T> List<F> removeAndTransList(Collection<T> coll, Predicate<? super T> removePredicate, Function<? super T, ? extends F> mapper) {
+        return coll.stream().filter(Objects::nonNull).filter(item -> !removePredicate.test(item)).map(mapper).collect(Collectors.toList());
+    }
+
+    /**
+     * 根据元素字段满足一定条件执行过滤, 并转换为指定集合
+     *
+     * @param resultColl       结果收集容器
+     * @param sourceColl       原始数据源
+     * @param survivePredicate 保留条件
+     * @param mapper           对筛选出元素进行计算的函数
+     * @return R
+     */
+    public static <T, F, R extends Collection<F>> R filterAndTransColl(Supplier<R> resultColl, Collection<T> sourceColl, Predicate<? super T> survivePredicate, Function<? super T, ? extends F> mapper) {
+        return sourceColl.stream().filter(Objects::nonNull).filter(survivePredicate).map(mapper).collect(Collectors.toCollection(resultColl));
+    }
+
+    /**
+     * 踢除满足条件removePredicate的元素字段 并转换为List
+     * 本方法与{@link #filterAndTransColl}筛选逻辑是相反的, 结果是互补的
+     *
+     * @param resultColl      结果收集容器
+     * @param sourceColl      原始数据源
+     * @param removePredicate 剔除条件
+     * @param mapper          对筛选出元素进行计算的函数
+     * @return R
+     */
+    public static <T, F, R extends Collection<F>> R removeAndTransColl(Supplier<R> resultColl, Collection<T> sourceColl, Predicate<? super T> removePredicate, Function<? super T, ? extends F> mapper) {
+        return sourceColl.stream().filter(Objects::nonNull).filter(item -> !removePredicate.test(item)).map(mapper).collect(Collectors.toCollection(resultColl));
+    }
+
+
+    /**
+     * 获取元素的某个字段集合, 并去重
+     *
+     * @param source 数据源
+     * @param mapper 字段执行函数
+     * @return
      */
     public static <E, R> List<R> distinctList(Collection<E> source, Function<? super E, ? extends R> mapper) {
         return source.stream().filter(Objects::nonNull).map(mapper).distinct().collect(Collectors.toList());
     }
 
     /**
-     * 根据集合元素中指定的字段进行去重，返回去重后的元素集合
+     * 根据集合元素中指定字段进行去重，返回去重后的元素集合
      *
-     * @param coll
-     * @param distinctComparator
-     * @return
+     * @param coll               数据源
+     * @param distinctComparator 元素字段比较器(可以是多个字段的联合比较器)
+     * @return 去重后的原始元素集合
      */
     public static <T> List<T> distinctListByField(Collection<T> coll, Comparator<T> distinctComparator) {
         if (isEmpty(coll)) {
@@ -128,6 +208,10 @@ public class CollectionUtil extends CollectionUtils {
 
     /**
      * 分组转换为Map<K, List<V>>，底层默认HashMap<K, ArrayList<V>>
+     *
+     * @param source
+     * @param kFunction
+     * @return
      */
     public static <E, K> Map<K, List<E>> groupIndexToMap(Collection<E> source, Function<? super E, ? extends K> kFunction) {
         return source.stream().filter(Objects::nonNull).collect(Collectors.groupingBy(kFunction));
@@ -135,6 +219,11 @@ public class CollectionUtil extends CollectionUtils {
 
     /**
      * 分组转换为指定的Map<K, List<V>>， 例如TreeMap<K, List<V>>/LinkedHashMap<K, List<V>>
+     *
+     * @param mapColl
+     * @param source
+     * @param kFunction
+     * @return
      */
     public static <E, K, M extends Map<K, List<E>>> M groupIndexToMap(Supplier<M> mapColl, Collection<E> source, Function<? super E, ? extends K> kFunction) {
         return source.stream().filter(Objects::nonNull).collect(Collectors.groupingBy(kFunction, mapColl, Collectors.toList()));
@@ -142,6 +231,11 @@ public class CollectionUtil extends CollectionUtils {
 
     /**
      * 分组转换为指定Map<K, 指定的List<V>>，例如TreeMap<K, LinkedList<V>>/LinkedHashMap<K, LinkedList<V>>
+     *
+     * @param mapColl
+     * @param vColl
+     * @param source
+     * @param kFunction
      */
     public static <E, K, M extends Map<K, C>, C extends Collection<E>> M groupIndexToMap(Supplier<M> mapColl, Supplier<C> vColl, Collection<E> source, Function<? super E, ? extends K> kFunction) {
         return source.stream().filter(Objects::nonNull).collect(Collectors.groupingBy(kFunction, mapColl, Collectors.toCollection(vColl)));
@@ -150,6 +244,13 @@ public class CollectionUtil extends CollectionUtils {
     /**
      * 分组转换为指定Map<K, 指定的List<V>>，例如TreeMap<K, LinkedList<V>>/LinkedHashMap<K, LinkedList<V>>
      * 并且可对原始数组元素进行计算(转化)为其他对象
+     *
+     * @param mapColl
+     * @param vColl
+     * @param source
+     * @param kGroupFunction
+     * @param vFunction
+     * @return
      */
     public static <E, K, V, M extends Map<K, C>, C extends Collection<V>> M groupIndexToMap(Supplier<M> mapColl, Supplier<C> vColl, Collection<E> source, Function<? super E, ? extends K> kGroupFunction, Function<? super E, ? extends V> vFunction) {
         return source.stream().filter(Objects::nonNull).collect(
@@ -158,16 +259,10 @@ public class CollectionUtil extends CollectionUtils {
 
     /**
      * 转换为Map-Value
-     */
-    public static <E, K> ImmutableMap<K, E> uniqueIndex(Iterable<E> values, Function<? super E, ? extends K> kFunction) {
-        if (Objects.isNull(values)) {
-            return ImmutableMap.of();
-        }
-        return Maps.uniqueIndex(values, kFunction::apply);
-    }
-
-    /**
-     * 转换为Map-Value
+     *
+     * @param values
+     * @param kFunction
+     * @return
      */
     public static <E, K> Map<K, E> transToMap(@NonNull Iterable<E> values, Function<? super E, ? extends K> kFunction) {
         return StreamSupport.stream(values.spliterator(), Boolean.FALSE)
@@ -177,6 +272,11 @@ public class CollectionUtil extends CollectionUtils {
 
     /**
      * 转换为Map-Value, 重复KEY将抛出异常
+     *
+     * @param mapColl
+     * @param values
+     * @param kFunction
+     * @return
      */
     public static <E, K, M extends Map<K, E>> M transToMap(Supplier<M> mapColl, @NonNull Iterable<E> values, Function<? super E, ? extends K> kFunction) {
         return StreamSupport.stream(values.spliterator(), Boolean.FALSE)
@@ -184,8 +284,14 @@ public class CollectionUtil extends CollectionUtils {
                 .collect(Collectors.toMap(kFunction, Function.identity(), nonDuplicateKey(), mapColl));
     }
 
+
     /**
      * 转换为Map-Value, 允许重复KEY
+     *
+     * @param mapColl
+     * @param values
+     * @param kFunction
+     * @return
      */
     public static <E, K, M extends Map<K, E>> M transToMapEnhance(Supplier<M> mapColl, @NonNull Iterable<E> values, Function<? super E, ? extends K> kFunction) {
         return StreamSupport.stream(values.spliterator(), Boolean.FALSE)
@@ -193,8 +299,14 @@ public class CollectionUtil extends CollectionUtils {
                 .collect(Collectors.toMap(kFunction, Function.identity(), enableNewOnDuplicateKey(), mapColl));
     }
 
+
     /**
      * 转换为Map-Value
+     *
+     * @param values
+     * @param kFunction
+     * @param vFunction
+     * @return
      */
     public static <E, K, V> Map<K, V> transToMap(@NonNull Iterable<E> values, Function<? super E, ? extends K> kFunction, Function<? super E, ? extends V> vFunction) {
         return StreamSupport.stream(values.spliterator(), Boolean.FALSE)
@@ -202,8 +314,15 @@ public class CollectionUtil extends CollectionUtils {
                 .collect(Collectors.toMap(kFunction, vFunction));
     }
 
+
     /**
      * 转换为Map-Value, 重复KEY将抛出异常
+     *
+     * @param mapColl
+     * @param values
+     * @param kFunction
+     * @param vFunction
+     * @return
      */
     public static <E, K, V, M extends Map<K, V>> M transToMap(Supplier<M> mapColl, @NonNull Iterable<E> values, Function<? super E, ? extends K> kFunction, Function<? super E, ? extends V> vFunction) {
         return StreamSupport.stream(values.spliterator(), Boolean.FALSE)
@@ -218,10 +337,6 @@ public class CollectionUtil extends CollectionUtils {
      * @param values
      * @param kFunction
      * @param vFunction
-     * @param <E>
-     * @param <K>
-     * @param <V>
-     * @param <M>
      * @return
      */
     public static <E, K, V, M extends Map<K, List<V>>> M transToMapByMerge(Supplier<M> mapColl, Iterable<E> values, Function<? super E, K> kFunction, Function<? super E, List<V>> vFunction) {
@@ -514,6 +629,12 @@ public class CollectionUtil extends CollectionUtils {
         return (oldValue, newValue) -> newValue;
     }
 
+    /**
+     * 获取中文姓名比较器
+     *
+     * @param function
+     * @return
+     */
     public static <T> Comparator<T> getNameComparator(Function<T, String> function) {
         return new NameComparator<>(function);
     }
