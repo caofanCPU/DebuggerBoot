@@ -37,6 +37,7 @@
         <code.zxin.version>3.3.2</code.zxin.version>
         <pinyin4j.version>2.5.0</pinyin4j.version>
         <java.verbal.expressions.version>1.4</java.verbal.expressions.version>
+        <java-oolamda.version>0.9.13</java-oolamda.version>
 
     </properties>
 
@@ -165,6 +166,12 @@
             <groupId>ru.lanwen.verbalregex</groupId>
             <artifactId>java-verbal-expressions</artifactId>
             <version>${java.verbal.expressions.version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>org.jooq</groupId>
+            <artifactId>jool-java-8</artifactId>
+            <version>${java-oolamda.version}</version>
         </dependency>
 
         <dependency>
