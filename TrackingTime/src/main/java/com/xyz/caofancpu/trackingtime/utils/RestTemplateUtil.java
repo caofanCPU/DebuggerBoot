@@ -60,8 +60,7 @@ public class RestTemplateUtil {
         }
         /** 一般请求参数不会太多，故而使用单向顺序流即可 */
         // 1.首先构建流，剔除值为空的元素
-        Stream<Map.Entry<String, Object>> tempStream = paramsMap.entrySet().stream()
-                .filter((entry) -> entry.getValue() != null);
+        Stream<Map.Entry<String, Object>> tempStream = paramsMap.entrySet().stream().filter((entry) -> entry.getValue() != null);
         // 2.从流中恢复map
         Map<String, Object> resultMap = tempStream.collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue));
         log.info("完成请求参数中null值的剔除");

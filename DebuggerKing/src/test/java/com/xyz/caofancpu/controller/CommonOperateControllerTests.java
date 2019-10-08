@@ -1,39 +1,29 @@
 package com.xyz.caofancpu.controller;
 
+import com.google.common.collect.Maps;
 import com.xyz.caofancpu.DebuggerKingApplicationTests;
-import com.xyz.caofancpu.util.dataOperateUtils.JSONUtil;
+import com.xyz.caofancpu.utils.SpringBootJunitTestUtil;
+import lombok.extern.slf4j.Slf4j;
 import org.junit.Test;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.util.MultiValueMap;
+import org.springframework.http.HttpHeaders;
 
-import java.util.HashMap;
+import javax.servlet.http.Cookie;
 import java.util.Map;
 
 /**
  * Created by caofanCPU on 2018/7/25.
  */
+@Slf4j
 public class CommonOperateControllerTests extends DebuggerKingApplicationTests {
-
-    private static final Logger logger = LoggerFactory.getLogger(CommonOperateControllerTests.class);
 
     @Test
     public void listSysDictByPageTest()
             throws Exception {
-        Map<String, Object> params = new HashMap<String, Object>(2, 0.5f) {
-            {
-                put("demo", "this is demo");
-            }
-        };
-        MultiValueMap<String, String> requestParams = springBootJunitTestUtil.convertRequestParam(params);
-        String responseStr = springBootJunitTestUtil.handlePostParamExecute(requestParams, "/sysDict/listByPage");
-        JSONUtil.formatStandardJSON(responseStr);
-    }
+        Map<String, Object> params = Maps.newHashMap();
+        params.put("demo", "this is a demo");
 
-    @Test
-    public void testRuntimeException()
-            throws Exception {
-        String responseStr = springBootJunitTestUtil.handlePostBodyExecute(new HashMap<>(2, 0.5f), "/testRuntimeException");
-        JSONUtil.formatStandardJSON(responseStr);
+        HttpHeaders httpHeaders = springBootJunitTestUtil.generateRequestHeaders();
+        Cookie[] cookies = springBootJunitTestUtil.buildMockHttpServletRequestCookie();
+        springBootJunitTestUtil.execute(params, "/sysDict/listByPage", httpHeaders, SpringBootJunitTestUtil.HttpTypeEnum.POST_PARAM, cookies);
     }
 }

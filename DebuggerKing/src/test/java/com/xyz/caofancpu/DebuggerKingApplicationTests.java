@@ -7,7 +7,6 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit4.SpringRunner;
 
-import javax.annotation.PostConstruct;
 import javax.annotation.Resource;
 
 /**
@@ -24,18 +23,6 @@ public class DebuggerKingApplicationTests {
 
     @Resource(type = SpringBootJunitTestUtil.class)
     public SpringBootJunitTestUtil springBootJunitTestUtil;
-
-    /**
-     * 默认就执行
-     * 设置context
-     *
-     * @throws Exception
-     */
-    @PostConstruct
-    public void setupMockMvc()
-            throws Exception {
-        springBootJunitTestUtil.setupMockMvc();
-    }
 
 }
 
