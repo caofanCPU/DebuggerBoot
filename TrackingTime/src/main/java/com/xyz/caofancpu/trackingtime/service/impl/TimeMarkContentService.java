@@ -1,7 +1,7 @@
 package com.xyz.caofancpu.trackingtime.service.impl;
 
 import com.google.common.collect.Lists;
-import com.xyz.caofancpu.trackingtime.annotation.Check;
+import com.xyz.caofancpu.mvc.annotation.Check;
 import com.xyz.caofancpu.trackingtime.constant.enums.MarkContentStatusEnum;
 import com.xyz.caofancpu.trackingtime.mapper.TimeBlockMapper;
 import com.xyz.caofancpu.trackingtime.mapper.TimeMarkContentMapper;

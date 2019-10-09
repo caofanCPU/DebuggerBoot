@@ -24,7 +24,9 @@ logging:
     org:
       springframework:
         #Spring框架日志级别
-        web: debug
+        web: error
+        boot:
+          autoconfigure: error
 #模拟服务所在网关路由/nginx配置
 server:
   servlet:

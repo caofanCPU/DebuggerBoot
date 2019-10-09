@@ -1,6 +1,6 @@
 package com.xyz.caofancpu.trackingtime.service.impl;
 
-import com.xyz.caofancpu.trackingtime.annotation.Check;
+import com.xyz.caofancpu.mvc.annotation.Check;
 import com.xyz.caofancpu.trackingtime.constant.enums.SuccessStatusEnum;
 import com.xyz.caofancpu.trackingtime.mapper.TimeBlockMapper;
 import com.xyz.caofancpu.trackingtime.model.TimeBlock;

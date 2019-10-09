@@ -1,16 +1,22 @@
 package com.xyz.caofancpu.tractingtime;
 
-import org.junit.Test;
+import com.xyz.caofancpu.mvc.test.SpringBootJunitTestUtil;
+import com.xyz.caofancpu.trackingtime.TrackingTimeApplication;
 import org.junit.runner.RunWith;
+import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit4.SpringRunner;
 
+import javax.annotation.Resource;
+
 @RunWith(SpringRunner.class)
-@SpringBootTest
+@SpringBootTest(classes = TrackingTimeApplication.class, webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
+@AutoConfigureMockMvc
+@ActiveProfiles("dev")
 public class TrackingTimeApplicationTests {
 
-    @Test
-    public void contextLoads() {
-    }
+    @Resource(type = SpringBootJunitTestUtil.class)
+    public SpringBootJunitTestUtil springBootJunitTestUtil;
 
 }

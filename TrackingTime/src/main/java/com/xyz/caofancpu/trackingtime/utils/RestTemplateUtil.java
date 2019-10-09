@@ -25,7 +25,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
-import java.util.Set;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -143,11 +142,10 @@ public class RestTemplateUtil {
         // 2.拼接'?'
         sb.append(paramSymbol);
         // 3.遍历参数进行拼接：参数名['=']值['&']
-        Set<Map.Entry<String, Object>> entrySet = paramsMap.entrySet();
         // GET传参一般不会很多，故而使用单向顺序流即可
-        entrySet.stream().forEach((entry) -> sb.append(entry.getKey())
+        paramsMap.forEach((key, value) -> sb.append(key)
                 .append(equalSymbol)
-                .append(entry.getValue())
+                .append(value)
                 .append(connectSymbol)
         );
         // 4.移除最后一个多余的'&'

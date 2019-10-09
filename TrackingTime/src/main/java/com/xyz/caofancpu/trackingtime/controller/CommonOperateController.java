@@ -71,4 +71,12 @@ public class CommonOperateController {
         String accessUrl = commonOperateService.getAttachmentAccessUrl(attachmentName);
         return new ResultBody(accessUrl);
     }
+
+    @PostMapping("/testException")
+    @ApiOperation(value = "测试异常", notes = "传参：无")
+    @Deprecated
+    public ResultBody testException()
+            throws GlobalErrorInfoException {
+        throw new NullPointerException("NPE, 嘿嘿");
+    }
 }

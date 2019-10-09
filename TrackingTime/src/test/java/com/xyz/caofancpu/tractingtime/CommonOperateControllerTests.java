@@ -1,7 +1,6 @@
-package com.xyz.caofancpu.controller;
+package com.xyz.caofancpu.tractingtime;
 
 import com.google.common.collect.Maps;
-import com.xyz.caofancpu.DebuggerKingApplicationTests;
 import com.xyz.caofancpu.constant.HttpTypeEnum;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.Test;
@@ -14,7 +13,15 @@ import java.util.Map;
  * Created by caofanCPU on 2018/7/25.
  */
 @Slf4j
-public class CommonOperateControllerTests extends DebuggerKingApplicationTests {
+public class CommonOperateControllerTests extends TrackingTimeApplicationTests {
+
+    @Test
+    public void npeTest()
+            throws Exception {
+        HttpHeaders httpHeaders = springBootJunitTestUtil.generateRequestHeaders();
+        Cookie[] cookies = springBootJunitTestUtil.buildMockHttpServletRequestCookie();
+        springBootJunitTestUtil.execute(Maps.newHashMap(), "/testException", httpHeaders, HttpTypeEnum.POST_PARAM, cookies);
+    }
 
     @Test
     public void listSysDictByPageTest()
