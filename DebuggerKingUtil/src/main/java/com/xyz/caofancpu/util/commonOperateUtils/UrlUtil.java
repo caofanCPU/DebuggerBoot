@@ -3,7 +3,6 @@ package com.xyz.caofancpu.util.commonOperateUtils;
 import com.xyz.caofancpu.util.result.GlobalErrorInfoException;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
-import org.springframework.util.Assert;
 
 import java.io.UnsupportedEncodingException;
 import java.net.URLDecoder;
@@ -52,25 +51,6 @@ public class UrlUtil {
             }
         }
         throw new GlobalErrorInfoException("URL参数不能为空!");
-    }
-
-    public static void main(String[] args) {
-        String originUrl = "http://cwq.nongjicai.com/#/orderConfirm?orderId=10025";
-        String encodeUrlByUTF = null;
-        try {
-            encodeUrlByUTF = encodeUrl(originUrl, UTF_TYPE);
-        } catch (GlobalErrorInfoException e) {
-            // ignore
-        }
-        System.out.println(encodeUrlByUTF);
-        String decodeUrlByUTF = null;
-        try {
-            decodeUrlByUTF = decodeUrl(encodeUrlByUTF, UTF_TYPE);
-        } catch (GlobalErrorInfoException e) {
-            // ignore
-        }
-        System.out.println(decodeUrlByUTF);
-        Assert.isTrue(originUrl.equals(decodeUrlByUTF), "测试失败！");
     }
 
 }

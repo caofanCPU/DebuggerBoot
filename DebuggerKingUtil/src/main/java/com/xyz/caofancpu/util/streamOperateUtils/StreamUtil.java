@@ -1,14 +1,11 @@
 package com.xyz.caofancpu.util.streamOperateUtils;
 
-import jdk.nashorn.internal.ir.annotations.Ignore;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.collections.CollectionUtils;
-import org.springframework.util.Assert;
 
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
@@ -216,148 +213,4 @@ public class StreamUtil {
                 .collect(Collectors.toList());
         return sortedList;*/
     }
-
-    public static void main(String[] args) {
-        testListSort();
-    }
-
-    @Ignore
-    public static void testListSort() {
-        List<Map<String, Object>> attachmentList = new ArrayList<Map<String, Object>>(10) {
-            {
-                add(new HashMap<String, Object>(2, 0.5f) {
-                    {
-                        put("id", 4);
-                        put("name", "张三");
-                    }
-                });
-                add(new HashMap<String, Object>(2, 0.5f) {
-                    {
-                        put("id", 3);
-                        put("name", "李四");
-                    }
-                });
-                add(new HashMap<String, Object>(2, 0.5f) {
-                    {
-                        put("id", 1);
-                        put("name", "王五");
-                    }
-                });
-                add(new HashMap<String, Object>(2, 0.5f) {
-                    {
-                        put("id", 2);
-                        put("name", "赵六");
-                    }
-                });
-                add(new HashMap<String, Object>(2, 0.5f) {
-                    {
-                        put("id", 2);
-                        put("name", "赵六2");
-                    }
-                });
-            }
-        };
-        sort(attachmentList, "id", true);
-        System.out.println("排序成功!");
-    }
-
-    @Ignore
-    public static void testFilterMapProperty() {
-        Map<String, Object> sourceMap = new HashMap<String, Object>(4, 0.5f) {
-            {
-                put("id", 1);
-                put("name", "帝八哥");
-                put("age", 120L);
-            }
-        };
-        Set<String> targetPropertySet = new HashSet<String>(4) {
-            {
-                add("name");
-            }
-        };
-//        Map<String, Object> resultMap = filterProperty(sourceMap, targetPropertySet);
-        Map<String, Object> resultMap = removeProperty(sourceMap, targetPropertySet);
-        System.out.println(resultMap.size());
-    }
-
-    @Ignore
-    public static void testFilterListProperty() {
-        List<Map<String, Object>> sourceList = new ArrayList<Map<String, Object>>(12) {
-            {
-                add(new HashMap<String, Object>(4, 0.5f) {
-                    {
-                        put("id", 1);
-                        put("name", "帝八哥");
-                        put("age", 120L);
-                    }
-                });
-                add(new HashMap<String, Object>(4, 0.5f) {
-                    {
-                        put("id", 2);
-                        put("name", "谷歌");
-                        put("age", 120L);
-                    }
-                });
-                add(new HashMap<String, Object>(4, 0.5f) {
-                    {
-                        put("id", 3);
-                        put("name", "百度");
-                        put("age", 120L);
-                    }
-                });
-                add(new HashMap<String, Object>(4, 0.5f) {
-                    {
-                        put("id", 4);
-                        put("name", "阿里巴巴");
-                        put("age", 120L);
-                    }
-                });
-            }
-        };
-        Set<String> targetPropertySet = new HashSet<String>(4) {
-            {
-                add("name");
-            }
-        };
-        List<Map<String, Object>> resultList = filterProperty(sourceList, targetPropertySet);
-        System.out.println(resultList.size());
-    }
-
-    @Ignore
-    public static void testStreamReturnSymbol() {
-        Stream<Integer> sourceStream = Stream.of(1, 2, 3, 4, 5);
-        sourceStream.forEach(item -> {
-            if (item > 3) {
-                return;
-            }
-            System.out.println("流中元素: " + item);
-        });
-        System.out.println("流结束后, 代码继续前行....");
-    }
-
-    @Ignore
-    public static void testRemoveNullElement() {
-        Map<String, Object> paramsMap = new HashMap<String, Object>(4, 0.5f) {
-            {
-                put("name", null);
-                put("age", 12L);
-            }
-        };
-        Map<String, Object> resultMap = removeNullElement(paramsMap);
-        System.out.println(resultMap);
-    }
-
-    @Ignore
-    public static void testIntegerHashCode() {
-        Integer a = Integer.valueOf(127);
-        Integer b = a.hashCode();
-        if (a == b) {
-            System.out.println("整型数值小于等于127,位于常量池中,因而[a==b] is OK");
-        }
-        a = 128;
-        b = a.hashCode();
-        Assert.isTrue(a == b, "不等于");
-    }
-
-
 }

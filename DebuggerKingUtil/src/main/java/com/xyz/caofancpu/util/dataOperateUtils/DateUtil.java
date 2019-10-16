@@ -1,6 +1,5 @@
 package com.xyz.caofancpu.util.dataOperateUtils;
 
-import com.xyz.caofancpu.util.commonOperateUtils.NormalUseUtil;
 import lombok.NonNull;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
@@ -655,40 +654,6 @@ public class DateUtil {
     public static int timeDiffHours(String timeStart, String timeEnd) {
         long between = ChronoUnit.HOURS.between(parseStandardTime(timeStart), parseStandardTime(timeEnd));
         return (int) between;
-    }
-
-    public static void main(String[] args) {
-//        NormalUseUtil.out(getCurrentDateTime(DATETIME_FORMAT_SIMPLE) + "\n" + getCurrentDate(DATE_FORMAT_SIMPLE) + "\n" + getCurrentTime(TIME_FORMAT_SIMPLE));
-//        NormalUseUtil.out(getCurrentTime(TIME_FORMAT_CN));
-//        NormalUseUtil.out(parseJavaUtilDate(new Date(), TIME_FORMAT_DETAIL));
-//        NormalUseUtil.out(String.valueOf(dateAfter("2019-08-15 20:38:33", "2019-08-25 20:38:33")));
-//        NormalUseUtil.out(String.valueOf(dateTimeDiffDays("2019-08-15 20:38:33", "2019-08-05 20:38:33")));
-//        NormalUseUtil.out(convertDateTimeFormat(getCurrentDateTime(DATETIME_FORMAT_SIMPLE), DATE_FORMAT_CN));
-//        NormalUseUtil.out(convertDateFormat(getCurrentDate(DATE_FORMAT_SIMPLE), DATE_FORMAT_FOR_BANK));
-//        NormalUseUtil.out(convertTimeFormat(getCurrentTime(TIME_FORMAT_SIMPLE), TIME_FORMAT_CN));
-//        NormalUseUtil.out(getAndAddYear(getCurrentDateTime(DATETIME_FORMAT_SIMPLE), DATETIME_FORMAT_SIMPLE, 1));
-//        NormalUseUtil.out(getAndAddMonth(getCurrentDateTime(DATETIME_FORMAT_SIMPLE), DATE_FORMAT_SIMPLE, 2));
-//        NormalUseUtil.out(getAndAddWeek(getCurrentDateTime(DATETIME_FORMAT_SIMPLE), DATETIME_FORMAT_DETAIL, 2));
-//        NormalUseUtil.out(getAndAddDay(getCurrentDateTime(DATETIME_FORMAT_SIMPLE), DATE_FORMAT_SIMPLE, -15));
-//        NormalUseUtil.out(getAndAddHour(getCurrentDateTime(DATETIME_FORMAT_SIMPLE), DATETIME_FORMAT_SIMPLE, 20));
-//        NormalUseUtil.out(getAndAddMinute(getCurrentDateTime(DATETIME_FORMAT_SIMPLE), DATETIME_FORMAT_SIMPLE, 40));
-//        NormalUseUtil.out(getAndAddSecond(getCurrentDateTime(DATETIME_FORMAT_SIMPLE), DATETIME_FORMAT_SIMPLE, 240));
-//        NormalUseUtil.out(getTodayStartDateTime());
-//        NormalUseUtil.out(getTodayEndDateTime());
-
-        NormalUseUtil.out(String.valueOf(
-                hasRepeat(
-                        new MutablePair<>("2019-08-15 20:00:16", "2019-08-15 20:00:18"),
-                        new MutablePair<>("2019-08-15 20:00:16", "2019-08-15 20:00:18")
-                )
-        ));
-        NormalUseUtil.out(String.valueOf(
-                hasRepeatByJavaUtilDate(
-                        new MutablePair<>(parseStandardDateTimeStr("2019-08-15 20:00:18"), parseStandardDateTimeStr("2019-08-15 20:00:16")),
-                        new MutablePair<>(parseStandardDateTimeStr("2019-08-15 20:00:18"), parseStandardDateTimeStr("2019-08-15 20:00:16"))
-                )
-        ));
-
     }
 
 }

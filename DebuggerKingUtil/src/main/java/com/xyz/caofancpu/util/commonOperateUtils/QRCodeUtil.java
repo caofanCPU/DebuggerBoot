@@ -262,15 +262,4 @@ public class QRCodeUtil {
             throws Exception {
         return QRCodeUtil.decode(new File(path));
     }
-
-    public static void main(String[] args)
-            throws Exception {
-        String text = "http://www.baidu.com";
-        // 不含Logo
-        QRCodeUtil.encode(text, null, "d:\\", true);
-        // 含Logo，不指定二维码图片名
-        // QRCodeUtil.encode(text, "e:\\csdn.jpg", "e:\\", true);
-        // 含Logo，指定二维码图片名
-        // QRCodeUtil.encode(text, "e:\\csdn.jpg", "e:\\", "qrcode", true);
-    }
 }
