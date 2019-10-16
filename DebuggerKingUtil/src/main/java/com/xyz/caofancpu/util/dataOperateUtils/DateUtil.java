@@ -353,7 +353,7 @@ public class DateUtil {
      * @return
      */
     public static String convertDateFormat(String dateStr, String format) {
-        if (StringUtils.isBlank(dateStr) || StringUtils.isBlank(format) || format == DATE_FORMAT_SIMPLE) {
+        if (StringUtils.isBlank(dateStr) || StringUtils.isBlank(format) || DATE_FORMAT_SIMPLE.equals(format)) {
             return dateStr;
         }
         return parseStandardDate(dateStr).format(DateTimeFormatter.ofPattern(format));
@@ -367,7 +367,7 @@ public class DateUtil {
      * @return
      */
     public static String convertTimeFormat(String timeStr, String format) {
-        if (StringUtils.isBlank(timeStr) || StringUtils.isBlank(format) || format == TIME_FORMAT_SIMPLE) {
+        if (StringUtils.isBlank(timeStr) || StringUtils.isBlank(format) || TIME_FORMAT_SIMPLE.equals(format)) {
             return timeStr;
         }
         return parseStandardTime(timeStr).format(DateTimeFormatter.ofPattern(format));
