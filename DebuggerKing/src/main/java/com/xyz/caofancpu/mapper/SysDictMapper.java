@@ -1,9 +1,9 @@
 package com.xyz.caofancpu.mapper;
 
+import com.xyz.caofancpu.model.SysConfigDictMo;
 import org.apache.ibatis.annotations.Mapper;
 
 import java.util.List;
-import java.util.Map;
 
 /**
  * Created by caofanCPU on 2018/7/25.
@@ -11,14 +11,14 @@ import java.util.Map;
 @Mapper
 public interface SysDictMapper {
 
-    List<Map<String, Object>> getInitSysDictList();
+    List<SysConfigDictMo> getInitSysDictList();
 
-    List<Map<String, Object>> getSysDictList();
+    List<SysConfigDictMo> getSysDictList();
 
     /**
      * 批量插入数据, 要返回的主键数据 会直接填充在 入参中
      *
      * @param dataList
      */
-    void batchAddConfig(List<Map<String, Object>> dataList);
+    void batchAddConfig(List<SysConfigDictMo> dataList);
 }

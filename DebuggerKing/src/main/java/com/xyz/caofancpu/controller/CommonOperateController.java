@@ -1,7 +1,9 @@
 package com.xyz.caofancpu.controller;
 
 import com.github.pagehelper.PageInfo;
+import com.google.common.collect.Lists;
 import com.xyz.caofancpu.model.Attachment;
+import com.xyz.caofancpu.model.SysConfigDictMo;
 import com.xyz.caofancpu.service.CommonOperateService;
 import com.xyz.caofancpu.service.SysDictService;
 import com.xyz.caofancpu.util.commonOperateUtils.HttpStaticHandleUtil;
@@ -35,8 +37,20 @@ public class CommonOperateController {
     @ApiOperation(value = "获取系统配置列表", notes = "传参：无")
     public ResultBody listSysDictByPage()
             throws GlobalErrorInfoException {
-        PageInfo<List<Map<String, Object>>> resultPageInfo = sysDictService.getSysDictList();
+        PageInfo<List<SysConfigDictMo>> resultPageInfo = sysDictService.getSysDictList();
         return new ResultBody(resultPageInfo);
+    }
+
+    @PostMapping("/sysDict/testBatchInsertWithBackIds")
+    @ApiOperation(value = "测试批量插入返回ID", notes = "传参：无")
+    public ResultBody testBatchInsertWithBackIds()
+            throws GlobalErrorInfoException {
+        List<SysConfigDictMo> sysConfigDictMoList = Lists.newArrayList(
+                new SysConfigDictMo().setPid(0).setName("配置1").setCode("zopi0").setSortId(1),
+                new SysConfigDictMo().setPid(0).setName("配置2").setCode("IG666").setSortId(2)
+        );
+        sysDictService.batchAddConfig(sysConfigDictMoList);
+        return new ResultBody(sysConfigDictMoList);
     }
 
     /**

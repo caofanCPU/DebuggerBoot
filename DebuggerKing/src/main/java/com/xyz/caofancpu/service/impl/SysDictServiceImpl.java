@@ -4,6 +4,7 @@ package com.xyz.caofancpu.service.impl;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import com.xyz.caofancpu.mapper.SysDictMapper;
+import com.xyz.caofancpu.model.SysConfigDictMo;
 import com.xyz.caofancpu.service.SysDictService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -11,7 +12,6 @@ import org.springframework.context.annotation.DependsOn;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.Map;
 
 
 /**
@@ -28,15 +28,21 @@ public class SysDictServiceImpl implements SysDictService {
     private transient SysDictMapper sysDictMapper;
 
     @Override
-    public List<Map<String, Object>> getInitSysDictList() {
+    public List<SysConfigDictMo> getInitSysDictList() {
         return sysDictMapper.getInitSysDictList();
     }
 
     @Override
-    public PageInfo<List<Map<String, Object>>> getSysDictList() {
+    @SuppressWarnings("unchecked")
+    public PageInfo<List<SysConfigDictMo>> getSysDictList() {
         PageHelper.startPage(1, 10);
-        List<Map<String, Object>> resultList = sysDictMapper.getSysDictList();
-        return (PageInfo<List<Map<String, Object>>>) new PageInfo(resultList);
+        List<SysConfigDictMo> resultList = sysDictMapper.getSysDictList();
+        return new PageInfo(resultList);
+    }
+
+    @Override
+    public void batchAddConfig(List<SysConfigDictMo> sysConfigDictMoList) {
+        sysDictMapper.batchAddConfig(sysConfigDictMoList);
     }
 }
 

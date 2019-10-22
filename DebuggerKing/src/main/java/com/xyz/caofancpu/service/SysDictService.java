@@ -2,9 +2,9 @@ package com.xyz.caofancpu.service;
 
 
 import com.github.pagehelper.PageInfo;
+import com.xyz.caofancpu.model.SysConfigDictMo;
 
 import java.util.List;
-import java.util.Map;
 
 /**
  * Service CommonOperate
@@ -12,8 +12,10 @@ import java.util.Map;
  */
 public interface SysDictService {
 
-    List<Map<String, Object>> getInitSysDictList();
+    List<SysConfigDictMo> getInitSysDictList();
 
-    PageInfo<List<Map<String, Object>>> getSysDictList();
+    PageInfo<List<SysConfigDictMo>> getSysDictList();
+
+    void batchAddConfig(List<SysConfigDictMo> sysConfigDictMoList);
 }
 

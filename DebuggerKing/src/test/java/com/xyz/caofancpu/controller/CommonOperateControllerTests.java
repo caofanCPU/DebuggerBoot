@@ -6,6 +6,7 @@ import com.xyz.caofancpu.constant.HttpTypeEnum;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.Test;
 import org.springframework.http.HttpHeaders;
+import org.springframework.test.annotation.Rollback;
 
 import javax.servlet.http.Cookie;
 import java.util.Map;
@@ -26,4 +27,14 @@ public class CommonOperateControllerTests extends DebuggerKingApplicationTests {
         Cookie[] cookies = springBootJunitTestUtil.buildMockHttpServletRequestCookie();
         springBootJunitTestUtil.execute(params, "/sysDict/listByPage", httpHeaders, HttpTypeEnum.POST_PARAM, cookies);
     }
+
+    @Test
+    @Rollback(false)
+    public void batchInsertWithIdsBackTest()
+            throws Exception {
+        HttpHeaders httpHeaders = springBootJunitTestUtil.generateRequestHeaders();
+        Cookie[] cookies = springBootJunitTestUtil.buildMockHttpServletRequestCookie();
+        springBootJunitTestUtil.execute(null, "/sysDict/testBatchInsertWithBackIds", httpHeaders, HttpTypeEnum.POST_BODY, cookies);
+    }
+
 }

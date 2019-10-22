@@ -1,6 +1,7 @@
 package com.xyz.caofancpu.init;
 
 import com.xyz.caofancpu.mapper.SysDictMapper;
+import com.xyz.caofancpu.model.SysConfigDictMo;
 import com.xyz.caofancpu.util.streamOperateUtils.CollectionUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,7 +15,6 @@ import org.springframework.core.io.ClassPathResource;
 import javax.annotation.PostConstruct;
 import javax.annotation.Resource;
 import java.util.List;
-import java.util.Map;
 import java.util.Properties;
 
 /**
@@ -26,10 +26,8 @@ import java.util.Properties;
 @Slf4j
 public class InitContextPropertyInitializer {
 
-    public static final String PROPERTY_KEY = "name";
-    public static final String PROPERTY_VALUE = "code";
-    public static final String DB_PROPERTY_SOURCE = "dbPropertySource";
-    public static final String YAML_PROPERTY_SOURCE = "yamlPropertySource";
+    private static final String DB_PROPERTY_SOURCE = "dbPropertySource";
+    private static final String YAML_PROPERTY_SOURCE = "yamlPropertySource";
     /**
      * 约定大于配置, properties文件配置
      */
@@ -78,8 +76,8 @@ public class InitContextPropertyInitializer {
         PropertiesPropertySource dbPropertySource = new PropertiesPropertySource(DB_PROPERTY_SOURCE, dbProperty);
         try {
             log.info("读取初始化数据库配置变量...");
-            List<Map<String, Object>> initDbPropertyList = sysDictMapper.getInitSysDictList();
-            initDbPropertyList.forEach(item -> dbProperty.put(item.get(PROPERTY_KEY), item.get(PROPERTY_VALUE)));
+            List<SysConfigDictMo> initDbPropertyList = sysDictMapper.getInitSysDictList();
+            initDbPropertyList.forEach(item -> dbProperty.put(item.getName(), item.getCode()));
             // 在队尾添加数据库的配置属性，即最后使用数据库配置属性
             configurableEnvironment.getPropertySources().addLast(dbPropertySource);
         } catch (Exception e) {
