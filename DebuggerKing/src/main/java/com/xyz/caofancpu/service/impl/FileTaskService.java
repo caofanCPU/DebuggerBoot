@@ -2,8 +2,8 @@ package com.xyz.caofancpu.service.impl;
 
 import com.xyz.caofancpu.model.FileClassifiedResult;
 import com.xyz.caofancpu.model.MiniAttachment;
+import com.xyz.caofancpu.mvc.config.CommonConfigValueService;
 import com.xyz.caofancpu.service.CommonOperateService;
-import com.xyz.caofancpu.service.configValue.CommonConfigValueService;
 import com.xyz.caofancpu.util.commonOperateUtils.FileUtil;
 import com.xyz.caofancpu.util.multiThreadUtils.RemoteInvokeHelper;
 import com.xyz.caofancpu.util.multiThreadUtils.RemoteRequestTask;

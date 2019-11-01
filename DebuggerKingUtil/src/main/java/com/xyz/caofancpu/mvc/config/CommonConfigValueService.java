@@ -1,4 +1,4 @@
-package com.xyz.caofancpu.service.configValue;
+package com.xyz.caofancpu.mvc.config;
 
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.DependsOn;
@@ -13,6 +13,12 @@ import org.springframework.stereotype.Service;
 @Service("commonConfigValueService")
 @DependsOn("initContextPropertyInitializer")
 public class CommonConfigValueService {
+
+    @Value("${server.servlet.context-path}")
+    public String contentPath;
+
+    @Value("${server.port}")
+    public String serverPort;
 
     @Value("${app.name}")
     public String appName;
@@ -37,5 +43,13 @@ public class CommonConfigValueService {
 
     @Value("${task.resultPath}")
     public String taskResultPath;
+
+    @Value("${local.oss.upload}")
+    @Deprecated
+    public String localOSSUploadRoot;
+
+    @Value("${local.oss.download}")
+    @Deprecated
+    public String localOSSDownloadRoot;
 
 }

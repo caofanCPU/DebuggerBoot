@@ -16,6 +16,8 @@ eureka:
 ms:
   file:
     url: http://SERVICE-FILE
+  sso:
+    url: http://SERVICE-SSO
 #日志系统配置
 logging:
   config: classpath:logback-spring.xml

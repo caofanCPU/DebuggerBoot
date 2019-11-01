@@ -58,6 +58,7 @@
             <groupId>com.xyz.caofanCPU.util</groupId>
             <artifactId>DebuggerKingUtil</artifactId>
             <version>2.0.0</version>
+            <scope>compile</scope>
         </dependency>
 
         <dependency>

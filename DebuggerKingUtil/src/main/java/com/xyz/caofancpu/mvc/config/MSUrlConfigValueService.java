@@ -1,4 +1,4 @@
-package com.xyz.caofancpu.service.configValue;
+package com.xyz.caofancpu.mvc.config;
 
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.DependsOn;
@@ -16,5 +16,8 @@ public class MSUrlConfigValueService {
 
     @Value("${ms.file.url}")
     public String fileAccessUrl;
+
+    @Value("${ms.sso.url}")
+    private String ssoAccessUrl;
 
 }

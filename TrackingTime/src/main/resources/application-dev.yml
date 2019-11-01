@@ -35,7 +35,7 @@ server:
 spring:
   datasource:
     connection-test-query: select 1
-    driverClassName: com.mysql.jdbc.Driver
+    driverClassName: com.mysql.cj.jdbc.Driver
     url: jdbc:mysql://127.0.0.1:3306/spring_clould?useUnicode=true&characterEncoding=UTF-8&zeroDateTimeBehavior=convertToNull&useSSL=false
     username: root
     password: ENC(ISF7rTrUFxKY7SN/PNvvWg==)
@@ -46,7 +46,7 @@ jasypt:
     #文件上传大小限制
     multipart:
       max-file-size: 10MB
-      max-request-size: 10MB
+      max-request-size: 100MB
   #Kafka配置
   kafka:
     #Kafka消息中心访问URL
@@ -60,6 +60,11 @@ task:
     average:  10
   rootPath: /work/xx
   resultPath: /work/ff
+
+local:
+  oss:
+    upload: /work/OSS/UP
+    download: /work/OSS/DL
 
 wx:
   domain: https://caofancpu.github.io

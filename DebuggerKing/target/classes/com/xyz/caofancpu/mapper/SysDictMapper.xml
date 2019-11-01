@@ -11,14 +11,16 @@
     </select>
 
     <insert id="batchAddConfig" parameterType="java.util.List" useGeneratedKeys="true" keyProperty="id">
-        INSERT INTO sys_config_dict (
+        INSERT INTO sys_config_dict
+        (
         name,
         code
         )
         VALUES
-        <foreach item="item" collection="list" index="index" separator=",">
+        <foreach collection="list" item="item" index="index" separator=",">
             (
-            #{item.name}, #{item.code}
+            #{item.name},
+            #{item.code}
             )
         </foreach>
     </insert>

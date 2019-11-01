@@ -1,6 +1,6 @@
 package com.xyz.caofancpu.trackingtime.init;
 
-import com.xyz.caofancpu.trackingtime.service.configValue.CommonConfigValueService;
+import com.xyz.caofancpu.mvc.config.CommonConfigValueService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
