@@ -24,7 +24,7 @@ public class TrackingTimeApplication {
      *         2. 配置如下静态代码
      */
     static {
-        ParserConfig.getGlobalInstance().addAccept("com.ovfintech.bynz.model");
+        ParserConfig.getGlobalInstance().addAccept("com.xyz.caofancpu.model");
     }
 
     public static void main(String[] args) {

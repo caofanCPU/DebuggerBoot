@@ -18,7 +18,7 @@ import java.util.regex.Pattern;
  */
 @Slf4j
 public class StringTemplateUtil {
-    public static final String TEMPLATE_KEY_PRIFIX = "\\$\\{";
+    public static final String TEMPLATE_KEY_PREFIX = "\\$\\{";
     public static final String TEMPLATE_KEY_SUFFIX = "\\}";
 
     public static String processTemplate(String templateContent, Object source) {
@@ -36,7 +36,7 @@ public class StringTemplateUtil {
         }
         Set<Map.Entry<String, Object>> entrySet = paramMap.entrySet();
         for (Map.Entry<String, Object> entry : entrySet) {
-            String regex = TEMPLATE_KEY_PRIFIX + entry.getKey() + TEMPLATE_KEY_SUFFIX;
+            String regex = TEMPLATE_KEY_PREFIX + entry.getKey() + TEMPLATE_KEY_SUFFIX;
             Pattern pattern = Pattern.compile(regex);
             Matcher matcher = pattern.matcher(templateContent);
             templateContent = matcher.replaceAll(NormalUseUtil.convertToString(entry.getValue()));

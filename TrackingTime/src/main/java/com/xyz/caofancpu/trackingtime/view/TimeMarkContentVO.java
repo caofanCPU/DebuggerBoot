@@ -18,8 +18,10 @@ import java.time.LocalDateTime;
 public class TimeMarkContentVO {
     @ApiModelProperty(value = "时间区块ID", name = "timeBlockId", example = "98789")
     public Long timeBlockId;
+
     @ApiModelProperty(value = "内容主Id", name = "id", example = "101")
     private Long id;
+
     @ApiModelProperty(value = "起始时间", name = "startTime", example = "2019-08-12 12:11:10")
     private LocalDateTime startTime;
 

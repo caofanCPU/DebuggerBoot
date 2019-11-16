@@ -7,6 +7,7 @@ import com.xyz.caofancpu.util.dataOperateUtils.ReflectionUtil;
 import com.xyz.caofancpu.util.result.CustomerErrorInfo;
 import com.xyz.caofancpu.util.result.GlobalErrorInfoException;
 import com.xyz.caofancpu.util.result.ResultBody;
+import com.xyz.caofancpu.util.streamOperateUtils.CollectionUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.aspectj.lang.ProceedingJoinPoint;
@@ -15,7 +16,6 @@ import org.aspectj.lang.annotation.Aspect;
 import org.aspectj.lang.reflect.MethodSignature;
 import org.springframework.core.annotation.Order;
 import org.springframework.stereotype.Component;
-import org.springframework.util.CollectionUtils;
 
 import java.lang.reflect.Method;
 import java.util.Collection;
@@ -41,7 +41,7 @@ public class CheckParamAspect {
     private static Boolean isNotNull(Object value, String operatorNum) {
         Boolean isNotNull = Boolean.TRUE;
         Boolean isStringNull = (value instanceof String) && StringUtils.isBlank((String) value);
-        Boolean isCollectionNull = (value instanceof Collection) && CollectionUtils.isEmpty((Collection) value);
+        Boolean isCollectionNull = (value instanceof Collection) && CollectionUtil.isEmpty((Collection) value);
         if (value == null) {
             isNotNull = Boolean.FALSE;
         } else if (isStringNull || isCollectionNull) {
@@ -58,20 +58,12 @@ public class CheckParamAspect {
      * @return 是否不为空
      */
     private static Boolean isNumber(Object value, String operatorNum) {
-        Boolean isNumber = Boolean.FALSE;
-
-        if (value != null && (value instanceof Integer || value instanceof Long)) {
-            isNumber = Boolean.TRUE;
-        }
-        return isNumber;
+        return value instanceof Integer || value instanceof Long;
     }
 
     @Deprecated
     private static Boolean isBoolStr(Object value, String operatorNum) {
-        if (value != null && value instanceof Boolean) {
-            return Boolean.TRUE;
-        }
-        return Boolean.FALSE;
+        return value instanceof Boolean;
     }
 
     /**
@@ -82,16 +74,10 @@ public class CheckParamAspect {
      * @return 是否不为空
      */
     private static Boolean isMoney(Object value, String operatorNum) {
-        Boolean isMoney = Boolean.FALSE;
         //表示金额的正则表达式
         String moneyReg = "^\\d+(\\.\\d{1,2})?$";
         Pattern moneyPattern = Pattern.compile(moneyReg);
-
-        if (value != null && moneyPattern.matcher(value.toString()).matches()) {
-            isMoney = Boolean.TRUE;
-        }
-
-        return isMoney;
+        return value != null && moneyPattern.matcher(value.toString()).matches();
     }
 
     // -=================== 对不同类型的值进行校验 起 =======================
@@ -104,15 +90,10 @@ public class CheckParamAspect {
      * @return 是否不为空
      */
     private static Boolean isMail(Object value, String operatorNum) {
-        Boolean isMail = Boolean.FALSE;
-        String mailReg = "^[a-zA-Z0-9_.-]+@[a-zA-Z0-9-]+(\\.[a-zA-Z0-9-]+)*\\.[a-zA-Z0-9]{2,6}$";//表示金额的正则表达式
+        //表示邮箱的正则表达式
+        String mailReg = "^[a-zA-Z0-9_.-]+@[a-zA-Z0-9-]+(\\.[a-zA-Z0-9-]+)*\\.[a-zA-Z0-9]{2,6}$";
         Pattern mailPattern = Pattern.compile(mailReg);
-
-        if (value != null && mailPattern.matcher(value.toString()).matches()) {
-            isMail = Boolean.TRUE;
-        }
-
-        return isMail;
+        return value != null && mailPattern.matcher(value.toString()).matches();
     }
 
     /**
@@ -127,13 +108,13 @@ public class CheckParamAspect {
         if (value == null) {
             return Boolean.FALSE;
         }
-        Boolean isStringGreaterThen = (value instanceof String) && ((String) value).length() > Integer.valueOf(operatorNum);
-        Boolean isLongGreaterThen = (value instanceof Long) && ((Long) value) > Long.valueOf(operatorNum);
-        Boolean isIntegerGreaterThen = (value instanceof Integer) && ((Integer) value) > Integer.valueOf(operatorNum);
-        Boolean isShortGreaterThen = (value instanceof Short) && ((Short) value) > Short.valueOf(operatorNum);
-        Boolean isFloatGreaterThen = (value instanceof Float) && ((Float) value) > Float.valueOf(operatorNum);
-        Boolean isDoubleGreaterThen = (value instanceof Double) && ((Double) value) > Double.valueOf(operatorNum);
-        Boolean isCollectionGreaterThen = (value instanceof Collection) && ((Collection) value).size() > Integer.valueOf(operatorNum);
+        boolean isStringGreaterThen = (value instanceof String) && ((String) value).length() > Integer.valueOf(operatorNum);
+        boolean isLongGreaterThen = (value instanceof Long) && ((Long) value) > Long.valueOf(operatorNum);
+        boolean isIntegerGreaterThen = (value instanceof Integer) && ((Integer) value) > Integer.valueOf(operatorNum);
+        boolean isShortGreaterThen = (value instanceof Short) && ((Short) value) > Short.valueOf(operatorNum);
+        boolean isFloatGreaterThen = (value instanceof Float) && ((Float) value) > Float.valueOf(operatorNum);
+        boolean isDoubleGreaterThen = (value instanceof Double) && ((Double) value) > Double.valueOf(operatorNum);
+        boolean isCollectionGreaterThen = (value instanceof Collection) && ((Collection) value).size() > Integer.valueOf(operatorNum);
         if (isStringGreaterThen || isLongGreaterThen || isIntegerGreaterThen ||
                 isShortGreaterThen || isFloatGreaterThen || isDoubleGreaterThen || isCollectionGreaterThen) {
             isGreaterThan = Boolean.TRUE;
@@ -153,13 +134,13 @@ public class CheckParamAspect {
         if (value == null) {
             return Boolean.FALSE;
         }
-        Boolean isStringGreaterThenEqual = (value instanceof String) && ((String) value).length() >= Integer.valueOf(operatorNum);
-        Boolean isLongGreaterThenEqual = (value instanceof Long) && ((Long) value) >= Long.valueOf(operatorNum);
-        Boolean isIntegerGreaterThenEqual = (value instanceof Integer) && ((Integer) value) >= Integer.valueOf(operatorNum);
-        Boolean isShortGreaterThenEqual = (value instanceof Short) && ((Short) value) >= Short.valueOf(operatorNum);
-        Boolean isFloatGreaterThenEqual = (value instanceof Float) && ((Float) value) >= Float.valueOf(operatorNum);
-        Boolean isDoubleGreaterThenEqual = (value instanceof Double) && ((Double) value) >= Double.valueOf(operatorNum);
-        Boolean isCollectionGreaterThenEqual = (value instanceof Collection) && ((Collection) value).size() >= Integer.valueOf(operatorNum);
+        boolean isStringGreaterThenEqual = (value instanceof String) && ((String) value).length() >= Integer.valueOf(operatorNum);
+        boolean isLongGreaterThenEqual = (value instanceof Long) && ((Long) value) >= Long.valueOf(operatorNum);
+        boolean isIntegerGreaterThenEqual = (value instanceof Integer) && ((Integer) value) >= Integer.valueOf(operatorNum);
+        boolean isShortGreaterThenEqual = (value instanceof Short) && ((Short) value) >= Short.valueOf(operatorNum);
+        boolean isFloatGreaterThenEqual = (value instanceof Float) && ((Float) value) >= Float.valueOf(operatorNum);
+        boolean isDoubleGreaterThenEqual = (value instanceof Double) && ((Double) value) >= Double.valueOf(operatorNum);
+        boolean isCollectionGreaterThenEqual = (value instanceof Collection) && ((Collection) value).size() >= Integer.valueOf(operatorNum);
         if (isStringGreaterThenEqual || isLongGreaterThenEqual || isIntegerGreaterThenEqual ||
                 isShortGreaterThenEqual || isFloatGreaterThenEqual || isDoubleGreaterThenEqual || isCollectionGreaterThenEqual) {
             isGreaterThanEqual = Boolean.TRUE;
@@ -179,13 +160,13 @@ public class CheckParamAspect {
         if (value == null) {
             return Boolean.FALSE;
         }
-        Boolean isStringLessThen = (value instanceof String) && ((String) value).length() < Integer.valueOf(operatorNum);
-        Boolean isLongLessThen = (value instanceof Long) && ((Long) value) < Long.valueOf(operatorNum);
-        Boolean isIntegerLessThen = (value instanceof Integer) && ((Integer) value) < Integer.valueOf(operatorNum);
-        Boolean isShortLessThen = (value instanceof Short) && ((Short) value) < Short.valueOf(operatorNum);
-        Boolean isFloatLessThen = (value instanceof Float) && ((Float) value) < Float.valueOf(operatorNum);
-        Boolean isDoubleLessThen = (value instanceof Double) && ((Double) value) < Double.valueOf(operatorNum);
-        Boolean isCollectionLessThen = (value instanceof Collection) && ((Collection) value).size() < Integer.valueOf(operatorNum);
+        boolean isStringLessThen = (value instanceof String) && ((String) value).length() < Integer.valueOf(operatorNum);
+        boolean isLongLessThen = (value instanceof Long) && ((Long) value) < Long.valueOf(operatorNum);
+        boolean isIntegerLessThen = (value instanceof Integer) && ((Integer) value) < Integer.valueOf(operatorNum);
+        boolean isShortLessThen = (value instanceof Short) && ((Short) value) < Short.valueOf(operatorNum);
+        boolean isFloatLessThen = (value instanceof Float) && ((Float) value) < Float.valueOf(operatorNum);
+        boolean isDoubleLessThen = (value instanceof Double) && ((Double) value) < Double.valueOf(operatorNum);
+        boolean isCollectionLessThen = (value instanceof Collection) && ((Collection) value).size() < Integer.valueOf(operatorNum);
         if (isStringLessThen || isLongLessThen || isIntegerLessThen ||
                 isShortLessThen || isFloatLessThen || isDoubleLessThen || isCollectionLessThen) {
             isLessThan = Boolean.TRUE;
@@ -205,13 +186,13 @@ public class CheckParamAspect {
         if (value == null) {
             return Boolean.FALSE;
         }
-        Boolean isStringLessThenEqual = (value instanceof String) && ((String) value).length() <= Integer.valueOf(operatorNum);
-        Boolean isLongLessThenEqual = (value instanceof Long) && ((Long) value) <= Long.valueOf(operatorNum);
-        Boolean isIntegerLessThenEqual = (value instanceof Integer) && ((Integer) value) <= Integer.valueOf(operatorNum);
-        Boolean isShortLessThenEqual = (value instanceof Short) && ((Short) value) <= Short.valueOf(operatorNum);
-        Boolean isFloatLessThenEqual = (value instanceof Float) && ((Float) value) <= Float.valueOf(operatorNum);
-        Boolean isDoubleLessThenEqual = (value instanceof Double) && ((Double) value) <= Double.valueOf(operatorNum);
-        Boolean isCollectionLessThenEqual = (value instanceof Collection) && ((Collection) value).size() <= Integer.valueOf(operatorNum);
+        boolean isStringLessThenEqual = (value instanceof String) && ((String) value).length() <= Integer.valueOf(operatorNum);
+        boolean isLongLessThenEqual = (value instanceof Long) && ((Long) value) <= Long.valueOf(operatorNum);
+        boolean isIntegerLessThenEqual = (value instanceof Integer) && ((Integer) value) <= Integer.valueOf(operatorNum);
+        boolean isShortLessThenEqual = (value instanceof Short) && ((Short) value) <= Short.valueOf(operatorNum);
+        boolean isFloatLessThenEqual = (value instanceof Float) && ((Float) value) <= Float.valueOf(operatorNum);
+        boolean isDoubleLessThenEqual = (value instanceof Double) && ((Double) value) <= Double.valueOf(operatorNum);
+        boolean isCollectionLessThenEqual = (value instanceof Collection) && ((Collection) value).size() <= Integer.valueOf(operatorNum);
         if (isStringLessThenEqual || isLongLessThenEqual || isIntegerLessThenEqual ||
                 isShortLessThenEqual || isFloatLessThenEqual || isDoubleLessThenEqual || isCollectionLessThenEqual) {
             isLessThanEqual = Boolean.TRUE;
@@ -231,13 +212,13 @@ public class CheckParamAspect {
         if (value == null) {
             return Boolean.FALSE;
         }
-        Boolean isStringNotEqual = (value instanceof String) && !value.equals(operatorNum);
-        Boolean isLongNotEqual = (value instanceof Long) && !value.equals(Long.valueOf(operatorNum));
-        Boolean isIntegerNotEqual = (value instanceof Integer) && !value.equals(Integer.valueOf(operatorNum));
-        Boolean isShortNotEqual = (value instanceof Short) && !value.equals(Short.valueOf(operatorNum));
-        Boolean isFloatNotEqual = (value instanceof Float) && !value.equals(Float.valueOf(operatorNum));
-        Boolean isDoubleNotEqual = (value instanceof Double) && !value.equals(Double.valueOf(operatorNum));
-        Boolean isCollectionNotEqual = (value instanceof Collection) && ((Collection) value).size() != Integer.valueOf(operatorNum);
+        boolean isStringNotEqual = (value instanceof String) && !value.equals(operatorNum);
+        boolean isLongNotEqual = (value instanceof Long) && !value.equals(Long.valueOf(operatorNum));
+        boolean isIntegerNotEqual = (value instanceof Integer) && !value.equals(Integer.valueOf(operatorNum));
+        boolean isShortNotEqual = (value instanceof Short) && !value.equals(Short.valueOf(operatorNum));
+        boolean isFloatNotEqual = (value instanceof Float) && !value.equals(Float.valueOf(operatorNum));
+        boolean isDoubleNotEqual = (value instanceof Double) && !value.equals(Double.valueOf(operatorNum));
+        boolean isCollectionNotEqual = (value instanceof Collection) && ((Collection) value).size() != Integer.valueOf(operatorNum);
         if (isStringNotEqual || isLongNotEqual || isIntegerNotEqual ||
                 isShortNotEqual || isFloatNotEqual || isDoubleNotEqual || isCollectionNotEqual) {
             isNotEqual = Boolean.TRUE;
@@ -248,11 +229,10 @@ public class CheckParamAspect {
     @Around("execution(* com.xyz..*.service..*.*.*(..))")
     public Object check(ProceedingJoinPoint point)
             throws Throwable {
-        Object obj;
         // 参数校验
         String msg = doCheck(point);
         if (StringUtils.isNotEmpty(msg)) {
-            // 处理完请求，返回内容
+            // 校验未通过, 打印日志, 封装异常抛出
             StringBuilder sb = new StringBuilder();
             sb.append("\n[后台响应结果]:\n"
                     + "响应耗时[0ms]" + "\n"
@@ -264,8 +244,7 @@ public class CheckParamAspect {
             throw new GlobalErrorInfoException(errInfo);
         }
         // 通过校验，继续执行原有方法
-        obj = point.proceed();
-        return obj;
+        return point.proceed();
     }
 
     /**
@@ -391,7 +370,7 @@ public class CheckParamAspect {
     }
 
 
-    // -=================== 对不同类型的值进行校验 止 =======================
+    // -=================== 对不同类型的值进行校验 =======================
 
     /**
      * 判断是否符合参数规则
