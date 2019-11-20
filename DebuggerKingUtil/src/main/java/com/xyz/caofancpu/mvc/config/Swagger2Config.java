@@ -1,6 +1,6 @@
 package com.xyz.caofancpu.mvc.config;
 
-import com.xyz.caofancpu.util.dataOperateUtils.CollectorGenerateUtil;
+import com.google.common.collect.Lists;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -20,7 +20,6 @@ import springfox.documentation.spi.DocumentationType;
 import springfox.documentation.spi.service.contexts.SecurityContext;
 import springfox.documentation.spring.web.plugins.Docket;
 
-import java.util.ArrayList;
 import java.util.List;
 
 @Configuration
@@ -70,38 +69,32 @@ public class Swagger2Config {
     }
 
     private List<ApiKey> securitySchemes() {
-        List<ApiKey> apiKeys = CollectorGenerateUtil.initArrayList(list -> {
-            list.add(new ApiKey(authKey, authKey, "header"));
-            return list;
-        });
-        return apiKeys;
+        return Lists.newArrayList(new ApiKey(authKey, authKey, "header"));
     }
 
     private List<SecurityContext> securityContexts() {
-        return CollectorGenerateUtil.initArrayList(list -> {
-            list.add(SecurityContext.builder()
-                    .securityReferences(defaultAuth())
-                    .build());
-            return list;
-        });
+        return Lists.newArrayList(SecurityContext.builder()
+                .securityReferences(defaultAuth())
+                .build());
     }
 
     List<SecurityReference> defaultAuth() {
         AuthorizationScope authorizationScope = new AuthorizationScope("global", "accessEverything");
         AuthorizationScope[] authorizationScopes = new AuthorizationScope[1];
         authorizationScopes[0] = authorizationScope;
-        return CollectorGenerateUtil.initArrayList(list -> {
-            list.add(new SecurityReference(authKey, authorizationScopes));
-            return list;
-        });
+        return Lists.newArrayList(new SecurityReference(authKey, authorizationScopes));
     }
 
     private List<Parameter> setHeaderToken() {
-        ParameterBuilder tokenPar = new ParameterBuilder();
-        List<Parameter> pars = new ArrayList<>();
-        tokenPar.name("X-Auth-Token").description(authKey).modelRef(new ModelRef("string")).parameterType("header").required(false).build();
-        pars.add(tokenPar.build());
-        return pars;
+        return Lists.newArrayList(
+                new ParameterBuilder()
+                        .name("X-Auth-Token")
+                        .description(authKey)
+                        .modelRef(new ModelRef("string"))
+                        .parameterType("header")
+                        .required(false)
+                        .build()
+        );
     }
 
 
