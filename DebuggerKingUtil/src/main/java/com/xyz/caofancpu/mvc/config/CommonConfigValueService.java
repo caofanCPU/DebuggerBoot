@@ -52,4 +52,7 @@ public class CommonConfigValueService {
     @Deprecated
     public String localOSSDownloadRoot;
 
+    @Value("${swagger.showApi}")
+    public boolean showApi;
+
 }

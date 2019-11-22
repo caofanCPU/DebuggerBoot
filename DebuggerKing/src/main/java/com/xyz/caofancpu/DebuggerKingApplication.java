@@ -6,14 +6,12 @@ import org.mybatis.spring.annotation.MapperScan;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.autoconfigure.security.servlet.SecurityAutoConfiguration;
-import springfox.documentation.swagger2.annotations.EnableSwagger2;
 
 @SpringBootApplication(scanBasePackages = {"com.xyz.caofancpu"}, exclude = {SecurityAutoConfiguration.class})
 //禁止自动注册
 //@EnableDiscoveryClient
 @MapperScan("com.xyz..*.mapper")
 @EnableEncryptableProperties
-@EnableSwagger2
 public class DebuggerKingApplication {
 
     /**

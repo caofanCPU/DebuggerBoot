@@ -1,11 +1,14 @@
 package com.xyz.caofancpu.mvc.config;
 
+import com.google.common.collect.Lists;
 import com.xyz.caofancpu.util.dataOperateUtils.MappingJackson2HttpMessageConverterUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.converter.HttpMessageConverter;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
+
+import java.util.List;
 
 /**
  * WEB配置
@@ -36,5 +39,16 @@ public class WebConfig implements WebMvcConfigurer {
     public HttpMessageConverter customerMappingJackson2HttpMessageConverter() {
         log.info("DebuggerKing....枚举请求&&响应转换器初始化完成!");
         return MappingJackson2HttpMessageConverterUtil.build();
+    }
+
+    /**
+     * 需要完全忽略登录|权限的请求, 请在此配置
+     *
+     * @return
+     */
+    private List<String> configAbsoluteFreeRequestUrl() {
+        // TODO
+        // 1.完全开放swaggerUI的访问路径
+        return Lists.newArrayList("/doc.html", "/swagger*/**", "/webjars/**", "/v2/api-docs-ext");
     }
 }

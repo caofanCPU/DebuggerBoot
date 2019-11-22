@@ -7,13 +7,11 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.autoconfigure.security.servlet.SecurityAutoConfiguration;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
-import springfox.documentation.swagger2.annotations.EnableSwagger2;
 
 //禁止自动注册
 //@EnableDiscoveryClient
 @SpringBootApplication(scanBasePackages = {"com.xyz.caofancpu"}, exclude = {SecurityAutoConfiguration.class})
 @EnableConfigurationProperties
-@EnableSwagger2
 @EnableEncryptableProperties
 @EnableTransactionManagement
 public class TrackingTimeApplication {

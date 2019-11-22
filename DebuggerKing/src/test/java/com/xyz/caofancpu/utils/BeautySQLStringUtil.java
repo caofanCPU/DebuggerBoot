@@ -14,8 +14,6 @@ import java.util.List;
 import java.util.Objects;
 import java.util.stream.Collectors;
 
-import static com.xyz.caofancpu.util.StudyWaitingUtils.VerbalExpressionUtil.executePatternRex;
-
 /**
  * FileName: StringTemplateUtil
  */
@@ -31,12 +29,16 @@ public class BeautySQLStringUtil {
     public static void main(String[] args)
             throws Exception {
         VerbalExpression splitRegex = VerbalExpression.regex()
-                .capt().find(".").oneOrMore()
-                .or("、").oneOrMore()
+                .capt()
+                .find("position")
+                .space().zeroOrMore()
+                .find("=")
+                .space().zeroOrMore()
+                .digit().zeroOrMore()
                 .endCapt()
                 .build();
         System.out.println(splitRegex.toString());
-        String result = executePatternRex(splitRegex, "1、5..（、2）", StringUtils.EMPTY);
+        String result = VerbalExpressionUtil.executePatternRex(splitRegex, "position=1, position =2, position =  300, position   = 400", StringUtils.EMPTY);
         System.out.println(result);
     }
 
