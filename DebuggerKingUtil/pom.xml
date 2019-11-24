@@ -373,6 +373,10 @@
                     <groupId>io.swagger</groupId>
                     <artifactId>swagger-models</artifactId>
                 </exclusion>
+                <exclusion>
+                    <artifactId>swagger-annotations</artifactId>
+                    <groupId>io.swagger</groupId>
+                </exclusion>
             </exclusions>
         </dependency>
 
@@ -407,6 +411,10 @@
                 <exclusion>
                     <artifactId>guava</artifactId>
                     <groupId>com.google.guava</groupId>
+                </exclusion>
+                <exclusion>
+                    <artifactId>spring-boot-autoconfigure</artifactId>
+                    <groupId>org.springframework.boot</groupId>
                 </exclusion>
             </exclusions>
         </dependency>

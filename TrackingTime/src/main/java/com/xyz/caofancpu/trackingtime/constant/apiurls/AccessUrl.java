@@ -1,4 +1,4 @@
-package com.xyz.caofancpu.trackingtime.constant.apiUrls;
+package com.xyz.caofancpu.trackingtime.constant.apiurls;
 
 /**
  * 访问API
@@ -17,4 +17,6 @@ public class AccessUrl {
     public static final String USER_ENCRYPTION_GET_PUBKEY = "/user/encryption/getPubKey";
     public static final String USER_ENCRYPTION_GET_PRIKEY = "/user/encryption/getPriKey";
 
+    public static final String VIRTUAL_COIN_TRANSACTION_SAVE = "/virtualCoinTransaction/save";
+    public static final String VIRTUAL_COIN_TRANSACTION_QUERY_LIST = "/virtualCoinTransaction/query/list";
 }

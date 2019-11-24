@@ -93,6 +93,7 @@ public class Swagger2Config {
         return Lists.newArrayList(
                 new ParameterBuilder()
                         .name("X-Auth-Token")
+                        .defaultValue("Authorization")
                         .description(authKey)
                         .modelRef(new ModelRef("string"))
                         .parameterType("header")
@@ -100,6 +101,5 @@ public class Swagger2Config {
                         .build()
         );
     }
-
 
 }

@@ -1,6 +1,6 @@
 package com.xyz.caofancpu.trackingtime.controller;
 
-import com.xyz.caofancpu.trackingtime.constant.apiUrls.AccessUrl;
+import com.xyz.caofancpu.trackingtime.constant.apiurls.AccessUrl;
 import com.xyz.caofancpu.trackingtime.model.TimeBlock;
 import com.xyz.caofancpu.trackingtime.service.impl.TimeBlockService;
 import com.xyz.caofancpu.util.result.GlobalErrorInfoException;

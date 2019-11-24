@@ -130,6 +130,36 @@ public class NumberUtil {
     }
 
     /**
+     * 虚拟货币对象转BigDecimal, 默认8位小数, 默认采用四舍五入保留2位小数
+     *
+     * @param price
+     * @return
+     */
+    public static BigDecimal convertVirtualCoinPrice(Object price) {
+        if (Objects.isNull(price)) {
+            return null;
+        }
+        return convertToBigDecimal(price, 8, BigDecimal.ROUND_HALF_UP);
+    }
+
+    /**
+     * 对象转BigDecimal, 默认采用四舍五入保留2位小数
+     *
+     * @param source
+     * @param newScale
+     * @return
+     */
+    public static BigDecimal convertToBigDecimal(Object source, int newScale) {
+        if (Objects.isNull(source)) {
+            return null;
+        }
+        if (newScale <= 0) {
+            newScale = 2;
+        }
+        return convertToBigDecimal(source, newScale, BigDecimal.ROUND_HALF_UP);
+    }
+
+    /**
      * 对象转BigDecimal, 默认采用四舍五入保留2位小数
      *
      * @param source
