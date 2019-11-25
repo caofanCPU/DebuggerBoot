@@ -42,6 +42,8 @@
         </layout>
     </appender>
 
+    <logger name="springfox.documentation" level="WARN"/>
+
     <root level="INFO">
         <appender-ref ref="INFO_FILE"/>
         <appender-ref ref="ERROR_FILE"/>

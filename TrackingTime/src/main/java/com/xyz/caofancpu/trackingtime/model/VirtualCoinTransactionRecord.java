@@ -1,5 +1,8 @@
 package com.xyz.caofancpu.trackingtime.model;
 
+import com.xyz.caofancpu.trackingtime.zcy.datamodel.enums.CoinTypeEnum;
+import com.xyz.caofancpu.trackingtime.zcy.datamodel.enums.ExchangePlaceEnum;
+import com.xyz.caofancpu.trackingtime.zcy.datamodel.enums.OperateTypeEnum;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.AllArgsConstructor;
@@ -9,6 +12,7 @@ import lombok.experimental.Accessors;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
+import java.util.List;
 
 /**
  * 虚拟货币交易记录
@@ -23,17 +27,17 @@ public class VirtualCoinTransactionRecord {
     @ApiModelProperty(value = "主键ID", example = "1", position = 1)
     private Integer id;
 
-    @ApiModelProperty(value = "主键ID", example = "-2147483648", position = 2)
+    @ApiModelProperty(value = "用户ID", example = "-2147483648", position = 2)
     private Integer operatorId;
 
     @ApiModelProperty(value = "创建时间", example = "2019-11-23 00:00:00", position = 3)
     private LocalDateTime createTime;
 
-    @ApiModelProperty(value = "交易所", example = "米信", position = 4)
-    private Short exchangePlace;
+    @ApiModelProperty(value = "交易所", example = "1", position = 4)
+    private ExchangePlaceEnum exchangePlace;
 
-    @ApiModelProperty(value = "币种", example = "BOX", position = 5)
-    private Short coinType;
+    @ApiModelProperty(value = "币种", example = "1", position = 5)
+    private CoinTypeEnum coinType;
 
     @ApiModelProperty(value = "价格", example = "79999.99", position = 6)
     private BigDecimal price;
@@ -47,7 +51,10 @@ public class VirtualCoinTransactionRecord {
     @ApiModelProperty(value = "当前累计市值", example = "79.99", position = 9)
     private BigDecimal coinTypeMarketAmount;
 
-    @ApiModelProperty(value = "操作", example = "买入", position = 10)
-    private Short operateType;
+    @ApiModelProperty(value = "操作", example = "1", position = 10)
+    private OperateTypeEnum operateType;
+
+    @ApiModelProperty(value = "批量操作", example = "[1, 2]", position = 11)
+    private List<OperateTypeEnum> operateTypeList;
 
 }

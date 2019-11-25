@@ -1,9 +1,11 @@
 package com.xyz.caofancpu.mvc.config;
 
-import com.fasterxml.classmate.ResolvedType;
 import com.xyz.caofancpu.util.commonOperateUtils.enumType.IEnum;
+import com.xyz.caofancpu.util.dataOperateUtils.JSONUtil;
 import com.xyz.caofancpu.util.streamOperateUtils.CollectionUtil;
 import io.swagger.annotations.ApiModelProperty;
+import org.springframework.core.Ordered;
+import org.springframework.core.annotation.Order;
 import org.springframework.stereotype.Component;
 import springfox.documentation.schema.Annotations;
 import springfox.documentation.service.AllowableListValues;
@@ -12,7 +14,7 @@ import springfox.documentation.spi.schema.ModelPropertyBuilderPlugin;
 import springfox.documentation.spi.schema.contexts.ModelPropertyContext;
 import springfox.documentation.swagger.schema.ApiModelProperties;
 
-import java.util.Collections;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 
@@ -23,6 +25,7 @@ import java.util.Optional;
  * @author ht-caofan
  */
 @Component
+@Order(Ordered.HIGHEST_PRECEDENCE + 98)
 public class Swagger2ModelPropertyPlugin implements ModelPropertyBuilderPlugin {
 
     @Override
@@ -37,16 +40,12 @@ public class Swagger2ModelPropertyPlugin implements ModelPropertyBuilderPlugin {
         }
         final Class<?> rawPrimaryType = context.getBeanPropertyDefinition().get().getRawPrimaryType();
         // 过滤得到目标类型
-        if (annotation.isPresent() && List.class.isAssignableFrom(rawPrimaryType)) {
+        if (annotation.isPresent() && IEnum.class.isAssignableFrom(rawPrimaryType)) {
             IEnum[] values = (IEnum[]) rawPrimaryType.getEnumConstants();
-            final List<String> displayValues = CollectionUtil.transToList(Collections.singletonList(values), Object::toString);
+            final List<String> displayValues = CollectionUtil.transToList(Arrays.asList(values), JSONUtil::serializeIEnumJSON);
             final AllowableListValues allowableListValues = new AllowableListValues(displayValues, rawPrimaryType.getTypeName());
-//             固定设置为int类型
-            final ResolvedType resolvedType = context.getResolver().resolve(int.class);
-            context.getBuilder()
-//                    .description(CollectionUtil.join(displayValues, ","))
-                    .allowableValues(allowableListValues)
-                    .qualifiedType("Integer");
+//            final ResolvedType resolvedType = context.getResolver().resolve(int.class);
+            context.getBuilder().allowableValues(allowableListValues);
         }
     }
 

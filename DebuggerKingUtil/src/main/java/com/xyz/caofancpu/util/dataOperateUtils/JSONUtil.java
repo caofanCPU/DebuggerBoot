@@ -3,11 +3,14 @@ package com.xyz.caofancpu.util.dataOperateUtils;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.alibaba.fastjson.serializer.SerializerFeature;
+import com.xyz.caofancpu.util.commonOperateUtils.enumType.IEnum;
 import com.xyz.caofancpu.util.result.GlobalErrorInfoRuntimeException;
 import com.xyz.caofancpu.util.streamOperateUtils.CollectionUtil;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang3.StringUtils;
 
 import java.io.Serializable;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
@@ -17,6 +20,10 @@ import java.util.Objects;
  */
 @Slf4j
 public class JSONUtil {
+
+    public static final String IENUM_VALUE_KEY = "value";
+
+    public static final String IENUM_NAME_KEY = "name";
 
     public static String toJSONStringWithDateFormat(Object data) {
         return JSONObject.toJSONStringWithDateFormat(data, DateUtil.DATETIME_FORMAT_SIMPLE);
@@ -88,6 +95,25 @@ public class JSONUtil {
      */
     public static String serializeJSON(Object object) {
         return JSONObject.toJSONString(object, SerializerFeature.WriteClassName);
+    }
+
+    /**
+     * 枚举IEnum子类序列化为JSON
+     *
+     * @return
+     */
+    public static String serializeIEnumJSON(IEnum iEnum) {
+        Map<String, Object> resultMap = new LinkedHashMap<>(4, 0.5f);
+        resultMap.put(IENUM_VALUE_KEY, iEnum.getValue());
+        String name = iEnum.getViewName();
+        if (StringUtils.isBlank(name)) {
+            name = iEnum.getName();
+        }
+        if (iEnum instanceof Enum && StringUtils.isBlank(name)) {
+            name = ((Enum) iEnum).name();
+        }
+        resultMap.put(IENUM_NAME_KEY, name);
+        return JSONObject.toJSONString(resultMap);
     }
 
     /**
