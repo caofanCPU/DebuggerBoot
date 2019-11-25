@@ -19,7 +19,7 @@ import java.util.Objects;
 @Component
 @Order(value = 1)
 @Slf4j
-public class DatabaseRunner implements CommandLineRunner, ApplicationListener<WebServerInitializedEvent> {
+public class InitCompletedRunner implements CommandLineRunner, ApplicationListener<WebServerInitializedEvent> {
 
     private int serverPort;
     private String serverIp;
@@ -31,7 +31,7 @@ public class DatabaseRunner implements CommandLineRunner, ApplicationListener<We
     public void run(String... strings) {
         log.info("项目启动成功, IP=" + this.serverIp + ", Port=" + serverPort);
         if (commonConfigPropertiesService.showApi) {
-            log.info("SwaggerApi文档参见: http://" + this.serverIp + ":" + serverPort + "/doc.html?plus=1&cache=1&filterApi=1&filterApiType=POST&lang=zh");
+            log.info("SwaggerApi文档参见: http://" + this.serverIp + ":" + serverPort + commonConfigPropertiesService.contentPath + "/doc.html?plus=1&cache=1&filterApi=1&filterApiType=POST&lang=zh");
             log.info("官方原版SwaggerApi文档参见: http://" + this.serverIp + ":" + serverPort + "/swagger-ui.html");
             log.info("官方原版SwaggerApi认证key：Authorization");
         }
