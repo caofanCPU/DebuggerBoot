@@ -12,7 +12,6 @@ import lombok.experimental.Accessors;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
-import java.util.List;
 
 /**
  * 虚拟货币交易记录
@@ -53,8 +52,5 @@ public class VirtualCoinTransactionRecord {
 
     @ApiModelProperty(value = "操作", example = "1", position = 10)
     private OperateTypeEnum operateType;
-
-    @ApiModelProperty(value = "批量操作", example = "[1, 2]", position = 11)
-    private List<OperateTypeEnum> operateTypeList;
 
 }
