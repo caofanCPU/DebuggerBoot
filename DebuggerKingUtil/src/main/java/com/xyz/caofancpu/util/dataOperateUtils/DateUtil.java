@@ -9,7 +9,6 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.time.MonthDay;
-import java.time.ZoneId;
 import java.time.ZoneOffset;
 import java.time.format.DateTimeFormatter;
 import java.time.temporal.ChronoUnit;
@@ -64,6 +63,26 @@ public class DateUtil {
     private final static int MIN_HOUR_MINUTE_SECOND = 0;
 
     /**
+     * java.util.date转LocalDateTime
+     *
+     * @param date
+     * @return
+     */
+    public static LocalDateTime convertFromJavaUtilDate(@NonNull Date date) {
+        return LocalDateTime.ofInstant(date.toInstant(), DEFAULT_ZONE_OFFSET);
+    }
+
+    /**
+     * 转换为java.util.date
+     *
+     * @param localDateTime
+     * @return
+     */
+    public static Date convertToJavaUtilDate(@NonNull LocalDateTime localDateTime) {
+        return Date.from(localDateTime.atZone(DEFAULT_ZONE_OFFSET).toInstant());
+    }
+
+    /**
      * 获取当日查询最早起始日期+时间, yyyy-MM-dd 00:00:00
      *
      * @return
@@ -113,11 +132,7 @@ public class DateUtil {
      * @return
      */
     public static String getTodayStartDateTime() {
-        return LocalDateTime.now()
-                .withHour(MIN_HOUR_MINUTE_SECOND)
-                .withMinute(MIN_HOUR_MINUTE_SECOND)
-                .withSecond(MIN_HOUR_MINUTE_SECOND)
-                .format(DateTimeFormatter.ofPattern(DATETIME_FORMAT_SIMPLE));
+        return getTodayQueryStartLocalDateTime().format(DateTimeFormatter.ofPattern(DATETIME_FORMAT_SIMPLE));
     }
 
     /**
@@ -126,11 +141,7 @@ public class DateUtil {
      * @return
      */
     public static String getTodayEndDateTime() {
-        return LocalDateTime.now()
-                .withHour(MAX_HOUR)
-                .withMinute(MAX_MINUTE_SECOND)
-                .withSecond(MAX_MINUTE_SECOND)
-                .format(DateTimeFormatter.ofPattern(DATETIME_FORMAT_SIMPLE));
+        return getTodayQueryEndLocalDateTime().format(DateTimeFormatter.ofPattern(DATETIME_FORMAT_SIMPLE));
     }
 
     /**
@@ -266,7 +277,7 @@ public class DateUtil {
         if (StringUtils.isBlank(format)) {
             format = DATETIME_FORMAT_SIMPLE;
         }
-        return LocalDateTime.ofInstant(date.toInstant(), ZoneId.systemDefault()).format(DateTimeFormatter.ofPattern(format));
+        return LocalDateTime.ofInstant(date.toInstant(), DEFAULT_ZONE_OFFSET).format(DateTimeFormatter.ofPattern(format));
     }
 
     /**
