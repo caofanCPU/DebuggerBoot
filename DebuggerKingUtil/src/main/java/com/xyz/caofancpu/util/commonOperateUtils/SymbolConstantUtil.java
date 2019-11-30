@@ -43,5 +43,40 @@ public class SymbolConstantUtil {
      */
     public static final String FILL_EMPTY_PLACE_HOLDER = "--";
 
+    /**
+     * 连接符: 单个短横线
+     */
+    public static final String JOINER = "-";
+
+    /**
+     * 连接符: 单个下划短横线
+     */
+    public static final String ENGLISH_UNDER_JOINER = "_";
+
+    /**
+     * 中文左括号
+     */
+    public static final String CHINESE_LEFT_BRACKET = "（";
+
+    /**
+     * 中文右括号
+     */
+    public static final String CHINESE_RIGHT_BRACKET = "）";
+
+    /**
+     * 英文分号
+     */
+    public static final String ENGLISH_SPLITER = ";";
+
+    /**
+     * 等号
+     */
+    public static final String EQUAL = "=";
+
+    /**
+     * 百分号
+     */
+    public static final String PERCENT = "%";
+
 
 }
