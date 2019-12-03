@@ -8,7 +8,6 @@ import org.apache.commons.collections.CollectionUtils;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashSet;
 import java.util.List;
@@ -83,9 +82,9 @@ public class StreamCoreMethodTest {
 
         viewData("原始列表元素", productItemList);
         // 使用Collections.sort()排序(不推荐)
-        Collections.sort(productItemList, Comparator.comparing(ProductItem::getPrice));
+        productItemList.sort(Comparator.comparing(ProductItem::getPrice));
         viewData("递增方式五(不推荐)排序后列表元素", productItemList);
-        Collections.sort(productItemList, Comparator.comparing(ProductItem::getPrice).reversed());
+        productItemList.sort(Comparator.comparing(ProductItem::getPrice).reversed());
         viewData("递减方式五(不推荐)排序后列表元素", productItemList);
     }
 
@@ -102,7 +101,7 @@ public class StreamCoreMethodTest {
         viewData("分组归类为Map后的数据", classifiedMap);
         List<List<ProductItem>> classifiedList = classifiedMap.keySet().stream()
                 .filter(Objects::nonNull)
-                .map(key -> classifiedMap.get(key))
+                .map(classifiedMap::get)
                 .collect(Collectors.toList());
         viewData("分组归类为List后的数据", classifiedList);
         List<List<ProductItem>> fastClassifiedList = new ArrayList<>();
@@ -182,7 +181,7 @@ public class StreamCoreMethodTest {
         Integer enhanceSum1 = productItemList.stream()
                 .filter(Objects::nonNull)
                 .map(ProductItem::getSalesNum)
-                .reduce(0, (x, y) -> x + y);
+                .reduce(0, Integer::sum);
         viewData("使用增强归约方式一(推荐)求和计算累计销量: ", enhanceSum1);
 
         Integer enhanceSum2 = productItemList.stream()
@@ -247,8 +246,8 @@ public class StreamCoreMethodTest {
         }
         char[] wordArray = sb.toString().toCharArray();
         Set<Character> wordSet = new HashSet<>(16, 0.75f);
-        for (int i = 0; i < wordArray.length; i++) {
-            wordSet.add(wordArray[i]);
+        for (char c : wordArray) {
+            wordSet.add(c);
         }
         viewData("去重后的字母列表", wordSet);
 

@@ -1,11 +1,20 @@
 package com.xyz.caofancpu.util.dataOperateUtils;
 
+import com.google.common.collect.Lists;
+import com.google.common.collect.Maps;
 import com.xyz.caofancpu.util.commonOperateUtils.NormalUseUtil;
 import com.xyz.caofancpu.util.commonOperateUtils.SymbolConstantUtil;
+import com.xyz.caofancpu.util.streamOperateUtils.CollectionUtil;
 import lombok.NonNull;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang3.tuple.Pair;
 
 import java.math.BigDecimal;
+import java.util.Comparator;
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Objects;
 
 /**
  * Created by caofanCPU on 2018/7/3.
@@ -213,6 +222,260 @@ public class NumberUtil {
         BigDecimal y = BigDecimal.valueOf(referValue);
         BigDecimal oneHundred = BigDecimal.valueOf(ONE_HUNDRED);
         return x.divide(y, DEFAULT_PRECISION, BigDecimal.ROUND_HALF_UP).multiply(oneHundred).toString() + SymbolConstantUtil.PERCENT;
+    }
+
+
+    /**
+     * 计算百分数, 返回结果为Map<元素索引, 百分数值>
+     * 示例: [5, 10, 15]
+     * precision=0时: Map.Entry[<0, 17>, <1, 33>, <2, 50>], => 元素5(在原始数值列表的索引为0)的百分占比为17%, 元素10的百分占比为33%, 元素15的百分占比为50%
+     * precision=1时: Map.Entry[<0, 16.7>, <1, 33.3>, <2, 50.0>]
+     * precision=2时: Map.Entry[<0, 16.67>, <1, 3.33>, <2, 50.00>]
+     *
+     * @param source    原始数值列表
+     * @param precision 百分数小数的位数, 0相当于求x%; 1相当于求x.y%; 2相当于求x.yy%
+     * @param <T>
+     * @return
+     */
+    public static <T extends Number> Map<Integer, BigDecimal> calculateDefaultPercentage(List<T> source, int precision) {
+        return calculatePercentageResult(source, precision, BigDecimal.ONE);
+    }
+
+    /**
+     * 根据参考值referValue及数字元素所占百分比, 计算 referValue * 百分比的结果
+     * 示例: 商品价格(单位:元)列表[5, 10, 15], 达到了满30元减10元的条件, 那么利用本方法求得每个商品的分摊优惠价
+     * precision=0时: Map.Entry[<0, 2>, <1, 3>, <2, 5>]
+     * precision=1时: Map.Entry[<0, 1.7>, <1, 3.3>, <2, 5.0>]
+     * precision=2时: Map.Entry[<0, 1.67>, <1, 3.33>, <2, 5.00>]
+     * <p>
+     * 注意: 由于价格用元表示, 与用分表示, 数值相差100倍, 那么如果用元计算时需要2位精度, 等价于用分计算时保留0位精度, 同上例用分表示结果如下:
+     * 商品价格(单位:分)列表[500, 1000, 1500], 达到了满3000分减1000分的条件, 那么利用本方法求得每个商品的分摊优惠价
+     * precision=0时: Map.Entry[<0, 167>, <1, 333>, <2, 500>], 该结果与用元表示时结果一致
+     *
+     * @param source
+     * @param precision
+     * @param referValue
+     * @param <T>
+     * @return Map<数字元素索引, 结果值>
+     */
+    public static <T extends Number> Map<Integer, BigDecimal> calculateDistributionValueByPercentage(List<T> source, int precision, BigDecimal referValue) {
+        Map<Integer, BigDecimal> percentageResultValueMap = calculatePercentageResult(source, precision, referValue);
+        Map<Integer, BigDecimal> resultValueMap = Maps.newLinkedHashMap();
+        BigDecimal oneHundred = BigDecimal.valueOf(ONE_HUNDRED);
+        percentageResultValueMap.forEach((key, value) -> resultValueMap.put(key, value.divide(oneHundred, precision, BigDecimal.ROUND_HALF_UP)));
+        return resultValueMap;
+    }
+
+    /**
+     * 计算列表中各数字元素所占的百分比, 在四舍五入的情况下保证百分比和为1, 且尽可能保证结果的方差最小
+     * 示例: [3, 4, 5] ==> 占比数值     [0.25000000, 0.33333333, 0.41666667]
+     * 占比数值 * 100 ==> 转换为百分数   [25.000000, 33.333333, 41.666667]
+     * 百分数向下取整  ==>              [25, 33, 41]
+     * 每个百分比的偏差值 ==>            [0, 0.333333, 0.666667]
+     * 偏差值逆序排列    ==>            [0.666667, 0.333333, 0]
+     * 因向下取整得到的百分比差值总和      100 - (25+33+41) = 1
+     * 将总偏差1分配下去, 每次分配1, 正好分配给最大偏差值0.666667对应的41: 41+1=42, 完成分配
+     * (将总偏差值以1为单位, 依次分配给最大的, 第二大的, 直到分配完为止)
+     * 得到结果: [25, 33, 42]
+     * <p>
+     * 精度推算的原理, 利用0.xxYY = 百分之xx.YY = 万分之xxYY
+     * 算法原理参考: https://revs.runtime-revolution.com/getting-100-with-rounded-percentages-273ffa70252b
+     *
+     * @param source
+     * @param precision  百分位的精度, 0代表x%, 1代表x.y%, 2代表x.yy%, 依次类推
+     * @param referValue 参考基数, 默认参考值为1 ==> 计算结果为百分比数值
+     * @return Map<数字元素索引, 结果值>
+     */
+    public static <T extends Number> Map<Integer, BigDecimal> calculatePercentageResult(List<T> source, int precision, BigDecimal referValue) {
+        if (CollectionUtil.isEmpty(source)) {
+            return Maps.newHashMap();
+        }
+        if (precision < 0) {
+            precision = 0;
+        }
+        if (Objects.isNull(referValue)) {
+            referValue = BigDecimal.ONE;
+        }
+
+        BigDecimal oneHundred = BigDecimal.valueOf(ONE_HUNDRED);
+        BigDecimal multiple = BigDecimal.valueOf(Math.pow(10, 2 + precision));
+        BigDecimal valueSum = BigDecimal.valueOf(source.stream().mapToDouble(Number::doubleValue).sum());
+        Map<Integer, BigDecimal> percentageMap = Maps.newHashMap();
+        for (int i = 0; i < source.size(); i++) {
+            T item = source.get(i);
+            BigDecimal value = BigDecimal.valueOf(item.doubleValue())
+                    .multiply(referValue)
+                    .multiply(multiple)
+                    .divide(valueSum, 8, BigDecimal.ROUND_HALF_UP);
+            percentageMap.put(i, value);
+        }
+        // 所有百分比向下取整
+        Map<Integer, BigDecimal> downPercentageMap = Maps.newHashMap();
+        percentageMap.forEach((index, percentage) -> downPercentageMap.put(index, percentage.setScale(0, BigDecimal.ROUND_HALF_UP)));
+        int downPercentageSum = downPercentageMap.values().stream().reduce(BigDecimal::add).orElse(oneHundred).intValue();
+        // 因向下取整得到的偏差
+        int deltaPercentageSum = multiple.intValue() - downPercentageSum;
+        Map<Integer, BigDecimal> deltaPercentageMap = Maps.newHashMap();
+        percentageMap.forEach((index, percentage) -> deltaPercentageMap.put(index, percentage.subtract(downPercentageMap.get(index))));
+        // 按照偏差由大到小排序
+        LinkedHashMap<Integer, BigDecimal> deltaPercentageSortedByValueMap = CollectionUtil.sortedMapByValue(deltaPercentageMap, Comparator.comparing(Map.Entry<Integer, BigDecimal>::getValue).reversed());
+        for (Integer index : deltaPercentageSortedByValueMap.keySet()) {
+            if (deltaPercentageSum > 0) {
+                downPercentageMap.put(index, downPercentageMap.get(index).add(BigDecimal.ONE));
+                deltaPercentageSum--;
+            } else {
+                break;
+            }
+        }
+        Map<Integer, BigDecimal> resultMap = Maps.newLinkedHashMap();
+        for (Integer index : downPercentageMap.keySet()) {
+            BigDecimal percentage = downPercentageMap.get(index);
+            BigDecimal percentageValue = percentage.multiply(oneHundred).divide(multiple, precision, BigDecimal.ROUND_HALF_UP);
+            resultMap.put(index, percentageValue);
+        }
+        return resultMap;
+    }
+
+    /**
+     * 将价格由分转为元, 得到字符串结果
+     * 示例: 123456L ==> 1234.56元
+     *
+     * @param price
+     * @return
+     */
+    public static String convertViewPriceFromFenToYuan(@NonNull Long price) {
+        return convertPriceFromFenToYuan(price).toString() + CN_UPPER_MONETRAY_UNIT[2];
+    }
+
+    /**
+     * 将分转为元, 得到BigDecimal结果
+     *
+     * @param price
+     * @return
+     */
+    public static BigDecimal convertPriceFromFenToYuan(@NonNull Long price) {
+        BigDecimal value = BigDecimal.valueOf(price);
+        BigDecimal oneHundred = BigDecimal.valueOf(ONE_HUNDRED);
+        return value.divide(oneHundred, DEFAULT_PRECISION, BigDecimal.ROUND_HALF_UP);
+    }
+
+    /**
+     * value
+     * 计算两个数的相对占比百分数, 返回 ------------ 的百分比表示, 默认保留百分位的2位小数
+     * referValue
+     * 示例: (5, 15, 4) ==> 33.3333%
+     * (15, 5, 4) ==> 300.0000%
+     *
+     * @param value      分子
+     * @param referValue 分母
+     * @param precision  百分位小数的精度
+     * @return
+     */
+    public static <T extends Number> String calculateViewPercent(@NonNull T value, @NonNull T referValue, int precision) {
+        if (precision < 0) {
+            precision = DEFAULT_PRECISION;
+        }
+        BigDecimal x = BigDecimal.valueOf(value.doubleValue());
+        BigDecimal y = BigDecimal.valueOf(referValue.doubleValue());
+        BigDecimal oneHundred = BigDecimal.valueOf(ONE_HUNDRED);
+        return x.multiply(oneHundred).divide(y, precision, BigDecimal.ROUND_HALF_UP).toString() + SymbolConstantUtil.PERCENT;
+    }
+
+    /**
+     * 针对至少有2个元素的列表source, 计算任意两元素的关系组合情况
+     *
+     * @param source
+     * @return
+     */
+    public static <T> List<Pair<T, T>> calculateCombNChooseTwo(List<T> source) {
+        if (CollectionUtil.isEmpty(source) || source.size() < 2) {
+            throw new RuntimeException("组合数计算至少需要两个元素");
+        }
+        List<Pair<T, T>> resultList = Lists.newArrayList();
+        int k = 2;
+        int[] array = new int[source.size()];
+        for (int i = 0; i < array.length; i++) {
+            array[i] = i;
+        }
+        int[][] combNChooseKResult = calculateCombNChooseK(array, k);
+        for (int[] ints : combNChooseKResult) {
+            T left = source.get(ints[0]);
+            T right = source.get(ints[1]);
+            resultList.add(Pair.of(left, right));
+        }
+        return resultList;
+    }
+
+    /**
+     * 从数组array中选取任意k个元素, 计算所有组合情况
+     * 原理参考: https://blog.csdn.net/haiyoushui123456/article/details/84338494
+     *
+     * @param array
+     * @param k
+     * @return
+     */
+    private static int[][] calculateCombNChooseK(int[] array, int k) {
+        int n = array.length;
+        checkNK(n, k);
+        if (k == 0) {
+            return new int[1][0];
+        }
+        int combNum = calculateNChooseK(n, k > (n - k) ? n - k : k);
+        int[][] comb = new int[combNum][k];
+        int rowEndIndex = n - k + 1;
+        for (int i = 0, k1 = k - 1; i < rowEndIndex; i++) {
+            // Fill the right-most side.
+            comb[i][k1] = array[k1 + i];
+        }
+        for (int begin = k - 2; begin >= 0; begin--) {
+            int rowLen = rowEndIndex;
+            int previousRowEndIndex = rowEndIndex;
+            for (int i = 0; i < rowEndIndex; i++) {
+                comb[i][begin] = array[begin];
+            }
+            for (int next = begin + 1, limit = begin + n - k; next <= limit; next++) {
+                int selectionNum = n - k + 1 + begin - next;
+                int allPossibleNum = n - next;
+                rowLen = rowLen * selectionNum / allPossibleNum;
+                int rowBeginIndex = rowEndIndex;
+                rowEndIndex = rowBeginIndex + rowLen;
+                int nextVal = array[next];
+                for (int i = rowBeginIndex; i < rowEndIndex; i++) {
+                    comb[i][begin] = nextVal;
+                    for (int j = begin + 1; j < k; j++) {
+                        comb[i][j] = comb[previousRowEndIndex - rowLen + i - rowBeginIndex][j];
+                    }
+                }
+            }
+        }
+        return comb;
+    }
+
+    private static void checkNK(int n, int k) {
+        // N must be a positive integer.
+        if (k < 0 || k > n) {
+            throw new IllegalArgumentException("K must be an integer between 0 and N.");
+        }
+    }
+
+    private static int calculateNChooseK(int n, int k) {
+        if (n > 31) {
+            throw new IllegalArgumentException("N must be less than or equal to 31");
+        }
+        checkNK(n, k);
+        k = (k > (n - k)) ? n - k : k;
+        if (k <= 1) {
+            // C(n, 0) = 1, C(n, 1) = n
+            return k == 0 ? 1 : n;
+        }
+        int limit = Integer.MAX_VALUE >> (31 - n);
+        int cnk = 0;
+        for (int i = 3; i < limit; i++) {
+            if (Integer.bitCount(i) == k) {
+                cnk++;
+            }
+        }
+        return cnk;
     }
 
     public static void main(String[] args) {
