@@ -8,6 +8,7 @@ import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang3.ArrayUtils;
 import org.apache.commons.lang3.StringUtils;
 
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
@@ -35,6 +36,54 @@ import java.util.stream.StreamSupport;
 public class CollectionUtil extends CollectionUtils {
 
     /**
+     * 对列表元素指定函数(字段为数字类型)求和
+     *
+     * @param coll
+     * @param numberValueFunction
+     * @param <F>
+     * @param <T>
+     * @return
+     */
+    public static <F extends Number, T> BigDecimal sum(Collection<T> coll, Function<? super T, ? extends F> numberValueFunction) {
+        double sum = coll.stream()
+                .filter(Objects::nonNull)
+                .map(numberValueFunction)
+                .mapToDouble(Number::doubleValue)
+                .sum();
+        return BigDecimal.valueOf(sum);
+    }
+
+    /**
+     * 对列表元素指定函数(字段为数字类型)求平均
+     *
+     * @param coll
+     * @param numberValueFunction
+     * @param <F>
+     * @param <T>
+     * @return
+     */
+    public static <F extends Number, T> BigDecimal average(Collection<T> coll, Function<? super T, ? extends F> numberValueFunction) {
+        Double average = coll.stream()
+                .filter(Objects::nonNull)
+                .map(numberValueFunction)
+                .collect(Collectors.averagingDouble(Number::doubleValue));
+        return BigDecimal.valueOf(average);
+    }
+
+    /**
+     * 将按照分隔符固定拼接的[数字]字符串转换为指定[数字]类型的List
+     *
+     * @param source
+     * @param splitSymbol
+     * @param numberTypeMapper
+     * @param <T>
+     * @return
+     */
+    public static <T extends Number> List<T> splitDelimitedStringToList(@NonNull String source, @NonNull String splitSymbol, Function<String, T> numberTypeMapper) {
+        return transToList(Arrays.asList(source.split(splitSymbol)), numberTypeMapper);
+    }
+
+    /**
      * Map判空
      *
      * @param sourceMap 数据源
@@ -44,6 +93,9 @@ public class CollectionUtil extends CollectionUtils {
         return Objects.isNull(sourceMap) || sourceMap.isEmpty();
     }
 
+    public static boolean isNotEmpty(Map sourceMap) {
+        return !isEmpty(sourceMap);
+    }
 
     /**
      * 转换为Set, 底层默认使用HashSet
