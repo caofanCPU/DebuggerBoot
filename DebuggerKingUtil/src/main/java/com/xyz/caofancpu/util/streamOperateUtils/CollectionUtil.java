@@ -36,6 +36,74 @@ import java.util.stream.StreamSupport;
 public class CollectionUtil extends CollectionUtils {
 
     /**
+     * 求元素类型相同的两个集合的并集(a ∪ b), 可指定结果容器类型
+     *
+     * @param resultColl
+     * @param a
+     * @param b
+     * @param <E>
+     * @param <C>
+     * @return
+     */
+    @SuppressWarnings("unchecked")
+    public static <E, C extends Collection<E>> C union(Supplier<C> resultColl, Collection<E> a, Collection<E> b) {
+        C result = resultColl.get();
+        union(a, b).forEach(item -> result.add((E) item));
+        return result;
+    }
+
+    /**
+     * 求元素类型相同的两个集合的交集(a ∩ b), 可指定结果容器类型
+     *
+     * @param resultColl
+     * @param a
+     * @param b
+     * @param <E>
+     * @param <C>
+     * @return
+     */
+    @SuppressWarnings("unchecked")
+    public static <E, C extends Collection<E>> C intersection(Supplier<C> resultColl, Collection<E> a, Collection<E> b) {
+        C result = resultColl.get();
+        intersection(a, b).forEach(item -> result.add((E) item));
+        return result;
+    }
+
+    /**
+     * 求元素类型相同的两个集合的交集的补集((a ∪ b) - (a ∩ b)), 可指定结果容器类型
+     *
+     * @param resultColl
+     * @param a
+     * @param b
+     * @param <E>
+     * @param <C>
+     * @return
+     */
+    @SuppressWarnings("unchecked")
+    public static <E, C extends Collection<E>> C disjunction(Supplier<C> resultColl, Collection<E> a, Collection<E> b) {
+        C result = resultColl.get();
+        disjunction(a, b).forEach(item -> result.add((E) item));
+        return result;
+    }
+
+    /**
+     * 求元素类型相同的两个集合的差集(a - ( a ∩ b)), 可指定结果容器类型
+     *
+     * @param resultColl
+     * @param a
+     * @param b
+     * @param <E>
+     * @param <C>
+     * @return
+     */
+    @SuppressWarnings("unchecked")
+    public static <E, C extends Collection<E>> C subtract(Supplier<C> resultColl, Collection<E> a, Collection<E> b) {
+        C result = resultColl.get();
+        subtract(a, b).forEach(item -> result.add((E) item));
+        return result;
+    }
+
+    /**
      * 对列表元素指定函数(字段为数字类型)求和
      *
      * @param coll
@@ -267,6 +335,21 @@ public class CollectionUtil extends CollectionUtils {
      */
     public static <E, K> Map<K, List<E>> groupIndexToMap(Collection<E> source, Function<? super E, ? extends K> kFunction) {
         return source.stream().filter(Objects::nonNull).collect(Collectors.groupingBy(kFunction));
+    }
+
+    /**
+     * 分组转换为Map<K, List<V>>, 支持key函数, value函数, 底层默认HashMap<K, ArrayList<V>>
+     *
+     * @param source
+     * @param kFunction
+     * @param vFunction
+     * @param <E>
+     * @param <K>
+     * @param <V>
+     * @return
+     */
+    public static <E, K, V> Map<K, List<V>> groupIndexToMap(Collection<E> source, Function<? super E, ? extends K> kFunction, Function<? super E, ? extends V> vFunction) {
+        return source.stream().filter(Objects::nonNull).collect(Collectors.groupingBy(kFunction, HashMap::new, Collectors.mapping(vFunction, Collectors.toList())));
     }
 
     /**
