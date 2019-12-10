@@ -12,6 +12,10 @@ public class NormalUseUtil {
         System.out.println(text);
     }
 
+    public static void outWithoutLn(String text) {
+        System.out.print(text);
+    }
+
     /**
      * 对象转String
      *

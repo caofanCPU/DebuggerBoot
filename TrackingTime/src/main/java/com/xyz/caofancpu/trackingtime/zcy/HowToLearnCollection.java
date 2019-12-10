@@ -1,6 +1,7 @@
 package com.xyz.caofancpu.trackingtime.zcy;
 
 import com.google.common.collect.Lists;
+import com.xyz.caofancpu.util.commonOperateUtils.NormalUseUtil;
 import com.xyz.caofancpu.util.dataOperateUtils.NumberUtil;
 
 import java.util.ArrayList;
@@ -20,6 +21,7 @@ import java.util.Map;
 public class HowToLearnCollection {
 
     public static void main(String[] args) {
+        printZeroZeroZeroToNineNineNine();
 
     }
 
@@ -27,15 +29,23 @@ public class HowToLearnCollection {
     /**
      * 按照顺序打印000-999
      * <p>
-     * 1.已知{@link com.xyz.caofancpu.util.commonOperateUtils.NormalUseUtil#out(String)}可以打印字符串
+     * 1.已知{@link NormalUseUtil#out(String)}可以打印字符串
      * 使用"" + 数字可以构造出一个字符串参数
      * 2.允许的操作, 只能用循环及1中提供的打印方法完成
      * 3.求: 按照顺序打印000-999
      * <p>
      * 训练点: 循环操作
+     *
+     * @author ZCY
      */
     public static void printZeroZeroZeroToNineNineNine() {
-        // TODO: write your code below
+        for (int i = 0; i <= 9; i++) {
+            for (int j = 0; j <= 9; j++) {
+                for (int k = 0; k <= 9; k++) {
+                    NormalUseUtil.out("" + i + j + k);
+                }
+            }
+        }
 
     }
 
