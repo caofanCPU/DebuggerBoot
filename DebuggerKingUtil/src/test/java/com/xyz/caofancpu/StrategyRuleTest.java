@@ -20,7 +20,28 @@ public class StrategyRuleTest {
 
     public static void main(String[] args) {
 //        bindingAndExclusiveTest();
-        minAndMaxSelectTest();
+//        minAndMaxSelectTest();
+        power();
+    }
+
+    public static void power() {
+        List<Integer> list1 = Lists.newArrayList(1, 2, 3);
+
+        List<Integer> list = new ArrayList<>();
+        list.add(1);
+        list.add(2);
+        list.add(3);
+        list.add(4);
+        list.add(5);
+        for (int i = 6; i < 101; i++) {
+            list.add(i);
+        }
+        Integer sum = 0;
+        for (Integer i : list) {
+            sum = sum + i;
+        }
+        NormalUseUtil.out("" + sum);
+
     }
 
     /**
