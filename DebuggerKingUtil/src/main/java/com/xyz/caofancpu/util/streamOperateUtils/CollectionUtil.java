@@ -15,6 +15,7 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -136,6 +137,59 @@ public class CollectionUtil extends CollectionUtils {
                 .map(numberValueFunction)
                 .collect(Collectors.averagingDouble(Number::doubleValue));
         return BigDecimal.valueOf(average);
+    }
+
+    /**
+     * 对列表元素指定函数(字段为数字类型), 求最大值
+     *
+     * @param coll
+     * @param numberValueFunction
+     * @param <F>
+     * @param <T>
+     * @return
+     */
+    public static <F extends Number, T> BigDecimal max(Collection<T> coll, Function<? super T, ? extends F> numberValueFunction) {
+        double max = coll.stream()
+                .filter(Objects::nonNull)
+                .map(numberValueFunction)
+                .mapToDouble(Number::doubleValue)
+                .max()
+                .orElse(0d);
+        return BigDecimal.valueOf(max);
+    }
+
+    /**
+     * 对列表元素指定函数(字段为数字类型), 求最小值
+     *
+     * @param coll
+     * @param numberValueFunction
+     * @param <F>
+     * @param <T>
+     * @return
+     */
+    public static <F extends Number, T> BigDecimal min(Collection<T> coll, Function<? super T, ? extends F> numberValueFunction) {
+        double min = coll.stream()
+                .filter(Objects::nonNull)
+                .map(numberValueFunction)
+                .mapToDouble(Number::doubleValue)
+                .min()
+                .orElse(0d);
+        return BigDecimal.valueOf(min);
+    }
+
+    /**
+     * 对集合元素指定字段检测重复, 返回重复元素
+     *
+     * @param coll
+     * @param mapper
+     * @param <T>
+     * @param <F>
+     * @return
+     */
+    public static <T, F> Set<F> probeRepeateValueSet(Collection<T> coll, Function<? super T, F> mapper) {
+        List<F> valueList = transToList(coll, mapper);
+        Set<F> noRepeatValueSet = new HashSet<>(valueList);
+        return subtract(HashSet::new, valueList, noRepeatValueSet);
     }
 
     /**

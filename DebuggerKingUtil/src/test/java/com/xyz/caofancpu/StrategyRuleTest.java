@@ -2,6 +2,7 @@ package com.xyz.caofancpu;
 
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
+import com.google.common.collect.Sets;
 import com.xyz.caofancpu.util.commonOperateUtils.NormalUseUtil;
 import com.xyz.caofancpu.util.commonOperateUtils.SymbolConstantUtil;
 import com.xyz.caofancpu.util.streamOperateUtils.CollectionUtil;
@@ -10,8 +11,11 @@ import lombok.experimental.Accessors;
 import org.apache.commons.lang3.tuple.Pair;
 
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 /**
  * 策略规则测试
@@ -21,10 +25,11 @@ public class StrategyRuleTest {
     public static void main(String[] args) {
 //        bindingAndExclusiveTest();
 //        minAndMaxSelectTest();
-        power();
+//        powerTest();
+        priceSumTest();
     }
 
-    public static void power() {
+    public static void powerTest() {
         List<Integer> list1 = Lists.newArrayList(1, 2, 3);
 
         List<Integer> list = new ArrayList<>();
@@ -180,29 +185,67 @@ public class StrategyRuleTest {
 
     private static void bindingAndExclusiveTest() {
         Map<Pair<String, String>, Boolean> relationshipMap = loadRelationshipMap();
-        List<String> positiveSelectedList = Lists.newArrayList("A", "M");
+        Set<String> positiveSelectedSet = Sets.newHashSet("F", "B", "G", "A");
         // 根据关系分组
         Map<Boolean, List<Pair<String, String>>> bindingOrExclusiveAsKeyMap = CollectionUtil.groupIndexToMap(relationshipMap.entrySet(), Map.Entry::getValue, Map.Entry::getKey);
+        Map<Boolean, List<String>> resultRelationshipMap = groupBindingAndExclusiveRelationship(bindingOrExclusiveAsKeyMap, Lists.newArrayList(positiveSelectedSet));
+        List<String> exclusiveResultList = resultRelationshipMap.get(Boolean.TRUE);
+        List<String> bindingResultList = resultRelationshipMap.get(Boolean.FALSE);
 
-        Map<String, List<Pair<String, String>>> bindingMap = CollectionUtil.groupIndexToMap(bindingOrExclusiveAsKeyMap.get(Boolean.TRUE), Pair::getLeft);
-        Map<String, List<Pair<String, String>>> exclusiveMap = CollectionUtil.groupIndexToMap(bindingOrExclusiveAsKeyMap.get(Boolean.FALSE), Pair::getLeft);
-        List<String> bindingResultList = recursiveSearchRelationship(positiveSelectedList, bindingMap);
-        List<String> exclusiveRelationshipResultList = recursiveSearchRelationship(positiveSelectedList, exclusiveMap);
-
-        List<String> exclusiveResultList = CollectionUtil.subtract(ArrayList::new, exclusiveRelationshipResultList, positiveSelectedList);
-        NormalUseUtil.out("enabled:");
+        NormalUseUtil.out("positiveSelect:");
+        positiveSelectedSet.forEach(NormalUseUtil::out);
+        NormalUseUtil.out("binding:");
         bindingResultList.forEach(NormalUseUtil::out);
-        NormalUseUtil.out("disabled:");
+        NormalUseUtil.out("exclusive:");
         exclusiveResultList.forEach(NormalUseUtil::out);
     }
 
-    private static List<String> recursiveSearchRelationship(List<String> keyList, Map<String, List<Pair<String, String>>> relationMap) {
-        List<String> resultList = Lists.newArrayList();
-        for (String key : keyList) {
+    /**
+     * 根据绑定互斥关系, 以及选定的参考元素RSet, 计算绑定关系列表 + 排斥关系列表
+     * 思路:
+     * 1.选定参考元素RSet所绑定的元素BSet, 是要被绑定的, 其并集 RSet + BSet = bindingResultSet
+     * 2.绑定元素并集bindingResultSet所排斥的元素, 记为一级排斥元素ESet
+     * 3.一级排斥元素ESet所绑定的元素, 记作二级排斥元素EBSet, 也是要被排斥的
+     *
+     * @param bindingOrExclusiveAsKeyMap
+     * @param calculateReferElementList
+     * @param <T>
+     * @return
+     */
+    public static <T> Map<Boolean, List<T>> groupBindingAndExclusiveRelationship(Map<Boolean, List<Pair<T, T>>> bindingOrExclusiveAsKeyMap, List<T> calculateReferElementList) {
+        // 对于绑定|互斥关系, 再次分组归并, 将一个元素key的所有绑定|互斥关系汇聚在value中
+        Map<T, List<Pair<T, T>>> bindingMap = CollectionUtil.groupIndexToMap(bindingOrExclusiveAsKeyMap.get(Boolean.TRUE), Pair::getLeft);
+        Map<T, List<Pair<T, T>>> exclusiveMap = CollectionUtil.groupIndexToMap(bindingOrExclusiveAsKeyMap.get(Boolean.FALSE), Pair::getLeft);
+        List<T> bindingResultList = recursiveSearchRelationship(calculateReferElementList, bindingMap);
+        // 计算排斥: 所有绑定的元素所排斥的都是要排斥的
+        Set<T> exclusiveCalculateReferElements = CollectionUtil.union(HashSet::new, calculateReferElementList, bindingResultList);
+        // 寻找一级排斥, 一级排斥绑定的所有都是二级排斥
+        Set<T> firstLevelExclusiveResults = Sets.newHashSet();
+        exclusiveCalculateReferElements.forEach(key -> {
+            if (CollectionUtil.isNotEmpty(exclusiveMap.get(key))) {
+                firstLevelExclusiveResults.addAll(CollectionUtil.transToList(exclusiveMap.get(key), Pair::getRight));
+            }
+        });
+        List<T> exclusiveResultList = recursiveSearchRelationship(Lists.newArrayList(firstLevelExclusiveResults), bindingMap);
+
+        // 如果输入本身有矛盾, 那么该矛盾元素既在绑定结果中又在排斥结果中
+        Set<T> contradictionElementSet = CollectionUtil.intersection(HashSet::new, bindingResultList, exclusiveResultList);
+        if (CollectionUtil.isNotEmpty(contradictionElementSet)) {
+            throw new IllegalArgumentException("非法操作, 以下不可选: " + CollectionUtil.join(contradictionElementSet, SymbolConstantUtil.ENGLISH_COMMA));
+        }
+        Map<Boolean, List<T>> resultMap = new HashMap<>(4, 0.75f);
+        resultMap.put(Boolean.TRUE, bindingResultList);
+        resultMap.put(Boolean.FALSE, exclusiveResultList);
+        return resultMap;
+    }
+
+    private static <T> List<T> recursiveSearchRelationship(List<T> keyList, Map<T, List<Pair<T, T>>> relationMap) {
+        List<T> resultList = Lists.newArrayList();
+        for (T key : keyList) {
             resultList.add(key);
             if (CollectionUtil.isNotEmpty(relationMap.get(key))) {
-                List<String> bindingKeyList = CollectionUtil.transToList(relationMap.get(key), Pair::getRight);
-                resultList.addAll(recursiveSearchRelationship(bindingKeyList, relationMap));
+                List<T> valueList = CollectionUtil.transToList(relationMap.get(key), Pair::getRight);
+                resultList.addAll(recursiveSearchRelationship(valueList, relationMap));
             }
         }
         // 递归结束条件
@@ -243,6 +286,31 @@ public class StrategyRuleTest {
         private List<String> configNameList = Lists.newArrayList();
         private Integer min;
         private Integer max;
+    }
+
+    private static void priceSumTest() {
+        List<Integer> ids = Lists.newArrayList(74, 73, 75, 76);
+        NormalUseUtil.out(CollectionUtil.join(ids, SymbolConstantUtil.ENGLISH_COMMA));
+        NormalUseUtil.out("" + calculateSum(ids, loadPrice()));
+    }
+
+    private static Integer calculateSum(List<Integer> ids, Map<Integer, Integer> priceMap) {
+        List<Integer> prices = CollectionUtil.transToList(ids, priceMap::get);
+        return CollectionUtil.sum(prices, Integer::intValue).intValue();
+    }
+
+    private static Map<Integer, Integer> loadPrice() {
+        Map<Integer, Integer> priceMap = Maps.newHashMap();
+        priceMap.put(73, 8000);
+        priceMap.put(74, 4000);
+        priceMap.put(75, 10000);
+        priceMap.put(76, 20000);
+        priceMap.put(77, 12000);
+        priceMap.put(78, 5800);
+        priceMap.put(79, 6400);
+        priceMap.put(80, 7865);
+        priceMap.put(81, 16969);
+        return priceMap;
     }
 
 }

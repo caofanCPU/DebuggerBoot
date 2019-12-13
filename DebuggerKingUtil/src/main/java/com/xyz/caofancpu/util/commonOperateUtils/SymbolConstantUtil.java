@@ -66,7 +66,7 @@ public class SymbolConstantUtil {
     /**
      * 英文分号
      */
-    public static final String ENGLISH_SPLITER = ";";
+    public static final String ENGLISH_SEMICOLON = ";";
 
     /**
      * 等号

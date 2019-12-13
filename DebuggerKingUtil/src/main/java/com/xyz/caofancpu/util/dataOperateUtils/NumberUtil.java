@@ -10,11 +10,15 @@ import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.tuple.Pair;
 
 import java.math.BigDecimal;
+import java.util.ArrayList;
 import java.util.Comparator;
+import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
+import java.util.stream.Collectors;
+import java.util.stream.IntStream;
 
 /**
  * Created by caofanCPU on 2018/7/3.
@@ -382,12 +386,74 @@ public class NumberUtil {
     }
 
     /**
+     * 对于列表指定最少选择数, 最多选择数, 返回可以选的组合情况 + 不可以选的组合情况
+     *
+     * @param source
+     * @param minSelect
+     * @param maxSelect
+     * @param <T>
+     * @return
+     */
+    public static <T> Map<Boolean, List<List<T>>> calculateAndGroupCombNChooseK(@NonNull List<T> source, int minSelect, int maxSelect) {
+        if (!(minSelect >= 0 && minSelect <= maxSelect && maxSelect <= source.size())) {
+            throw new IllegalArgumentException("Please check your params, Rule: 0 <= minSelect <= maxSelect <= source.size()");
+        }
+        List<Integer> totalSelectNumList = IntStream.rangeClosed(0, source.size()).boxed().collect(Collectors.toList());
+        List<Integer> okSelectNumList = IntStream.rangeClosed(minSelect, maxSelect).boxed().collect(Collectors.toList());
+        List<Integer> errorSelectNumList = CollectionUtil.subtract(ArrayList::new, totalSelectNumList, okSelectNumList);
+
+        Map<Boolean, List<List<T>>> resultMap = new HashMap<>(4, 0.5f);
+        resultMap.put(Boolean.TRUE, calculateCombNChooseK(source, okSelectNumList));
+        resultMap.put(Boolean.FALSE, calculateCombNChooseK(source, errorSelectNumList));
+        return resultMap;
+    }
+
+    /**
+     * 从N个元素中, 选出k=0, 1, x, y, n多种情况的组合结果
+     *
+     * @param source
+     * @param kList
+     * @param <T>
+     * @return
+     */
+    public static <T> List<List<T>> calculateCombNChooseK(@NonNull List<T> source, @NonNull List<Integer> kList) {
+        List<List<T>> resultList = Lists.newArrayList();
+        kList.forEach(k -> resultList.addAll(calculateCombNChooseK(source, k)));
+        return resultList;
+    }
+
+    /**
+     * 针对至少有2个元素的列表source, 计算任意k(k>=0)元素的关系组合情况
+     *
+     * @param source
+     * @param k
+     * @param <T>
+     * @return
+     */
+    public static <T> List<List<T>> calculateCombNChooseK(@NonNull List<T> source, int k) {
+        List<List<T>> resultList = Lists.newArrayList();
+        int[] array = new int[source.size()];
+        for (int i = 0; i < array.length; i++) {
+            array[i] = i;
+        }
+        int[][] combNChooseKResult = calculateCombNChooseK(array, k);
+        for (int[] ints : combNChooseKResult) {
+            List<T> itemResult = Lists.newArrayList();
+            for (int index : ints) {
+                itemResult.add(source.get(index));
+            }
+            resultList.add(itemResult);
+        }
+        return resultList;
+    }
+
+    /**
      * 针对至少有2个元素的列表source, 计算任意两元素的关系组合情况
      *
      * @param source
      * @return
      */
-    public static <T> List<Pair<T, T>> calculateCombNChooseTwo(List<T> source) {
+    public static <T> List<Pair<T, T>> calculateCombNChooseTwo(@NonNull List<T> source) {
         if (CollectionUtil.isEmpty(source) || source.size() < 2) {
             throw new RuntimeException("组合数计算至少需要两个元素");
         }
@@ -479,8 +545,25 @@ public class NumberUtil {
     }
 
     public static void main(String[] args) {
-        NormalUseUtil.out(calculateViewPercent(200L, 300L));
-        NormalUseUtil.out(parseMoneyCN("123456789.546"));
+        List<String> list = Lists.newArrayList("A", "B", "C", "D", "E");
+        Map<Boolean, List<List<String>>> resultMap = calculateAndGroupCombNChooseK(list, 0, 5);
+        resultMap.forEach((key, valueList) -> {
+            if (CollectionUtil.isEmpty(valueList)) {
+                return;
+            }
+            if (key) {
+                NormalUseUtil.out("可选择的组合如下: ");
+            } else {
+                NormalUseUtil.out("不能选择的组合如下: ");
+            }
+            valueList.forEach(itemList -> {
+                if (CollectionUtil.isEmpty(itemList)) {
+                    NormalUseUtil.out("[空]");
+                    return;
+                }
+                NormalUseUtil.out(CollectionUtil.join(itemList, SymbolConstantUtil.ENGLISH_COMMA));
+            });
+        });
     }
 
 }
