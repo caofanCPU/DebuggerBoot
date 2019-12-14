@@ -186,7 +186,7 @@ public class CollectionUtil extends CollectionUtils {
      * @param <F>
      * @return
      */
-    public static <T, F> Set<F> probeRepeateValueSet(Collection<T> coll, Function<? super T, F> mapper) {
+    public static <T, F> Set<F> probeRepeatValueSet(Collection<T> coll, Function<? super T, F> mapper) {
         List<F> valueList = transToList(coll, mapper);
         Set<F> noRepeatValueSet = new HashSet<>(valueList);
         return subtract(HashSet::new, valueList, noRepeatValueSet);
