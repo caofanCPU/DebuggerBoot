@@ -178,7 +178,7 @@ public class CollectionUtil extends CollectionUtils {
     }
 
     /**
-     * 对集合元素指定字段检测重复, 返回重复元素
+     * 对集合元素指定字段检测重复, 返回非空重复元素
      *
      * @param coll
      * @param mapper
@@ -187,9 +187,10 @@ public class CollectionUtil extends CollectionUtils {
      * @return
      */
     public static <T, F> Set<F> probeRepeatValueSet(Collection<T> coll, Function<? super T, F> mapper) {
-        List<F> valueList = transToList(coll, mapper);
-        Set<F> noRepeatValueSet = new HashSet<>(valueList);
-        return subtract(HashSet::new, valueList, noRepeatValueSet);
+        List<F> elementList = transToList(coll, mapper);
+        List<F> withoutNullElementList = transToList(elementList, Function.identity());
+        Set<F> noRepeatElementSet = new HashSet<>(withoutNullElementList);
+        return subtract(HashSet::new, withoutNullElementList, noRepeatElementSet);
     }
 
     /**
@@ -265,6 +266,17 @@ public class CollectionUtil extends CollectionUtils {
         return source.stream().filter(Objects::nonNull).map(mapper).flatMap(List::stream).collect(Collectors.toList());
     }
 
+    /**
+     * 两层嵌套Collection折叠平铺为Set去重, 底层默认使用HashSet
+     * 多层嵌套的可以通过重复调用此方法完成平铺
+     *
+     * @param source 两层嵌套List数据源
+     * @param mapper 外层元素获取内Collection的执行函数
+     * @return 平铺后收集到的List
+     */
+    public static <E, R> Set<R> transToSetWithFlatMap(Collection<E> source, Function<? super E, ? extends List<R>> mapper) {
+        return source.stream().filter(Objects::nonNull).map(mapper).flatMap(List::stream).collect(Collectors.toSet());
+    }
 
     /**
      * 根据元素字段满足一定条件执行过滤, 并转换为Set

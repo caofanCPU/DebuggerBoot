@@ -7,15 +7,20 @@ import com.xyz.caofancpu.util.commonOperateUtils.NormalUseUtil;
 import com.xyz.caofancpu.util.commonOperateUtils.SymbolConstantUtil;
 import com.xyz.caofancpu.util.streamOperateUtils.CollectionUtil;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 import lombok.experimental.Accessors;
 import org.apache.commons.lang3.tuple.Pair;
 
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.Stack;
+import java.util.function.Function;
 
 /**
  * 策略规则测试
@@ -26,7 +31,8 @@ public class StrategyRuleTest {
 //        bindingAndExclusiveTest();
 //        minAndMaxSelectTest();
 //        powerTest();
-        priceSumTest();
+//        priceSumTest();
+        tarjanAlgorithm();
     }
 
     public static void powerTest() {
@@ -256,7 +262,7 @@ public class StrategyRuleTest {
      * A->B->C->D, A->Q, A-x-F, F-x-G, G-x-H
      * M->N->O->P, M-x-X, X-x-Y, Y-x-Z
      * <p>
-     * if i input [A, M], the result should like this:
+     * if i input [A, M], the resultIndexList should like this:
      * enabled:   [A, B, C, D, Q, M, N, O, P]
      * disabled:  [F, G, H, X, Y, Z]
      *
@@ -279,6 +285,32 @@ public class StrategyRuleTest {
         dataMap.put(Pair.of("Y", "Z"), Boolean.FALSE);
         return dataMap;
     }
+
+    /**
+     * 连环绑定
+     * ↓↽↓↽↑
+     * A↣B↣C↣D⇢B, 环状结构: B↣C、C↣D、B↣C↣D
+     * 连环排斥
+     * ↓↽↽↽↑
+     * A×M×N⇢A,    环状结构: A×M×N
+     *
+     * @return
+     */
+    private static Map<Pair<String, String>, Boolean> loadChainRelationshipMap() {
+        Map<Pair<String, String>, Boolean> dataMap = Maps.newHashMap();
+        dataMap.put(Pair.of("A", "B"), Boolean.TRUE);
+        dataMap.put(Pair.of("B", "C"), Boolean.TRUE);
+        dataMap.put(Pair.of("C", "B"), Boolean.TRUE);
+        dataMap.put(Pair.of("C", "D"), Boolean.TRUE);
+        dataMap.put(Pair.of("D", "B"), Boolean.TRUE);
+        dataMap.put(Pair.of("D", "C"), Boolean.TRUE);
+        dataMap.put(Pair.of("D", "E"), Boolean.TRUE);
+        dataMap.put(Pair.of("A", "M"), Boolean.FALSE);
+        dataMap.put(Pair.of("M", "N"), Boolean.FALSE);
+        dataMap.put(Pair.of("N", "A"), Boolean.FALSE);
+        return dataMap;
+    }
+
 
     @Data
     @Accessors(chain = true)
@@ -311,6 +343,190 @@ public class StrategyRuleTest {
         priceMap.put(80, 7865);
         priceMap.put(81, 16969);
         return priceMap;
+    }
+
+    private static void tarjanAlgorithm() {
+        Tarjan.DirectedGraph<String> graph = new Tarjan.DirectedGraph<>();
+        graph.addEdge("A", "B");
+        graph.addEdge("B", "C");
+        graph.addEdge("C", "D");
+        graph.addEdge("C", "E");
+        graph.addEdge("D", "B");
+
+        graph.buildGraph();
+        @SuppressWarnings("unchecked")
+        Tarjan<String> t = new Tarjan(graph);
+        List<ArrayList<String>> result = t.calculateByIndex();
+        // 打印结果
+        for (ArrayList<String> elementList : result) {
+            for (String s : elementList) {
+                System.out.print(s + " ");
+            }
+            System.out.println();
+        }
+    }
+
+    public static class Tarjan<T> {
+        /**
+         * 有向图
+         */
+        private DirectedGraph<T> graph;
+        /**
+         * 有向图强连通分量索引结果
+         */
+        private List<ArrayList<Integer>> resultIndexList = Lists.newArrayList();
+        /**
+         * 有向图顶点是否在计算栈中, 方便查找
+         */
+        private boolean[] inStack;
+        /**
+         * 栈
+         */
+        private Stack<Integer> stack;
+        private int[] dfn;
+        private int[] low;
+        private int time;
+
+        public Tarjan(DirectedGraph<T> graph) {
+            this.graph = graph;
+            this.inStack = new boolean[graph.getVertexNum()];
+            this.stack = new Stack<>();
+            dfn = new int[graph.getVertexNum()];
+            low = new int[graph.getVertexNum()];
+            // 将dfn所有元素都置为-1，其中dfn[i]=-1代表i还有没被访问过。
+            Arrays.fill(dfn, -1);
+            Arrays.fill(low, -1);
+        }
+
+        public List<ArrayList<T>> calculateByIndex() {
+            for (int i = 0; i < this.graph.getVertexNum(); i++) {
+                if (dfn[i] == -1) {
+                    tarjan(i);
+                }
+            }
+            List<ArrayList<T>> resultElementList = Lists.newArrayList();
+            for (int i = 0; i < resultIndexList.size(); i++) {
+                ArrayList<Integer> itemList = resultIndexList.get(i);
+                resultElementList.add(new ArrayList<>(itemList.size()));
+                resultElementList.get(i).addAll(CollectionUtil.transToList(itemList, index -> graph.getVertexIndexAsKeyMap().get(index)));
+            }
+            return resultElementList;
+        }
+
+        private void tarjan(int current) {
+            dfn[current] = low[current] = time++;
+            inStack[current] = true;
+            stack.push(current);
+            ArrayList<Integer> currentList = graph.getVertexIndexList().get(current);
+            for (int next : currentList) {
+                // -1代表没有被访问
+                if (dfn[next] == -1) {
+                    tarjan(next);
+                    low[current] = Math.min(low[current], low[next]);
+                } else if (inStack[next]) {
+                    low[current] = Math.min(low[current], dfn[next]);
+                }
+            }
+
+            if (low[current] == dfn[current]) {
+                ArrayList<Integer> temp = new ArrayList<>();
+                int j = -1;
+                while (current != j) {
+                    j = stack.pop();
+                    inStack[j] = false;
+                    temp.add(j);
+                }
+                resultIndexList.add(temp);
+            }
+        }
+
+        /**
+         * 有向图
+         *
+         * @param <T>
+         */
+        @Data
+        @NoArgsConstructor
+        @Accessors(chain = true)
+        public static class DirectedGraph<T> {
+            /**
+             * 有向图顶点数目
+             */
+            private int vertexNum;
+            /**
+             * 有向图顶点关系索引列表
+             */
+            private List<ArrayList<Integer>> vertexIndexList = Lists.newArrayList();
+            /**
+             * 有向图原始顶点元素与索引的映射关系, 方便查找
+             */
+            private Map<T, Integer> vertexElementAsKeyMap;
+            /**
+             * 有向图索引与原始顶点元素的映射关系, 方便查找
+             */
+            private Map<Integer, T> vertexIndexAsKeyMap;
+            /**
+             * 有向图原始元素关系列表
+             */
+            private List<Pair<T, T>> originRelationshipList = Lists.newArrayList();
+
+            /**
+             * 添加有向图的边
+             *
+             * @param u
+             * @param v
+             */
+            public void addEdge(T u, T v) {
+                this.originRelationshipList.add(Pair.of(u, v));
+            }
+
+            /**
+             * 批量添加有向图边
+             *
+             * @param edgeList
+             */
+            public void addEdgeList(List<Pair<T, T>> edgeList) {
+                this.originRelationshipList.addAll(edgeList);
+            }
+
+            /**
+             * 构建有向图
+             */
+            public void buildGraph() {
+                Set<T> vertexElements = CollectionUtil.transToSetWithFlatMap(this.getOriginRelationshipList(), pair -> {
+                    List<T> elementList = new ArrayList<>();
+                    elementList.add(pair.getLeft());
+                    elementList.add(pair.getRight());
+                    return elementList;
+                });
+                this.vertexNum = vertexElements.size();
+                List<T> vertexElementList = Lists.newArrayList(vertexElements);
+                // 排序映射
+                vertexElementList.sort(Comparator.comparing(Object::hashCode));
+                this.vertexElementAsKeyMap = CollectionUtil.transToMap(vertexElementList, Function.identity(), vertexElementList::indexOf);
+                this.vertexIndexAsKeyMap = CollectionUtil.transToMap(this.vertexElementAsKeyMap.entrySet(), Map.Entry::getValue, Map.Entry::getKey);
+                this.buildVertexIndex();
+            }
+
+            /**
+             * 构建有向图的索引
+             */
+            private void buildVertexIndex() {
+                if (CollectionUtil.isEmpty(this.getOriginRelationshipList()) || CollectionUtil.isEmpty(this.getVertexElementAsKeyMap())) {
+                    return;
+                }
+                // 初始化有向图
+                for (int i = 0; i < this.vertexNum; i++) {
+                    this.vertexIndexList.add(new ArrayList<>());
+                }
+                for (Pair<T, T> pair : this.originRelationshipList) {
+                    Integer outReferVertexIndex = this.vertexElementAsKeyMap.get(pair.getLeft());
+                    Integer inVertexIndex = this.vertexElementAsKeyMap.get(pair.getRight());
+                    this.vertexIndexList.get(outReferVertexIndex).add(inVertexIndex);
+                }
+            }
+        }
+
     }
 
 }
