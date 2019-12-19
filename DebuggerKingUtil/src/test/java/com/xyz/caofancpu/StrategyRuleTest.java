@@ -187,6 +187,9 @@ public class StrategyRuleTest {
         return Lists.newArrayList("A₁");
     }
 
+    /**
+     * 绑定与互斥测试
+     */
     private static void bindingAndExclusiveTest() {
         Map<Pair<String, String>, Boolean> relationshipMap = loadRelationshipMap();
         Set<String> positiveSelectedSet = Sets.newHashSet("F", "B", "G", "A");
@@ -204,6 +207,9 @@ public class StrategyRuleTest {
         exclusiveResultList.forEach(NormalUseUtil::out);
     }
 
+    /**
+     * 绑定与互斥关系探测循环测试
+     */
     private static void bindingAndExclusiveProbeCycleTest() {
         Map<Pair<String, String>, Boolean> relationshipMap = loadChainRelationshipMap();
         Map<Boolean, List<Pair<String, String>>> bindingOrExclusiveAsKeyMap = CollectionUtil.groupIndexToMap(relationshipMap.entrySet(), Map.Entry::getValue, Map.Entry::getKey);
@@ -211,6 +217,11 @@ public class StrategyRuleTest {
         List<Pair<String, String>> exclusiveRelationshipList = bindingOrExclusiveAsKeyMap.get(Boolean.FALSE);
         List<ArrayList<String>> bindingCycleList = probeDirectedGraphCycleByTarjanAlgorithm(bindingRelationshipList);
         List<ArrayList<String>> exclusiveCycleList = probeDirectedGraphCycleByTarjanAlgorithm(exclusiveRelationshipList);
+        if (CollectionUtil.isEmpty(bindingCycleList) && CollectionUtil.isEmpty(exclusiveCycleList)) {
+            NormalUseUtil.out("没有循环, 请放心使用");
+            return;
+        }
+
         NormalUseUtil.out("绑定关系环状元素:");
         bindingCycleList.forEach(itemList -> {
             itemList.forEach(NormalUseUtil::outWithSpace);
@@ -380,6 +391,7 @@ public class StrategyRuleTest {
             itemList.forEach(NormalUseUtil::outWithSpace);
             NormalUseUtil.outNextLine();
         });
+        NormalUseUtil.outNextLine();
         return CollectionUtil.filterAndTransList(tarjanSSCList, item -> item.size() > 1, Function.identity());
     }
 

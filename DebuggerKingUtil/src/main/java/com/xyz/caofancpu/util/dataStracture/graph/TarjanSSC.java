@@ -23,15 +23,24 @@ public class TarjanSSC<T> {
      */
     private List<ArrayList<Integer>> resultIndexList = Lists.newArrayList();
     /**
-     * 有向图顶点是否在计算栈中, 方便查找
+     * 有向图顶点是否在计算栈中, 打标记方便查找
      */
     private boolean[] inStack;
     /**
-     * 栈
+     * 栈容器
      */
     private Stack<Integer> stack;
+    /**
+     * i don't know how to description this amazing array
+     */
     private int[] dfn;
+    /**
+     * i don't know how to description this amazing array either.
+     */
     private int[] low;
+    /**
+     * 时间戳整数
+     */
     private int time;
 
     public TarjanSSC(DirectedGraph<T> graph) {
