@@ -5,21 +5,19 @@ import com.google.common.collect.Maps;
 import com.google.common.collect.Sets;
 import com.xyz.caofancpu.util.commonOperateUtils.NormalUseUtil;
 import com.xyz.caofancpu.util.commonOperateUtils.SymbolConstantUtil;
+import com.xyz.caofancpu.util.dataStracture.graph.DirectedGraph;
+import com.xyz.caofancpu.util.dataStracture.graph.TarjanSSC;
 import com.xyz.caofancpu.util.streamOperateUtils.CollectionUtil;
 import lombok.Data;
-import lombok.NoArgsConstructor;
 import lombok.experimental.Accessors;
 import org.apache.commons.lang3.tuple.Pair;
 
 import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Comparator;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
-import java.util.Stack;
 import java.util.function.Function;
 
 /**
@@ -32,7 +30,7 @@ public class StrategyRuleTest {
 //        minAndMaxSelectTest();
 //        powerTest();
 //        priceSumTest();
-        tarjanAlgorithm();
+        bindingAndExclusiveProbeCycleTest();
     }
 
     public static void powerTest() {
@@ -206,6 +204,27 @@ public class StrategyRuleTest {
         exclusiveResultList.forEach(NormalUseUtil::out);
     }
 
+    private static void bindingAndExclusiveProbeCycleTest() {
+        Map<Pair<String, String>, Boolean> relationshipMap = loadChainRelationshipMap();
+        Map<Boolean, List<Pair<String, String>>> bindingOrExclusiveAsKeyMap = CollectionUtil.groupIndexToMap(relationshipMap.entrySet(), Map.Entry::getValue, Map.Entry::getKey);
+        List<Pair<String, String>> bindingRelationshipList = bindingOrExclusiveAsKeyMap.get(Boolean.TRUE);
+        List<Pair<String, String>> exclusiveRelationshipList = bindingOrExclusiveAsKeyMap.get(Boolean.FALSE);
+        List<ArrayList<String>> bindingCycleList = probeDirectedGraphCycleByTarjanAlgorithm(bindingRelationshipList);
+        List<ArrayList<String>> exclusiveCycleList = probeDirectedGraphCycleByTarjanAlgorithm(exclusiveRelationshipList);
+        NormalUseUtil.out("绑定关系环状元素:");
+        bindingCycleList.forEach(itemList -> {
+            itemList.forEach(NormalUseUtil::outWithSpace);
+            NormalUseUtil.outNextLine();
+        });
+        NormalUseUtil.outNextLine();
+        NormalUseUtil.out("排斥关系环状元素:");
+        exclusiveCycleList.forEach(itemList -> {
+            itemList.forEach(NormalUseUtil::outWithSpace);
+            NormalUseUtil.outNextLine();
+        });
+        NormalUseUtil.outNextLine();
+    }
+
     /**
      * 根据绑定互斥关系, 以及选定的参考元素RSet, 计算绑定关系列表 + 排斥关系列表
      * 思路:
@@ -289,10 +308,10 @@ public class StrategyRuleTest {
     /**
      * 连环绑定
      * ↓↽↓↽↑
-     * A↣B↣C↣D⇢B, 环状结构: B↣C、C↣D、B↣C↣D
+     * A↣B↣C↣D, 环状结构: B↣C、C↣D、B↣C↣D
      * 连环排斥
      * ↓↽↽↽↑
-     * A×M×N⇢A,    环状结构: A×M×N
+     * A×M×N,    环状结构: A×M×N
      *
      * @return
      */
@@ -345,188 +364,24 @@ public class StrategyRuleTest {
         return priceMap;
     }
 
-    private static void tarjanAlgorithm() {
-        Tarjan.DirectedGraph<String> graph = new Tarjan.DirectedGraph<>();
-        graph.addEdge("A", "B");
-        graph.addEdge("B", "C");
-        graph.addEdge("C", "D");
-        graph.addEdge("C", "E");
-        graph.addEdge("D", "B");
-
-        graph.buildGraph();
-        @SuppressWarnings("unchecked")
-        Tarjan<String> t = new Tarjan(graph);
-        List<ArrayList<String>> result = t.calculateByIndex();
+    /**
+     * 使用Robert•Tarjan算法计算有向图的强连通分量(SSC)
+     * 强连通分量必定是环状结构, 单个元素是自环, 在实际业务中求得的环元素大于1个即可
+     *
+     * @param relationshipList
+     * @param <T>
+     * @return
+     */
+    private static <T> List<ArrayList<T>> probeDirectedGraphCycleByTarjanAlgorithm(List<Pair<T, T>> relationshipList) {
+        TarjanSSC<T> tarjan = new TarjanSSC<>(new DirectedGraph<>(relationshipList));
+        List<ArrayList<T>> tarjanSSCList = tarjan.calculateByIndex();
         // 打印结果
-        for (ArrayList<String> elementList : result) {
-            for (String s : elementList) {
-                System.out.print(s + " ");
-            }
-            System.out.println();
-        }
+        tarjanSSCList.forEach(itemList -> {
+            itemList.forEach(NormalUseUtil::outWithSpace);
+            NormalUseUtil.outNextLine();
+        });
+        return CollectionUtil.filterAndTransList(tarjanSSCList, item -> item.size() > 1, Function.identity());
     }
 
-    public static class Tarjan<T> {
-        /**
-         * 有向图
-         */
-        private DirectedGraph<T> graph;
-        /**
-         * 有向图强连通分量索引结果
-         */
-        private List<ArrayList<Integer>> resultIndexList = Lists.newArrayList();
-        /**
-         * 有向图顶点是否在计算栈中, 方便查找
-         */
-        private boolean[] inStack;
-        /**
-         * 栈
-         */
-        private Stack<Integer> stack;
-        private int[] dfn;
-        private int[] low;
-        private int time;
-
-        public Tarjan(DirectedGraph<T> graph) {
-            this.graph = graph;
-            this.inStack = new boolean[graph.getVertexNum()];
-            this.stack = new Stack<>();
-            dfn = new int[graph.getVertexNum()];
-            low = new int[graph.getVertexNum()];
-            // 将dfn所有元素都置为-1，其中dfn[i]=-1代表i还有没被访问过。
-            Arrays.fill(dfn, -1);
-            Arrays.fill(low, -1);
-        }
-
-        public List<ArrayList<T>> calculateByIndex() {
-            for (int i = 0; i < this.graph.getVertexNum(); i++) {
-                if (dfn[i] == -1) {
-                    tarjan(i);
-                }
-            }
-            List<ArrayList<T>> resultElementList = Lists.newArrayList();
-            for (int i = 0; i < resultIndexList.size(); i++) {
-                ArrayList<Integer> itemList = resultIndexList.get(i);
-                resultElementList.add(new ArrayList<>(itemList.size()));
-                resultElementList.get(i).addAll(CollectionUtil.transToList(itemList, index -> graph.getVertexIndexAsKeyMap().get(index)));
-            }
-            return resultElementList;
-        }
-
-        private void tarjan(int current) {
-            dfn[current] = low[current] = time++;
-            inStack[current] = true;
-            stack.push(current);
-            ArrayList<Integer> currentList = graph.getVertexIndexList().get(current);
-            for (int next : currentList) {
-                // -1代表没有被访问
-                if (dfn[next] == -1) {
-                    tarjan(next);
-                    low[current] = Math.min(low[current], low[next]);
-                } else if (inStack[next]) {
-                    low[current] = Math.min(low[current], dfn[next]);
-                }
-            }
-
-            if (low[current] == dfn[current]) {
-                ArrayList<Integer> temp = new ArrayList<>();
-                int j = -1;
-                while (current != j) {
-                    j = stack.pop();
-                    inStack[j] = false;
-                    temp.add(j);
-                }
-                resultIndexList.add(temp);
-            }
-        }
-
-        /**
-         * 有向图
-         *
-         * @param <T>
-         */
-        @Data
-        @NoArgsConstructor
-        @Accessors(chain = true)
-        public static class DirectedGraph<T> {
-            /**
-             * 有向图顶点数目
-             */
-            private int vertexNum;
-            /**
-             * 有向图顶点关系索引列表
-             */
-            private List<ArrayList<Integer>> vertexIndexList = Lists.newArrayList();
-            /**
-             * 有向图原始顶点元素与索引的映射关系, 方便查找
-             */
-            private Map<T, Integer> vertexElementAsKeyMap;
-            /**
-             * 有向图索引与原始顶点元素的映射关系, 方便查找
-             */
-            private Map<Integer, T> vertexIndexAsKeyMap;
-            /**
-             * 有向图原始元素关系列表
-             */
-            private List<Pair<T, T>> originRelationshipList = Lists.newArrayList();
-
-            /**
-             * 添加有向图的边
-             *
-             * @param u
-             * @param v
-             */
-            public void addEdge(T u, T v) {
-                this.originRelationshipList.add(Pair.of(u, v));
-            }
-
-            /**
-             * 批量添加有向图边
-             *
-             * @param edgeList
-             */
-            public void addEdgeList(List<Pair<T, T>> edgeList) {
-                this.originRelationshipList.addAll(edgeList);
-            }
-
-            /**
-             * 构建有向图
-             */
-            public void buildGraph() {
-                Set<T> vertexElements = CollectionUtil.transToSetWithFlatMap(this.getOriginRelationshipList(), pair -> {
-                    List<T> elementList = new ArrayList<>();
-                    elementList.add(pair.getLeft());
-                    elementList.add(pair.getRight());
-                    return elementList;
-                });
-                this.vertexNum = vertexElements.size();
-                List<T> vertexElementList = Lists.newArrayList(vertexElements);
-                // 排序映射
-                vertexElementList.sort(Comparator.comparing(Object::hashCode));
-                this.vertexElementAsKeyMap = CollectionUtil.transToMap(vertexElementList, Function.identity(), vertexElementList::indexOf);
-                this.vertexIndexAsKeyMap = CollectionUtil.transToMap(this.vertexElementAsKeyMap.entrySet(), Map.Entry::getValue, Map.Entry::getKey);
-                this.buildVertexIndex();
-            }
-
-            /**
-             * 构建有向图的索引
-             */
-            private void buildVertexIndex() {
-                if (CollectionUtil.isEmpty(this.getOriginRelationshipList()) || CollectionUtil.isEmpty(this.getVertexElementAsKeyMap())) {
-                    return;
-                }
-                // 初始化有向图
-                for (int i = 0; i < this.vertexNum; i++) {
-                    this.vertexIndexList.add(new ArrayList<>());
-                }
-                for (Pair<T, T> pair : this.originRelationshipList) {
-                    Integer outReferVertexIndex = this.vertexElementAsKeyMap.get(pair.getLeft());
-                    Integer inVertexIndex = this.vertexElementAsKeyMap.get(pair.getRight());
-                    this.vertexIndexList.get(outReferVertexIndex).add(inVertexIndex);
-                }
-            }
-        }
-
-    }
 
 }

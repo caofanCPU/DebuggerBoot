@@ -8,12 +8,20 @@ import java.util.Objects;
 
 public class NormalUseUtil {
 
-    public static void out(String text) {
+    public static void outNextLine() {
+        System.out.println(SymbolConstantUtil.EMPTY);
+    }
+
+    public static void out(Object text) {
         System.out.println(text);
     }
 
-    public static void outWithoutLn(String text) {
+    public static void outWithoutLn(Object text) {
         System.out.print(text);
+    }
+
+    public static void outWithSpace(Object text) {
+        System.out.print(text + SymbolConstantUtil.SPACE);
     }
 
     /**
