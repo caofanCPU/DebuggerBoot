@@ -211,10 +211,16 @@ public class StrategyRuleTest {
      * 绑定与互斥关系探测循环测试
      */
     private static void bindingAndExclusiveProbeCycleTest() {
-        Map<Pair<String, String>, Boolean> relationshipMap = loadChainRelationshipMap();
+        Map<Pair<String, String>, Boolean> relationshipMap = loadChainRelationshipMap2();
         Map<Boolean, List<Pair<String, String>>> bindingOrExclusiveAsKeyMap = CollectionUtil.groupIndexToMap(relationshipMap.entrySet(), Map.Entry::getValue, Map.Entry::getKey);
         List<Pair<String, String>> bindingRelationshipList = bindingOrExclusiveAsKeyMap.get(Boolean.TRUE);
         List<Pair<String, String>> exclusiveRelationshipList = bindingOrExclusiveAsKeyMap.get(Boolean.FALSE);
+        if (CollectionUtil.isEmpty(bindingRelationshipList)) {
+            bindingRelationshipList = Lists.newArrayList();
+        }
+        if (CollectionUtil.isEmpty(exclusiveRelationshipList)) {
+            exclusiveRelationshipList = Lists.newArrayList();
+        }
         List<ArrayList<String>> bindingCycleList = probeDirectedGraphCycleByTarjanAlgorithm(bindingRelationshipList);
         List<ArrayList<String>> exclusiveCycleList = probeDirectedGraphCycleByTarjanAlgorithm(exclusiveRelationshipList);
         if (CollectionUtil.isEmpty(bindingCycleList) && CollectionUtil.isEmpty(exclusiveCycleList)) {
@@ -341,6 +347,18 @@ public class StrategyRuleTest {
         return dataMap;
     }
 
+    private static Map<Pair<String, String>, Boolean> loadChainRelationshipMap2() {
+        Map<Pair<String, String>, Boolean> dataMap = Maps.newHashMap();
+        dataMap.put(Pair.of("A", "B"), Boolean.TRUE);
+        dataMap.put(Pair.of("B", "C"), Boolean.TRUE);
+        dataMap.put(Pair.of("B", "E"), Boolean.TRUE);
+        dataMap.put(Pair.of("C", "D"), Boolean.TRUE);
+        dataMap.put(Pair.of("C", "F"), Boolean.TRUE);
+        dataMap.put(Pair.of("D", "F"), Boolean.TRUE);
+        dataMap.put(Pair.of("D", "B"), Boolean.TRUE);
+        dataMap.put(Pair.of("E", "F"), Boolean.TRUE);
+        return dataMap;
+    }
 
     @Data
     @Accessors(chain = true)

@@ -185,19 +185,19 @@ public class MultiplicationAlgorithmUtil {
 
     public static void main(String[] args) {
         Pattern numberPattern = getPattern("^[1-9]\\d*$");
-        while (Boolean.TRUE) {
+        while (true) {
             initRecursionNum();
             System.out.println("请输入乘数A（不以0开头的正整数）：");
             Scanner sc = new Scanner(System.in);
             String A = sc.next();
-            if (!checkNumber(numberPattern, A)) {
+            if (checkNumber(numberPattern, A)) {
                 System.out.println("乘数A输入不合法, 请检查！");
                 continue;
             }
 
             System.out.println("请输入被乘数B（不以0开头的正整数）：");
             String B = sc.next();
-            if (!checkNumber(numberPattern, B)) {
+            if (checkNumber(numberPattern, B)) {
                 System.out.println("被乘数B输入不合法, 请检查！");
                 continue;
             }
@@ -220,11 +220,56 @@ public class MultiplicationAlgorithmUtil {
     }
 
     public static boolean checkNumber(Pattern numberPattern, String value) {
-        return Objects.isNull(numberPattern) ? Boolean.FALSE : numberPattern.matcher(value).matches();
+        return Objects.isNull(numberPattern) || !numberPattern.matcher(value).matches();
     }
 
     public static void out(String text) {
         System.out.println(text);
+    }
+
+
+    // TODO: Function for finding sum of larger numbers
+    public static String findSum(String str1, String str2) {
+        // Before proceeding further, make sure length
+        // of str2 is larger.
+        if (str1.length() > str2.length()) {
+            String t = str1;
+            str1 = str2;
+            str2 = t;
+        }
+
+        // Take an empty String for storing result
+        StringBuilder str = new StringBuilder();
+
+        // Calculate length of both String
+        int n1 = str1.length(), n2 = str2.length();
+        int diff = n2 - n1;
+
+        // Initially take carry zero
+        int carry = 0;
+
+        // Traverse from end of both Strings
+        for (int i = n1 - 1; i >= 0; i--) {
+            // Do school mathematics, compute sum of
+            // current digits and carry
+            int sum = ((str1.charAt(i) - '0') + (str2.charAt(i + diff) - '0') + carry);
+            str.append((char) (sum % 10 + '0'));
+            carry = sum / 10;
+        }
+
+        // Add remaining digits of str2[]
+        for (int i = n2 - n1 - 1; i >= 0; i--) {
+            int sum = ((str2.charAt(i) - '0') + carry);
+            str.append((char) (sum % 10 + '0'));
+            carry = sum / 10;
+        }
+
+        // Add remaining carry
+        if (carry > 0)
+            str.append((char) (carry + '0'));
+
+        // reverse resultant String
+        return new StringBuilder(str.toString()).reverse().toString();
     }
 
 }
