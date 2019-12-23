@@ -1,7 +1,7 @@
 package com.xyz.caofancpu.constant;
 
-import com.xyz.caofancpu.util.commonOperateUtils.NormalUseUtil;
-import com.xyz.caofancpu.util.commonOperateUtils.enumType.IEnum;
+import com.xyz.caofancpu.util.commonoperateutils.NormalUseUtil;
+import com.xyz.caofancpu.util.commonoperateutils.enumtype.IEnum;
 import lombok.Getter;
 
 /**

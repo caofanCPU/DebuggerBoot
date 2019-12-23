@@ -1,6 +1,6 @@
 package com.xyz.caofancpu.trackingtime.constant.enums;
 
-import com.xyz.caofancpu.util.commonOperateUtils.enumType.IEnum;
+import com.xyz.caofancpu.util.commonoperateutils.enumtype.IEnum;
 import lombok.Getter;
 
 /**

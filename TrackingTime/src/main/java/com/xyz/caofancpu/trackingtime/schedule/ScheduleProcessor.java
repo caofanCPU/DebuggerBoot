@@ -1,7 +1,7 @@
 package com.xyz.caofancpu.trackingtime.schedule;
 
-import com.xyz.caofancpu.util.commonOperateUtils.NormalUseUtil;
-import com.xyz.caofancpu.util.dataOperateUtils.DateUtil;
+import com.xyz.caofancpu.util.commonoperateutils.NormalUseUtil;
+import com.xyz.caofancpu.util.dataoperateutils.DateUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.scheduling.annotation.EnableScheduling;

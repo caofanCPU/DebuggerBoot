@@ -1,8 +1,8 @@
 package com.xyz.caofancpu.trackingtime.zcy;
 
 import com.google.common.collect.Lists;
-import com.xyz.caofancpu.util.commonOperateUtils.NormalUseUtil;
-import com.xyz.caofancpu.util.dataOperateUtils.NumberUtil;
+import com.xyz.caofancpu.util.commonoperateutils.NormalUseUtil;
+import com.xyz.caofancpu.util.dataoperateutils.NumberUtil;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -54,7 +54,7 @@ public class HowToLearnCollection {
      * 借助随机数构造000-999数字集合
      * <p>
      * 1.已知{@link #randomNumBetweenZeroAndNine}可以随机产生一位数字, 其值范围为0-9,
-     * {@link com.xyz.caofancpu.util.commonOperateUtils.NormalUseUtil#out(String)}可以打印字符串
+     * {@link com.xyz.caofancpu.util.commonoperateutils.NormalUseUtil#out(String)}可以打印字符串
      * 2.允许的操作: 借助{@link #randomNumBetweenZeroAndNine}方法拼接出3位数, 借助循环收集3位数结果, 借助循环打印3位数结果
      * 3.求: 按照000, 001, 002,..., 999顺序打印结果
      * <p>

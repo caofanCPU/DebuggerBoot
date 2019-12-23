@@ -1,8 +1,8 @@
 package com.xyz.caofancpu.utils;
 
-import com.xyz.caofancpu.util.StudyWaitingUtils.VerbalExpressionUtil;
-import com.xyz.caofancpu.util.commonOperateUtils.FileUtil;
-import com.xyz.caofancpu.util.streamOperateUtils.CollectionUtil;
+import com.xyz.caofancpu.util.commonoperateutils.FileUtil;
+import com.xyz.caofancpu.util.streamoperateutils.CollectionUtil;
+import com.xyz.caofancpu.util.studywaitingutils.VerbalExpressionUtil;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -24,7 +24,7 @@ public class BeautySQLStringUtil {
      */
     private static final Logger logger = LoggerFactory.getLogger(BeautySQLStringUtil.class);
 
-    public static final String FILE_BASE_PATH = "/Users/htuser-085/Desktop/CAOFAN/IDEA-WORK/DebuggerBoot/DebuggerKingUtil/src/main/java/com/xyz/caofancpu/util/dataOperateUtils/SQLString";
+    public static final String FILE_BASE_PATH = "/Users/htuser-085/Desktop/CAOFAN/IDEA-WORK/DebuggerBoot/DebuggerKingUtil/src/main/java/com/xyz/caofancpu/util/dataoperateutils/SQLString";
 
     public static void main(String[] args)
             throws Exception {

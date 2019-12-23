@@ -17,6 +17,9 @@ import org.springframework.web.bind.annotation.RestController;
 import javax.annotation.Resource;
 import java.util.List;
 
+/**
+ * @author caofanCPU
+ */
 @RestController
 @Api(tags = {"虚拟货币交易记录处理接口"})
 @ApiSort(1)

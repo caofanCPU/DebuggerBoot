@@ -1,7 +1,7 @@
 package com.xyz.caofancpu.streamTest;
 
 
-import com.xyz.caofancpu.util.dataOperateUtils.CollectorGenerateUtil;
+import com.xyz.caofancpu.util.dataoperateutils.CollectorGenerateUtil;
 
 import java.util.Map;
 import java.util.Objects;

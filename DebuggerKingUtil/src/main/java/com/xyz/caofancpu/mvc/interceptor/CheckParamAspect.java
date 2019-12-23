@@ -2,12 +2,12 @@ package com.xyz.caofancpu.mvc.interceptor;
 
 import com.alibaba.fastjson.JSONObject;
 import com.xyz.caofancpu.mvc.annotation.Check;
-import com.xyz.caofancpu.util.dataOperateUtils.JSONUtil;
-import com.xyz.caofancpu.util.dataOperateUtils.ReflectionUtil;
+import com.xyz.caofancpu.util.dataoperateutils.JSONUtil;
+import com.xyz.caofancpu.util.dataoperateutils.ReflectionUtil;
 import com.xyz.caofancpu.util.result.CustomerErrorInfo;
 import com.xyz.caofancpu.util.result.GlobalErrorInfoException;
 import com.xyz.caofancpu.util.result.ResultBody;
-import com.xyz.caofancpu.util.streamOperateUtils.CollectionUtil;
+import com.xyz.caofancpu.util.streamoperateutils.CollectionUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.aspectj.lang.ProceedingJoinPoint;

@@ -1,7 +1,7 @@
 package com.xyz.caofancpu.utils;
 
-import com.xyz.caofancpu.util.multiThreadUtils.DebuggerKingRunnable;
-import com.xyz.caofancpu.util.multiThreadUtils.DemoRunnableTask;
+import com.xyz.caofancpu.util.multithreadutils.DebuggerKingRunnable;
+import com.xyz.caofancpu.util.multithreadutils.DemoRunnableTask;
 import io.swagger.annotations.Api;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.scheduling.annotation.Async;

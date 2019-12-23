@@ -1,7 +1,7 @@
 package com.xyz.caofancpu.trackingtime.init;
 
-import com.xyz.caofancpu.util.commonOperateUtils.enumType.EnumRequestJSONConverterUtil;
-import com.xyz.caofancpu.util.dataOperateUtils.MappingJackson2HttpMessageConverterUtil;
+import com.xyz.caofancpu.util.commonoperateutils.enumtype.EnumRequestJSONConverterUtil;
+import com.xyz.caofancpu.util.dataoperateutils.MappingJackson2HttpMessageConverterUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.boot.convert.ApplicationConversionService;
 

@@ -14,8 +14,11 @@ import org.springframework.web.bind.annotation.RestController;
 
 import javax.annotation.Resource;
 
+/**
+ * @author caofanCPU
+ */
 @RestController
-@Api(description = "TimeBlockController", tags = {"时间区块处理接口"})
+@Api(tags = {"时间区块处理接口"})
 @Slf4j
 public class TimeBlockController {
 

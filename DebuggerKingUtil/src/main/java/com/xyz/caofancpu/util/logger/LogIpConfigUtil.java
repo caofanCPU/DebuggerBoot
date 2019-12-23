@@ -2,7 +2,7 @@ package com.xyz.caofancpu.util.logger;
 
 import ch.qos.logback.classic.pattern.ClassicConverter;
 import ch.qos.logback.classic.spi.ILoggingEvent;
-import com.xyz.caofancpu.util.commonOperateUtils.SymbolConstantUtil;
+import com.xyz.caofancpu.util.commonoperateutils.SymbolConstantUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;

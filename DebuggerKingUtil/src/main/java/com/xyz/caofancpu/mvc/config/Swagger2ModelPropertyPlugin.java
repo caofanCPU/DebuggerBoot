@@ -1,8 +1,8 @@
 package com.xyz.caofancpu.mvc.config;
 
-import com.xyz.caofancpu.util.commonOperateUtils.enumType.IEnum;
-import com.xyz.caofancpu.util.dataOperateUtils.JSONUtil;
-import com.xyz.caofancpu.util.streamOperateUtils.CollectionUtil;
+import com.xyz.caofancpu.util.commonoperateutils.enumtype.IEnum;
+import com.xyz.caofancpu.util.dataoperateutils.JSONUtil;
+import com.xyz.caofancpu.util.streamoperateutils.CollectionUtil;
 import io.swagger.annotations.ApiModelProperty;
 import org.springframework.core.Ordered;
 import org.springframework.core.annotation.Order;

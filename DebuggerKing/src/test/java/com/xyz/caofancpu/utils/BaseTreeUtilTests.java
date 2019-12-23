@@ -1,7 +1,7 @@
 package com.xyz.caofancpu.utils;
 
-import com.xyz.caofancpu.util.commonOperateUtils.treeElement.BaseTree;
-import com.xyz.caofancpu.util.commonOperateUtils.treeElement.BaseTreeUtil;
+import com.xyz.caofancpu.util.commonoperateutils.treeelement.BaseTree;
+import com.xyz.caofancpu.util.commonoperateutils.treeelement.BaseTreeUtil;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.EqualsAndHashCode;

@@ -1,7 +1,7 @@
 package com.xyz.caofancpu.mvc.interceptor;
 
 
-import com.xyz.caofancpu.util.dataOperateUtils.JSONUtil;
+import com.xyz.caofancpu.util.dataoperateutils.JSONUtil;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.ibatis.executor.statement.StatementHandler;
 import org.apache.ibatis.mapping.BoundSql;

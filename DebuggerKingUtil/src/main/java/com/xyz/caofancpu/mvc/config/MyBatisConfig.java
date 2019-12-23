@@ -1,6 +1,6 @@
 package com.xyz.caofancpu.mvc.config;
 
-import com.xyz.caofancpu.util.commonOperateUtils.enumType.AutoDispatchMyBatisEnumTypeHandler;
+import com.xyz.caofancpu.util.commonoperateutils.enumtype.AutoDispatchMyBatisEnumTypeHandler;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.ibatis.session.SqlSessionFactory;
 import org.apache.ibatis.type.TypeHandlerRegistry;

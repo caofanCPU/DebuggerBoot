@@ -1,10 +1,10 @@
 package com.xyz.caofancpu.utils;
 
-import com.xyz.caofancpu.util.commonOperateUtils.FileUtil;
-import com.xyz.caofancpu.util.multiThreadUtils.BatchGroupRunnable;
-import com.xyz.caofancpu.util.multiThreadUtils.DebuggerKingRunnable;
-import com.xyz.caofancpu.util.multiThreadUtils.ThreadTraceUtil;
-import com.xyz.caofancpu.util.streamOperateUtils.CollectionUtil;
+import com.xyz.caofancpu.util.commonoperateutils.FileUtil;
+import com.xyz.caofancpu.util.multithreadutils.BatchGroupRunnable;
+import com.xyz.caofancpu.util.multithreadutils.DebuggerKingRunnable;
+import com.xyz.caofancpu.util.multithreadutils.ThreadTraceUtil;
+import com.xyz.caofancpu.util.streamoperateutils.CollectionUtil;
 import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
 
 import java.io.File;
@@ -20,7 +20,7 @@ import java.util.concurrent.ThreadPoolExecutor;
  */
 public class BatchGroupRunnableTest {
 
-    private static final String FILE_BASE_PATH = "/Users/htuser-085/Desktop/CAOFAN/IDEA-WORK/DebuggerBoot/DebuggerKingUtil/src/main/java/com/xyz/caofancpu/util/multiThreadUtils/textFile";
+    private static final String FILE_BASE_PATH = "/Users/htuser-085/Desktop/CAOFAN/IDEA-WORK/DebuggerBoot/DebuggerKingUtil/src/main/java/com/xyz/caofancpu/util/multithreadutils/textFile";
 
     public static void main(String[] args) {
         ThreadTraceUtil.beginTrace();

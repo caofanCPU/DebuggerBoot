@@ -1,8 +1,8 @@
 package com.xyz.caofancpu.streamTest;
 
 import com.alibaba.fastjson.JSONObject;
-import com.xyz.caofancpu.util.commonOperateUtils.NormalUseUtil;
-import com.xyz.caofancpu.util.dataOperateUtils.JSONUtil;
+import com.xyz.caofancpu.util.commonoperateutils.NormalUseUtil;
+import com.xyz.caofancpu.util.dataoperateutils.JSONUtil;
 import org.apache.commons.collections.CollectionUtils;
 
 import java.math.BigDecimal;

@@ -1,8 +1,8 @@
 package com.xyz.caofancpu.utils;
 
 import com.xyz.caofancpu.model.Area;
-import com.xyz.caofancpu.util.commonOperateUtils.treeElement.WrapTreeUtil;
-import com.xyz.caofancpu.util.dataOperateUtils.CollectorGenerateUtil;
+import com.xyz.caofancpu.util.commonoperateutils.treeelement.WrapTreeUtil;
+import com.xyz.caofancpu.util.dataoperateutils.CollectorGenerateUtil;
 
 import java.util.ArrayList;
 import java.util.Comparator;

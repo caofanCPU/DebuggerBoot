@@ -1,6 +1,6 @@
 package com.xyz.caofancpu.util.logger;
 
-import com.xyz.caofancpu.util.multiThreadUtils.ThreadTraceUtil;
+import com.xyz.caofancpu.util.multithreadutils.ThreadTraceUtil;
 import org.slf4j.Logger;
 
 import java.util.Objects;

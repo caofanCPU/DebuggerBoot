@@ -1,7 +1,7 @@
 package com.xyz.caofancpu.mvc.config;
 
 import com.google.common.collect.Lists;
-import com.xyz.caofancpu.util.dataOperateUtils.MappingJackson2HttpMessageConverterUtil;
+import com.xyz.caofancpu.util.dataoperateutils.MappingJackson2HttpMessageConverterUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
