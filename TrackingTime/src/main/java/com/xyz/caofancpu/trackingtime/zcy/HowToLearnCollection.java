@@ -29,7 +29,7 @@ public class HowToLearnCollection {
     /**
      * 按照顺序打印000-999
      * <p>
-     * 1.已知{@link NormalUseUtil#out(String)}可以打印字符串
+     * 1.已知{@link NormalUseUtil#out(Object)}可以打印字符串
      * 使用"" + 数字可以构造出一个字符串参数
      * 2.允许的操作, 只能用循环及1中提供的打印方法完成
      * 3.求: 按照顺序打印000-999
@@ -54,7 +54,7 @@ public class HowToLearnCollection {
      * 借助随机数构造000-999数字集合
      * <p>
      * 1.已知{@link #randomNumBetweenZeroAndNine}可以随机产生一位数字, 其值范围为0-9,
-     * {@link com.xyz.caofancpu.util.commonoperateutils.NormalUseUtil#out(String)}可以打印字符串
+     * {@link com.xyz.caofancpu.util.commonoperateutils.NormalUseUtil#out(Object)}可以打印字符串
      * 2.允许的操作: 借助{@link #randomNumBetweenZeroAndNine}方法拼接出3位数, 借助循环收集3位数结果, 借助循环打印3位数结果
      * 3.求: 按照000, 001, 002,..., 999顺序打印结果
      * <p>
