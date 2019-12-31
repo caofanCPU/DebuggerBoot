@@ -15,6 +15,8 @@ import java.util.Objects;
 
 /**
  * 枚举类型自动转换器
+ *
+ * @author caofanCPU
  */
 @SuppressWarnings("unchecked")
 @Slf4j

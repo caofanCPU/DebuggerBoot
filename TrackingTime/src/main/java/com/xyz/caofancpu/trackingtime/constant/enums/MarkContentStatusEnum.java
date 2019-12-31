@@ -7,6 +7,8 @@ import java.util.Arrays;
 
 /**
  * 内容状态机
+ *
+ * @author caofanCPU
  */
 public enum MarkContentStatusEnum implements IEnum {
     CREATED(0, "已创建"),
