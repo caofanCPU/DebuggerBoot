@@ -152,15 +152,22 @@ React Native documentation is Creative Commons licensed, as found in the [LICENS
 
 ### Hello
 [MarkDown公式语法](https://www.jianshu.com/p/a0aa94ef8ab2)  
-$\sum_{i=0}^N\int_{a}^{b}g(t,i)\text{d}t$
+$
+\sum_{i=0}^N\int_{a}^{b}g(t,i)\text{d}t
+$
 
-$$\sum_{i=0}^N\int_{a}^{b}g(t,i)\text{d}t$$
+$$
+\sum_{i=0}^N\int_{a}^{b}g(t,i)\text{d}t
+$$
 
-$$\begin{matrix}
-1&0&0\\  
-0&1&0\\  
-0&0&1\\  
-\end{matrix}$$
+$$
+\begin{matrix}
+1 & 0 & 0 \\  
+0 & 1 & 0 \\  
+0 & 0 & 1 \\  
+\end{matrix}
+$$
 
-
-$e^{x} = 1 + \frac{x}{1!} + \frac{x^{2}}{2!} + \frac{x^{3}}{3!} + \cdots , \quad - \infty < x < \infty$
+$
+e^{x} = 1 + \frac{x}{1!} + \frac{x^{2}}{2!} + \frac{x^{3}}{3!} + \cdots , \quad - \infty < x < \infty
+$
