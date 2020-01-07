@@ -157,9 +157,9 @@ $\sum_{i=0}^N\int_{a}^{b}g(t,i)\text{d}t$
 $$\sum_{i=0}^N\int_{a}^{b}g(t,i)\text{d}t$$
 
 $$\begin{matrix}
-1&0&0\\
-0&1&0\\
-0&0&1\\
+1&0&0\\  
+0&1&0\\  
+0&0&1\\  
 \end{matrix}$$
 
 
