@@ -39,7 +39,7 @@ public class SymbolConstantUtil {
     /**
      * EXCEL中汉字的缩进间距，设置为4个空格
      */
-    public static final String CHINESE_INDENT = CollectionUtil.join(Collections.nCopies(4, SPACE), EMPTY);
+    public static final String TAB = CollectionUtil.join(Collections.nCopies(4, SPACE), EMPTY);
     /**
      * 填空占位符: 两条短横线
      */
@@ -79,6 +79,11 @@ public class SymbolConstantUtil {
      * 百分号
      */
     public static final String PERCENT = "%";
+
+    /**
+     * 换行
+     */
+    public static final String NEXT_LINE = "\n";
 
 
 }
