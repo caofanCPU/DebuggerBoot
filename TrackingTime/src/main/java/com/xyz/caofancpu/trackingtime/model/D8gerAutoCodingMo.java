@@ -14,7 +14,7 @@ import java.util.Date;
 /**
  * D8gerAutoCodingMo
  *
- * @author 曹繁
+ * @author caofanCPU
  */
 @Data
 @NoArgsConstructor
@@ -28,19 +28,9 @@ public class D8gerAutoCodingMo {
     private Integer id;
 
     /**
-     * 游龄
-     */
-    private int age;
-
-    /**
      * 累计得分
      */
     private Long score;
-
-    /**
-     * 累计时长
-     */
-    private long totalSeconds;
 
     /**
      * 昵称
@@ -51,11 +41,6 @@ public class D8gerAutoCodingMo {
      * 是否删除
      */
     private Boolean deleted;
-
-    /**
-     * 是否满级
-     */
-    private boolean completeLevel;
 
     /**
      * 注册时间
@@ -78,29 +63,14 @@ public class D8gerAutoCodingMo {
     private Double englishMoney;
 
     /**
-     * 德币
-     */
-    private double germanMoney;
-
-    /**
      * 法币
      */
     private Float frenchMoney;
 
     /**
-     * 日币
-     */
-    private float japanMoney;
-
-    /**
      * 韩币
      */
     private Short koreanMoney;
-
-    /**
-     * 人民币
-     */
-    private short rmbMoney;
 
     /**
      * 加密类型

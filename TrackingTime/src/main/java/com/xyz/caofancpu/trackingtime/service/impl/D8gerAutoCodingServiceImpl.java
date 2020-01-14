@@ -14,7 +14,7 @@ import java.util.Objects;
 /**
  * D8gerAutoCodingMo对应的ServiceImpl
  *
- * @author 曹繁
+ * @author caofanCPU
  */
 @Service
 @Slf4j
@@ -73,6 +73,17 @@ public class D8gerAutoCodingServiceImpl implements D8gerAutoCodingService {
     @Override
     public int updateSelectiveById(D8gerAutoCodingMo d8gerAutoCodingMo) {
         return d8gerAutoCodingMapper.updateByPrimaryKeySelective(d8gerAutoCodingMo);
+    }
+
+    /**
+     * 批量根据id更新非null字段
+     *
+     * @param d8gerAutoCodingMoList
+     * @return
+     */
+    @Override
+    public int batchUpdateSelectiveById(List<D8gerAutoCodingMo> d8gerAutoCodingMoList) {
+        return d8gerAutoCodingMapper.updateBatchByPrimaryKeySelective(d8gerAutoCodingMoList);
     }
 
     /**

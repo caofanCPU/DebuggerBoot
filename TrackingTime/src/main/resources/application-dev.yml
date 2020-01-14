@@ -36,7 +36,7 @@ spring:
   datasource:
     connection-test-query: select 1
     driverClassName: com.mysql.cj.jdbc.Driver
-    url: jdbc:mysql://127.0.0.1:3306/spring_clould?useUnicode=true&characterEncoding=UTF-8&zeroDateTimeBehavior=convertToNull&useSSL=false&serverTimezone=UTC&serverTimezone=Asia/Shanghai
+    url: jdbc:mysql://127.0.0.1:3306/spring_clould?useUnicode=true&characterEncoding=UTF-8&allowMultiQueries=true&zeroDateTimeBehavior=convertToNull&useSSL=false&serverTimezone=UTC&serverTimezone=Asia/Shanghai
     username: root
     password: ENC(ISF7rTrUFxKY7SN/PNvvWg==)
 jasypt:

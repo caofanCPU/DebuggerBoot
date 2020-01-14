@@ -10,7 +10,7 @@ import java.util.List;
 /**
  * D8gerAutoCodingMo对应的Mapper
  *
- * @author 曹繁
+ * @author caofanCPU
  */
 @Mapper
 public interface D8gerAutoCodingMapper {

@@ -7,7 +7,7 @@ import java.util.List;
 /**
  * D8gerAutoCodingMo对应的Service接口定义
  *
- * @author 曹繁
+ * @author caofanCPU
  */
 public interface D8gerAutoCodingService {
 
@@ -43,6 +43,14 @@ public interface D8gerAutoCodingService {
      * @return
      */
     int updateSelectiveById(D8gerAutoCodingMo d8gerAutoCodingMo);
+
+    /**
+     * 批量根据id更新非null字段
+     *
+     * @param d8gerAutoCodingMoList
+     * @return
+     */
+    int batchUpdateSelectiveById(List<D8gerAutoCodingMo> d8gerAutoCodingMoList);
 
     /**
      * 根据id物理删除

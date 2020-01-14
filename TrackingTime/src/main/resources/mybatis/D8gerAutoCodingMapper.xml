@@ -71,21 +71,15 @@
             DISTINCT
         </if>
         `id` AS id,
-        `age` AS age,
         `score` AS score,
-        `total_seconds` AS totalSeconds,
         `nick_name` AS nickName,
         `deleted` AS deleted,
-        `complete_level` AS completeLevel,
         `register_date` AS registerDate,
         `pre_start_time` AS preStartTime,
         `exact_money` AS exactMoney,
         `english_money` AS englishMoney,
-        `german_money` AS germanMoney,
         `french_money` AS frenchMoney,
-        `japan_money` AS japanMoney,
         `korean_money` AS koreanMoney,
-        `rmb_money` AS rmbMoney,
         `encrypt_type` AS encryptType,
         `mark_content_status` AS markContentStatus
         FROM `d8ger_auto_coding`
@@ -102,59 +96,41 @@
         <foreach collection="list" open="" close="" separator=";" item="item">
             UPDATE `d8ger_auto_coding`
             <set>
-                <if test="age != null">
-                    `age` = #{age},
+                <if test="item.score != null">
+                    `score` = #{item.score},
                 </if>
-                <if test="score != null">
-                    `score` = #{score},
+                <if test="item.nickName != null">
+                    `nick_name` = #{item.nickName},
                 </if>
-                <if test="totalSeconds != null">
-                    `total_seconds` = #{totalSeconds},
+                <if test="item.deleted != null">
+                    `deleted` = #{item.deleted},
                 </if>
-                <if test="nickName != null">
-                    `nick_name` = #{nickName},
+                <if test="item.registerDate != null">
+                    `register_date` = #{item.registerDate},
                 </if>
-                <if test="deleted != null">
-                    `deleted` = #{deleted},
+                <if test="item.preStartTime != null">
+                    `pre_start_time` = #{item.preStartTime},
                 </if>
-                <if test="completeLevel != null">
-                    `complete_level` = #{completeLevel},
+                <if test="item.exactMoney != null">
+                    `exact_money` = #{item.exactMoney},
                 </if>
-                <if test="registerDate != null">
-                    `register_date` = #{registerDate},
+                <if test="item.englishMoney != null">
+                    `english_money` = #{item.englishMoney},
                 </if>
-                <if test="preStartTime != null">
-                    `pre_start_time` = #{preStartTime},
+                <if test="item.frenchMoney != null">
+                    `french_money` = #{item.frenchMoney},
                 </if>
-                <if test="exactMoney != null">
-                    `exact_money` = #{exactMoney},
+                <if test="item.koreanMoney != null">
+                    `korean_money` = #{item.koreanMoney},
                 </if>
-                <if test="englishMoney != null">
-                    `english_money` = #{englishMoney},
+                <if test="item.encryptType != null">
+                    `encrypt_type` = #{item.encryptType},
                 </if>
-                <if test="germanMoney != null">
-                    `german_money` = #{germanMoney},
-                </if>
-                <if test="frenchMoney != null">
-                    `french_money` = #{frenchMoney},
-                </if>
-                <if test="japanMoney != null">
-                    `japan_money` = #{japanMoney},
-                </if>
-                <if test="koreanMoney != null">
-                    `korean_money` = #{koreanMoney},
-                </if>
-                <if test="rmbMoney != null">
-                    `rmb_money` = #{rmbMoney},
-                </if>
-                <if test="encryptType != null">
-                    `encrypt_type` = #{encryptType},
-                </if>
-                <if test="markContentStatus != null">
-                    `mark_content_status` = #{markContentStatus},
+                <if test="item.markContentStatus != null">
+                    `mark_content_status` = #{item.markContentStatus},
                 </if>
             </set>
-            WHERE id = #{id}
+            WHERE `id` = #{item.id}
         </foreach>
     </update>
 
@@ -163,25 +139,16 @@
         UPDATE `d8ger_auto_coding`
         <set>
             <if test="record.id != null">
-                `id` = #{record.id},
-            </if>
-            <if test="record.age != null">
-                `age` = #{record.age},
+                id = #{record.id},
             </if>
             <if test="record.score != null">
                 `score` = #{record.score},
-            </if>
-            <if test="record.totalSeconds != null">
-                `total_seconds` = #{record.totalSeconds},
             </if>
             <if test="record.nickName != null">
                 `nick_name` = #{record.nickName},
             </if>
             <if test="record.deleted != null">
                 `deleted` = #{record.deleted},
-            </if>
-            <if test="record.completeLevel != null">
-                `complete_level` = #{record.completeLevel},
             </if>
             <if test="record.registerDate != null">
                 `register_date` = #{record.registerDate},
@@ -195,20 +162,11 @@
             <if test="record.englishMoney != null">
                 `english_money` = #{record.englishMoney},
             </if>
-            <if test="record.germanMoney != null">
-                `german_money` = #{record.germanMoney},
-            </if>
             <if test="record.frenchMoney != null">
                 `french_money` = #{record.frenchMoney},
             </if>
-            <if test="record.japanMoney != null">
-                `japan_money` = #{record.japanMoney},
-            </if>
             <if test="record.koreanMoney != null">
                 `korean_money` = #{record.koreanMoney},
-            </if>
-            <if test="record.rmbMoney != null">
-                `rmb_money` = #{record.rmbMoney},
             </if>
             <if test="record.encryptType != null">
                 `encrypt_type` = #{record.encryptType},
@@ -243,39 +201,27 @@
     <!-- 6.增加单条记录, 返回主键 -->
     <insert id="insertWithId" parameterType="com.xyz.caofancpu.trackingtime.model.D8gerAutoCodingMo" useGeneratedKeys="true" keyProperty="id">
         INSERT INTO `d8ger_auto_coding` (`id`,
-                                         `age`,
                                          `score`,
-                                         `total_seconds`,
                                          `nick_name`,
                                          `deleted`,
-                                         `complete_level`,
                                          `register_date`,
                                          `pre_start_time`,
                                          `exact_money`,
                                          `english_money`,
-                                         `german_money`,
                                          `french_money`,
-                                         `japan_money`,
                                          `korean_money`,
-                                         `rmb_money`,
                                          `encrypt_type`,
                                          `mark_content_status`)
         values (#{id},
-                #{age},
                 #{score},
-                #{totalSeconds},
                 #{nickName},
                 #{deleted},
-                #{completeLevel},
                 #{registerDate},
                 #{preStartTime},
                 #{exactMoney},
                 #{englishMoney},
-                #{germanMoney},
                 #{frenchMoney},
-                #{japanMoney},
                 #{koreanMoney},
-                #{rmbMoney},
                 #{encryptType},
                 #{markContentStatus})
     </insert>
@@ -284,21 +230,15 @@
     <insert id="insertBatchWithId" parameterType="java.util.List" useGeneratedKeys="true" keyProperty="id">
         INSERT INTO `d8ger_auto_coding` (
         `id`,
-        `age`,
         `score`,
-        `total_seconds`,
         `nick_name`,
         `deleted`,
-        `complete_level`,
         `register_date`,
         `pre_start_time`,
         `exact_money`,
         `english_money`,
-        `german_money`,
         `french_money`,
-        `japan_money`,
         `korean_money`,
-        `rmb_money`,
         `encrypt_type`,
         `mark_content_status`
         )
@@ -306,21 +246,15 @@
         <foreach collection="list" item="item" separator=",">
             (
             #{item.id},
-            #{item.age},
             #{item.score},
-            #{item.totalSeconds},
             #{item.nickName},
             #{item.deleted},
-            #{item.completeLevel},
             #{item.registerDate},
             #{item.preStartTime},
             #{item.exactMoney},
             #{item.englishMoney},
-            #{item.germanMoney},
             #{item.frenchMoney},
-            #{item.japanMoney},
             #{item.koreanMoney},
-            #{item.rmbMoney},
             #{item.encryptType},
             #{item.markContentStatus}
             )
@@ -331,21 +265,15 @@
     <select id="queryD8gerAutoCodingMoList" parameterType="com.xyz.caofancpu.trackingtime.model.D8gerAutoCodingMo" resultType="com.xyz.caofancpu.trackingtime.model.D8gerAutoCodingMo">
         SELECT
         `id` AS id,
-        `age` AS age,
         `score` AS score,
-        `total_seconds` AS totalSeconds,
         `nick_name` AS nickName,
         `deleted` AS deleted,
-        `complete_level` AS completeLevel,
         `register_date` AS registerDate,
         `pre_start_time` AS preStartTime,
         `exact_money` AS exactMoney,
         `english_money` AS englishMoney,
-        `german_money` AS germanMoney,
         `french_money` AS frenchMoney,
-        `japan_money` AS japanMoney,
         `korean_money` AS koreanMoney,
-        `rmb_money` AS rmbMoney,
         `encrypt_type` AS encryptType,
         `mark_content_status` AS markContentStatus
         FROM `d8ger_auto_coding`
@@ -353,23 +281,14 @@
         <if test="id != null">
             AND `id` = #{id}
         </if>
-        <if test="age != null">
-            AND `age` = #{age}
-        </if>
         <if test="score != null">
             AND `score` = #{score}
-        </if>
-        <if test="totalSeconds != null">
-            AND `total_seconds` = #{totalSeconds}
         </if>
         <if test="nickName != null">
             AND `nick_name` LIKE CONCAT(#{nickName}, '%')
         </if>
         <if test="deleted != null">
             AND `deleted` = #{deleted}
-        </if>
-        <if test="completeLevel != null">
-            AND `complete_level` = #{completeLevel}
         </if>
         <if test="registerDate != null">
             AND `register_date` = #{registerDate}
@@ -383,20 +302,11 @@
         <if test="englishMoney != null">
             AND `english_money` = #{englishMoney}
         </if>
-        <if test="germanMoney != null">
-            AND `german_money` = #{germanMoney}
-        </if>
         <if test="frenchMoney != null">
             AND `french_money` = #{frenchMoney}
         </if>
-        <if test="japanMoney != null">
-            AND `japan_money` = #{japanMoney}
-        </if>
         <if test="koreanMoney != null">
             AND `korean_money` = #{koreanMoney}
-        </if>
-        <if test="rmbMoney != null">
-            AND `rmb_money` = #{rmbMoney}
         </if>
         <if test="encryptType != null">
             AND `encrypt_type` = #{encryptType}
@@ -409,48 +319,33 @@
     <!-- 9.根据ID查询对象 -->
     <select id="selectByPrimaryKey" resultType="com.xyz.caofancpu.trackingtime.model.D8gerAutoCodingMo">
         SELECT `id`                  AS id,
-               `age`                 AS age,
                `score`               AS score,
-               `total_seconds`       AS totalSeconds,
                `nick_name`           AS nickName,
                `deleted`             AS deleted,
-               `complete_level`      AS completeLevel,
                `register_date`       AS registerDate,
                `pre_start_time`      AS preStartTime,
                `exact_money`         AS exactMoney,
                `english_money`       AS englishMoney,
-               `german_money`        AS germanMoney,
                `french_money`        AS frenchMoney,
-               `japan_money`         AS japanMoney,
                `korean_money`        AS koreanMoney,
-               `rmb_money`           AS rmbMoney,
                `encrypt_type`        AS encryptType,
                `mark_content_status` AS markContentStatus
         FROM `d8ger_auto_coding`
-        WHERE id = #{id}
+        WHERE `id` = #{id}
     </select>
 
     <!-- 10.根据主键只更新非null字段 -->
     <update id="updateByPrimaryKeySelective" parameterType="com.xyz.caofancpu.trackingtime.model.D8gerAutoCodingMo">
         UPDATE `d8ger_auto_coding`
         <set>
-            <if test="age != null">
-                `age` = #{age},
-            </if>
             <if test="score != null">
                 `score` = #{score},
-            </if>
-            <if test="totalSeconds != null">
-                `total_seconds` = #{totalSeconds},
             </if>
             <if test="nickName != null">
                 `nick_name` = #{nickName},
             </if>
             <if test="deleted != null">
                 `deleted` = #{deleted},
-            </if>
-            <if test="completeLevel != null">
-                `complete_level` = #{completeLevel},
             </if>
             <if test="registerDate != null">
                 `register_date` = #{registerDate},
@@ -464,20 +359,11 @@
             <if test="englishMoney != null">
                 `english_money` = #{englishMoney},
             </if>
-            <if test="germanMoney != null">
-                `german_money` = #{germanMoney},
-            </if>
             <if test="frenchMoney != null">
                 `french_money` = #{frenchMoney},
             </if>
-            <if test="japanMoney != null">
-                `japan_money` = #{japanMoney},
-            </if>
             <if test="koreanMoney != null">
                 `korean_money` = #{koreanMoney},
-            </if>
-            <if test="rmbMoney != null">
-                `rmb_money` = #{rmbMoney},
             </if>
             <if test="encryptType != null">
                 `encrypt_type` = #{encryptType},
@@ -486,14 +372,14 @@
                 `mark_content_status` = #{markContentStatus},
             </if>
         </set>
-        WHERE id = #{id}
+        WHERE `id` = #{id}
     </update>
 
     <!-- 11.根据条件删除记录 -->
     <delete id="deleteByPrimaryKey">
         DELETE
         FROM `d8ger_auto_coding`
-        WHERE id = #{id}
+        WHERE `id` = #{id}
     </delete>
 
 </mapper>

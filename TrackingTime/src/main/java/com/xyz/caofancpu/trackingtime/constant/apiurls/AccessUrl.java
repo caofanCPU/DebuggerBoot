@@ -2,6 +2,8 @@ package com.xyz.caofancpu.trackingtime.constant.apiurls;
 
 /**
  * 访问API
+ *
+ * @author caofanCPU
  */
 public class AccessUrl {
 
@@ -14,8 +16,8 @@ public class AccessUrl {
     public static final String USER_REGISTER = "/user/register";
     public static final String USER_LOGIN = "/user/login";
     public static final String USER_UPDATE_INFO = "/user/updateInfo";
-    public static final String USER_ENCRYPTION_GET_PUBKEY = "/user/encryption/getPubKey";
-    public static final String USER_ENCRYPTION_GET_PRIKEY = "/user/encryption/getPriKey";
+    public static final String USER_ENCRYPTION_GET_PUBLIC_KEY = "/user/encryption/getPubKey";
+    public static final String USER_ENCRYPTION_GET_PRIVATE_KEY = "/user/encryption/getPriKey";
 
     public static final String VIRTUAL_COIN_TRANSACTION_SAVE = "/virtualCoinTransaction/save";
     public static final String VIRTUAL_COIN_TRANSACTION_QUERY_LIST = "/virtualCoinTransaction/query/list";

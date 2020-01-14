@@ -16,13 +16,14 @@ import org.springframework.web.bind.annotation.RestController;
 
 import javax.annotation.Resource;
 import javax.validation.Valid;
+import javax.validation.constraints.NotEmpty;
 import java.util.ArrayList;
 import java.util.List;
 
 /**
  * D8gerAutoCodingMo控制器
  *
- * @author 曹繁
+ * @author caofanCPU
  */
 @RestController
 @Api(tags = {"D8gerAutoCodingMo模块接口"})
@@ -33,7 +34,7 @@ public class D8gerAutoCodingController {
     @Resource
     private D8gerAutoCodingService d8gerAutoCodingService;
 
-    @PostMapping(value = "/api/api/v100/live/add")
+    @PostMapping(value = "/d8gerAutoCode/add")
     @ApiOperationSupport(order = 1)
     @ApiOperation(value = "D8gerAutoCodingMo新增记录")
     public Object add(@Valid @RequestBody D8gerAutoCodingVo d8gerAutoCodingVo) {
@@ -43,7 +44,7 @@ public class D8gerAutoCodingController {
         return d8gerAutoCodingMo.getId();
     }
 
-    @PostMapping(value = "/api/api/v100/live/batchAdd")
+    @PostMapping(value = "/d8gerAutoCode/batchAdd")
     @ApiOperationSupport(order = 2)
     @ApiOperation(value = "D8gerAutoCodingMo批量新增")
     public Object batchAdd(@Valid @RequestBody List<D8gerAutoCodingVo> d8gerAutoCodingVoList) {
@@ -54,7 +55,7 @@ public class D8gerAutoCodingController {
         return d8gerAutoCodingService.batchAdd(d8gerAutoCodingMoList);
     }
 
-    @PostMapping(value = "/api/api/v100/live/queryD8gerAutoCodingMoList")
+    @PostMapping(value = "/d8gerAutoCode/queryD8gerAutoCodingMoList")
     @ApiOperationSupport(order = 3)
     @ApiOperation(value = "D8gerAutoCodingMo列表查询")
     public Object queryD8gerAutoCodingMoList(@Valid @RequestBody D8gerAutoCodingVo d8gerAutoCodingVo) {
@@ -63,7 +64,7 @@ public class D8gerAutoCodingController {
         return d8gerAutoCodingService.queryD8gerAutoCodingMoList(d8gerAutoCodingMo);
     }
 
-    @PostMapping(value = "/api/api/v100/live/queryD8gerAutoCodingMoPage")
+    @PostMapping(value = "/d8gerAutoCode/queryD8gerAutoCodingMoPage")
     @ApiOperationSupport(order = 4)
     @ApiOperation(value = "D8gerAutoCodingMo分页查询")
     public Object queryD8gerAutoCodingMoPage(@Valid @RequestBody D8gerAutoCodingVo d8gerAutoCodingVo) {
@@ -73,7 +74,7 @@ public class D8gerAutoCodingController {
         return PageInfo.of(resultD8gerAutoCodingMoList);
     }
 
-    @PostMapping(value = "/api/api/v100/live/update")
+    @PostMapping(value = "/d8gerAutoCode/update")
     @ApiOperationSupport(order = 5)
     @ApiOperation(value = "D8gerAutoCodingMo修改记录")
     public Object update(@Valid @RequestBody D8gerAutoCodingVo d8gerAutoCodingVo) {
@@ -82,7 +83,17 @@ public class D8gerAutoCodingController {
         return d8gerAutoCodingService.updateSelectiveById(d8gerAutoCodingMo);
     }
 
-    @PostMapping(value = "/api/api/v100/live/delete")
+    @PostMapping(value = "/d8gerAutoCode/batchUpdate")
+    @ApiOperationSupport(order = 5)
+    @ApiOperation(value = "D8gerAutoCodingMo批量修改记录")
+    public Object batchUpdate(@NotEmpty @RequestBody List<D8gerAutoCodingVo> d8gerAutoCodingVoList) {
+        // 转换数据
+        List<D8gerAutoCodingMo> d8gerAutoCodingMoList = new ArrayList<>(d8gerAutoCodingVoList.size());
+        d8gerAutoCodingVoList.forEach(item -> d8gerAutoCodingMoList.add(JSONObject.parseObject(JSONObject.toJSONString(item), D8gerAutoCodingMo.class)));
+        return d8gerAutoCodingService.batchUpdateSelectiveById(d8gerAutoCodingMoList);
+    }
+
+    @PostMapping(value = "/d8gerAutoCode/delete")
     @ApiOperationSupport(order = 6)
     @ApiOperation(value = "D8gerAutoCodingMo删除记录")
     public Object delete(@Valid @RequestBody D8gerAutoCodingVo d8gerAutoCodingVo) {

@@ -12,7 +12,7 @@ import java.util.List;
 /**
  * D8gerAutoCodingMo对应的Example单表操作对象
  *
- * @author 曹繁
+ * @author caofanCPU
  */
 public class D8gerAutoCodingExample {
 
@@ -26,20 +26,20 @@ public class D8gerAutoCodingExample {
         oredCriteria = new ArrayList<>();
     }
 
-    public String getOrderByClause() {
-        return orderByClause;
-    }
-
     public void setOrderByClause(String orderByClause) {
         this.orderByClause = orderByClause;
     }
 
-    public boolean isDistinct() {
-        return distinct;
+    public String getOrderByClause() {
+        return orderByClause;
     }
 
     public void setDistinct(boolean distinct) {
         this.distinct = distinct;
+    }
+
+    public boolean isDistinct() {
+        return distinct;
     }
 
     public List<Criteria> getOredCriteria() {
@@ -236,126 +236,6 @@ public class D8gerAutoCodingExample {
         }
 
         /**
-         * age为null
-         *
-         * @return
-         */
-        public Criteria andAgeIsNull() {
-            addCriterion("age is null");
-            return (Criteria) this;
-        }
-
-        /**
-         * age不为null
-         *
-         * @return
-         */
-        public Criteria andAgeIsNotNull() {
-            addCriterion("age is not null");
-            return (Criteria) this;
-        }
-
-        /**
-         * age等于
-         *
-         * @return
-         */
-        public Criteria andAgeEqualTo(int value) {
-            addCriterion("age =", value, "age");
-            return (Criteria) this;
-        }
-
-        /**
-         * age不等于
-         *
-         * @return
-         */
-        public Criteria andAgeNotEqualTo(int value) {
-            addCriterion("age <>", value, "age");
-            return (Criteria) this;
-        }
-
-        /**
-         * age大于
-         *
-         * @return
-         */
-        public Criteria andAgeGreaterThan(int value) {
-            addCriterion("age >", value, "age");
-            return (Criteria) this;
-        }
-
-        /**
-         * age大于等于
-         *
-         * @return
-         */
-        public Criteria andAgeGreaterThanOrEqualTo(int value) {
-            addCriterion("age >=", value, "age");
-            return (Criteria) this;
-        }
-
-        /**
-         * age小于
-         *
-         * @return
-         */
-        public Criteria andAgeLessThan(int value) {
-            addCriterion("age <", value, "age");
-            return (Criteria) this;
-        }
-
-        /**
-         * age小于等于
-         *
-         * @return
-         */
-        public Criteria andAgeLessThanOrEqualTo(int value) {
-            addCriterion("age <=", value, "age");
-            return (Criteria) this;
-        }
-
-        /**
-         * age在列表内
-         *
-         * @return
-         */
-        public Criteria andAgeIn(List<Integer> values) {
-            addCriterion("age in", values, "age");
-            return (Criteria) this;
-        }
-
-        /**
-         * age不在列表内
-         *
-         * @return
-         */
-        public Criteria andAgeNotIn(List<Integer> values) {
-            addCriterion("age not in", values, "age");
-            return (Criteria) this;
-        }
-
-        /**
-         * age在起始值范围内
-         *
-         * @return
-         */
-        public Criteria andAgeBetween(int value1, int value2) {
-            addCriterion("age between", value1, value2, "age");
-            return (Criteria) this;
-        }
-
-        /**
-         * age不在起始值范围内
-         *
-         * @return
-         */
-        public Criteria andAgeNotBetween(int value1, int value2) {
-            addCriterion("age not between", value1, value2, "age");
-            return (Criteria) this;
-        }
-
-        /**
          * score为null
          *
          * @return
@@ -472,126 +352,6 @@ public class D8gerAutoCodingExample {
          */
         public Criteria andScoreNotBetween(Long value1, Long value2) {
             addCriterion("score not between", value1, value2, "score");
-            return (Criteria) this;
-        }
-
-        /**
-         * totalSeconds为null
-         *
-         * @return
-         */
-        public Criteria andTotalSecondsIsNull() {
-            addCriterion("total_seconds is null");
-            return (Criteria) this;
-        }
-
-        /**
-         * totalSeconds不为null
-         *
-         * @return
-         */
-        public Criteria andTotalSecondsIsNotNull() {
-            addCriterion("total_seconds is not null");
-            return (Criteria) this;
-        }
-
-        /**
-         * totalSeconds等于
-         *
-         * @return
-         */
-        public Criteria andTotalSecondsEqualTo(long value) {
-            addCriterion("total_seconds =", value, "totalSeconds");
-            return (Criteria) this;
-        }
-
-        /**
-         * totalSeconds不等于
-         *
-         * @return
-         */
-        public Criteria andTotalSecondsNotEqualTo(long value) {
-            addCriterion("total_seconds <>", value, "totalSeconds");
-            return (Criteria) this;
-        }
-
-        /**
-         * totalSeconds大于
-         *
-         * @return
-         */
-        public Criteria andTotalSecondsGreaterThan(long value) {
-            addCriterion("total_seconds >", value, "totalSeconds");
-            return (Criteria) this;
-        }
-
-        /**
-         * totalSeconds大于等于
-         *
-         * @return
-         */
-        public Criteria andTotalSecondsGreaterThanOrEqualTo(long value) {
-            addCriterion("total_seconds >=", value, "totalSeconds");
-            return (Criteria) this;
-        }
-
-        /**
-         * totalSeconds小于
-         *
-         * @return
-         */
-        public Criteria andTotalSecondsLessThan(long value) {
-            addCriterion("total_seconds <", value, "totalSeconds");
-            return (Criteria) this;
-        }
-
-        /**
-         * totalSeconds小于等于
-         *
-         * @return
-         */
-        public Criteria andTotalSecondsLessThanOrEqualTo(long value) {
-            addCriterion("total_seconds <=", value, "totalSeconds");
-            return (Criteria) this;
-        }
-
-        /**
-         * totalSeconds在列表内
-         *
-         * @return
-         */
-        public Criteria andTotalSecondsIn(List<Long> values) {
-            addCriterion("total_seconds in", values, "totalSeconds");
-            return (Criteria) this;
-        }
-
-        /**
-         * totalSeconds不在列表内
-         *
-         * @return
-         */
-        public Criteria andTotalSecondsNotIn(List<Long> values) {
-            addCriterion("total_seconds not in", values, "totalSeconds");
-            return (Criteria) this;
-        }
-
-        /**
-         * totalSeconds在起始值范围内
-         *
-         * @return
-         */
-        public Criteria andTotalSecondsBetween(long value1, long value2) {
-            addCriterion("total_seconds between", value1, value2, "totalSeconds");
-            return (Criteria) this;
-        }
-
-        /**
-         * totalSeconds不在起始值范围内
-         *
-         * @return
-         */
-        public Criteria andTotalSecondsNotBetween(long value1, long value2) {
-            addCriterion("total_seconds not between", value1, value2, "totalSeconds");
             return (Criteria) this;
         }
 
@@ -852,126 +612,6 @@ public class D8gerAutoCodingExample {
          */
         public Criteria andDeletedNotBetween(Boolean value1, Boolean value2) {
             addCriterion("deleted not between", value1, value2, "deleted");
-            return (Criteria) this;
-        }
-
-        /**
-         * completeLevel为null
-         *
-         * @return
-         */
-        public Criteria andCompleteLevelIsNull() {
-            addCriterion("complete_level is null");
-            return (Criteria) this;
-        }
-
-        /**
-         * completeLevel不为null
-         *
-         * @return
-         */
-        public Criteria andCompleteLevelIsNotNull() {
-            addCriterion("complete_level is not null");
-            return (Criteria) this;
-        }
-
-        /**
-         * completeLevel等于
-         *
-         * @return
-         */
-        public Criteria andCompleteLevelEqualTo(boolean value) {
-            addCriterion("complete_level =", value, "completeLevel");
-            return (Criteria) this;
-        }
-
-        /**
-         * completeLevel不等于
-         *
-         * @return
-         */
-        public Criteria andCompleteLevelNotEqualTo(boolean value) {
-            addCriterion("complete_level <>", value, "completeLevel");
-            return (Criteria) this;
-        }
-
-        /**
-         * completeLevel大于
-         *
-         * @return
-         */
-        public Criteria andCompleteLevelGreaterThan(boolean value) {
-            addCriterion("complete_level >", value, "completeLevel");
-            return (Criteria) this;
-        }
-
-        /**
-         * completeLevel大于等于
-         *
-         * @return
-         */
-        public Criteria andCompleteLevelGreaterThanOrEqualTo(boolean value) {
-            addCriterion("complete_level >=", value, "completeLevel");
-            return (Criteria) this;
-        }
-
-        /**
-         * completeLevel小于
-         *
-         * @return
-         */
-        public Criteria andCompleteLevelLessThan(boolean value) {
-            addCriterion("complete_level <", value, "completeLevel");
-            return (Criteria) this;
-        }
-
-        /**
-         * completeLevel小于等于
-         *
-         * @return
-         */
-        public Criteria andCompleteLevelLessThanOrEqualTo(boolean value) {
-            addCriterion("complete_level <=", value, "completeLevel");
-            return (Criteria) this;
-        }
-
-        /**
-         * completeLevel在列表内
-         *
-         * @return
-         */
-        public Criteria andCompleteLevelIn(List<Boolean> values) {
-            addCriterion("complete_level in", values, "completeLevel");
-            return (Criteria) this;
-        }
-
-        /**
-         * completeLevel不在列表内
-         *
-         * @return
-         */
-        public Criteria andCompleteLevelNotIn(List<Boolean> values) {
-            addCriterion("complete_level not in", values, "completeLevel");
-            return (Criteria) this;
-        }
-
-        /**
-         * completeLevel在起始值范围内
-         *
-         * @return
-         */
-        public Criteria andCompleteLevelBetween(boolean value1, boolean value2) {
-            addCriterion("complete_level between", value1, value2, "completeLevel");
-            return (Criteria) this;
-        }
-
-        /**
-         * completeLevel不在起始值范围内
-         *
-         * @return
-         */
-        public Criteria andCompleteLevelNotBetween(boolean value1, boolean value2) {
-            addCriterion("complete_level not between", value1, value2, "completeLevel");
             return (Criteria) this;
         }
 
@@ -1456,126 +1096,6 @@ public class D8gerAutoCodingExample {
         }
 
         /**
-         * germanMoney为null
-         *
-         * @return
-         */
-        public Criteria andGermanMoneyIsNull() {
-            addCriterion("german_money is null");
-            return (Criteria) this;
-        }
-
-        /**
-         * germanMoney不为null
-         *
-         * @return
-         */
-        public Criteria andGermanMoneyIsNotNull() {
-            addCriterion("german_money is not null");
-            return (Criteria) this;
-        }
-
-        /**
-         * germanMoney等于
-         *
-         * @return
-         */
-        public Criteria andGermanMoneyEqualTo(double value) {
-            addCriterion("german_money =", value, "germanMoney");
-            return (Criteria) this;
-        }
-
-        /**
-         * germanMoney不等于
-         *
-         * @return
-         */
-        public Criteria andGermanMoneyNotEqualTo(double value) {
-            addCriterion("german_money <>", value, "germanMoney");
-            return (Criteria) this;
-        }
-
-        /**
-         * germanMoney大于
-         *
-         * @return
-         */
-        public Criteria andGermanMoneyGreaterThan(double value) {
-            addCriterion("german_money >", value, "germanMoney");
-            return (Criteria) this;
-        }
-
-        /**
-         * germanMoney大于等于
-         *
-         * @return
-         */
-        public Criteria andGermanMoneyGreaterThanOrEqualTo(double value) {
-            addCriterion("german_money >=", value, "germanMoney");
-            return (Criteria) this;
-        }
-
-        /**
-         * germanMoney小于
-         *
-         * @return
-         */
-        public Criteria andGermanMoneyLessThan(double value) {
-            addCriterion("german_money <", value, "germanMoney");
-            return (Criteria) this;
-        }
-
-        /**
-         * germanMoney小于等于
-         *
-         * @return
-         */
-        public Criteria andGermanMoneyLessThanOrEqualTo(double value) {
-            addCriterion("german_money <=", value, "germanMoney");
-            return (Criteria) this;
-        }
-
-        /**
-         * germanMoney在列表内
-         *
-         * @return
-         */
-        public Criteria andGermanMoneyIn(List<Double> values) {
-            addCriterion("german_money in", values, "germanMoney");
-            return (Criteria) this;
-        }
-
-        /**
-         * germanMoney不在列表内
-         *
-         * @return
-         */
-        public Criteria andGermanMoneyNotIn(List<Double> values) {
-            addCriterion("german_money not in", values, "germanMoney");
-            return (Criteria) this;
-        }
-
-        /**
-         * germanMoney在起始值范围内
-         *
-         * @return
-         */
-        public Criteria andGermanMoneyBetween(double value1, double value2) {
-            addCriterion("german_money between", value1, value2, "germanMoney");
-            return (Criteria) this;
-        }
-
-        /**
-         * germanMoney不在起始值范围内
-         *
-         * @return
-         */
-        public Criteria andGermanMoneyNotBetween(double value1, double value2) {
-            addCriterion("german_money not between", value1, value2, "germanMoney");
-            return (Criteria) this;
-        }
-
-        /**
          * frenchMoney为null
          *
          * @return
@@ -1696,126 +1216,6 @@ public class D8gerAutoCodingExample {
         }
 
         /**
-         * japanMoney为null
-         *
-         * @return
-         */
-        public Criteria andJapanMoneyIsNull() {
-            addCriterion("japan_money is null");
-            return (Criteria) this;
-        }
-
-        /**
-         * japanMoney不为null
-         *
-         * @return
-         */
-        public Criteria andJapanMoneyIsNotNull() {
-            addCriterion("japan_money is not null");
-            return (Criteria) this;
-        }
-
-        /**
-         * japanMoney等于
-         *
-         * @return
-         */
-        public Criteria andJapanMoneyEqualTo(float value) {
-            addCriterion("japan_money =", value, "japanMoney");
-            return (Criteria) this;
-        }
-
-        /**
-         * japanMoney不等于
-         *
-         * @return
-         */
-        public Criteria andJapanMoneyNotEqualTo(float value) {
-            addCriterion("japan_money <>", value, "japanMoney");
-            return (Criteria) this;
-        }
-
-        /**
-         * japanMoney大于
-         *
-         * @return
-         */
-        public Criteria andJapanMoneyGreaterThan(float value) {
-            addCriterion("japan_money >", value, "japanMoney");
-            return (Criteria) this;
-        }
-
-        /**
-         * japanMoney大于等于
-         *
-         * @return
-         */
-        public Criteria andJapanMoneyGreaterThanOrEqualTo(float value) {
-            addCriterion("japan_money >=", value, "japanMoney");
-            return (Criteria) this;
-        }
-
-        /**
-         * japanMoney小于
-         *
-         * @return
-         */
-        public Criteria andJapanMoneyLessThan(float value) {
-            addCriterion("japan_money <", value, "japanMoney");
-            return (Criteria) this;
-        }
-
-        /**
-         * japanMoney小于等于
-         *
-         * @return
-         */
-        public Criteria andJapanMoneyLessThanOrEqualTo(float value) {
-            addCriterion("japan_money <=", value, "japanMoney");
-            return (Criteria) this;
-        }
-
-        /**
-         * japanMoney在列表内
-         *
-         * @return
-         */
-        public Criteria andJapanMoneyIn(List<Float> values) {
-            addCriterion("japan_money in", values, "japanMoney");
-            return (Criteria) this;
-        }
-
-        /**
-         * japanMoney不在列表内
-         *
-         * @return
-         */
-        public Criteria andJapanMoneyNotIn(List<Float> values) {
-            addCriterion("japan_money not in", values, "japanMoney");
-            return (Criteria) this;
-        }
-
-        /**
-         * japanMoney在起始值范围内
-         *
-         * @return
-         */
-        public Criteria andJapanMoneyBetween(float value1, float value2) {
-            addCriterion("japan_money between", value1, value2, "japanMoney");
-            return (Criteria) this;
-        }
-
-        /**
-         * japanMoney不在起始值范围内
-         *
-         * @return
-         */
-        public Criteria andJapanMoneyNotBetween(float value1, float value2) {
-            addCriterion("japan_money not between", value1, value2, "japanMoney");
-            return (Criteria) this;
-        }
-
-        /**
          * koreanMoney为null
          *
          * @return
@@ -1932,126 +1332,6 @@ public class D8gerAutoCodingExample {
          */
         public Criteria andKoreanMoneyNotBetween(Short value1, Short value2) {
             addCriterion("korean_money not between", value1, value2, "koreanMoney");
-            return (Criteria) this;
-        }
-
-        /**
-         * rmbMoney为null
-         *
-         * @return
-         */
-        public Criteria andRmbMoneyIsNull() {
-            addCriterion("rmb_money is null");
-            return (Criteria) this;
-        }
-
-        /**
-         * rmbMoney不为null
-         *
-         * @return
-         */
-        public Criteria andRmbMoneyIsNotNull() {
-            addCriterion("rmb_money is not null");
-            return (Criteria) this;
-        }
-
-        /**
-         * rmbMoney等于
-         *
-         * @return
-         */
-        public Criteria andRmbMoneyEqualTo(short value) {
-            addCriterion("rmb_money =", value, "rmbMoney");
-            return (Criteria) this;
-        }
-
-        /**
-         * rmbMoney不等于
-         *
-         * @return
-         */
-        public Criteria andRmbMoneyNotEqualTo(short value) {
-            addCriterion("rmb_money <>", value, "rmbMoney");
-            return (Criteria) this;
-        }
-
-        /**
-         * rmbMoney大于
-         *
-         * @return
-         */
-        public Criteria andRmbMoneyGreaterThan(short value) {
-            addCriterion("rmb_money >", value, "rmbMoney");
-            return (Criteria) this;
-        }
-
-        /**
-         * rmbMoney大于等于
-         *
-         * @return
-         */
-        public Criteria andRmbMoneyGreaterThanOrEqualTo(short value) {
-            addCriterion("rmb_money >=", value, "rmbMoney");
-            return (Criteria) this;
-        }
-
-        /**
-         * rmbMoney小于
-         *
-         * @return
-         */
-        public Criteria andRmbMoneyLessThan(short value) {
-            addCriterion("rmb_money <", value, "rmbMoney");
-            return (Criteria) this;
-        }
-
-        /**
-         * rmbMoney小于等于
-         *
-         * @return
-         */
-        public Criteria andRmbMoneyLessThanOrEqualTo(short value) {
-            addCriterion("rmb_money <=", value, "rmbMoney");
-            return (Criteria) this;
-        }
-
-        /**
-         * rmbMoney在列表内
-         *
-         * @return
-         */
-        public Criteria andRmbMoneyIn(List<Short> values) {
-            addCriterion("rmb_money in", values, "rmbMoney");
-            return (Criteria) this;
-        }
-
-        /**
-         * rmbMoney不在列表内
-         *
-         * @return
-         */
-        public Criteria andRmbMoneyNotIn(List<Short> values) {
-            addCriterion("rmb_money not in", values, "rmbMoney");
-            return (Criteria) this;
-        }
-
-        /**
-         * rmbMoney在起始值范围内
-         *
-         * @return
-         */
-        public Criteria andRmbMoneyBetween(short value1, short value2) {
-            addCriterion("rmb_money between", value1, value2, "rmbMoney");
-            return (Criteria) this;
-        }
-
-        /**
-         * rmbMoney不在起始值范围内
-         *
-         * @return
-         */
-        public Criteria andRmbMoneyNotBetween(short value1, short value2) {
-            addCriterion("rmb_money not between", value1, value2, "rmbMoney");
             return (Criteria) this;
         }
 
@@ -2321,6 +1601,38 @@ public class D8gerAutoCodingExample {
 
         private String typeHandler;
 
+        public String getCondition() {
+            return condition;
+        }
+
+        public Object getValue() {
+            return value;
+        }
+
+        public Object getSecondValue() {
+            return secondValue;
+        }
+
+        public boolean isNoValue() {
+            return noValue;
+        }
+
+        public boolean isSingleValue() {
+            return singleValue;
+        }
+
+        public boolean isBetweenValue() {
+            return betweenValue;
+        }
+
+        public boolean isListValue() {
+            return listValue;
+        }
+
+        public String getTypeHandler() {
+            return typeHandler;
+        }
+
         protected Criterion(String condition) {
             super();
             this.condition = condition;
@@ -2355,38 +1667,6 @@ public class D8gerAutoCodingExample {
 
         protected Criterion(String condition, Object value, Object secondValue) {
             this(condition, value, secondValue, null);
-        }
-
-        public String getCondition() {
-            return condition;
-        }
-
-        public Object getValue() {
-            return value;
-        }
-
-        public Object getSecondValue() {
-            return secondValue;
-        }
-
-        public boolean isNoValue() {
-            return noValue;
-        }
-
-        public boolean isSingleValue() {
-            return singleValue;
-        }
-
-        public boolean isBetweenValue() {
-            return betweenValue;
-        }
-
-        public boolean isListValue() {
-            return listValue;
-        }
-
-        public String getTypeHandler() {
-            return typeHandler;
         }
     }
 }
