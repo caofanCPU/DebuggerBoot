@@ -21,4 +21,5 @@ public class AccessUrl {
 
     public static final String VIRTUAL_COIN_TRANSACTION_SAVE = "/virtualCoinTransaction/save";
     public static final String VIRTUAL_COIN_TRANSACTION_QUERY_LIST = "/virtualCoinTransaction/query/list";
+    public static final String VIRTUAL_COIN_TRANSACTION_MODIFY = "/virtualCoinTransaction/modify";
 }
