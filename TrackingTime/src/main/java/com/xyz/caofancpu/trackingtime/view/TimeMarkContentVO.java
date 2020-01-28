@@ -1,5 +1,6 @@
 package com.xyz.caofancpu.trackingtime.view;
 
+import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -15,6 +16,7 @@ import java.time.LocalDateTime;
 @NoArgsConstructor
 @AllArgsConstructor
 @Accessors(chain = true)
+@ApiModel
 public class TimeMarkContentVO {
     @ApiModelProperty(value = "时间区块ID", name = "timeBlockId", example = "98789")
     public Long timeBlockId;

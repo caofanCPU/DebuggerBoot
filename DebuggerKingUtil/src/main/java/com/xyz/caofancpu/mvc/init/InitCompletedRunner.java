@@ -32,8 +32,6 @@ public class InitCompletedRunner implements CommandLineRunner, ApplicationListen
         log.info("项目启动成功, IP=" + this.serverIp + ", Port=" + serverPort);
         if (commonConfigPropertiesService.showApi) {
             log.info("SwaggerApi文档参见: http://" + this.serverIp + ":" + serverPort + commonConfigPropertiesService.contentPath + "/doc.html?plus=1&cache=1&filterApi=1&filterApiType=POST&lang=zh");
-            log.info("官方原版SwaggerApi文档参见: http://" + this.serverIp + ":" + serverPort + "/swagger-ui.html");
-            log.info("官方原版SwaggerApi认证key：Authorization");
         }
     }
 

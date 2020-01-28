@@ -3,11 +3,11 @@ package com.xyz.caofancpu.service.impl;
 import com.xyz.caofancpu.model.FileClassifiedResult;
 import com.xyz.caofancpu.model.MiniAttachment;
 import com.xyz.caofancpu.mvc.config.CommonConfigValueService;
-import com.xyz.caofancpu.service.CommonOperateService;
 import com.xyz.caofancpu.util.commonoperateutils.FileUtil;
 import com.xyz.caofancpu.util.multithreadutils.RemoteInvokeHelper;
 import com.xyz.caofancpu.util.multithreadutils.RemoteRequestTask;
-import com.xyz.caofancpu.util.result.ResultBody;
+import com.xyz.caofancpu.util.result.D8API;
+import com.xyz.caofancpu.util.result.D8Response;
 import com.xyz.caofancpu.util.streamoperateutils.CollectionUtil;
 import io.swagger.annotations.Api;
 import lombok.extern.slf4j.Slf4j;
@@ -39,9 +39,6 @@ public class FileTaskService {
     // 引入默认线程池
     @Resource(name = "standardThreadPool")
     private ThreadPoolTaskExecutor defaultThreadPool;
-
-    @Autowired
-    private CommonOperateService commonOperateService;
 
     @Autowired
     private CommonConfigValueService commonConfigValueService;
@@ -87,7 +84,6 @@ public class FileTaskService {
                 .forEach(item -> {
                     // 1.创建目录
                     String destFileParentPath = commonConfigValueService.taskRootPath + commonConfigValueService.taskResultPath + item.getLocation();
-                    commonOperateService.createParentDir(destFileParentPath);
                     // 2.
                     List<MiniAttachment> attachmentList = item.getAttachmentList();
                     if (CollectionUtil.isNotEmpty(attachmentList)) {
@@ -139,7 +135,7 @@ public class FileTaskService {
         return resultList;
     }
 
-    public ResultBody execute() {
+    public D8Response execute() {
         Map<Integer, Future<?>> taskResultMap = new HashMap<>();
         addToPool(taskResultMap, 1, this, "loadData", 1, new Class[]{Integer.class});
         addToPool(taskResultMap, 2, this, "loadData", 2, new Class[]{Integer.class});
@@ -176,17 +172,17 @@ public class FileTaskService {
         return getCheckResult(checkResultArray);
     }
 
-    private ResultBody getCheckResult(int[] checkResultArray) {
+    private D8Response getCheckResult(int[] checkResultArray) {
         if (checkResultArray[0] != 1) {
-            return new ResultBody().fail("手机号验证失败！");
+            return D8API.fail("手机号验证失败！");
         }
         if (checkResultArray[1] != 1) {
-            return new ResultBody().fail("身份证号验证失败！");
+            return D8API.fail("身份证号验证失败！");
         }
         if (checkResultArray[2] != 1) {
-            return new ResultBody().fail("银行卡号验证失败！");
+            return D8API.fail("银行卡号验证失败！");
         }
-        return new ResultBody().fail(StringUtils.EMPTY);
+        return D8API.fail(StringUtils.EMPTY);
     }
 
     private boolean checkResult(Future task) {

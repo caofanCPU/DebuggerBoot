@@ -10,8 +10,8 @@ import com.xyz.caofancpu.trackingtime.utils.RestTemplateUtil;
 import com.xyz.caofancpu.util.commonoperateutils.GlobalResultCheckUtil;
 import com.xyz.caofancpu.util.dataoperateutils.DateUtil;
 import com.xyz.caofancpu.util.result.CustomerErrorInfo;
+import com.xyz.caofancpu.util.result.D8Response;
 import com.xyz.caofancpu.util.result.GlobalErrorInfoException;
-import com.xyz.caofancpu.util.result.ResultBody;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,7 +27,6 @@ import javax.servlet.http.HttpServletRequest;
 import java.io.File;
 import java.io.IOException;
 import java.util.Base64;
-import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
@@ -85,7 +84,7 @@ public class CommonOperateServiceImpl implements CommonOperateService {
 
         attachment.setType(type);
         attachment.setName(path);
-        attachment.setCreateTime(DateUtil.parseJavaUtilDate(new Date(), DateUtil.DATETIME_FORMAT_SIMPLE));
+        attachment.setCreateTime(DateUtil.getCurrentTime(DateUtil.DATETIME_FORMAT_SIMPLE));
 
         log.info("\n客户端于[{}]上传文件：[{}]", attachment.getCreateTime(), attachment.getName());
     }
@@ -103,9 +102,9 @@ public class CommonOperateServiceImpl implements CommonOperateService {
             }
         };
 
-        ResultBody resultBody = restTemplateUtil.postBody(msUrlConfigValueService.fileAccessUrl + "/file/generateUrl", map);
-        GlobalResultCheckUtil.handleMSResultBody(resultBody);
-        JSONObject jsonObject = JSONObject.parseObject(JSONObject.toJSONString(resultBody));
+        D8Response d8Response = restTemplateUtil.postBody(msUrlConfigValueService.fileAccessUrl + "/file/generateUrl", map);
+        GlobalResultCheckUtil.handleMSResultBody(d8Response);
+        JSONObject jsonObject = JSONObject.parseObject(JSONObject.toJSONString(d8Response));
         String accessUrl = jsonObject.getString("data");
         log.info("查询文件访问Url:\n输入文件名[{}]\n输出Url[{}]", attachmentName, accessUrl);
         return accessUrl;

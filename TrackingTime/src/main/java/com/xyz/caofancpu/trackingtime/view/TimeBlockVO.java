@@ -2,6 +2,7 @@ package com.xyz.caofancpu.trackingtime.view;
 
 import com.google.common.collect.Lists;
 import com.xyz.caofancpu.trackingtime.model.TimeBlock;
+import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -17,6 +18,7 @@ import java.util.List;
 @NoArgsConstructor
 @AllArgsConstructor
 @Accessors(chain = true)
+@ApiModel
 public class TimeBlockVO {
     @ApiModelProperty(value = "是否创建成功", name = "createStatus", example = "1")
     private int createStatus;

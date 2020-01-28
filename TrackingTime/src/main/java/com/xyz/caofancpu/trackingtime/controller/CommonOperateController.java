@@ -1,21 +1,21 @@
 package com.xyz.caofancpu.trackingtime.controller;
 
+import com.beust.jcommander.internal.Lists;
 import com.github.pagehelper.PageInfo;
-import com.google.common.collect.Lists;
 import com.xyz.caofancpu.mvc.config.CommonConfigValueService;
 import com.xyz.caofancpu.trackingtime.model.Attachment;
 import com.xyz.caofancpu.trackingtime.service.CommonOperateService;
 import com.xyz.caofancpu.trackingtime.service.SysDictService;
 import com.xyz.caofancpu.util.commonoperateutils.HttpStaticHandleUtil;
 import com.xyz.caofancpu.util.dataoperateutils.JSONUtil;
+import com.xyz.caofancpu.util.result.D8API;
+import com.xyz.caofancpu.util.result.D8Response;
 import com.xyz.caofancpu.util.result.GlobalErrorInfoException;
-import com.xyz.caofancpu.util.result.ResultBody;
 import com.xyz.caofancpu.util.streamoperateutils.CollectionUtil;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.io.FileUtils;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -37,7 +37,7 @@ import java.util.List;
 import java.util.Map;
 
 @RestController
-@Api(description = "CommonOperateController", tags = {"公共处理接口"})
+@Api(tags = {"公共处理接口"})
 @Slf4j
 public class CommonOperateController {
     @Resource
@@ -46,15 +46,15 @@ public class CommonOperateController {
     @Resource(type = SysDictService.class)
     private transient SysDictService sysDictService;
 
-    @Autowired
+    @Resource
     private transient CommonConfigValueService commonConfigValueService;
 
     @PostMapping("/sysDict/listByPage")
     @ApiOperation(value = "获取系统配置列表", notes = "传参：无")
-    public ResultBody listSysDictByPage()
+    public D8Response<Object> listSysDictByPage()
             throws GlobalErrorInfoException {
         PageInfo<List<Map<String, Object>>> resultPageInfo = sysDictService.getSysDictList();
-        return new ResultBody(resultPageInfo);
+        return D8API.success(resultPageInfo);
     }
 
     /**
@@ -67,12 +67,12 @@ public class CommonOperateController {
      */
     @Deprecated
     @PostMapping("/attachment/upload")
-    public ResultBody uploadAttachment(MultipartFile file, HttpServletRequest request)
+    public D8Response<Attachment> uploadAttachment(MultipartFile file, HttpServletRequest request)
             throws GlobalErrorInfoException {
         Map<String, Object> requestParamMap = HttpStaticHandleUtil.getParameterMap(request);
         Attachment attachment = JSONUtil.copyProperties(requestParamMap, Attachment.class);
         commonOperateService.uploadAttachment(attachment, file);
-        return new ResultBody(attachment);
+        return D8API.success(attachment);
     }
 
     /**
@@ -84,10 +84,10 @@ public class CommonOperateController {
      */
     @Deprecated
     @PostMapping("/attachment/getAccessUrl")
-    public ResultBody getAccessUrl(@RequestParam(required = true) String attachmentName)
+    public D8Response<String> getAccessUrl(@RequestParam(required = true) String attachmentName)
             throws GlobalErrorInfoException {
         String accessUrl = commonOperateService.getAttachmentAccessUrl(attachmentName);
-        return new ResultBody(accessUrl);
+        return D8API.success(accessUrl);
     }
 
     /**
@@ -117,7 +117,7 @@ public class CommonOperateController {
      * @return
      */
     @PostMapping("/multiUpload")
-    public ResultBody multiUpload(MultipartHttpServletRequest multiUploadRequest) {
+    public D8Response<List<String>> multiUpload(MultipartHttpServletRequest multiUploadRequest) {
         List<MultipartFile> uploadFileList = multiUploadRequest.getFiles("file");
         if (CollectionUtil.isEmpty(uploadFileList)) {
             throw new RuntimeException("请选择上传文件!");
@@ -137,13 +137,13 @@ public class CommonOperateController {
                 throw new RuntimeException("上传文件失败, 请重试");
             }
         }
-        return new ResultBody(fileNameList);
+        return D8API.success(fileNameList);
     }
 
     @PostMapping("/testException")
     @ApiOperation(value = "测试异常", notes = "传参：无")
     @Deprecated
-    public ResultBody testException()
+    public D8Response<Object> testException()
             throws GlobalErrorInfoException {
         throw new NullPointerException("NPE, 嘿嘿");
     }

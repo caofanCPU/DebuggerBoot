@@ -5,8 +5,8 @@ import com.xyz.caofancpu.mvc.annotation.Check;
 import com.xyz.caofancpu.util.dataoperateutils.JSONUtil;
 import com.xyz.caofancpu.util.dataoperateutils.ReflectionUtil;
 import com.xyz.caofancpu.util.result.CustomerErrorInfo;
+import com.xyz.caofancpu.util.result.D8API;
 import com.xyz.caofancpu.util.result.GlobalErrorInfoException;
-import com.xyz.caofancpu.util.result.ResultBody;
 import com.xyz.caofancpu.util.streamoperateutils.CollectionUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
@@ -237,7 +237,7 @@ public class CheckParamAspect {
             sb.append("\n[后台响应结果]:\n"
                     + "响应耗时[0ms]" + "\n"
                     + "响应数据结果:\n"
-                    + JSONUtil.formatStandardJSON(JSONObject.toJSONString(new ResultBody().fail(msg))));
+                    + JSONUtil.formatStandardJSON(JSONObject.toJSONString(D8API.fail(msg))));
             log.info(sb.toString());
             // 这里可以返回自己封装的返回类
             CustomerErrorInfo errInfo = new CustomerErrorInfo("501", msg);

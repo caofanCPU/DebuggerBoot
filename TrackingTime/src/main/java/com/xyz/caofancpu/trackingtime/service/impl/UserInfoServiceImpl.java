@@ -1,13 +1,16 @@
 package com.xyz.caofancpu.trackingtime.service.impl;
 
+import com.alibaba.fastjson.JSONObject;
 import com.github.pagehelper.PageHelper;
 import com.xyz.caofancpu.trackingtime.mapper.UserInfoMapper;
 import com.xyz.caofancpu.trackingtime.model.UserInfoMo;
 import com.xyz.caofancpu.trackingtime.service.UserInfoService;
+import com.xyz.caofancpu.trackingtime.view.UserInfoVo;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
@@ -55,13 +58,20 @@ public class UserInfoServiceImpl implements UserInfoService {
      * @return
      */
     @Override
-    public List<UserInfoMo> queryUserInfoMoList(UserInfoMo userInfoMo, Integer... pageParams) {
+    public List<UserInfoVo> queryUserInfoMoList(UserInfoMo userInfoMo, Integer... pageParams) {
         if (Objects.nonNull(pageParams) && pageParams.length > 0) {
             int pageNum = pageParams[0];
             int pageSize = pageParams.length > 1 ? pageParams[1] : 10;
             PageHelper.startPage(pageNum, pageSize);
         }
-        return userInfoMapper.queryUserInfoMoList(userInfoMo);
+        List<UserInfoMo> userInfoMoList = userInfoMapper.queryUserInfoMoList(userInfoMo);
+        List<UserInfoVo> resultList = new ArrayList<>(userInfoMoList.size());
+        for (UserInfoMo mo : userInfoMoList) {
+            UserInfoVo vo = JSONObject.parseObject(JSONObject.toJSONString(mo), UserInfoVo.class);
+            vo.setPageNum(null).setPageSize(null);
+            resultList.add(vo);
+        }
+        return resultList;
     }
 
     /**

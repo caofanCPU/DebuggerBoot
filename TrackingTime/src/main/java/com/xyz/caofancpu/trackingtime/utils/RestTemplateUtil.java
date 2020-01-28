@@ -2,9 +2,10 @@ package com.xyz.caofancpu.trackingtime.utils;
 
 import com.alibaba.fastjson.JSONObject;
 import com.xyz.caofancpu.util.dataoperateutils.JSONUtil;
+import com.xyz.caofancpu.util.result.D8API;
+import com.xyz.caofancpu.util.result.D8Response;
 import com.xyz.caofancpu.util.result.GlobalErrorInfoEnum;
 import com.xyz.caofancpu.util.result.GlobalErrorInfoException;
-import com.xyz.caofancpu.util.result.ResultBody;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Value;
@@ -66,27 +67,27 @@ public class RestTemplateUtil {
         return resultMap;
     }
 
-    public ResultBody convertResponse(JSONObject responseJson) {
-        ResultBody resultBody = new ResultBody();
+    public D8Response<Object> convertResponse(JSONObject responseJson) {
+        D8Response<Object> d8Response = new D8Response<>();
         boolean msgFlag = responseJson.get("msg") == null;
         if (!GlobalErrorInfoEnum.SUCCESS.getCode().equals(String.valueOf(responseJson.get("code")))) {
-            resultBody.setData(null);
-            resultBody.setCode(GlobalErrorInfoEnum.GLOBAL_MS_MSG.getCode());
+            d8Response.setData(null);
+            d8Response.setCode(GlobalErrorInfoEnum.GLOBAL_MS_MSG.getCode());
             if (msgFlag) {
-                resultBody.setMsg(GlobalErrorInfoEnum.GLOBAL_MS_MSG.getMsg());
+                d8Response.setMsg(GlobalErrorInfoEnum.GLOBAL_MS_MSG.getMsg());
             } else {
-                resultBody.setMsg(responseJson.get("msg").toString());
+                d8Response.setMsg(responseJson.get("msg").toString());
             }
         } else {
-            resultBody.setData(responseJson.get("data"));
-            resultBody.setCode(GlobalErrorInfoEnum.SUCCESS.getCode());
+            d8Response.setData(responseJson.get("data"));
+            d8Response.setCode(GlobalErrorInfoEnum.SUCCESS.getCode());
             if (msgFlag) {
-                resultBody.setMsg(GlobalErrorInfoEnum.SUCCESS.getMsg());
+                d8Response.setMsg(GlobalErrorInfoEnum.SUCCESS.getMsg());
             } else {
-                resultBody.setMsg(responseJson.get("msg").toString());
+                d8Response.setMsg(responseJson.get("msg").toString());
             }
         }
-        return resultBody;
+        return d8Response;
     }
 
     /**
@@ -96,7 +97,7 @@ public class RestTemplateUtil {
      * @param paramMap
      * @return
      */
-    public ResultBody getParam(String url, Map<String, Object> paramMap)
+    public D8Response<Object> getParam(String url, Map<String, Object> paramMap)
             throws GlobalErrorInfoException {
         Map<String, Object> requestMap = removeNullElement(paramMap);
         String token = loadToken();
@@ -110,11 +111,12 @@ public class RestTemplateUtil {
             log.error("调用微服务接口失败! 接口: {} \n原因: {}", url, e.getMessage());
             throw new GlobalErrorInfoException(GlobalErrorInfoEnum.GLOBAL_MS_MSG);
         }
-        if (responseEntity == null) {
-            log.error("调用微服务接口失败! 接口: {} \n原因: {}", url, "响应为null");
-            return new ResultBody(GlobalErrorInfoEnum.GLOBAL_MS_MSG);
-        }
+
         JSONObject responseJson = responseEntity.getBody();
+        if (Objects.isNull(responseJson)) {
+            log.error("调用微服务接口失败! 接口: {} \n原因: {}", url, "响应为null");
+            return D8API.fail(GlobalErrorInfoEnum.GLOBAL_MS_MSG);
+        }
         showResponseLog(url, responseJson.toJSONString());
         return convertResponse(responseJson);
     }
@@ -160,7 +162,7 @@ public class RestTemplateUtil {
      * @param paramMap
      * @return
      */
-    public ResultBody postBody(String url, Map<String, Object> paramMap)
+    public D8Response<Object> postBody(String url, Map<String, Object> paramMap)
             throws GlobalErrorInfoException {
         Map<String, Object> bodyMap = removeNullElement(paramMap);
         String token = loadToken();
@@ -173,14 +175,13 @@ public class RestTemplateUtil {
             log.error("调用微服务接口失败! 接口: {} \n原因: {}", url, e.getMessage());
             throw new GlobalErrorInfoException(GlobalErrorInfoEnum.GLOBAL_MS_MSG);
         }
-        if (responseJson == null) {
+        if (Objects.isNull(responseJson)) {
             log.error("调用微服务接口失败! 接口: {} \n原因: {}", url, "响应为null");
-            return new ResultBody(new GlobalErrorInfoException(GlobalErrorInfoEnum.GLOBAL_MS_MSG));
+            return D8API.fail(GlobalErrorInfoEnum.GLOBAL_MS_MSG);
         }
         showResponseLog(url, responseJson.toJSONString());
         return convertResponse(responseJson);
     }
-
 
     /**
      * POST方式调用，传body对象, 对象为List
@@ -189,7 +190,7 @@ public class RestTemplateUtil {
      * @param paramList
      * @return
      */
-    public ResultBody postListBody(String url, List<?> paramList)
+    public D8Response<Object> postListBody(String url, List<?> paramList)
             throws GlobalErrorInfoException {
         List<?> filteredList = paramList.stream().filter(Objects::nonNull).collect(Collectors.toList());
         String token = loadToken();
@@ -207,9 +208,9 @@ public class RestTemplateUtil {
             log.error("调用微服务接口失败! 接口: {} \n原因: {}", url, e.getMessage());
             throw new GlobalErrorInfoException(GlobalErrorInfoEnum.GLOBAL_MS_MSG);
         }
-        if (responseJson == null) {
+        if (Objects.isNull(responseJson)) {
             log.error("调用微服务接口失败! 接口: {} \n原因: {}", url, "响应为null");
-            return new ResultBody(new GlobalErrorInfoException(GlobalErrorInfoEnum.GLOBAL_MS_MSG));
+            return D8API.fail(GlobalErrorInfoEnum.GLOBAL_MS_MSG);
         }
         showResponseLog(url, responseJson.toJSONString());
         return convertResponse(responseJson);
@@ -226,8 +227,7 @@ public class RestTemplateUtil {
         HttpHeaders headers = new HttpHeaders();
         headers.add("Authorization", token);
         headers.add("Content-Type", "application/json");
-        HttpEntity<Map<String, Object>> httpEntity = new HttpEntity<>(paramMap, headers);
-        return httpEntity;
+        return new HttpEntity<>(paramMap, headers);
     }
 
     /**
@@ -241,8 +241,7 @@ public class RestTemplateUtil {
         HttpHeaders headers = new HttpHeaders();
         headers.add("Authorization", token);
         headers.add("Content-Type", "application/json");
-        HttpEntity<List<?>> httpEntity = new HttpEntity<>(paramList, headers);
-        return httpEntity;
+        return new HttpEntity<>(paramList, headers);
     }
 
     /**
@@ -285,11 +284,7 @@ public class RestTemplateUtil {
             log.info("[提示]无HttpServletRequest信息, 加载token为null");
             return null;
         }
-        if (Objects.isNull(request)) {
-            return null;
-        }
-        String token = request.getHeader(authKey);
-        return token;
+        return request.getHeader(authKey);
     }
 
     /**

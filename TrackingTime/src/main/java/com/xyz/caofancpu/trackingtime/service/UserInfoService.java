@@ -1,6 +1,7 @@
 package com.xyz.caofancpu.trackingtime.service;
 
 import com.xyz.caofancpu.trackingtime.model.UserInfoMo;
+import com.xyz.caofancpu.trackingtime.view.UserInfoVo;
 
 import java.util.List;
 
@@ -34,7 +35,7 @@ public interface UserInfoService {
      * @param pageParams 可选分页参数
      * @return
      */
-    List<UserInfoMo> queryUserInfoMoList(UserInfoMo userInfoMo, Integer... pageParams);
+    List<UserInfoVo> queryUserInfoMoList(UserInfoMo userInfoMo, Integer... pageParams);
 
     /**
      * 根据id更新非null字段
