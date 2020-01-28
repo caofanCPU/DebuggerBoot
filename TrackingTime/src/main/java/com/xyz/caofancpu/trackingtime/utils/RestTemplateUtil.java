@@ -2,7 +2,6 @@ package com.xyz.caofancpu.trackingtime.utils;
 
 import com.alibaba.fastjson.JSONObject;
 import com.xyz.caofancpu.util.dataoperateutils.JSONUtil;
-import com.xyz.caofancpu.util.result.D8API;
 import com.xyz.caofancpu.util.result.D8Response;
 import com.xyz.caofancpu.util.result.GlobalErrorInfoEnum;
 import com.xyz.caofancpu.util.result.GlobalErrorInfoException;
@@ -115,7 +114,7 @@ public class RestTemplateUtil {
         JSONObject responseJson = responseEntity.getBody();
         if (Objects.isNull(responseJson)) {
             log.error("调用微服务接口失败! 接口: {} \n原因: {}", url, "响应为null");
-            return D8API.fail(GlobalErrorInfoEnum.GLOBAL_MS_MSG);
+            return D8Response.fail(GlobalErrorInfoEnum.GLOBAL_MS_MSG);
         }
         showResponseLog(url, responseJson.toJSONString());
         return convertResponse(responseJson);
@@ -177,7 +176,7 @@ public class RestTemplateUtil {
         }
         if (Objects.isNull(responseJson)) {
             log.error("调用微服务接口失败! 接口: {} \n原因: {}", url, "响应为null");
-            return D8API.fail(GlobalErrorInfoEnum.GLOBAL_MS_MSG);
+            return D8Response.fail(GlobalErrorInfoEnum.GLOBAL_MS_MSG);
         }
         showResponseLog(url, responseJson.toJSONString());
         return convertResponse(responseJson);
@@ -210,7 +209,7 @@ public class RestTemplateUtil {
         }
         if (Objects.isNull(responseJson)) {
             log.error("调用微服务接口失败! 接口: {} \n原因: {}", url, "响应为null");
-            return D8API.fail(GlobalErrorInfoEnum.GLOBAL_MS_MSG);
+            return D8Response.fail(GlobalErrorInfoEnum.GLOBAL_MS_MSG);
         }
         showResponseLog(url, responseJson.toJSONString());
         return convertResponse(responseJson);

@@ -3,7 +3,6 @@ package com.xyz.caofancpu.trackingtime.controller;
 import com.xyz.caofancpu.trackingtime.constant.apiurls.AccessUrl;
 import com.xyz.caofancpu.trackingtime.service.impl.TimeMarkContentService;
 import com.xyz.caofancpu.trackingtime.view.TimeMarkContentVO;
-import com.xyz.caofancpu.util.result.D8API;
 import com.xyz.caofancpu.util.result.D8Response;
 import com.xyz.caofancpu.util.result.GlobalErrorInfoException;
 import io.swagger.annotations.Api;
@@ -28,21 +27,21 @@ public class TimeMarkContentController {
     @ApiOperation(value = "保存内容", notes = "传参：timeBlockId, title, authorId")
     public D8Response<TimeMarkContentVO> saveMarkContent(@RequestBody TimeMarkContentVO timeMarkContentVo)
             throws GlobalErrorInfoException {
-        return D8API.success(timeMarkContentService.saveMarkContent(timeMarkContentVo));
+        return D8Response.success(timeMarkContentService.saveMarkContent(timeMarkContentVo));
     }
 
     @PostMapping(AccessUrl.TIME_MARK_QUERY_LIST)
     @ApiOperation(value = "查询内容列表", notes = "传参：authorId, startTime, endTime")
     public D8Response<List<TimeMarkContentVO>> queryMarkContent(@RequestBody TimeMarkContentVO timeMarkContentVo)
             throws GlobalErrorInfoException {
-        return D8API.success(timeMarkContentService.queryList(timeMarkContentVo));
+        return D8Response.success(timeMarkContentService.queryList(timeMarkContentVo));
     }
 
     @PostMapping(AccessUrl.TIME_MARK_QUERY_DETAIL)
     @ApiOperation(value = "查询内容详情", notes = "传参：id, authorId")
     public D8Response<TimeMarkContentVO> queryMarkDetail(@RequestBody TimeMarkContentVO timeMarkContentVo)
             throws GlobalErrorInfoException {
-        return D8API.success(timeMarkContentService.queryDetail(timeMarkContentVo));
+        return D8Response.success(timeMarkContentService.queryDetail(timeMarkContentVo));
     }
 
 }

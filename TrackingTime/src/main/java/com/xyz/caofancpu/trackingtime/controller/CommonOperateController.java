@@ -8,7 +8,6 @@ import com.xyz.caofancpu.trackingtime.service.CommonOperateService;
 import com.xyz.caofancpu.trackingtime.service.SysDictService;
 import com.xyz.caofancpu.util.commonoperateutils.HttpStaticHandleUtil;
 import com.xyz.caofancpu.util.dataoperateutils.JSONUtil;
-import com.xyz.caofancpu.util.result.D8API;
 import com.xyz.caofancpu.util.result.D8Response;
 import com.xyz.caofancpu.util.result.GlobalErrorInfoException;
 import com.xyz.caofancpu.util.streamoperateutils.CollectionUtil;
@@ -54,25 +53,7 @@ public class CommonOperateController {
     public D8Response<Object> listSysDictByPage()
             throws GlobalErrorInfoException {
         PageInfo<List<Map<String, Object>>> resultPageInfo = sysDictService.getSysDictList();
-        return D8API.success(resultPageInfo);
-    }
-
-    /**
-     * 上传附件
-     *
-     * @param file
-     * @param request
-     * @return
-     * @throws GlobalErrorInfoException
-     */
-    @Deprecated
-    @PostMapping("/attachment/upload")
-    public D8Response<Attachment> uploadAttachment(MultipartFile file, HttpServletRequest request)
-            throws GlobalErrorInfoException {
-        Map<String, Object> requestParamMap = HttpStaticHandleUtil.getParameterMap(request);
-        Attachment attachment = JSONUtil.copyProperties(requestParamMap, Attachment.class);
-        commonOperateService.uploadAttachment(attachment, file);
-        return D8API.success(attachment);
+        return D8Response.success(resultPageInfo);
     }
 
     /**
@@ -87,7 +68,7 @@ public class CommonOperateController {
     public D8Response<String> getAccessUrl(@RequestParam(required = true) String attachmentName)
             throws GlobalErrorInfoException {
         String accessUrl = commonOperateService.getAttachmentAccessUrl(attachmentName);
-        return D8API.success(accessUrl);
+        return D8Response.success(accessUrl);
     }
 
     /**
@@ -108,6 +89,24 @@ public class CommonOperateController {
         // 以下载方式打开文件
         headers.setContentDispositionFormData("attachment", downloadFile);
         return new ResponseEntity<>(FileUtils.readFileToByteArray(file), headers, HttpStatus.OK);
+    }
+
+    /**
+     * 上传附件
+     *
+     * @param file
+     * @param request
+     * @return
+     * @throws GlobalErrorInfoException
+     */
+    @Deprecated
+    @PostMapping("/attachment/upload")
+    public D8Response<Attachment> uploadAttachment(MultipartFile file, HttpServletRequest request)
+            throws GlobalErrorInfoException {
+        Map<String, Object> requestParamMap = HttpStaticHandleUtil.getParameterMap(request);
+        Attachment attachment = JSONUtil.copyProperties(requestParamMap, Attachment.class);
+        commonOperateService.uploadAttachment(attachment, file);
+        return D8Response.success(attachment);
     }
 
     /**
@@ -137,7 +136,7 @@ public class CommonOperateController {
                 throw new RuntimeException("上传文件失败, 请重试");
             }
         }
-        return D8API.success(fileNameList);
+        return D8Response.success(fileNameList);
     }
 
     @PostMapping("/testException")

@@ -6,7 +6,6 @@ import com.xyz.caofancpu.mvc.config.CommonConfigValueService;
 import com.xyz.caofancpu.util.commonoperateutils.FileUtil;
 import com.xyz.caofancpu.util.multithreadutils.RemoteInvokeHelper;
 import com.xyz.caofancpu.util.multithreadutils.RemoteRequestTask;
-import com.xyz.caofancpu.util.result.D8API;
 import com.xyz.caofancpu.util.result.D8Response;
 import com.xyz.caofancpu.util.streamoperateutils.CollectionUtil;
 import io.swagger.annotations.Api;
@@ -174,15 +173,15 @@ public class FileTaskService {
 
     private D8Response getCheckResult(int[] checkResultArray) {
         if (checkResultArray[0] != 1) {
-            return D8API.fail("手机号验证失败！");
+            return D8Response.fail("手机号验证失败！");
         }
         if (checkResultArray[1] != 1) {
-            return D8API.fail("身份证号验证失败！");
+            return D8Response.fail("身份证号验证失败！");
         }
         if (checkResultArray[2] != 1) {
-            return D8API.fail("银行卡号验证失败！");
+            return D8Response.fail("银行卡号验证失败！");
         }
-        return D8API.fail(StringUtils.EMPTY);
+        return D8Response.fail(StringUtils.EMPTY);
     }
 
     private boolean checkResult(Future task) {
