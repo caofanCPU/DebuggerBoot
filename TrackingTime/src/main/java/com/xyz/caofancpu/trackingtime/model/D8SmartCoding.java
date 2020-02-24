@@ -10,7 +10,7 @@ import java.util.Date;
 /**
  *
  */
-public class D8gerAutoCoding {
+public class D8SmartCoding {
 
     /**
      * ID

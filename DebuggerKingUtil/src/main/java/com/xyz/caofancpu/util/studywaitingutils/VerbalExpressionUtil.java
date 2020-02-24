@@ -7,6 +7,7 @@ import lombok.NonNull;
 import org.apache.commons.lang3.StringUtils;
 import ru.lanwen.verbalregex.VerbalExpression;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.regex.Matcher;
@@ -135,12 +136,38 @@ public class VerbalExpressionUtil {
         return result;
     }
 
+    /**
+     * Convert path string to package,
+     * for example: /src/main/java/com/xyz/caofancpu/d8ger/test --> com.xyz.caofancpu.d8ger.test
+     *
+     * @param originPath
+     * @return
+     */
+    public static String convertPathToPackage(String originPath) {
+        VerbalExpression regex1 = VerbalExpression.regex()
+                .capt()
+                .find("/").zeroOrMore()
+                .then("src").then(File.separator).zeroOrMore()
+                .then("main").then(File.separator).zeroOrMore()
+                .then("java")
+                .endCapt()
+                .build();
+        String first = executePatternRex(regex1, originPath, SymbolConstantUtil.EMPTY);
+        VerbalExpression regex2 = VerbalExpression.regex()
+                .startOfLine()
+                .then(File.separator).oneOrMore()
+                .build();
+        String second = executePatternRex(regex2, first, SymbolConstantUtil.EMPTY);
+        return second.replaceAll(File.separator, SymbolConstantUtil.ENGLISH_FULL_STOP);
+    }
+
     public static void main(String[] args)
             throws Exception {
-        NormalUseUtil.out("cao_fan");
-        NormalUseUtil.out(camelUnderLineNameConverter("cao_fan"));
-        NormalUseUtil.out(camelUnderLineNameConverter(camelUnderLineNameConverter("cao_fan")));
-        NormalUseUtil.out(camelUnderLineNameConverter(camelUnderLineNameConverter(camelUnderLineNameConverter("cao_fan"))));
+        NormalUseUtil.out(convertPathToPackage("//src//mainjava//com/xyz/caofancpu/d8ger/test"));
+//        NormalUseUtil.out("cao_fan");
+//        NormalUseUtil.out(camelUnderLineNameConverter("cao_fan"));
+//        NormalUseUtil.out(camelUnderLineNameConverter(camelUnderLineNameConverter("cao_fan")));
+//        NormalUseUtil.out(camelUnderLineNameConverter(camelUnderLineNameConverter(camelUnderLineNameConverter("cao_fan"))));
     }
 
     public static String executePatternRex(VerbalExpression regexExpression, String originText, String replacer) {
