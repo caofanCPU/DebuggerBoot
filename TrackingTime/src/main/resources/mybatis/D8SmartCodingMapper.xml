@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="com.xyz.caofancpu.trackingtime.mapper.D8gerAutoCodingMapper">
+<mapper namespace="com.xyz.caofancpu.trackingtime.mapper.D8SmartCodingMapper">
 
     <!-- 查询操作时条件 -->
     <sql id="Example_Where_Clause">
@@ -65,7 +65,7 @@
     </sql>
 
     <!-- 1.根据条件查询列表 -->
-    <select id="selectByExample" parameterType="com.xyz.caofancpu.trackingtime.mapper.example.D8gerAutoCodingExample" resultType="com.xyz.caofancpu.trackingtime.model.D8gerAutoCodingMo">
+    <select id="selectByExample" parameterType="com.xyz.caofancpu.trackingtime.mapper.example.D8SmartCodingExample" resultType="com.xyz.caofancpu.trackingtime.model.D8SmartCodingMo">
         SELECT
         <if test="distinct">
             DISTINCT
@@ -82,7 +82,7 @@
         `korean_money` AS koreanMoney,
         `encrypt_type` AS encryptType,
         `mark_content_status` AS markContentStatus
-        FROM `d8ger_auto_coding`
+        FROM `d8_smart_coding`
         <if test="_parameter != null">
             <include refid="Example_Where_Clause"/>
         </if>
@@ -94,7 +94,7 @@
     <!-- 2.批量更新, 根据主键更新非null字段 -->
     <update id="updateBatchByPrimaryKeySelective" parameterType="java.util.List">
         <foreach collection="list" open="" close="" separator=";" item="item">
-            UPDATE `d8ger_auto_coding`
+            UPDATE `d8_smart_coding`
             <set>
                 <if test="item.score != null">
                     `score` = #{item.score},
@@ -136,10 +136,10 @@
 
     <!-- 3.根据条件更新非null字段 -->
     <update id="updateByExampleSelective" parameterType="map">
-        UPDATE `d8ger_auto_coding`
+        UPDATE `d8_smart_coding`
         <set>
             <if test="record.id != null">
-                id = #{record.id},
+                `id` = #{record.id},
             </if>
             <if test="record.score != null">
                 `score` = #{record.score},
@@ -181,37 +181,37 @@
     </update>
 
     <!-- 4.根据条件删除记录 -->
-    <delete id="deleteByExample" parameterType="com.xyz.caofancpu.trackingtime.mapper.example.D8gerAutoCodingExample">
-        DELETE FROM `d8ger_auto_coding`
+    <delete id="deleteByExample" parameterType="com.xyz.caofancpu.trackingtime.mapper.example.D8SmartCodingExample">
+        DELETE FROM `d8_smart_coding`
         <if test="_parameter != null">
             <include refid="Example_Where_Clause"/>
         </if>
     </delete>
 
     <!-- 5.根据条件统计记录 -->
-    <select id="countByExample" parameterType="com.xyz.caofancpu.trackingtime.mapper.example.D8gerAutoCodingExample">
+    <select id="countByExample" parameterType="com.xyz.caofancpu.trackingtime.mapper.example.D8SmartCodingExample">
         SELECT
         COUNT(*)
-        FROM `d8ger_auto_coding`
+        FROM `d8_smart_coding`
         <if test="_parameter != null">
             <include refid="Example_Where_Clause"/>
         </if>
     </select>
 
     <!-- 6.增加单条记录, 返回主键 -->
-    <insert id="insertWithId" parameterType="com.xyz.caofancpu.trackingtime.model.D8gerAutoCodingMo" useGeneratedKeys="true" keyProperty="id">
-        INSERT INTO `d8ger_auto_coding` (`id`,
-                                         `score`,
-                                         `nick_name`,
-                                         `deleted`,
-                                         `register_date`,
-                                         `pre_start_time`,
-                                         `exact_money`,
-                                         `english_money`,
-                                         `french_money`,
-                                         `korean_money`,
-                                         `encrypt_type`,
-                                         `mark_content_status`)
+    <insert id="insertWithId" parameterType="com.xyz.caofancpu.trackingtime.model.D8SmartCodingMo" useGeneratedKeys="true" keyProperty="id">
+        INSERT INTO `d8_smart_coding` (`id`,
+                                       `score`,
+                                       `nick_name`,
+                                       `deleted`,
+                                       `register_date`,
+                                       `pre_start_time`,
+                                       `exact_money`,
+                                       `english_money`,
+                                       `french_money`,
+                                       `korean_money`,
+                                       `encrypt_type`,
+                                       `mark_content_status`)
         values (#{id},
                 #{score},
                 #{nickName},
@@ -228,7 +228,7 @@
 
     <!-- 7.批量增加记录, 返回主键 -->
     <insert id="insertBatchWithId" parameterType="java.util.List" useGeneratedKeys="true" keyProperty="id">
-        INSERT INTO `d8ger_auto_coding` (
+        INSERT INTO `d8_smart_coding` (
         `id`,
         `score`,
         `nick_name`,
@@ -261,8 +261,8 @@
         </foreach>
     </insert>
 
-    <!-- 8.D8gerAutoCoding列表查询 -->
-    <select id="queryD8gerAutoCodingMoList" parameterType="com.xyz.caofancpu.trackingtime.model.D8gerAutoCodingMo" resultType="com.xyz.caofancpu.trackingtime.model.D8gerAutoCodingMo">
+    <!-- 8.D8SmartCoding列表查询 -->
+    <select id="queryD8SmartCodingMoList" parameterType="com.xyz.caofancpu.trackingtime.model.D8SmartCodingMo" resultType="com.xyz.caofancpu.trackingtime.model.D8SmartCodingMo">
         SELECT
         `id` AS id,
         `score` AS score,
@@ -276,7 +276,7 @@
         `korean_money` AS koreanMoney,
         `encrypt_type` AS encryptType,
         `mark_content_status` AS markContentStatus
-        FROM `d8ger_auto_coding`
+        FROM `d8_smart_coding`
         WHERE 1 = 1
         <if test="id != null">
             AND `id` = #{id}
@@ -317,7 +317,7 @@
     </select>
 
     <!-- 9.根据ID查询对象 -->
-    <select id="selectByPrimaryKey" resultType="com.xyz.caofancpu.trackingtime.model.D8gerAutoCodingMo">
+    <select id="selectByPrimaryKey" resultType="com.xyz.caofancpu.trackingtime.model.D8SmartCodingMo">
         SELECT `id`                  AS id,
                `score`               AS score,
                `nick_name`           AS nickName,
@@ -330,13 +330,13 @@
                `korean_money`        AS koreanMoney,
                `encrypt_type`        AS encryptType,
                `mark_content_status` AS markContentStatus
-        FROM `d8ger_auto_coding`
+        FROM `d8_smart_coding`
         WHERE `id` = #{id}
     </select>
 
     <!-- 10.根据主键只更新非null字段 -->
-    <update id="updateByPrimaryKeySelective" parameterType="com.xyz.caofancpu.trackingtime.model.D8gerAutoCodingMo">
-        UPDATE `d8ger_auto_coding`
+    <update id="updateByPrimaryKeySelective" parameterType="com.xyz.caofancpu.trackingtime.model.D8SmartCodingMo">
+        UPDATE `d8_smart_coding`
         <set>
             <if test="score != null">
                 `score` = #{score},
@@ -375,10 +375,10 @@
         WHERE `id` = #{id}
     </update>
 
-    <!-- 11.根据条件删除记录 -->
+    <!-- 11.根据ID删除记录 -->
     <delete id="deleteByPrimaryKey">
         DELETE
-        FROM `d8ger_auto_coding`
+        FROM `d8_smart_coding`
         WHERE `id` = #{id}
     </delete>
 

@@ -14,16 +14,16 @@ import java.time.LocalDateTime;
 import java.util.Date;
 
 /**
- * D8gerAutoCodingMo对应的SwaggerApi增强Vo对象
+ * D8SmartCodingMo对应的SwaggerApi增强Vo对象
  *
- * @author caofanCPU
+ * @author Power+
  */
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
 @Accessors(chain = true)
 @ApiModel
-public class D8gerAutoCodingVo {
+public class D8SmartCodingVo {
 
     @ApiModelProperty(value = "ID", required = false, example = "", position = 0)
     private Integer id;
@@ -61,10 +61,10 @@ public class D8gerAutoCodingVo {
     @ApiModelProperty(value = "状态", required = false, example = "", position = 11)
     private MarkContentStatusEnum markContentStatus;
 
-    @ApiModelProperty(value = "分页页码", required = false, example = "1", position = 12)
+    @ApiModelProperty(value = "pageNum", required = false, example = "1", position = 12)
     private Integer pageNum;
 
-    @ApiModelProperty(value = "分页大小", required = false, example = "10", position = 13)
+    @ApiModelProperty(value = "pageSize", required = false, example = "10", position = 13)
     private Integer pageSize;
 
 }

@@ -12,15 +12,15 @@ import java.time.LocalDateTime;
 import java.util.Date;
 
 /**
- * D8gerAutoCodingMo
+ * D8SmartCodingMo
  *
- * @author caofanCPU
+ * @author Power+
  */
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
 @Accessors(chain = true)
-public class D8gerAutoCodingMo {
+public class D8SmartCodingMo {
 
     /**
      * ID

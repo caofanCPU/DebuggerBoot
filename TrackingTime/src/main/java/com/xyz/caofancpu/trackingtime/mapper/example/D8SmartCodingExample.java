@@ -10,11 +10,11 @@ import java.util.Date;
 import java.util.List;
 
 /**
- * D8gerAutoCodingMo对应的Example单表操作对象
+ * D8SmartCodingMo对应的Example单表操作对象
  *
- * @author caofanCPU
+ * @author Power+
  */
-public class D8gerAutoCodingExample {
+public class D8SmartCodingExample {
 
     protected String orderByClause;
 
@@ -22,7 +22,7 @@ public class D8gerAutoCodingExample {
 
     protected List<Criteria> oredCriteria;
 
-    public D8gerAutoCodingExample() {
+    public D8SmartCodingExample() {
         oredCriteria = new ArrayList<>();
     }
 
@@ -116,7 +116,7 @@ public class D8gerAutoCodingExample {
         }
 
         /**
-         * id为null
+         * id Is Null
          *
          * @return
          */
@@ -126,7 +126,7 @@ public class D8gerAutoCodingExample {
         }
 
         /**
-         * id不为null
+         * id IS Not Null
          *
          * @return
          */
@@ -136,7 +136,7 @@ public class D8gerAutoCodingExample {
         }
 
         /**
-         * id等于
+         * id Equal
          *
          * @return
          */
@@ -146,7 +146,7 @@ public class D8gerAutoCodingExample {
         }
 
         /**
-         * id不等于
+         * id Not Equal
          *
          * @return
          */
@@ -156,7 +156,7 @@ public class D8gerAutoCodingExample {
         }
 
         /**
-         * id大于
+         * id Greater Than
          *
          * @return
          */
@@ -166,7 +166,7 @@ public class D8gerAutoCodingExample {
         }
 
         /**
-         * id大于等于
+         * id Greater Than Or Equal To
          *
          * @return
          */
@@ -176,7 +176,7 @@ public class D8gerAutoCodingExample {
         }
 
         /**
-         * id小于
+         * id Less Than
          *
          * @return
          */
@@ -186,7 +186,7 @@ public class D8gerAutoCodingExample {
         }
 
         /**
-         * id小于等于
+         * id Less Than Or Equal To
          *
          * @return
          */
@@ -196,7 +196,7 @@ public class D8gerAutoCodingExample {
         }
 
         /**
-         * id在列表内
+         * id In
          *
          * @return
          */
@@ -206,7 +206,7 @@ public class D8gerAutoCodingExample {
         }
 
         /**
-         * id不在列表内
+         * id Not In
          *
          * @return
          */
@@ -216,7 +216,7 @@ public class D8gerAutoCodingExample {
         }
 
         /**
-         * id在起始值范围内
+         * id Between
          *
          * @return
          */
@@ -226,7 +226,7 @@ public class D8gerAutoCodingExample {
         }
 
         /**
-         * id不在起始值范围内
+         * id Not Between
          *
          * @return
          */
@@ -236,7 +236,7 @@ public class D8gerAutoCodingExample {
         }
 
         /**
-         * score为null
+         * score Is Null
          *
          * @return
          */
@@ -246,7 +246,7 @@ public class D8gerAutoCodingExample {
         }
 
         /**
-         * score不为null
+         * score IS Not Null
          *
          * @return
          */
@@ -256,7 +256,7 @@ public class D8gerAutoCodingExample {
         }
 
         /**
-         * score等于
+         * score Equal
          *
          * @return
          */
@@ -266,7 +266,7 @@ public class D8gerAutoCodingExample {
         }
 
         /**
-         * score不等于
+         * score Not Equal
          *
          * @return
          */
@@ -276,7 +276,7 @@ public class D8gerAutoCodingExample {
         }
 
         /**
-         * score大于
+         * score Greater Than
          *
          * @return
          */
@@ -286,7 +286,7 @@ public class D8gerAutoCodingExample {
         }
 
         /**
-         * score大于等于
+         * score Greater Than Or Equal To
          *
          * @return
          */
@@ -296,7 +296,7 @@ public class D8gerAutoCodingExample {
         }
 
         /**
-         * score小于
+         * score Less Than
          *
          * @return
          */
@@ -306,7 +306,7 @@ public class D8gerAutoCodingExample {
         }
 
         /**
-         * score小于等于
+         * score Less Than Or Equal To
          *
          * @return
          */
@@ -316,7 +316,7 @@ public class D8gerAutoCodingExample {
         }
 
         /**
-         * score在列表内
+         * score In
          *
          * @return
          */
@@ -326,7 +326,7 @@ public class D8gerAutoCodingExample {
         }
 
         /**
-         * score不在列表内
+         * score Not In
          *
          * @return
          */
@@ -336,7 +336,7 @@ public class D8gerAutoCodingExample {
         }
 
         /**
-         * score在起始值范围内
+         * score Between
          *
          * @return
          */
@@ -346,7 +346,7 @@ public class D8gerAutoCodingExample {
         }
 
         /**
-         * score不在起始值范围内
+         * score Not Between
          *
          * @return
          */
@@ -356,7 +356,7 @@ public class D8gerAutoCodingExample {
         }
 
         /**
-         * nickName为null
+         * nickName Is Null
          *
          * @return
          */
@@ -366,7 +366,7 @@ public class D8gerAutoCodingExample {
         }
 
         /**
-         * nickName不为null
+         * nickName IS Not Null
          *
          * @return
          */
@@ -376,7 +376,7 @@ public class D8gerAutoCodingExample {
         }
 
         /**
-         * nickName等于
+         * nickName Equal
          *
          * @return
          */
@@ -386,7 +386,7 @@ public class D8gerAutoCodingExample {
         }
 
         /**
-         * nickName不等于
+         * nickName Not Equal
          *
          * @return
          */
@@ -396,7 +396,7 @@ public class D8gerAutoCodingExample {
         }
 
         /**
-         * nickName大于
+         * nickName Greater Than
          *
          * @return
          */
@@ -406,7 +406,7 @@ public class D8gerAutoCodingExample {
         }
 
         /**
-         * nickName大于等于
+         * nickName Greater Than Or Equal To
          *
          * @return
          */
@@ -416,7 +416,7 @@ public class D8gerAutoCodingExample {
         }
 
         /**
-         * nickName小于
+         * nickName Less Than
          *
          * @return
          */
@@ -426,7 +426,7 @@ public class D8gerAutoCodingExample {
         }
 
         /**
-         * nickName小于等于
+         * nickName Less Than Or Equal To
          *
          * @return
          */
@@ -436,7 +436,7 @@ public class D8gerAutoCodingExample {
         }
 
         /**
-         * nickName在列表内
+         * nickName In
          *
          * @return
          */
@@ -446,7 +446,7 @@ public class D8gerAutoCodingExample {
         }
 
         /**
-         * nickName不在列表内
+         * nickName Not In
          *
          * @return
          */
@@ -456,7 +456,7 @@ public class D8gerAutoCodingExample {
         }
 
         /**
-         * nickName在起始值范围内
+         * nickName Between
          *
          * @return
          */
@@ -466,7 +466,7 @@ public class D8gerAutoCodingExample {
         }
 
         /**
-         * nickName不在起始值范围内
+         * nickName Not Between
          *
          * @return
          */
@@ -476,7 +476,7 @@ public class D8gerAutoCodingExample {
         }
 
         /**
-         * nickName模糊查询以前缀开头
+         * nickName Like
          *
          * @return
          */
@@ -486,7 +486,7 @@ public class D8gerAutoCodingExample {
         }
 
         /**
-         * nickName模糊查询不以前缀匹开头
+         * nickName Not Like
          *
          * @return
          */
@@ -496,7 +496,7 @@ public class D8gerAutoCodingExample {
         }
 
         /**
-         * deleted为null
+         * deleted Is Null
          *
          * @return
          */
@@ -506,7 +506,7 @@ public class D8gerAutoCodingExample {
         }
 
         /**
-         * deleted不为null
+         * deleted IS Not Null
          *
          * @return
          */
@@ -516,7 +516,7 @@ public class D8gerAutoCodingExample {
         }
 
         /**
-         * deleted等于
+         * deleted Equal
          *
          * @return
          */
@@ -526,7 +526,7 @@ public class D8gerAutoCodingExample {
         }
 
         /**
-         * deleted不等于
+         * deleted Not Equal
          *
          * @return
          */
@@ -536,7 +536,7 @@ public class D8gerAutoCodingExample {
         }
 
         /**
-         * deleted大于
+         * deleted Greater Than
          *
          * @return
          */
@@ -546,7 +546,7 @@ public class D8gerAutoCodingExample {
         }
 
         /**
-         * deleted大于等于
+         * deleted Greater Than Or Equal To
          *
          * @return
          */
@@ -556,7 +556,7 @@ public class D8gerAutoCodingExample {
         }
 
         /**
-         * deleted小于
+         * deleted Less Than
          *
          * @return
          */
@@ -566,7 +566,7 @@ public class D8gerAutoCodingExample {
         }
 
         /**
-         * deleted小于等于
+         * deleted Less Than Or Equal To
          *
          * @return
          */
@@ -576,7 +576,7 @@ public class D8gerAutoCodingExample {
         }
 
         /**
-         * deleted在列表内
+         * deleted In
          *
          * @return
          */
@@ -586,7 +586,7 @@ public class D8gerAutoCodingExample {
         }
 
         /**
-         * deleted不在列表内
+         * deleted Not In
          *
          * @return
          */
@@ -596,7 +596,7 @@ public class D8gerAutoCodingExample {
         }
 
         /**
-         * deleted在起始值范围内
+         * deleted Between
          *
          * @return
          */
@@ -606,7 +606,7 @@ public class D8gerAutoCodingExample {
         }
 
         /**
-         * deleted不在起始值范围内
+         * deleted Not Between
          *
          * @return
          */
@@ -616,7 +616,7 @@ public class D8gerAutoCodingExample {
         }
 
         /**
-         * registerDate为null
+         * registerDate Is Null
          *
          * @return
          */
@@ -626,7 +626,7 @@ public class D8gerAutoCodingExample {
         }
 
         /**
-         * registerDate不为null
+         * registerDate IS Not Null
          *
          * @return
          */
@@ -636,7 +636,7 @@ public class D8gerAutoCodingExample {
         }
 
         /**
-         * registerDate等于
+         * registerDate Equal
          *
          * @return
          */
@@ -646,7 +646,7 @@ public class D8gerAutoCodingExample {
         }
 
         /**
-         * registerDate不等于
+         * registerDate Not Equal
          *
          * @return
          */
@@ -656,7 +656,7 @@ public class D8gerAutoCodingExample {
         }
 
         /**
-         * registerDate大于
+         * registerDate Greater Than
          *
          * @return
          */
@@ -666,7 +666,7 @@ public class D8gerAutoCodingExample {
         }
 
         /**
-         * registerDate大于等于
+         * registerDate Greater Than Or Equal To
          *
          * @return
          */
@@ -676,7 +676,7 @@ public class D8gerAutoCodingExample {
         }
 
         /**
-         * registerDate小于
+         * registerDate Less Than
          *
          * @return
          */
@@ -686,7 +686,7 @@ public class D8gerAutoCodingExample {
         }
 
         /**
-         * registerDate小于等于
+         * registerDate Less Than Or Equal To
          *
          * @return
          */
@@ -696,7 +696,7 @@ public class D8gerAutoCodingExample {
         }
 
         /**
-         * registerDate在列表内
+         * registerDate In
          *
          * @return
          */
@@ -706,7 +706,7 @@ public class D8gerAutoCodingExample {
         }
 
         /**
-         * registerDate不在列表内
+         * registerDate Not In
          *
          * @return
          */
@@ -716,7 +716,7 @@ public class D8gerAutoCodingExample {
         }
 
         /**
-         * registerDate在起始值范围内
+         * registerDate Between
          *
          * @return
          */
@@ -726,7 +726,7 @@ public class D8gerAutoCodingExample {
         }
 
         /**
-         * registerDate不在起始值范围内
+         * registerDate Not Between
          *
          * @return
          */
@@ -736,7 +736,7 @@ public class D8gerAutoCodingExample {
         }
 
         /**
-         * preStartTime为null
+         * preStartTime Is Null
          *
          * @return
          */
@@ -746,7 +746,7 @@ public class D8gerAutoCodingExample {
         }
 
         /**
-         * preStartTime不为null
+         * preStartTime IS Not Null
          *
          * @return
          */
@@ -756,7 +756,7 @@ public class D8gerAutoCodingExample {
         }
 
         /**
-         * preStartTime等于
+         * preStartTime Equal
          *
          * @return
          */
@@ -766,7 +766,7 @@ public class D8gerAutoCodingExample {
         }
 
         /**
-         * preStartTime不等于
+         * preStartTime Not Equal
          *
          * @return
          */
@@ -776,7 +776,7 @@ public class D8gerAutoCodingExample {
         }
 
         /**
-         * preStartTime大于
+         * preStartTime Greater Than
          *
          * @return
          */
@@ -786,7 +786,7 @@ public class D8gerAutoCodingExample {
         }
 
         /**
-         * preStartTime大于等于
+         * preStartTime Greater Than Or Equal To
          *
          * @return
          */
@@ -796,7 +796,7 @@ public class D8gerAutoCodingExample {
         }
 
         /**
-         * preStartTime小于
+         * preStartTime Less Than
          *
          * @return
          */
@@ -806,7 +806,7 @@ public class D8gerAutoCodingExample {
         }
 
         /**
-         * preStartTime小于等于
+         * preStartTime Less Than Or Equal To
          *
          * @return
          */
@@ -816,7 +816,7 @@ public class D8gerAutoCodingExample {
         }
 
         /**
-         * preStartTime在列表内
+         * preStartTime In
          *
          * @return
          */
@@ -826,7 +826,7 @@ public class D8gerAutoCodingExample {
         }
 
         /**
-         * preStartTime不在列表内
+         * preStartTime Not In
          *
          * @return
          */
@@ -836,7 +836,7 @@ public class D8gerAutoCodingExample {
         }
 
         /**
-         * preStartTime在起始值范围内
+         * preStartTime Between
          *
          * @return
          */
@@ -846,7 +846,7 @@ public class D8gerAutoCodingExample {
         }
 
         /**
-         * preStartTime不在起始值范围内
+         * preStartTime Not Between
          *
          * @return
          */
@@ -856,7 +856,7 @@ public class D8gerAutoCodingExample {
         }
 
         /**
-         * exactMoney为null
+         * exactMoney Is Null
          *
          * @return
          */
@@ -866,7 +866,7 @@ public class D8gerAutoCodingExample {
         }
 
         /**
-         * exactMoney不为null
+         * exactMoney IS Not Null
          *
          * @return
          */
@@ -876,7 +876,7 @@ public class D8gerAutoCodingExample {
         }
 
         /**
-         * exactMoney等于
+         * exactMoney Equal
          *
          * @return
          */
@@ -886,7 +886,7 @@ public class D8gerAutoCodingExample {
         }
 
         /**
-         * exactMoney不等于
+         * exactMoney Not Equal
          *
          * @return
          */
@@ -896,7 +896,7 @@ public class D8gerAutoCodingExample {
         }
 
         /**
-         * exactMoney大于
+         * exactMoney Greater Than
          *
          * @return
          */
@@ -906,7 +906,7 @@ public class D8gerAutoCodingExample {
         }
 
         /**
-         * exactMoney大于等于
+         * exactMoney Greater Than Or Equal To
          *
          * @return
          */
@@ -916,7 +916,7 @@ public class D8gerAutoCodingExample {
         }
 
         /**
-         * exactMoney小于
+         * exactMoney Less Than
          *
          * @return
          */
@@ -926,7 +926,7 @@ public class D8gerAutoCodingExample {
         }
 
         /**
-         * exactMoney小于等于
+         * exactMoney Less Than Or Equal To
          *
          * @return
          */
@@ -936,7 +936,7 @@ public class D8gerAutoCodingExample {
         }
 
         /**
-         * exactMoney在列表内
+         * exactMoney In
          *
          * @return
          */
@@ -946,7 +946,7 @@ public class D8gerAutoCodingExample {
         }
 
         /**
-         * exactMoney不在列表内
+         * exactMoney Not In
          *
          * @return
          */
@@ -956,7 +956,7 @@ public class D8gerAutoCodingExample {
         }
 
         /**
-         * exactMoney在起始值范围内
+         * exactMoney Between
          *
          * @return
          */
@@ -966,7 +966,7 @@ public class D8gerAutoCodingExample {
         }
 
         /**
-         * exactMoney不在起始值范围内
+         * exactMoney Not Between
          *
          * @return
          */
@@ -976,7 +976,7 @@ public class D8gerAutoCodingExample {
         }
 
         /**
-         * englishMoney为null
+         * englishMoney Is Null
          *
          * @return
          */
@@ -986,7 +986,7 @@ public class D8gerAutoCodingExample {
         }
 
         /**
-         * englishMoney不为null
+         * englishMoney IS Not Null
          *
          * @return
          */
@@ -996,7 +996,7 @@ public class D8gerAutoCodingExample {
         }
 
         /**
-         * englishMoney等于
+         * englishMoney Equal
          *
          * @return
          */
@@ -1006,7 +1006,7 @@ public class D8gerAutoCodingExample {
         }
 
         /**
-         * englishMoney不等于
+         * englishMoney Not Equal
          *
          * @return
          */
@@ -1016,7 +1016,7 @@ public class D8gerAutoCodingExample {
         }
 
         /**
-         * englishMoney大于
+         * englishMoney Greater Than
          *
          * @return
          */
@@ -1026,7 +1026,7 @@ public class D8gerAutoCodingExample {
         }
 
         /**
-         * englishMoney大于等于
+         * englishMoney Greater Than Or Equal To
          *
          * @return
          */
@@ -1036,7 +1036,7 @@ public class D8gerAutoCodingExample {
         }
 
         /**
-         * englishMoney小于
+         * englishMoney Less Than
          *
          * @return
          */
@@ -1046,7 +1046,7 @@ public class D8gerAutoCodingExample {
         }
 
         /**
-         * englishMoney小于等于
+         * englishMoney Less Than Or Equal To
          *
          * @return
          */
@@ -1056,7 +1056,7 @@ public class D8gerAutoCodingExample {
         }
 
         /**
-         * englishMoney在列表内
+         * englishMoney In
          *
          * @return
          */
@@ -1066,7 +1066,7 @@ public class D8gerAutoCodingExample {
         }
 
         /**
-         * englishMoney不在列表内
+         * englishMoney Not In
          *
          * @return
          */
@@ -1076,7 +1076,7 @@ public class D8gerAutoCodingExample {
         }
 
         /**
-         * englishMoney在起始值范围内
+         * englishMoney Between
          *
          * @return
          */
@@ -1086,7 +1086,7 @@ public class D8gerAutoCodingExample {
         }
 
         /**
-         * englishMoney不在起始值范围内
+         * englishMoney Not Between
          *
          * @return
          */
@@ -1096,7 +1096,7 @@ public class D8gerAutoCodingExample {
         }
 
         /**
-         * frenchMoney为null
+         * frenchMoney Is Null
          *
          * @return
          */
@@ -1106,7 +1106,7 @@ public class D8gerAutoCodingExample {
         }
 
         /**
-         * frenchMoney不为null
+         * frenchMoney IS Not Null
          *
          * @return
          */
@@ -1116,7 +1116,7 @@ public class D8gerAutoCodingExample {
         }
 
         /**
-         * frenchMoney等于
+         * frenchMoney Equal
          *
          * @return
          */
@@ -1126,7 +1126,7 @@ public class D8gerAutoCodingExample {
         }
 
         /**
-         * frenchMoney不等于
+         * frenchMoney Not Equal
          *
          * @return
          */
@@ -1136,7 +1136,7 @@ public class D8gerAutoCodingExample {
         }
 
         /**
-         * frenchMoney大于
+         * frenchMoney Greater Than
          *
          * @return
          */
@@ -1146,7 +1146,7 @@ public class D8gerAutoCodingExample {
         }
 
         /**
-         * frenchMoney大于等于
+         * frenchMoney Greater Than Or Equal To
          *
          * @return
          */
@@ -1156,7 +1156,7 @@ public class D8gerAutoCodingExample {
         }
 
         /**
-         * frenchMoney小于
+         * frenchMoney Less Than
          *
          * @return
          */
@@ -1166,7 +1166,7 @@ public class D8gerAutoCodingExample {
         }
 
         /**
-         * frenchMoney小于等于
+         * frenchMoney Less Than Or Equal To
          *
          * @return
          */
@@ -1176,7 +1176,7 @@ public class D8gerAutoCodingExample {
         }
 
         /**
-         * frenchMoney在列表内
+         * frenchMoney In
          *
          * @return
          */
@@ -1186,7 +1186,7 @@ public class D8gerAutoCodingExample {
         }
 
         /**
-         * frenchMoney不在列表内
+         * frenchMoney Not In
          *
          * @return
          */
@@ -1196,7 +1196,7 @@ public class D8gerAutoCodingExample {
         }
 
         /**
-         * frenchMoney在起始值范围内
+         * frenchMoney Between
          *
          * @return
          */
@@ -1206,7 +1206,7 @@ public class D8gerAutoCodingExample {
         }
 
         /**
-         * frenchMoney不在起始值范围内
+         * frenchMoney Not Between
          *
          * @return
          */
@@ -1216,7 +1216,7 @@ public class D8gerAutoCodingExample {
         }
 
         /**
-         * koreanMoney为null
+         * koreanMoney Is Null
          *
          * @return
          */
@@ -1226,7 +1226,7 @@ public class D8gerAutoCodingExample {
         }
 
         /**
-         * koreanMoney不为null
+         * koreanMoney IS Not Null
          *
          * @return
          */
@@ -1236,7 +1236,7 @@ public class D8gerAutoCodingExample {
         }
 
         /**
-         * koreanMoney等于
+         * koreanMoney Equal
          *
          * @return
          */
@@ -1246,7 +1246,7 @@ public class D8gerAutoCodingExample {
         }
 
         /**
-         * koreanMoney不等于
+         * koreanMoney Not Equal
          *
          * @return
          */
@@ -1256,7 +1256,7 @@ public class D8gerAutoCodingExample {
         }
 
         /**
-         * koreanMoney大于
+         * koreanMoney Greater Than
          *
          * @return
          */
@@ -1266,7 +1266,7 @@ public class D8gerAutoCodingExample {
         }
 
         /**
-         * koreanMoney大于等于
+         * koreanMoney Greater Than Or Equal To
          *
          * @return
          */
@@ -1276,7 +1276,7 @@ public class D8gerAutoCodingExample {
         }
 
         /**
-         * koreanMoney小于
+         * koreanMoney Less Than
          *
          * @return
          */
@@ -1286,7 +1286,7 @@ public class D8gerAutoCodingExample {
         }
 
         /**
-         * koreanMoney小于等于
+         * koreanMoney Less Than Or Equal To
          *
          * @return
          */
@@ -1296,7 +1296,7 @@ public class D8gerAutoCodingExample {
         }
 
         /**
-         * koreanMoney在列表内
+         * koreanMoney In
          *
          * @return
          */
@@ -1306,7 +1306,7 @@ public class D8gerAutoCodingExample {
         }
 
         /**
-         * koreanMoney不在列表内
+         * koreanMoney Not In
          *
          * @return
          */
@@ -1316,7 +1316,7 @@ public class D8gerAutoCodingExample {
         }
 
         /**
-         * koreanMoney在起始值范围内
+         * koreanMoney Between
          *
          * @return
          */
@@ -1326,7 +1326,7 @@ public class D8gerAutoCodingExample {
         }
 
         /**
-         * koreanMoney不在起始值范围内
+         * koreanMoney Not Between
          *
          * @return
          */
@@ -1336,7 +1336,7 @@ public class D8gerAutoCodingExample {
         }
 
         /**
-         * encryptType为null
+         * encryptType Is Null
          *
          * @return
          */
@@ -1346,7 +1346,7 @@ public class D8gerAutoCodingExample {
         }
 
         /**
-         * encryptType不为null
+         * encryptType IS Not Null
          *
          * @return
          */
@@ -1356,7 +1356,7 @@ public class D8gerAutoCodingExample {
         }
 
         /**
-         * encryptType等于
+         * encryptType Equal
          *
          * @return
          */
@@ -1366,7 +1366,7 @@ public class D8gerAutoCodingExample {
         }
 
         /**
-         * encryptType不等于
+         * encryptType Not Equal
          *
          * @return
          */
@@ -1376,7 +1376,7 @@ public class D8gerAutoCodingExample {
         }
 
         /**
-         * encryptType大于
+         * encryptType Greater Than
          *
          * @return
          */
@@ -1386,7 +1386,7 @@ public class D8gerAutoCodingExample {
         }
 
         /**
-         * encryptType大于等于
+         * encryptType Greater Than Or Equal To
          *
          * @return
          */
@@ -1396,7 +1396,7 @@ public class D8gerAutoCodingExample {
         }
 
         /**
-         * encryptType小于
+         * encryptType Less Than
          *
          * @return
          */
@@ -1406,7 +1406,7 @@ public class D8gerAutoCodingExample {
         }
 
         /**
-         * encryptType小于等于
+         * encryptType Less Than Or Equal To
          *
          * @return
          */
@@ -1416,7 +1416,7 @@ public class D8gerAutoCodingExample {
         }
 
         /**
-         * encryptType在列表内
+         * encryptType In
          *
          * @return
          */
@@ -1426,7 +1426,7 @@ public class D8gerAutoCodingExample {
         }
 
         /**
-         * encryptType不在列表内
+         * encryptType Not In
          *
          * @return
          */
@@ -1436,7 +1436,7 @@ public class D8gerAutoCodingExample {
         }
 
         /**
-         * encryptType在起始值范围内
+         * encryptType Between
          *
          * @return
          */
@@ -1446,7 +1446,7 @@ public class D8gerAutoCodingExample {
         }
 
         /**
-         * encryptType不在起始值范围内
+         * encryptType Not Between
          *
          * @return
          */
@@ -1456,7 +1456,7 @@ public class D8gerAutoCodingExample {
         }
 
         /**
-         * markContentStatus为null
+         * markContentStatus Is Null
          *
          * @return
          */
@@ -1466,7 +1466,7 @@ public class D8gerAutoCodingExample {
         }
 
         /**
-         * markContentStatus不为null
+         * markContentStatus IS Not Null
          *
          * @return
          */
@@ -1476,7 +1476,7 @@ public class D8gerAutoCodingExample {
         }
 
         /**
-         * markContentStatus等于
+         * markContentStatus Equal
          *
          * @return
          */
@@ -1486,7 +1486,7 @@ public class D8gerAutoCodingExample {
         }
 
         /**
-         * markContentStatus不等于
+         * markContentStatus Not Equal
          *
          * @return
          */
@@ -1496,7 +1496,7 @@ public class D8gerAutoCodingExample {
         }
 
         /**
-         * markContentStatus大于
+         * markContentStatus Greater Than
          *
          * @return
          */
@@ -1506,7 +1506,7 @@ public class D8gerAutoCodingExample {
         }
 
         /**
-         * markContentStatus大于等于
+         * markContentStatus Greater Than Or Equal To
          *
          * @return
          */
@@ -1516,7 +1516,7 @@ public class D8gerAutoCodingExample {
         }
 
         /**
-         * markContentStatus小于
+         * markContentStatus Less Than
          *
          * @return
          */
@@ -1526,7 +1526,7 @@ public class D8gerAutoCodingExample {
         }
 
         /**
-         * markContentStatus小于等于
+         * markContentStatus Less Than Or Equal To
          *
          * @return
          */
@@ -1536,7 +1536,7 @@ public class D8gerAutoCodingExample {
         }
 
         /**
-         * markContentStatus在列表内
+         * markContentStatus In
          *
          * @return
          */
@@ -1546,7 +1546,7 @@ public class D8gerAutoCodingExample {
         }
 
         /**
-         * markContentStatus不在列表内
+         * markContentStatus Not In
          *
          * @return
          */
@@ -1556,7 +1556,7 @@ public class D8gerAutoCodingExample {
         }
 
         /**
-         * markContentStatus在起始值范围内
+         * markContentStatus Between
          *
          * @return
          */
@@ -1566,7 +1566,7 @@ public class D8gerAutoCodingExample {
         }
 
         /**
-         * markContentStatus不在起始值范围内
+         * markContentStatus Not Between
          *
          * @return
          */
