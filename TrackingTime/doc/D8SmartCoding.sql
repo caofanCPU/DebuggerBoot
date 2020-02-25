@@ -1,3 +1,4 @@
+
 -- ----------------------------
 -- D8ger-Sql-Auto-Generated
 -- Table structure for `d8_smart_coding`
