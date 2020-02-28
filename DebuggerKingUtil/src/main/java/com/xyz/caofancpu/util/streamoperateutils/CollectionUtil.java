@@ -194,16 +194,16 @@ public class CollectionUtil extends CollectionUtils {
     }
 
     /**
-     * 将按照分隔符固定拼接的[数字]字符串转换为指定[数字]类型的List
+     * 将按照分隔符固定拼接的[数字]字符串转换为指定[数字或其他类型]类型的List
      *
      * @param source
      * @param splitSymbol
-     * @param numberTypeMapper
+     * @param mapper
      * @param <T>
      * @return
      */
-    public static <T extends Number> List<T> splitDelimitedStringToList(@NonNull String source, @NonNull String splitSymbol, Function<String, T> numberTypeMapper) {
-        return transToList(Arrays.asList(source.split(splitSymbol)), numberTypeMapper);
+    public static <T> List<T> splitDelimitedStringToList(@NonNull String source, @NonNull String splitSymbol, Function<String, T> mapper) {
+        return transToList(Arrays.asList(source.split(splitSymbol)), mapper);
     }
 
     /**
