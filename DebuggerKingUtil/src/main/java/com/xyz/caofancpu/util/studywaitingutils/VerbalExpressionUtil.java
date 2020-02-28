@@ -1,6 +1,5 @@
 package com.xyz.caofancpu.util.studywaitingutils;
 
-import com.xyz.caofancpu.util.commonoperateutils.NormalUseUtil;
 import com.xyz.caofancpu.util.commonoperateutils.SymbolConstantUtil;
 import com.xyz.caofancpu.util.streamoperateutils.CollectionUtil;
 import lombok.NonNull;
@@ -82,6 +81,23 @@ public class VerbalExpressionUtil {
      */
     public static VerbalExpression buildRegex(String matchKeyWord) {
         return VerbalExpression.regex().capt().find(matchKeyWord).endCapt().build();
+    }
+
+    /**
+     * Extract matched content list by pattern
+     *
+     * @param originContext
+     * @param pattern
+     * @return
+     */
+    public static List<String> extractMatchContent(@NonNull String originContext, Pattern pattern) {
+        List<String> resultList = new ArrayList<>();
+        Matcher matcher = pattern.matcher(originContext);
+        while (matcher.find()) {
+            // add current matched group value
+            resultList.add(matcher.group());
+        }
+        return resultList;
     }
 
     /**
@@ -178,17 +194,18 @@ public class VerbalExpressionUtil {
 
     public static void main(String[] args)
             throws Exception {
-//        VerbalExpression regex = VerbalExpression.regex()
-//                .startOfLine()
-//                .then("\\[A-Z\\]")
+//        VerbalExpression configRegex = VerbalExpression.regex()
+//                .find("@<")
+//                .anything()
+//                .then(">@")
 //                .build();
 //        NormalUseUtil.out(regex.toString());
 //        NormalUseUtil.out(convertPathToPackage("//src//mainjava//com/xyz/caofancpu/d8ger/test"));
-        NormalUseUtil.out("cao_fan");
-        NormalUseUtil.out(camelUnderLineNameConverter("cao_fan"));
-        NormalUseUtil.out(camelUnderLineNameConverter(camelUnderLineNameConverter("cao_fan")));
-        NormalUseUtil.out(camelUnderLineNameConverter(camelUnderLineNameConverter(camelUnderLineNameConverter("cao_fan"))));
-        NormalUseUtil.out(camelUnderLineNameConverter(camelUnderLineNameConverter(camelUnderLineNameConverter(camelUnderLineNameConverter("cao_fan")))));
+//        NormalUseUtil.out("cao_fan");
+//        NormalUseUtil.out(camelUnderLineNameConverter("cao_fan"));
+//        NormalUseUtil.out(camelUnderLineNameConverter(camelUnderLineNameConverter("cao_fan")));
+//        NormalUseUtil.out(camelUnderLineNameConverter(camelUnderLineNameConverter(camelUnderLineNameConverter("cao_fan"))));
+//        NormalUseUtil.out(camelUnderLineNameConverter(camelUnderLineNameConverter(camelUnderLineNameConverter(camelUnderLineNameConverter("cao_fan")))));
     }
 
     public static String executePatternRex(VerbalExpression regexExpression, String originText, String replacer) {
@@ -220,9 +237,7 @@ public class VerbalExpressionUtil {
      */
     public static String cleanWhiteChar(@NonNull String source) {
         VerbalExpression regex = VerbalExpression.regex()
-                .capt()
                 .space().oneOrMore()
-                .endCapt()
                 .build();
         return executePatternRex(regex, source, SymbolConstantUtil.EMPTY);
     }

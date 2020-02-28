@@ -25,60 +25,47 @@ public class StringAlignUtil {
     public static final Pattern SQL_COLUMN_WHITE_CHAR = Pattern.compile("((?:\\s)+)");
 
     public static void main(String[] args) {
-        String sqlText = "app_name,\n" +
-                "live_watch_pv,\n" +
-                "live_watch_uv,\n" +
-                "valid_live_watch_pv,\n" +
-                "valid_live_watch_uv,\n" +
-                "live_watch_fans_pv,\n" +
-                "live_watch_fans_uv,\n" +
-                "live_watch_not_fans_pv,\n" +
-                "live_watch_not_fans_uv,\n" +
-                "valid_live_watch_fans_pv,\n" +
-                "valid_live_watch_fans_uv,\n" +
-                "valid_live_watch_not_fans_pv,\n" +
-                "valid_live_watch_not_fans_uv,\n" +
-                "watch_pv_entrance_show,\n" +
-                "watch_uv_entrance_show,\n" +
-                "fans_watch_pv_entrance_show,\n" +
-                "fans_watch_uv_entrance_show,\n" +
-                "not_fans_watch_pv_entrance_show,\n" +
-                "not_fans_watch_uv_entrance_show,\n" +
-                "click_pv_entrance,\n" +
-                "click_uv_entrance,\n" +
-                "fans_click_pv_entrance,\n" +
-                "fans_click_uv_entrance,\n" +
-                "not_fans_click_pv_entrance,\n" +
-                "not_fans_click_uv_entrance";
-        NormalUseUtil.out(formatSQLColumn(sqlText, "sum(", ")", true));
+        String sqlText = "first_name,\n" +
+                "current_age,\n" +
+                "blog_url,\n" +
+                "graduated_school,\n" +
+                "total_assets";
+        NormalUseUtil.out(formatSQLColumn(sqlText, Alignment.LEFT, "D8ger(", ")", false, true));
     }
 
     /**
      * Format SQL columns, for example, add function or rename by using 'AS'
      *
      * @param originText
+     * @param formatAlignment
      * @param prefix
      * @param suffix
+     * @param formatSQL
+     * @param formatAsCamel
      * @return
      */
-    public static String formatSQLColumn(@NonNull String originText, @NonNull String prefix, @NonNull String suffix, boolean... clearUnderLine) {
+    public static String formatSQLColumn(@NonNull String originText, Alignment formatAlignment, @NonNull String prefix, @NonNull String suffix, boolean formatSQL, boolean formatAsCamel) {
         String legalText = SQL_COLUMN_WHITE_CHAR.matcher(originText.replaceAll(SymbolConstantUtil.CHINESE_COMMA, SymbolConstantUtil.ENGLISH_COMMA)).replaceAll(SymbolConstantUtil.EMPTY);
         String splitSymbol = SymbolConstantUtil.ENGLISH_COMMA;
         List<String> stringList = CollectionUtil.splitDelimitedStringToList(legalText, splitSymbol, String::toString);
         List<String> completeFixList = CollectionUtil.transToList(stringList, item -> prefix + item + suffix);
         int singleLineMaxChars = CollectionUtil.max(completeFixList, String::length).intValue();
-        Alignment formatAlignment = Alignment.LEFT;
+        if (Objects.isNull(formatAlignment)) {
+            formatAlignment = Alignment.LEFT;
+        }
         List<String> formattedLineList = formatSQLColumn(singleLineMaxChars, formatAlignment, completeFixList);
-        if (Objects.nonNull(clearUnderLine) && clearUnderLine[0]) {
+        if (formatSQL && formatAsCamel) {
             stringList = CollectionUtil.transToList(stringList, StringAlignUtil::cleanUnderLineForSQLAliasName);
         }
         Map<Integer, String> indexMap = CollectionUtil.transToMap(stringList, stringList::indexOf, Function.identity());
         StringBuilder result = new StringBuilder();
         for (int i = 0; i < formattedLineList.size(); i++) {
             String column = indexMap.get(i);
-            result.append(formattedLineList.get(i))
-                    .append(SymbolConstantUtil.TAB).append("AS").append(SymbolConstantUtil.SPACE).append(SymbolConstantUtil.SPACE).append(column)
-                    .append(SymbolConstantUtil.ENGLISH_COMMA).append(SymbolConstantUtil.NEXT_LINE);
+            result.append(formattedLineList.get(i));
+            if (formatSQL) {
+                result.append(SymbolConstantUtil.SPACE).append(SymbolConstantUtil.SPACE).append("AS").append(SymbolConstantUtil.SPACE).append(SymbolConstantUtil.SPACE).append(column);
+            }
+            result.append(SymbolConstantUtil.ENGLISH_COMMA).append(SymbolConstantUtil.NEXT_LINE);
         }
         return StringUtils.isEmpty(result) ? result.toString() : result.deleteCharAt(result.lastIndexOf(SymbolConstantUtil.ENGLISH_COMMA)).toString();
     }
@@ -231,5 +218,15 @@ public class StringAlignUtil {
         CENTER,
         RIGHT,
         ;
+
+        public static Alignment fromName(String name) {
+            Alignment[] values = Alignment.values();
+            for (int i = 0; i < values.length; i++) {
+                if (values[i].name().equalsIgnoreCase(name)) {
+                    return values[i];
+                }
+            }
+            return null;
+        }
     }
 }
