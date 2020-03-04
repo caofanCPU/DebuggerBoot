@@ -230,7 +230,7 @@ public class VerbalExpressionUtil {
 
     /**
      * 清除空白字符
-     * ((?:\s)+)
+     * (?:\s)+
      *
      * @param source
      * @return

@@ -69,8 +69,11 @@ public class JSONUtil {
                     }
                     break;
                 case ',':
+                    resultBuilder.append(piece);
                     // 如果是",", 则断行
-                    resultBuilder.append(piece).append(SymbolConstantUtil.NEXT_LINE);
+                    if (doubleQuoteCount % 2 == 0) {
+                        resultBuilder.append(SymbolConstantUtil.NEXT_LINE);
+                    }
                     break;
                 case '}':
                 case ']':
