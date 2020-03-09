@@ -1,5 +1,6 @@
 package com.xyz.caofancpu.util.studywaitingutils;
 
+import com.xyz.caofancpu.util.commonoperateutils.NormalUseUtil;
 import com.xyz.caofancpu.util.commonoperateutils.SymbolConstantUtil;
 import com.xyz.caofancpu.util.streamoperateutils.CollectionUtil;
 import lombok.NonNull;
@@ -194,12 +195,11 @@ public class VerbalExpressionUtil {
 
     public static void main(String[] args)
             throws Exception {
-//        VerbalExpression configRegex = VerbalExpression.regex()
-//                .find("@<")
-//                .anything()
-//                .then(">@")
-//                .build();
-//        NormalUseUtil.out(regex.toString());
+        VerbalExpression regex = VerbalExpression.regex()
+                .startOfLine()
+                .then(",").oneOrMore()
+                .build();
+        NormalUseUtil.out(regex.toString());
 //        NormalUseUtil.out(convertPathToPackage("//src//mainjava//com/xyz/caofancpu/d8ger/test"));
 //        NormalUseUtil.out("cao_fan");
 //        NormalUseUtil.out(camelUnderLineNameConverter("cao_fan"));

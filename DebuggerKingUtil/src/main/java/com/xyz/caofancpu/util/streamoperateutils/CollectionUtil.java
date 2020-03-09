@@ -602,6 +602,20 @@ public class CollectionUtil extends CollectionUtils {
     }
 
     /**
+     * Find a value in a array, normally used in Enum class
+     *
+     * @param source
+     * @param function
+     * @param value
+     * @param <T>
+     * @param <F>
+     * @return
+     */
+    public static <T, F> T findAnyInArrays(T[] source, Function<? super T, ? extends F> function, @NonNull F value) {
+        return findAny(Arrays.asList(source), function, value);
+    }
+
+    /**
      * 在List中根据指定字段(函数)查找元素，找到任意一个就返回，找不到就返回null
      *
      * @param coll

@@ -22,15 +22,37 @@ import java.util.regex.Pattern;
  */
 @Slf4j
 public class StringAlignUtil {
-    public static final Pattern SQL_COLUMN_WHITE_CHAR = Pattern.compile("((?:\\s)+)");
+
+    /**
+     * White char regex
+     */
+    public static final Pattern WHITE_CHAR_PATTERN = Pattern.compile("(?:\\s)+");
+    /**
+     * Line begins with English comma regex
+     */
+    public static final Pattern START_WITH_ENGLISH_COMMA_PATTERN = Pattern.compile("^(?:,)+");
+    /**
+     * Compatibility separator pattern, support one or more lineBreak | English comma as ',' | Chinese comma as '，'
+     */
+    public static final Pattern ORIGIN_COMPATIBILITY_SEPARATOR = Pattern.compile("((?:\\n|(?:\\r\\n))|(?:,)|(?:，))+");
 
     public static void main(String[] args) {
-        String sqlText = "first_name,\n" +
-                "current_age,\n" +
-                "blog_url,\n" +
-                "graduated_school,\n" +
-                "total_assets";
+        String sqlText = "，, c\r\n d\n\n   f,, g，,      a, b";
         NormalUseUtil.out(formatSQLColumn(sqlText, Alignment.LEFT, "D8ger(", ")", false, true));
+    }
+
+    /**
+     * Handling multi lines by conventional separator
+     *
+     * @param originText
+     * @return
+     */
+    public static List<String> handleSplitMultiLines(@NonNull String originText) {
+        String legalText = originText.replaceAll(ORIGIN_COMPATIBILITY_SEPARATOR.pattern(), SymbolConstantUtil.ENGLISH_COMMA)
+                .replaceAll(WHITE_CHAR_PATTERN.pattern(), SymbolConstantUtil.EMPTY)
+                .replaceAll(START_WITH_ENGLISH_COMMA_PATTERN.pattern(), SymbolConstantUtil.EMPTY);
+        String splitSymbol = SymbolConstantUtil.ENGLISH_COMMA;
+        return CollectionUtil.splitDelimitedStringToList(legalText, splitSymbol, String::toString);
     }
 
     /**
@@ -45,9 +67,7 @@ public class StringAlignUtil {
      * @return
      */
     public static String formatSQLColumn(@NonNull String originText, Alignment formatAlignment, @NonNull String prefix, @NonNull String suffix, boolean formatSQL, boolean formatAsCamel) {
-        String legalText = SQL_COLUMN_WHITE_CHAR.matcher(originText.replaceAll(SymbolConstantUtil.CHINESE_COMMA, SymbolConstantUtil.ENGLISH_COMMA)).replaceAll(SymbolConstantUtil.EMPTY);
-        String splitSymbol = SymbolConstantUtil.ENGLISH_COMMA;
-        List<String> stringList = CollectionUtil.splitDelimitedStringToList(legalText, splitSymbol, String::toString);
+        List<String> stringList = handleSplitMultiLines(originText);
         List<String> completeFixList = CollectionUtil.transToList(stringList, item -> prefix + item + suffix);
         int singleLineMaxChars = CollectionUtil.max(completeFixList, String::length).intValue();
         if (Objects.isNull(formatAlignment)) {
