@@ -46,9 +46,9 @@ public class VerbalExpressionUtil {
     public static final Pattern CAMEL_UNDERLINE_4_NO_LOWER_CASE = Pattern.compile("^(?![a-z])[A-Z0-9\\W_]+$");
 
     /**
-     * Swagger field position order regular match expression
+     * Swagger field | interface position order regular match expression
      */
-    public static final Pattern SWAGGER_POSITION_PATTERN = Pattern.compile("((?:position)(?:\\s)*(?:\\=)(?:\\s)*(?:\\d)*)");
+    public static final Pattern SWAGGER_MODEL_PATTERN = Pattern.compile("(((?:position)|(?:order))(?:\\s)*(?:=)(?:\\s)*(?:\\d)*)");
     /**
      * Phone regex
      */
@@ -63,14 +63,14 @@ public class VerbalExpressionUtil {
     public static Pattern PWD_REGEX = Pattern.compile("^(?![a-zA-Z]+$)(?![A-Z0-9]+$)(?![A-Z\\W_]+$)(?![a-z0-9]+$)(?![a-z\\W_]+$)(?![0-9\\W_]+$)[a-zA-Z0-9\\W_]{8,30}$");
 
     /**
-     * Swagger field position order regular replacement
+     * Swagger field | interface position order regular replacement
      *
      * @param originString
      * @param replaceString
      * @return
      */
-    public static String regexHandlePositionProperty(String originString, final String replaceString) {
-        Matcher matcher = SWAGGER_POSITION_PATTERN.matcher(originString);
+    public static String regexHandleSwaggerModelProperty(String originString, final String replaceString) {
+        Matcher matcher = SWAGGER_MODEL_PATTERN.matcher(originString);
         return matcher.replaceAll(replaceString);
     }
 
