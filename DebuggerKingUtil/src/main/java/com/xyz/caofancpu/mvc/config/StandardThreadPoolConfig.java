@@ -14,7 +14,6 @@ import java.util.concurrent.ThreadPoolExecutor;
  * Author:   caofanCPU
  * Date:     2018/9/5 9:20
  */
-
 @Configuration
 @EnableAsync
 @Slf4j

@@ -134,7 +134,7 @@ public class StreamUtil {
     }
 
     /**
-     * 从Map种移除类型为文件MultipartFile/File的元素
+     * 从Map中移除类型为文件MultipartFile/File的元素
      *
      * @param paramsMap
      * @return
@@ -162,7 +162,7 @@ public class StreamUtil {
 
 
     /**
-     * 从Map种移除指定类型的元素
+     * 从数组中移除指定类型的元素
      *
      * @param paramArray
      * @param clazzArray
