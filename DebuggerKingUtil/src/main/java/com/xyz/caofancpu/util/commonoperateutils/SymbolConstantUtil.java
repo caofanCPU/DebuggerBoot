@@ -71,6 +71,16 @@ public class SymbolConstantUtil {
     public static final String ENGLISH_SEMICOLON = ";";
 
     /**
+     * 英文冒号
+     */
+    public static final String ENGLISH_COLON = ":";
+
+    /**
+     * 英文双引号
+     */
+    public static final String ENGLISH_DOUBLE_QUOTES = "\"";
+
+    /**
      * 等号
      */
     public static final String EQUAL = "=";

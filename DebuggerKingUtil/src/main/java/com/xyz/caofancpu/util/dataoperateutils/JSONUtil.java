@@ -39,7 +39,7 @@ public class JSONUtil {
     }
 
     public static String formatStandardJSON(@NonNull String source) {
-        String nonWhiteCharStr = VerbalExpressionUtil.cleanWhiteChar(source);
+        String nonWhiteCharStr = VerbalExpressionUtil.cleanJSONWhiteChar(source);
         int level = 0;
         StringBuilder resultBuilder = new StringBuilder();
         // 循环遍历每一个字符
@@ -86,6 +86,10 @@ public class JSONUtil {
                         }
                     }
                     resultBuilder.append(piece);
+                    break;
+                case ':':
+                    // 增加单个空格美化显示
+                    resultBuilder.append(piece).append(SymbolConstantUtil.SPACE);
                     break;
                 default:
                     resultBuilder.append(piece);

@@ -1,5 +1,6 @@
 package com.xyz.caofancpu.util.studywaitingutils;
 
+import com.google.common.collect.Lists;
 import com.xyz.caofancpu.util.commonoperateutils.NormalUseUtil;
 import com.xyz.caofancpu.util.commonoperateutils.SymbolConstantUtil;
 import com.xyz.caofancpu.util.streamoperateutils.CollectionUtil;
@@ -61,6 +62,21 @@ public class VerbalExpressionUtil {
      * Password validate regex, rule for C4_3 | C4_4
      */
     public static Pattern PWD_REGEX = Pattern.compile("^(?![a-zA-Z]+$)(?![A-Z0-9]+$)(?![A-Z\\W_]+$)(?![a-z0-9]+$)(?![a-z\\W_]+$)(?![0-9\\W_]+$)[a-zA-Z0-9\\W_]{8,30}$");
+
+    /**
+     * When we clear white chars, considering spaces can be part of data we should except spaces in JSON string
+     */
+    public static final Pattern WHITE_CHAR_IN_JSON_REGEX_0 = Pattern.compile("(?:[\\t\\n\\x0B\\f\\r])+");
+
+    /**
+     * Beauty JSON view regex
+     */
+    public static final Pattern WHITE_CHAR_IN_JSON_REGEX_1 = Pattern.compile("(?:\")+[ ]*[:：]+[ ]*");
+
+    /**
+     * JSON string definition regex
+     */
+    public static final Pattern JSON_STRING_JUDGE_REGEX = Pattern.compile("^(?:\\{).*(?:})$");
 
     /**
      * Swagger field | interface position order regular replacement
@@ -195,11 +211,13 @@ public class VerbalExpressionUtil {
 
     public static void main(String[] args)
             throws Exception {
-        VerbalExpression regex = VerbalExpression.regex()
-                .startOfLine()
-                .then(",").oneOrMore()
-                .build();
-        NormalUseUtil.out(regex.toString());
+        List<String> textList = Lists.newArrayList("a{}", "{}b", "{}", "{ }", "{a,    b}");
+        textList.forEach(text -> NormalUseUtil.out(VerbalExpressionUtil.JSON_STRING_JUDGE_REGEX.matcher(text).matches()));
+//        VerbalExpression regex = VerbalExpression.regex()
+//                .startOfLine()
+//                .then(",").oneOrMore()
+//                .build();
+//        NormalUseUtil.out(regex.toString());
 //        NormalUseUtil.out(convertPathToPackage("//src//mainjava//com/xyz/caofancpu/d8ger/test"));
 //        NormalUseUtil.out("cao_fan");
 //        NormalUseUtil.out(camelUnderLineNameConverter("cao_fan"));
@@ -240,5 +258,16 @@ public class VerbalExpressionUtil {
                 .space().oneOrMore()
                 .build();
         return executePatternRex(regex, source, SymbolConstantUtil.EMPTY);
+    }
+
+    /**
+     * 清除JSON字符串中的空白字符, 不应包括空格
+     *
+     * @param source
+     * @return
+     */
+    public static String cleanJSONWhiteChar(@NonNull String source) {
+        return source.replaceAll(WHITE_CHAR_IN_JSON_REGEX_0.pattern(), SymbolConstantUtil.EMPTY)
+                .replaceAll(WHITE_CHAR_IN_JSON_REGEX_1.pattern(), SymbolConstantUtil.ENGLISH_DOUBLE_QUOTES + SymbolConstantUtil.ENGLISH_COLON);
     }
 }
