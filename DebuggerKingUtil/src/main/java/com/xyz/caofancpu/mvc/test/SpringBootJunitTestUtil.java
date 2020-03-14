@@ -188,7 +188,7 @@ public class SpringBootJunitTestUtil {
         // 上传文件固定文件类型
         httpHeaders.setContentType(MediaType.MULTIPART_FORM_DATA);
 
-        HttpEntity<Map> requestEntity = new HttpEntity<>(paramMap, httpHeaders);
+        HttpEntity<MultiValueMap<String, Object>> requestEntity = new HttpEntity<>(paramMap, httpHeaders);
         ResponseEntity<JSONObject> uploadFileResponseEntity = restTemplate.postForEntity(fileAccessUrl + "/api/upload/file", requestEntity, JSONObject.class);
         JSONObject responseJSONObject = uploadFileResponseEntity.getBody();
         if (Objects.isNull(responseJSONObject)) {
@@ -263,7 +263,7 @@ public class SpringBootJunitTestUtil {
                 .andReturn()
                 .getResponse();
         byte[] fileContentByteArray = mockHttpServletResponse.getContentAsByteArray();
-        if (fileContentByteArray == null || fileContentByteArray.length == 0) {
+        if (fileContentByteArray.length == 0) {
             log.error("下载文件内容为空, 请检查!");
         } else {
             IOUtils.write(fileContentByteArray, new FileOutputStream(localOSSDownloadRoot + File.separator + fileName));
@@ -284,9 +284,6 @@ public class SpringBootJunitTestUtil {
         HttpEntity<Map> requestEntity = new HttpEntity<>(httpHeaders);
         String requestUrl = fileAccessUrl + "/api/download/file" + "?fileKey=" + fileKey;
         ResponseEntity<byte[]> downloadFileResponseEntity = restTemplate.exchange(requestUrl, HttpMethod.GET, requestEntity, byte[].class);
-        if (Objects.isNull(downloadFileResponseEntity)) {
-            throw new RuntimeException("下载文件出错, 响应为NULL");
-        }
         byte[] fileContentByteArray = downloadFileResponseEntity.getBody();
         if (fileContentByteArray == null || fileContentByteArray.length == 0) {
             log.error("下载文件内容为空, 请检查!");

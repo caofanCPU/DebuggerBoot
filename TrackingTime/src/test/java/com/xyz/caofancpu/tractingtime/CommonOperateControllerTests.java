@@ -20,7 +20,9 @@ public class CommonOperateControllerTests extends TrackingTimeApplicationTests {
             throws Exception {
         HttpHeaders httpHeaders = springBootJunitTestUtil.generateRequestHeaders();
         Cookie[] cookies = springBootJunitTestUtil.buildMockHttpServletRequestCookie();
-        springBootJunitTestUtil.execute(Maps.newHashMap(), "/testException", httpHeaders, HttpTypeEnum.POST_PARAM, cookies);
+        Map<String, Object> paramMap = Maps.newHashMap();
+        paramMap.put("id", "1000L");
+        springBootJunitTestUtil.execute(paramMap, "/testException", httpHeaders, HttpTypeEnum.POST_BODY, cookies);
     }
 
     @Test

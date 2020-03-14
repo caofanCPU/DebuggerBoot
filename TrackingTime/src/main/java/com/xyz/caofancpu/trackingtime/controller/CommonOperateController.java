@@ -3,6 +3,7 @@ package com.xyz.caofancpu.trackingtime.controller;
 import com.beust.jcommander.internal.Lists;
 import com.github.pagehelper.PageInfo;
 import com.xyz.caofancpu.mvc.config.CommonConfigValueService;
+import com.xyz.caofancpu.trackingtime.model.Area;
 import com.xyz.caofancpu.trackingtime.model.Attachment;
 import com.xyz.caofancpu.trackingtime.service.CommonOperateService;
 import com.xyz.caofancpu.trackingtime.service.SysDictService;
@@ -20,6 +21,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -142,7 +144,7 @@ public class CommonOperateController {
     @PostMapping("/testException")
     @ApiOperation(value = "测试异常", notes = "传参：无")
     @Deprecated
-    public D8Response<Object> testException()
+    public D8Response<Object> testException(@RequestBody Area area)
             throws GlobalErrorInfoException {
         throw new NullPointerException("NPE, 嘿嘿");
     }
