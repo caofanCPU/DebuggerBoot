@@ -2,7 +2,7 @@
 -- ----------------------------
 -- D8ger-Sql-Auto-Generated
 -- Table structure for `d8_smart_coding`
--- @author 帝八哥
+-- @author Power+
 -- ----------------------------
 -- DROP TABLE IF EXISTS `d8_smart_coding`;
 CREATE TABLE `d8_smart_coding`

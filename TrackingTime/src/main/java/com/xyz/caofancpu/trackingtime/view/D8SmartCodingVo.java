@@ -16,7 +16,7 @@ import java.util.Date;
 /**
  * D8SmartCodingMo对应的SwaggerApi增强Vo对象
  *
- * @author 帝八哥
+ * @author Power+
  */
 @Data
 @NoArgsConstructor

@@ -19,22 +19,22 @@ import lombok.experimental.Accessors;
 @ApiModel
 public class UserInfoVo {
 
-    @ApiModelProperty(value = "ID 用户唯一编码", required = false, example = "", position = 1)
+    @ApiModelProperty(value = "ID 用户唯一编码", required = false, example = "", position = 0)
     private Long id;
 
-    @ApiModelProperty(value = "name 姓名", required = false, example = "", position = 2)
+    @ApiModelProperty(value = "name 姓名", required = false, example = "", position = 1)
     private String name;
 
-    @ApiModelProperty(value = "age 年龄", required = false, example = "", position = 3)
+    @ApiModelProperty(value = "age 年龄", required = false, example = "", position = 2)
     private Integer age;
 
-    @ApiModelProperty(value = "job 工作", required = false, example = "", position = 4)
+    @ApiModelProperty(value = "job 工作", required = false, example = "", position = 3)
     private String job;
 
-    @ApiModelProperty(value = "pageNum", required = false, example = "1", position = 5)
+    @ApiModelProperty(value = "pageNum", required = false, example = "1", position = 4)
     private Integer pageNum;
 
-    @ApiModelProperty(value = "pageSize", required = false, example = "10", position = 6)
+    @ApiModelProperty(value = "pageSize", required = false, example = "10", position = 5)
     private Integer pageSize;
 
 }
