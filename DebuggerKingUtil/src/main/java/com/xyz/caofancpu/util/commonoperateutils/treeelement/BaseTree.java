@@ -16,7 +16,7 @@ import java.util.List;
 @Accessors(chain = true)
 @AllArgsConstructor
 @NoArgsConstructor
-public class BaseTree<C extends BaseTree> {
+public class BaseTree<C extends BaseTree<C>> {
 
     /**
      * 当前节点ID

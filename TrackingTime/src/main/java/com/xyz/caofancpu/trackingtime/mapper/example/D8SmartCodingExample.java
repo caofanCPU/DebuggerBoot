@@ -12,7 +12,7 @@ import java.util.List;
 /**
  * D8SmartCodingMo对应的Example单表操作对象
  *
- * @author Power+
+ * @author 帝八哥
  */
 public class D8SmartCodingExample {
 

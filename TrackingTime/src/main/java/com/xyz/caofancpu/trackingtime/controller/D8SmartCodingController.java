@@ -23,7 +23,7 @@ import java.util.List;
 /**
  * D8SmartCodingMo控制器
  *
- * @author Power+
+ * @author 帝八哥
  */
 @RestController
 @Api(tags = {"D8SmartCodingMo模块接口"})
@@ -34,7 +34,7 @@ public class D8SmartCodingController {
     @Resource
     private D8SmartCodingService d8SmartCodingService;
 
-    @PostMapping(value = "/virtualCoin/d8SmartCodingMo/add")
+    @PostMapping(value = "/AutoCoding/d8SmartCodingMo/add")
     @ApiOperationSupport(order = 1)
     @ApiOperation(value = "D8SmartCodingMo新增记录")
     public Object add(@Valid @RequestBody D8SmartCodingVo d8SmartCodingVo) {
@@ -44,7 +44,7 @@ public class D8SmartCodingController {
         return d8SmartCodingMo.getId();
     }
 
-    @PostMapping(value = "/virtualCoin/d8SmartCodingMo/batchAdd")
+    @PostMapping(value = "/AutoCoding/d8SmartCodingMo/batchAdd")
     @ApiOperationSupport(order = 2)
     @ApiOperation(value = "D8SmartCodingMo批量新增")
     public Object batchAdd(@Valid @RequestBody List<D8SmartCodingVo> d8SmartCodingVoList) {
@@ -55,7 +55,7 @@ public class D8SmartCodingController {
         return d8SmartCodingService.batchAdd(d8SmartCodingMoList);
     }
 
-    @PostMapping(value = "/virtualCoin/d8SmartCodingMo/queryD8SmartCodingMoList")
+    @PostMapping(value = "/AutoCoding/d8SmartCodingMo/queryD8SmartCodingMoList")
     @ApiOperationSupport(order = 3)
     @ApiOperation(value = "D8SmartCodingMo列表查询")
     public Object queryD8SmartCodingMoList(@Valid @RequestBody D8SmartCodingVo d8SmartCodingVo) {
@@ -64,7 +64,7 @@ public class D8SmartCodingController {
         return d8SmartCodingService.queryD8SmartCodingMoList(d8SmartCodingMo);
     }
 
-    @PostMapping(value = "/virtualCoin/d8SmartCodingMo/queryD8SmartCodingMoPage")
+    @PostMapping(value = "/AutoCoding/d8SmartCodingMo/queryD8SmartCodingMoPage")
     @ApiOperationSupport(order = 4)
     @ApiOperation(value = "D8SmartCodingMo分页查询")
     public Object queryD8SmartCodingMoPage(@Valid @RequestBody D8SmartCodingVo d8SmartCodingVo) {
@@ -74,7 +74,7 @@ public class D8SmartCodingController {
         return PageInfo.of(resultD8SmartCodingMoList);
     }
 
-    @PostMapping(value = "/virtualCoin/d8SmartCodingMo/update")
+    @PostMapping(value = "/AutoCoding/d8SmartCodingMo/update")
     @ApiOperationSupport(order = 5)
     @ApiOperation(value = "D8SmartCodingMo修改记录")
     public Object update(@Valid @RequestBody D8SmartCodingVo d8SmartCodingVo) {
@@ -83,7 +83,7 @@ public class D8SmartCodingController {
         return d8SmartCodingService.updateSelectiveById(d8SmartCodingMo);
     }
 
-    @PostMapping(value = "/virtualCoin/d8SmartCodingMo/batchUpdate")
+    @PostMapping(value = "/AutoCoding/d8SmartCodingMo/batchUpdate")
     @ApiOperationSupport(order = 5)
     @ApiOperation(value = "D8SmartCodingMo批量修改记录")
     public Object batchUpdate(@NotEmpty @RequestBody List<D8SmartCodingVo> d8SmartCodingVoList) {
@@ -93,7 +93,7 @@ public class D8SmartCodingController {
         return d8SmartCodingService.batchUpdateSelectiveById(d8SmartCodingList);
     }
 
-    @PostMapping(value = "/virtualCoin/d8SmartCodingMo/delete")
+    @PostMapping(value = "/AutoCoding/d8SmartCodingMo/delete")
     @ApiOperationSupport(order = 6)
     @ApiOperation(value = "D8SmartCodingMo删除记录")
     public Object delete(@Valid @RequestBody D8SmartCodingVo d8SmartCodingVo) {

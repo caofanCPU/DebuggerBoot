@@ -17,7 +17,7 @@ public class BaseTreeUtil {
      * @param collector       结果收集容器
      * @param currentElements
      */
-    public static <E extends BaseTree> void expandTreeElements(List<E> collector, List<E> currentElements) {
+    public static <E extends BaseTree<E>> void expandTreeElements(List<E> collector, List<E> currentElements) {
         if (CollectionUtil.isEmpty(currentElements)) {
             return;
         }
@@ -39,7 +39,7 @@ public class BaseTreeUtil {
      * @param depth           叶子节点深度限制
      * @param collector       结果收集容器
      */
-    public static <E extends BaseTree> void findTreeLeafElements(List<E> collector, List<E> currentElements, Integer depth) {
+    public static <E extends BaseTree<E>> void findTreeLeafElements(List<E> collector, List<E> currentElements, Integer depth) {
         if (CollectionUtil.isEmpty(currentElements)) {
             return;
         }

@@ -17,7 +17,7 @@ import java.util.List;
 @Accessors(chain = true)
 @NoArgsConstructor
 @AllArgsConstructor
-class WrapTree<I extends Comparable, E extends Serializable> {
+class WrapTree<I extends Comparable<Number>, E extends Serializable> {
     /**
      * 树元素ID, 一般为Integer/Long型
      */

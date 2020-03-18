@@ -7,7 +7,7 @@ import java.util.List;
 /**
  * D8SmartCodingMo对应的Service接口定义
  *
- * @author Power+
+ * @author 帝八哥
  */
 public interface D8SmartCodingService {
 

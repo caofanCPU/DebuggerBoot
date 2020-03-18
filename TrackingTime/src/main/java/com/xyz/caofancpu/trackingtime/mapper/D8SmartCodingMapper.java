@@ -10,7 +10,7 @@ import java.util.List;
 /**
  * D8SmartCodingMo对应的Mapper
  *
- * @author Power+
+ * @author 帝八哥
  */
 @Mapper
 public interface D8SmartCodingMapper {
