@@ -1,4 +1,4 @@
-package com.xyz.caofancpu.trackingtime.model;
+package com.xyz.caofancpu.trackingtime;
 
 import com.xyz.caofancpu.trackingtime.constant.enums.EncryptTypeEnum;
 import com.xyz.caofancpu.trackingtime.constant.enums.MarkContentStatusEnum;
@@ -18,58 +18,58 @@ public class D8SmartCoding {
     private Integer id;
 
     /**
-     * 累计得分
+     * score
      */
     private Long score;
 
     /**
-     * 昵称
+     * nickName
      */
     private String nickName;
 
     /**
-     * 是否删除
+     * deleted
      */
     private Boolean deleted;
 
     /**
-     * 注册时间
+     * registerDate
      */
     private Date registerDate;
 
     /**
-     * 试玩开始时间
+     * preStartTime
      */
     private LocalDateTime preStartTime;
 
     /**
-     * 金币
+     * exactMoney
      */
     private BigDecimal exactMoney;
 
     /**
-     * 英币
+     * englishMoney
      */
     private Double englishMoney;
 
     /**
-     * 法币
+     * frenchMoney
      */
     private Float frenchMoney;
 
 
     /**
-     * 韩币
+     * koreanMoney
      */
     private Short koreanMoney;
 
     /**
-     * 加密类型
+     * encryptType
      */
     private EncryptTypeEnum encryptType;
 
     /**
-     * 状态
+     * markContentStatus
      */
     private MarkContentStatusEnum markContentStatus;
 
