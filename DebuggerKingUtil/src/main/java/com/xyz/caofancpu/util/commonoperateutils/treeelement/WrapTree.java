@@ -25,6 +25,7 @@ public class WrapTree<I extends Comparable, E extends Serializable> implements S
 
     /**
      * 树元素父ID, 与树元素子节点集合 必须二者择一
+     * 当数据源是平铺List(从数据库查出的列表), 推荐使用pid转换
      */
     private I pid;
 
@@ -45,6 +46,7 @@ public class WrapTree<I extends Comparable, E extends Serializable> implements S
 
     /**
      * 树元素子节点集合
+     * 当树型元素是嵌套List, 推荐使用children转换
      */
     private List<WrapTree<I, E>> childElements;
 
