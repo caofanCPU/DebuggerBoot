@@ -1,15 +1,21 @@
 package com.xyz.caofancpu.utils;
 
-import com.xyz.caofancpu.model.Area;
 import com.xyz.caofancpu.util.commonoperateutils.treeelement.WrapTreeUtil;
 import com.xyz.caofancpu.util.dataoperateutils.CollectorGenerateUtil;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+import lombok.experimental.Accessors;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
 
 /**
+ * 树型结构处理工具类测试用例
  *
+ * @author caofanCPU
  */
 public class WrapTreeUtilTests {
 
@@ -115,5 +121,53 @@ public class WrapTreeUtilTests {
         });
         areaList.sort(Comparator.comparing(Area::getPid).reversed());
         return areaList;
+    }
+
+    /**
+     * @author CY_XYZ
+     */
+    @Data
+    @NoArgsConstructor
+    @AllArgsConstructor
+    @Accessors(chain = true)
+    public static class Area implements Serializable {
+
+        /**
+         * ID
+         */
+        private Integer id;
+
+        /**
+         * 名称
+         */
+        private String name;
+
+        /**
+         * pid
+         */
+        private Integer pid;
+
+        /**
+         * 节点深度
+         */
+        private Integer depth;
+
+        /**
+         * 子节点集合
+         */
+        private List<Area> children;
+
+        public Area(Integer id, String name, Integer pid) {
+            this.id = id;
+            this.name = name;
+            this.pid = pid;
+        }
+
+        public Area(Integer id, String name, Integer pid, Integer depth) {
+            this.id = id;
+            this.name = name;
+            this.pid = pid;
+            this.depth = depth;
+        }
     }
 }

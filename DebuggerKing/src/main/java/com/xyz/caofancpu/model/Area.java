@@ -12,9 +12,9 @@ import java.util.List;
  * @author CY_XYZ
  */
 @Data
-@Accessors(chain = true)
 @NoArgsConstructor
 @AllArgsConstructor
+@Accessors(chain = true)
 public class Area implements Serializable {
 
     /**

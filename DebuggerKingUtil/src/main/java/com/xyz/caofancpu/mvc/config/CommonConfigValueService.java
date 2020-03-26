@@ -14,7 +14,7 @@ import org.springframework.stereotype.Service;
 @DependsOn("initContextPropertyInitializer")
 public class CommonConfigValueService {
 
-    @Value("${server.servlet.context-path}")
+    @Value("${server.servlet.context-path:/d8ger}")
     public String contentPath;
 
     @Value("${server.port}")
@@ -55,4 +55,24 @@ public class CommonConfigValueService {
     @Value("${swagger.showApi}")
     public boolean showApi;
 
+    @Value("${http.maxPerRoute:20}")
+    public int maxPerRoute;
+
+    @Value("${http.maxTotal:200}")
+    public int maxTotal;
+
+    @Value("${http.validateAfterInactivity:30000}")
+    public int validateAfterInactivity;
+
+    @Value("${http.connectionRequestTimeout:2000}")
+    public int connectionRequestTimeout;
+
+    @Value("${http.connectTimeout:2000}")
+    public int connectTimeout;
+
+    @Value("${http.socketTimeout:4000}")
+    public int socketTimeout;
+
+    @Value("${http.idleConnection.maxIdleTime:10}")
+    public long maxIdleTime;
 }

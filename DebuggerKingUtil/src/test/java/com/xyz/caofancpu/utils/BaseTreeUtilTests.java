@@ -15,7 +15,9 @@ import java.util.stream.LongStream;
 
 
 /**
+ * 基类树形结构处理工具类
  *
+ * @author caofanCPU
  */
 public class BaseTreeUtilTests {
 

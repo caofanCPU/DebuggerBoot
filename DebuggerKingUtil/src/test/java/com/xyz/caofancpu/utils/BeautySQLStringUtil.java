@@ -3,9 +3,8 @@ package com.xyz.caofancpu.utils;
 import com.xyz.caofancpu.util.commonoperateutils.FileUtil;
 import com.xyz.caofancpu.util.streamoperateutils.CollectionUtil;
 import com.xyz.caofancpu.util.studywaitingutils.VerbalExpressionUtil;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import ru.lanwen.verbalregex.VerbalExpression;
 
 import java.util.ArrayList;
@@ -17,12 +16,8 @@ import java.util.stream.Collectors;
 /**
  * FileName: StringTemplateUtil
  */
+@Slf4j
 public class BeautySQLStringUtil {
-
-    /**
-     * LOG
-     */
-    private static final Logger logger = LoggerFactory.getLogger(BeautySQLStringUtil.class);
 
     public static final String FILE_BASE_PATH = "/Users/htuser-085/Desktop/CAOFAN/IDEA-WORK/DebuggerBoot/DebuggerKingUtil/src/main/java/com/xyz/caofancpu/util/dataoperateutils/SQLString";
 

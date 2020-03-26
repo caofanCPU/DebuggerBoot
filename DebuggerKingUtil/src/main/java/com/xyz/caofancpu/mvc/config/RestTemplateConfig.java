@@ -1,5 +1,6 @@
 package com.xyz.caofancpu.mvc.config;
 
+import org.apache.http.client.config.RequestConfig;
 import org.apache.http.config.Registry;
 import org.apache.http.config.RegistryBuilder;
 import org.apache.http.conn.socket.ConnectionSocketFactory;
@@ -7,7 +8,7 @@ import org.apache.http.conn.socket.PlainConnectionSocketFactory;
 import org.apache.http.conn.ssl.NoopHostnameVerifier;
 import org.apache.http.conn.ssl.SSLConnectionSocketFactory;
 import org.apache.http.impl.client.CloseableHttpClient;
-import org.apache.http.impl.client.HttpClients;
+import org.apache.http.impl.client.HttpClientBuilder;
 import org.apache.http.impl.conn.PoolingHttpClientConnectionManager;
 import org.apache.http.ssl.SSLContextBuilder;
 import org.springframework.boot.web.client.RestTemplateBuilder;
@@ -22,6 +23,7 @@ import java.security.KeyManagementException;
 import java.security.KeyStoreException;
 import java.security.NoSuchAlgorithmException;
 import java.security.cert.X509Certificate;
+import java.util.concurrent.TimeUnit;
 
 /**
  * FileName: RestTemplateConfig
@@ -30,6 +32,9 @@ import java.security.cert.X509Certificate;
  */
 @Configuration
 public class RestTemplateConfig {
+
+    @Resource
+    private CommonConfigValueService commonConfigValueService;
 
     @Resource
     RestTemplateBuilder restTemplateBuilder;
@@ -74,19 +79,23 @@ public class RestTemplateConfig {
         );
         Registry<ConnectionSocketFactory> registry = RegistryBuilder.<ConnectionSocketFactory>create()
                 .register("http", new PlainConnectionSocketFactory())
-                .register("https", socketFactory).build();
+                .register("https", socketFactory)
+                .build();
         PoolingHttpClientConnectionManager connectionManager = new PoolingHttpClientConnectionManager(registry);
-        connectionManager.setMaxTotal(200);
-        CloseableHttpClient httpClient = HttpClients.custom()
+        connectionManager.setDefaultMaxPerRoute(commonConfigValueService.maxPerRoute);
+        connectionManager.setMaxTotal(commonConfigValueService.maxTotal);
+        connectionManager.setValidateAfterInactivity(commonConfigValueService.validateAfterInactivity);
+        CloseableHttpClient httpClient = HttpClientBuilder.create()
                 .setSSLSocketFactory(socketFactory)
-                .setConnectionManager(connectionManager)
+                .setDefaultRequestConfig(RequestConfig.custom()
+                        .setConnectionRequestTimeout(commonConfigValueService.connectionRequestTimeout)
+                        .setConnectTimeout(commonConfigValueService.connectTimeout)
+                        .setSocketTimeout(commonConfigValueService.socketTimeout)
+                        .build()
+                )
+                .setConnectionManager(connectionManager).evictIdleConnections(commonConfigValueService.maxIdleTime, TimeUnit.SECONDS)
                 .setConnectionManagerShared(true)
                 .build();
-        HttpComponentsClientHttpRequestFactory factory = new HttpComponentsClientHttpRequestFactory();
-        factory.setConnectionRequestTimeout(30000);
-        factory.setConnectTimeout(30000);
-        factory.setReadTimeout(30000);
-        factory.setHttpClient(httpClient);
-        return new RestTemplate(factory);
+        return new RestTemplate(new HttpComponentsClientHttpRequestFactory(httpClient));
     }
 }
