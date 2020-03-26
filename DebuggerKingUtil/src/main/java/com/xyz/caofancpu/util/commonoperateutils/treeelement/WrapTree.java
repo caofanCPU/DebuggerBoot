@@ -17,29 +17,38 @@ import java.util.List;
 @Accessors(chain = true)
 @NoArgsConstructor
 @AllArgsConstructor
-class WrapTree<I extends Comparable, E extends Serializable> {
+public class WrapTree<I extends Comparable, E extends Serializable> implements Serializable {
     /**
      * 树元素ID, 一般为Integer/Long型
      */
     private I id;
+
     /**
      * 树元素父ID, 与树元素子节点集合 必须二者择一
      */
     private I pid;
+
+    /**
+     * 节点名称
+     */
+    private String name;
+
     /**
      * 节点深度, 非必须
      */
     private I depth;
+
     /**
      * 原始元素
      */
     private E element;
+
     /**
      * 树元素子节点集合
      */
     private List<WrapTree<I, E>> childElements;
 
-    boolean hasChildren() {
+    public boolean hasChildren() {
         return CollectionUtil.isNotEmpty(childElements);
     }
 }

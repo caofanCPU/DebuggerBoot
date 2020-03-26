@@ -1,7 +1,10 @@
 package com.xyz.caofancpu.utils;
 
+import com.xyz.caofancpu.util.commonoperateutils.NormalUseUtil;
+import com.xyz.caofancpu.util.commonoperateutils.treeelement.WrapTree;
 import com.xyz.caofancpu.util.commonoperateutils.treeelement.WrapTreeUtil;
 import com.xyz.caofancpu.util.dataoperateutils.CollectorGenerateUtil;
+import com.xyz.caofancpu.util.dataoperateutils.JSONUtil;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -20,7 +23,33 @@ import java.util.List;
 public class WrapTreeUtilTests {
 
     public static void main(String[] args) {
-        testCutTreeElementByDepth();
+        testInitTreeByPid();
+//        NormalUseUtil.out("\n=========================\n");
+//        testInitTreeByChildren();
+    }
+
+    /**
+     * 使用情况: 在一些第三方接口中返回的字段用'_'而非驼峰, 因而产生树[Area]转换为树[Area]的需求
+     * 根据pid装换树
+     */
+    public static void testInitTreeByPid() {
+        List<Area> areaList = buildAreaNestedList();
+        List<Area> nonNestedList = new ArrayList<>();
+        WrapTreeUtil.expandNestedListInOrder(nonNestedList, areaList, Area::getChildren);
+        List<WrapTree<Integer, Area>> resultTreeList = WrapTreeUtil.initTreeByPid(nonNestedList, Area::getPid, Area::getId, Area::getDepth, Area::getName, Boolean.TRUE);
+        NormalUseUtil.out("原始树\n" + JSONUtil.formatStandardJSON(areaList));
+        NormalUseUtil.out("转换树\n" + JSONUtil.formatStandardJSON(resultTreeList));
+    }
+
+    /**
+     * 使用情况: 在一些第三方接口中返回的字段用'_'而非驼峰, 因而产生树[Area]转换为树[Area]的需求
+     * 根据children转换树
+     */
+    public static void testInitTreeByChildren() {
+        List<Area> areaList = buildAreaNestedList();
+        List<WrapTree<Integer, Area>> resultTreeList = WrapTreeUtil.initTreeByChildren(areaList, Area::getChildren, Area::getId, Area::getDepth, Area::getName, Boolean.TRUE);
+        NormalUseUtil.out("原始树\n" + JSONUtil.formatStandardJSON(areaList));
+        NormalUseUtil.out("转换树\n" + JSONUtil.formatStandardJSON(resultTreeList));
     }
 
     public static void testExpandNestedListInOrder() {
@@ -32,35 +61,35 @@ public class WrapTreeUtilTests {
 
     public static void testCutTreeElementByDepth() {
         List<Area> areaList = buildAreaNestedList();
-        List<Area> resultList = WrapTreeUtil.cutTreeElementByDepth(areaList, Area::getChildren, Area::getDepth, 3);
+        List<Area> resultList = WrapTreeUtil.cutTreeElementByDepth(areaList, 3, Area::getChildren, Area::getDepth);
         int a = 1;
     }
 
     public static void testSelectTreeLeafElements() {
         List<Area> areaList = buildAreaNestedList();
         List<Area> resultList = new ArrayList<>();
-        WrapTreeUtil.selectRelativeTreeLeafByDepth(resultList, areaList, Area::getChildren, Area::getId, Area::getDepth, 2);
+        WrapTreeUtil.selectRelativeTreeLeafByDepth(resultList, areaList, 2, Area::getChildren, Area::getId, Area::getDepth);
         int a = 1;
     }
 
     public static void testPureSelectTreeLeafElements() {
         List<Area> areaList = buildAreaNestedList();
         List<Area> resultList = new ArrayList<>();
-        WrapTreeUtil.pureSelectRelativeTreeLeafByDepth(resultList, areaList, Area::getChildren, Area::getId, Area::getDepth, 1);
+        WrapTreeUtil.pureSelectRelativeTreeLeafByDepth(resultList, areaList, 1, Area::getChildren, Area::getId, Area::getDepth);
         int a = 1;
     }
 
     public static void testExpandTreeElements() {
         List<Area> areaList = buildAreaList();
         List<Area> resultList = new ArrayList<>();
-        WrapTreeUtil.expandTreeElements(resultList, areaList, Area::getPid, Area::getId, null);
+        WrapTreeUtil.expandTreeElements(resultList, areaList, Area::getPid, Area::getId);
         int a = 1;
     }
 
     public static void testCollectTreeLeafElements() {
         List<Area> areaList = buildAreaList();
         List<Area> resultList = new ArrayList<>();
-        WrapTreeUtil.collectRelativeTreeLeafElements(resultList, areaList, Area::getPid, Area::getId, Area::getDepth, 1);
+        WrapTreeUtil.collectRelativeTreeLeafElements(resultList, areaList, 1, Area::getPid, Area::getId, Area::getDepth);
         int a = 1;
     }
 
@@ -124,7 +153,7 @@ public class WrapTreeUtilTests {
     }
 
     /**
-     * @author CY_XYZ
+     * 区域对象
      */
     @Data
     @NoArgsConstructor

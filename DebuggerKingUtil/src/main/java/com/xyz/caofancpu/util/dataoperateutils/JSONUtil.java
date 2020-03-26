@@ -38,6 +38,22 @@ public class JSONUtil {
         return JSONObject.toJSONStringWithDateFormat(data, DateUtil.DATETIME_FORMAT_SIMPLE, SerializerFeature.WriteEnumUsingToString);
     }
 
+    /**
+     * 对象的标准JSON字符串
+     *
+     * @param source
+     * @return
+     */
+    public static String formatStandardJSON(@NonNull Object source) {
+        return formatStandardJSON(toJSONStringWithDateFormatAndEnumToString(source));
+    }
+
+    /**
+     * 格式化JSON字符串
+     *
+     * @param source
+     * @return
+     */
     public static String formatStandardJSON(@NonNull String source) {
         String nonWhiteCharStr = VerbalExpressionUtil.cleanJSONWhiteChar(source);
         int level = 0;
