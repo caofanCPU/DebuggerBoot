@@ -31,7 +31,7 @@ public class WrapTreeUtil {
      */
     public static <I extends Comparable, C extends Serializable> void expandTreeElements(List<C> collector, List<C> sourceList, @NonNull Function<? super C, ? extends I> pidFunction, @NonNull Function<? super C, ? extends I> idFunction) {
         List<WrapTree<I, C>> treeElements = initTreeByPid(sourceList, pidFunction, idFunction, null, null);
-        expandTree(collector, treeElements);
+        expandTree(collector, treeElements, WrapTree::getElement);
     }
 
     /**
@@ -232,21 +232,22 @@ public class WrapTreeUtil {
     }
 
     /**
-     * 递归展开子集
+     * 递归展开树, 得到平铺目标元素的平铺列表
      *
      * @param collector    结果搜集器
      * @param treeElements 树元素列表
+     * @param mapper       树元素操作函数
      */
-    private static <I extends Comparable, C extends Serializable> void expandTree(List<C> collector, List<WrapTree<I, C>> treeElements) {
+    public static <I extends Comparable, C extends Serializable, T extends Serializable> void expandTree(List<T> collector, List<WrapTree<I, C>> treeElements, @NonNull Function<WrapTree<I, C>, T> mapper) {
         if (CollectionUtil.isEmpty(treeElements)) {
             return;
         }
         treeElements.stream()
                 .filter(Objects::nonNull)
                 .forEach(currentElement -> {
-                    collector.add(currentElement.getElement());
+                    collector.add(mapper.apply(currentElement));
                     if (currentElement.hasChildren()) {
-                        expandTree(collector, currentElement.getChildElements());
+                        expandTree(collector, currentElement.getChildElements(), mapper);
                     }
                 });
     }

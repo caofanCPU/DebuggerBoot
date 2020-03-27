@@ -1,6 +1,8 @@
 package com.xyz.caofancpu.util.commonoperateutils.treeelement;
 
 import com.xyz.caofancpu.util.streamoperateutils.CollectionUtil;
+import io.swagger.annotations.ApiModel;
+import io.swagger.annotations.ApiModelProperty;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -16,40 +18,47 @@ import java.util.List;
  * @author caofanCPU
  */
 @Data
-@Accessors(chain = true)
 @NoArgsConstructor
 @AllArgsConstructor
+@Accessors(chain = true)
+@ApiModel
 public class WrapTree<I extends Comparable, E extends Serializable> implements Serializable {
     /**
      * 树元素ID, 一般为Integer/Long型
      */
+    @ApiModelProperty(value = "元素节点ID", example = "400", position = 1)
     private I id;
 
     /**
      * 树元素父ID, 与树元素子节点集合 必须二者择一
      * 当数据源是平铺List(从数据库查出的列表), 推荐使用pid转换
      */
+    @ApiModelProperty(value = "元素父节点ID", example = "0", position = 2)
     private I pid;
 
     /**
      * 节点名称, 非必须
      */
+    @ApiModelProperty(value = "元素节点名称", example = "节点名称", position = 3)
     private String name;
 
     /**
      * 节点深度, 非必须
      */
+    @ApiModelProperty(value = "节点深度(第几层节点)", example = "3", position = 4)
     private I depth;
 
     /**
      * 原始元素
      */
+    @ApiModelProperty(value = "原始元素, 仅后台使用", hidden = true, position = 5)
     private E element;
 
     /**
      * 树元素子节点集合
      * 当树型元素是嵌套List, 推荐使用children转换
      */
+    @ApiModelProperty(value = "子节点列表", position = 6)
     private List<WrapTree<I, E>> childElements;
 
     public boolean hasChildren() {
