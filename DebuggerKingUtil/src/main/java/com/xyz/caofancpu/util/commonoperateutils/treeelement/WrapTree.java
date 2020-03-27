@@ -12,6 +12,8 @@ import java.util.List;
 /**
  * I为id的数据类型，推荐Integer/Long
  * E为被包装的树元素类型，限制必须实现序列化
+ *
+ * @author caofanCPU
  */
 @Data
 @Accessors(chain = true)
@@ -30,7 +32,7 @@ public class WrapTree<I extends Comparable, E extends Serializable> implements S
     private I pid;
 
     /**
-     * 节点名称
+     * 节点名称, 非必须
      */
     private String name;
 
