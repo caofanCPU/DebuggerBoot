@@ -22,7 +22,7 @@ import java.util.List;
 @AllArgsConstructor
 @Accessors(chain = true)
 @ApiModel
-public class WrapTree<I extends Comparable, E extends Serializable> implements Serializable {
+public class WrapTree<I extends Comparable<I>, E extends Serializable> implements Serializable {
     /**
      * 树元素ID, 一般为Integer/Long型
      */
@@ -47,6 +47,12 @@ public class WrapTree<I extends Comparable, E extends Serializable> implements S
      */
     @ApiModelProperty(value = "节点深度(第几层节点)", example = "3", position = 4)
     private I depth;
+
+    /**
+     * 节点在子列表里的相对排序值, 非必须
+     */
+    @ApiModelProperty(value = "节点相对排序值", example = "55", position = 5)
+    private I sortNo;
 
     /**
      * 原始元素

@@ -6,6 +6,7 @@ import com.xyz.caofancpu.util.streamoperateutils.CollectionUtil;
 import lombok.NonNull;
 
 import java.io.Serializable;
+import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
@@ -24,13 +25,13 @@ public class WrapTreeUtil {
     /**
      * 对于给定的列表， 顺序遍历父节点->子节点，遍历到的元素添加到结果收集容器中
      *
-     * @param collector   结果收集容器
-     * @param sourceList  数据源
-     * @param pidFunction pid操作函数表达式
-     * @param idFunction  id操作函数表达式
+     * @param collector     结果收集容器
+     * @param nonNestedList 非嵌套平铺List数据源
+     * @param pidFunction   pid操作函数表达式
+     * @param idFunction    id操作函数表达式
      */
-    public static <I extends Comparable, C extends Serializable> void expandTreeElements(List<C> collector, List<C> sourceList, @NonNull Function<? super C, ? extends I> pidFunction, @NonNull Function<? super C, ? extends I> idFunction) {
-        List<WrapTree<I, C>> treeElements = initTreeByPid(sourceList, pidFunction, idFunction, null, null);
+    public static <I extends Comparable<I>, C extends Serializable> void expandTreeElements(List<C> collector, List<C> nonNestedList, @NonNull Function<? super C, ? extends I> pidFunction, @NonNull Function<? super C, ? extends I> idFunction) {
+        List<WrapTree<I, C>> treeElements = initTreeByPid(nonNestedList, pidFunction, idFunction, null, null, null);
         expandTree(collector, treeElements, WrapTree::getElement);
     }
 
@@ -41,56 +42,58 @@ public class WrapTreeUtil {
      * 添加到结果收集容器中
      *
      * @param collector     结果收集容器
-     * @param sourceList    数据源
+     * @param nonNestedList 数据源
      * @param depth         叶子节点深度限制
      * @param pidFunction   pid操作函数表达式
      * @param idFunction    id操作函数表达式
      * @param depthFunction depth操作函数
      */
-    public static <I extends Comparable, C extends Serializable> void collectRelativeTreeLeafElements(List<C> collector, List<C> sourceList, @NonNull I depth, @NonNull Function<? super C, ? extends I> pidFunction, @NonNull Function<? super C, ? extends I> idFunction, @NonNull Function<? super C, ? extends I> depthFunction) {
-        List<WrapTree<I, C>> treeElements = initTreeByPid(sourceList, pidFunction, idFunction, depthFunction, null);
+    public static <I extends Comparable<I>, C extends Serializable> void collectRelativeTreeLeafElements(List<C> collector, List<C> nonNestedList, @NonNull I depth, @NonNull Function<? super C, ? extends I> pidFunction, @NonNull Function<? super C, ? extends I> idFunction, @NonNull Function<? super C, ? extends I> depthFunction) {
+        List<WrapTree<I, C>> treeElements = initTreeByPid(nonNestedList, pidFunction, idFunction, depthFunction, null, null);
         collectRelativeTreeLeafByDepth(collector, treeElements, depth);
     }
 
     /**
      * 根据pid对List做一次转换 将List<C> 转换为 List<WrapTree<I, C>>
+     * 如果有节点排序值, 并且数据源中节点排序值不存在null值, 则子节点列表按照自然增序排列
      * 可用于转换结构相同但属性字段不同的'坑爹树'
      *
-     * @param nonNestedList 平铺非嵌套List作为数据源, 常见于从数据库中查出的列表
-     *                      如果是嵌套List, 首推{@link #initTreeByChildren}
-     *                      其次, 先将嵌套List折叠展开{@link #expandNestedListInOrder}
-     * @param pidFunction   pid操作函数表达式
-     * @param idFunction    id操作函数表达式
-     * @param depthFunction depth操作函数
-     * @param nameFunction  name操作函数
-     * @param abandon       是否丢弃原始元素, 传true则丢弃, 其他情况保留
+     * @param nonNestedList  平铺非嵌套List作为数据源, 常见于从数据库中查出的列表
+     *                       如果是嵌套List, 首推{@link #initTreeByChildren}
+     *                       其次, 先将嵌套List折叠展开{@link #expandNestedListInOrder}
+     * @param pidFunction    pid操作函数表达式
+     * @param idFunction     id操作函数表达式
+     * @param depthFunction  depth操作函数
+     * @param nameFunction   name操作函数
+     * @param sortNoFunction sortNo操作函数
+     * @param abandon        是否丢弃原始元素, 传true则丢弃, 其他情况保留
      * @return 树元素列表
      */
-    public static <I extends Comparable, C extends Serializable> List<WrapTree<I, C>> initTreeByPid(List<C> nonNestedList, @NonNull Function<? super C, ? extends I> pidFunction, @NonNull Function<? super C, ? extends I> idFunction, Function<? super C, ? extends I> depthFunction, Function<? super C, String> nameFunction, boolean... abandon) {
+    public static <I extends Comparable<I>, C extends Serializable> List<WrapTree<I, C>> initTreeByPid(List<C> nonNestedList, @NonNull Function<? super C, ? extends I> pidFunction, @NonNull Function<? super C, ? extends I> idFunction, Function<? super C, ? extends I> depthFunction, Function<? super C, String> nameFunction, Function<? super C, ? extends I> sortNoFunction, boolean... abandon) {
         TreeMap<I, List<C>> pidMultiMap = nonNestedList.stream()
                 .filter(Objects::nonNull)
                 .collect(TreeMap::new, (map, c) -> map.computeIfAbsent(pidFunction.apply(c), init -> Lists.newArrayList()).add(c), TreeMap::putAll);
         boolean abandonOriginElement = Objects.nonNull(abandon) && abandon.length > 0 && abandon[0];
-        return initTreeChildItems(pidMultiMap, pidMultiMap.firstKey(), abandonOriginElement, idFunction, depthFunction, nameFunction);
+        return initTreeChildItems(pidMultiMap, pidMultiMap.firstKey(), abandonOriginElement, idFunction, depthFunction, nameFunction, sortNoFunction);
     }
 
     /**
      * 对于嵌套树型结构的List，将其按照自然遍历顺序平铺展开
      *
      * @param collector        收集器
-     * @param sourceList       数据源
+     * @param nestedList       数据源
      * @param childrenFunction 子集操作函数
      */
-    public static <C extends Serializable> void expandNestedListInOrder(List<C> collector, List<C> sourceList, @NonNull Function<C, List<C>> childrenFunction) {
-        if (CollectionUtil.isEmpty(sourceList)) {
+    public static <C extends Serializable, T extends Serializable> void expandNestedListInOrder(List<T> collector, List<C> nestedList, @NonNull Function<? super C, ? extends List<C>> childrenFunction, @NonNull Function<? super C, ? extends T> mapper) {
+        if (CollectionUtil.isEmpty(nestedList)) {
             return;
         }
-        sourceList.stream()
+        nestedList.stream()
                 .filter(Objects::nonNull)
                 .forEach(currentElement -> {
-                    collector.add(currentElement);
+                    collector.add(mapper.apply(currentElement));
                     if (CollectionUtil.isNotEmpty(childrenFunction.apply(currentElement))) {
-                        expandNestedListInOrder(collector, childrenFunction.apply(currentElement), childrenFunction);
+                        expandNestedListInOrder(collector, childrenFunction.apply(currentElement), childrenFunction, mapper);
                     }
                 });
     }
@@ -108,8 +111,8 @@ public class WrapTreeUtil {
      * @param idFunction       id操作函数表达式
      * @param depthFunction    节点深度操作函数表达式
      */
-    public static <I extends Comparable, C extends Serializable> void selectRelativeTreeLeafByDepth(List<C> collector, List<C> sourceNestedList, @NonNull I depth, @NonNull Function<C, List<C>> childrenFunction, @NonNull Function<? super C, ? extends I> idFunction, @NonNull Function<? super C, ? extends I> depthFunction) {
-        List<WrapTree<I, C>> treeElements = initTreeByChildren(sourceNestedList, childrenFunction, idFunction, depthFunction, null);
+    public static <I extends Comparable<I>, C extends Serializable> void selectRelativeTreeLeafByDepth(List<C> collector, List<C> sourceNestedList, @NonNull I depth, @NonNull Function<? super C, ? extends List<C>> childrenFunction, @NonNull Function<? super C, ? extends I> idFunction, @NonNull Function<? super C, ? extends I> depthFunction) {
+        List<WrapTree<I, C>> treeElements = initTreeByChildren(sourceNestedList, childrenFunction, idFunction, depthFunction, null, null);
         collectRelativeTreeLeafByDepth(collector, treeElements, depth);
     }
 
@@ -123,7 +126,7 @@ public class WrapTreeUtil {
      * @param depthFunction    深度操作函数
      */
     @SuppressWarnings("unchecked")
-    public static <I extends Comparable, C extends Serializable> List<C> cutTreeElementByDepth(List<C> sourceNestedList, @NonNull I depth, @NonNull Function<C, List<C>> childrenFunction, @NonNull Function<? super C, ? extends I> depthFunction) {
+    public static <I extends Comparable<I>, C extends Serializable> List<C> cutTreeElementByDepth(List<C> sourceNestedList, @NonNull I depth, @NonNull Function<? super C, ? extends List<C>> childrenFunction, @NonNull Function<? super C, ? extends I> depthFunction) {
         return sourceNestedList.stream()
                 .filter(Objects::nonNull)
                 .map(currentElement -> {
@@ -172,8 +175,8 @@ public class WrapTreeUtil {
      * @param idFunction       id操作函数表达式
      * @param depthFunction    节点深度操作函数表达式
      */
-    public static <I extends Comparable, C extends Serializable> void pureSelectRelativeTreeLeafByDepth(List<C> collector, List<C> sourceNestedList, @NonNull I depth, @NonNull Function<C, List<C>> childrenFunction, @NonNull Function<? super C, ? extends I> idFunction, @NonNull Function<? super C, ? extends I> depthFunction) {
-        List<WrapTree<I, C>> treeElements = initTreeByChildren(sourceNestedList, childrenFunction, idFunction, depthFunction, null);
+    public static <I extends Comparable<I>, C extends Serializable> void pureSelectRelativeTreeLeafByDepth(List<C> collector, List<C> sourceNestedList, @NonNull I depth, @NonNull Function<? super C, ? extends List<C>> childrenFunction, @NonNull Function<? super C, ? extends I> idFunction, @NonNull Function<? super C, ? extends I> depthFunction) {
+        List<WrapTree<I, C>> treeElements = initTreeByChildren(sourceNestedList, childrenFunction, idFunction, depthFunction, null, null);
         collectRelativeTreeLeafByDepth(collector, treeElements, depth);
         if (CollectionUtil.isEmpty(collector)) {
             return;
@@ -198,6 +201,7 @@ public class WrapTreeUtil {
 
     /**
      * 对嵌套树型结构的List进行装饰，根据children递归设置树元素子集
+     * 如果有节点排序值, 并且数据源中节点排序值不存在null值, 则子节点列表按照自然增序排列
      * 将List<C> 包装为 List<WrapTree<I, C>>
      *
      * @param sourceNestedList 嵌套的List数据源
@@ -205,20 +209,24 @@ public class WrapTreeUtil {
      * @param idFunction       id操作函数表达式
      * @param depthFunction    depth操作函数表达式
      * @param nameFunction     name操作函数表达式
+     * @param sortNoFunction   sortNo操作函数表达式
      * @param abandon          是否丢弃原始元素, 传true则丢弃, 其他情况保留
      * @return 树元素列表
      */
-    public static <I extends Comparable, C extends Serializable> List<WrapTree<I, C>> initTreeByChildren(List<C> sourceNestedList, @NonNull Function<C, List<C>> childrenFunction, @NonNull Function<? super C, ? extends I> idFunction, Function<? super C, ? extends I> depthFunction, Function<? super C, String> nameFunction, boolean... abandon) {
+    public static <I extends Comparable<I>, C extends Serializable> List<WrapTree<I, C>> initTreeByChildren(List<C> sourceNestedList, @NonNull Function<? super C, ? extends List<C>> childrenFunction, @NonNull Function<? super C, ? extends I> idFunction, Function<? super C, ? extends I> depthFunction, Function<? super C, String> nameFunction, Function<? super C, ? extends I> sortNoFunction, boolean... abandon) {
         if (CollectionUtil.isEmpty(sourceNestedList)) {
             return Lists.newArrayList();
         }
         boolean abandonOriginElement = Objects.nonNull(abandon) && abandon.length > 0 && abandon[0];
-        return sourceNestedList.stream()
+        List<WrapTree<I, C>> resultTreeList = sourceNestedList.stream()
                 .filter(Objects::nonNull)
                 .map(currentElement -> {
                     WrapTree<I, C> wrapTree = new WrapTree<I, C>().setId(idFunction.apply(currentElement));
                     if (Objects.nonNull(depthFunction)) {
                         wrapTree.setDepth(depthFunction.apply(currentElement));
+                    }
+                    if (Objects.nonNull(sortNoFunction)) {
+                        wrapTree.setSortNo(sortNoFunction.apply(currentElement));
                     }
                     if (Objects.nonNull(nameFunction)) {
                         wrapTree.setName(nameFunction.apply(currentElement));
@@ -226,9 +234,14 @@ public class WrapTreeUtil {
                     if (!abandonOriginElement) {
                         wrapTree.setElement(currentElement);
                     }
-                    return wrapTree.setChildElements(initTreeByChildren(childrenFunction.apply(currentElement), childrenFunction, idFunction, depthFunction, nameFunction, abandon));
+                    wrapTree.setChildElements(initTreeByChildren(childrenFunction.apply(currentElement), childrenFunction, idFunction, depthFunction, nameFunction, sortNoFunction, abandon));
+                    // 内层排序
+                    sort(wrapTree.getChildElements(), sortNoFunction);
+                    return wrapTree;
                 })
                 .collect(Collectors.toList());
+        // 最外层排序
+        return sort(resultTreeList, sortNoFunction);
     }
 
     /**
@@ -238,7 +251,7 @@ public class WrapTreeUtil {
      * @param treeElements 树元素列表
      * @param mapper       树元素操作函数
      */
-    public static <I extends Comparable, C extends Serializable, T extends Serializable> void expandTree(List<T> collector, List<WrapTree<I, C>> treeElements, @NonNull Function<WrapTree<I, C>, T> mapper) {
+    public static <I extends Comparable<I>, C extends Serializable, T extends Serializable> void expandTree(List<T> collector, List<WrapTree<I, C>> treeElements, @NonNull Function<WrapTree<I, C>, T> mapper) {
         if (CollectionUtil.isEmpty(treeElements)) {
             return;
         }
@@ -263,7 +276,7 @@ public class WrapTreeUtil {
      * @param depth        叶子节点深度限制
      */
     @SuppressWarnings("unchecked")
-    private static <I extends Comparable, C extends Serializable> void collectRelativeTreeLeafByDepth(List<C> collector, List<WrapTree<I, C>> treeElements, @NonNull I depth) {
+    private static <I extends Comparable<I>, C extends Serializable> void collectRelativeTreeLeafByDepth(List<C> collector, List<WrapTree<I, C>> treeElements, @NonNull I depth) {
         if (CollectionUtil.isEmpty(treeElements)) {
             return;
         }
@@ -283,6 +296,7 @@ public class WrapTreeUtil {
 
     /**
      * 根据pid递归设置树元素子集
+     * 如果有节点排序值, 并且数据源中节点排序值不存在null值, 则子节点列表按照自然增序排列
      *
      * @param pidMultiMap          分类Map
      * @param pid                  pid
@@ -290,19 +304,23 @@ public class WrapTreeUtil {
      * @param idFunction           id操作函数
      * @param depthFunction        depth操作函数
      * @param nameFunction         name操作函数
+     * @param sortNoFunction       sortNo操作函数
      * @return 树元素列表
      */
-    private static <I extends Comparable, C extends Serializable> List<WrapTree<I, C>> initTreeChildItems(Map<I, List<C>> pidMultiMap, @NonNull I pid, boolean abandonOriginElement, @NonNull Function<? super C, ? extends I> idFunction, Function<? super C, ? extends I> depthFunction, Function<? super C, String> nameFunction) {
+    private static <I extends Comparable<I>, C extends Serializable> List<WrapTree<I, C>> initTreeChildItems(Map<I, List<C>> pidMultiMap, @NonNull I pid, boolean abandonOriginElement, @NonNull Function<? super C, ? extends I> idFunction, Function<? super C, ? extends I> depthFunction, Function<? super C, String> nameFunction, Function<? super C, ? extends I> sortNoFunction) {
         List<C> currentList = pidMultiMap.get(pid);
         if (CollectionUtil.isEmpty(currentList)) {
             return Lists.newArrayList();
         }
-        return currentList.stream()
+        List<WrapTree<I, C>> resultTreeList = currentList.stream()
                 .filter(Objects::nonNull)
                 .map(cItem -> {
                     WrapTree<I, C> wrapTree = new WrapTree<I, C>().setPid(pid).setId(idFunction.apply(cItem));
                     if (Objects.nonNull(depthFunction)) {
                         wrapTree.setDepth(depthFunction.apply(cItem));
+                    }
+                    if (Objects.nonNull(sortNoFunction)) {
+                        wrapTree.setSortNo(sortNoFunction.apply(cItem));
                     }
                     if (Objects.nonNull(nameFunction)) {
                         wrapTree.setName(nameFunction.apply(cItem));
@@ -310,10 +328,31 @@ public class WrapTreeUtil {
                     if (!abandonOriginElement) {
                         wrapTree.setElement(cItem);
                     }
-                    wrapTree.setChildElements(initTreeChildItems(pidMultiMap, idFunction.apply(cItem), abandonOriginElement, idFunction, depthFunction, nameFunction));
+                    wrapTree.setChildElements(initTreeChildItems(pidMultiMap, idFunction.apply(cItem), abandonOriginElement, idFunction, depthFunction, nameFunction, sortNoFunction));
+                    // 内层排序
+                    sort(wrapTree.getChildElements(), sortNoFunction);
                     return wrapTree;
                 })
                 .collect(Collectors.toList());
+        // 最外层排序
+        return sort(resultTreeList, sortNoFunction);
+    }
+
+    /**
+     * 根据节点排序值函数排序
+     *
+     * @param currentChildren 当前子节点列表
+     * @param sortNoFunction  节点排序值函数
+     */
+    private static <I extends Comparable<I>, C extends Serializable> List<WrapTree<I, C>> sort(List<WrapTree<I, C>> currentChildren, Function<? super C, ? extends I> sortNoFunction) {
+        if (Objects.nonNull(sortNoFunction)) {
+            // 子节点列表自然增序
+            List<I> currentChildrenSortNoList = CollectionUtil.filterAndTransList(currentChildren, Objects::isNull, WrapTree::getSortNo);
+            if (CollectionUtil.isEmpty(currentChildrenSortNoList) && CollectionUtil.isNotEmpty(currentChildren) && currentChildren.size() > 1) {
+                currentChildren.sort(Comparator.comparing(WrapTree::getSortNo));
+            }
+        }
+        return currentChildren;
     }
 
 }
