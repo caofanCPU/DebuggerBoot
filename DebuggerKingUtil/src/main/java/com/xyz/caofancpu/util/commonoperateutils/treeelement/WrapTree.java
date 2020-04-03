@@ -22,6 +22,7 @@ import java.util.List;
 @AllArgsConstructor
 @Accessors(chain = true)
 @ApiModel
+@Deprecated
 public class WrapTree<I extends Comparable<I>, E extends Serializable> implements Serializable {
     /**
      * 树元素ID, 一般为Integer/Long型

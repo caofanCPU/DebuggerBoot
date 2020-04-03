@@ -16,6 +16,7 @@ import java.util.List;
 @Accessors(chain = true)
 @AllArgsConstructor
 @NoArgsConstructor
+@Deprecated
 public class BaseTree<C extends BaseTree> {
 
     /**

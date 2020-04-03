@@ -10,6 +10,7 @@ import java.util.Objects;
  * 要求：想实现树操作的元素需继承BaseTree
  */
 @SuppressWarnings("unchecked")
+@Deprecated
 public class BaseTreeUtil {
 
     /**
