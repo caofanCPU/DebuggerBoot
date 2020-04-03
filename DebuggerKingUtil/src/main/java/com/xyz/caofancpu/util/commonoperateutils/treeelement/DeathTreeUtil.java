@@ -32,8 +32,8 @@ public class DeathTreeUtil {
      * @param idFunction    id操作函数表达式
      */
     public static <I extends Comparable<I>, C extends Serializable> void expandTreeElements(List<C> collector, List<C> nonNestedList, @NonNull Function<? super C, ? extends I> pidFunction, @NonNull Function<? super C, ? extends I> idFunction) {
-        List<WrapTree<I, C>> treeElements = initTreeByPid(nonNestedList, pidFunction, idFunction, null, null, null);
-        expandTree(collector, treeElements, WrapTree::getElement);
+        List<DeathTree<I, C>> treeElements = initTreeByPid(nonNestedList, pidFunction, idFunction, null, null, null);
+        expandTree(collector, treeElements, DeathTree::getElement);
     }
 
     /**
@@ -50,7 +50,7 @@ public class DeathTreeUtil {
      * @param depthFunction depth操作函数
      */
     public static <I extends Comparable<I>, C extends Serializable> void collectRelativeTreeLeafElements(List<C> collector, List<C> nonNestedList, @NonNull I depth, @NonNull Function<? super C, ? extends I> pidFunction, @NonNull Function<? super C, ? extends I> idFunction, @NonNull Function<? super C, ? extends I> depthFunction) {
-        List<WrapTree<I, C>> treeElements = initTreeByPid(nonNestedList, pidFunction, idFunction, depthFunction, null, null);
+        List<DeathTree<I, C>> treeElements = initTreeByPid(nonNestedList, pidFunction, idFunction, depthFunction, null, null);
         collectRelativeTreeLeafByDepth(collector, treeElements, depth);
     }
 
@@ -70,7 +70,7 @@ public class DeathTreeUtil {
      * @param abandon        是否丢弃原始元素, 传true则丢弃, 其他情况保留
      * @return 树元素列表
      */
-    public static <I extends Comparable<I>, C extends Serializable> List<WrapTree<I, C>> initTreeByPid(List<C> nonNestedList, @NonNull Function<? super C, ? extends I> pidFunction, @NonNull Function<? super C, ? extends I> idFunction, Function<? super C, ? extends I> depthFunction, Function<? super C, String> nameFunction, Function<? super C, ? extends I> sortNoFunction, boolean... abandon) {
+    public static <I extends Comparable<I>, C extends Serializable> List<DeathTree<I, C>> initTreeByPid(List<C> nonNestedList, @NonNull Function<? super C, ? extends I> pidFunction, @NonNull Function<? super C, ? extends I> idFunction, Function<? super C, ? extends I> depthFunction, Function<? super C, String> nameFunction, Function<? super C, ? extends I> sortNoFunction, boolean... abandon) {
         TreeMap<I, List<C>> pidMultiMap = nonNestedList.stream()
                 .filter(Objects::nonNull)
                 .collect(TreeMap::new, (map, c) -> map.computeIfAbsent(pidFunction.apply(c), init -> Lists.newArrayList()).add(c), TreeMap::putAll);
@@ -113,7 +113,7 @@ public class DeathTreeUtil {
      * @param depthFunction    节点深度操作函数表达式
      */
     public static <I extends Comparable<I>, C extends Serializable> void selectRelativeTreeLeafByDepth(List<C> collector, List<C> sourceNestedList, @NonNull I depth, @NonNull Function<? super C, ? extends List<C>> childrenFunction, @NonNull Function<? super C, ? extends I> idFunction, @NonNull Function<? super C, ? extends I> depthFunction) {
-        List<WrapTree<I, C>> treeElements = initTreeByChildren(sourceNestedList, childrenFunction, idFunction, depthFunction, null, null);
+        List<DeathTree<I, C>> treeElements = initTreeByChildren(sourceNestedList, childrenFunction, idFunction, depthFunction, null, null);
         collectRelativeTreeLeafByDepth(collector, treeElements, depth);
     }
 
@@ -126,7 +126,6 @@ public class DeathTreeUtil {
      * @param childrenFunction 子集获取函数
      * @param depthFunction    深度操作函数
      */
-    @SuppressWarnings("unchecked")
     public static <I extends Comparable<I>, C extends Serializable> List<C> cutTreeElementByDepth(List<C> sourceNestedList, @NonNull I depth, @NonNull Function<? super C, ? extends List<C>> childrenFunction, @NonNull Function<? super C, ? extends I> depthFunction) {
         return sourceNestedList.stream()
                 .filter(Objects::nonNull)
@@ -177,7 +176,7 @@ public class DeathTreeUtil {
      * @param depthFunction    节点深度操作函数表达式
      */
     public static <I extends Comparable<I>, C extends Serializable> void pureSelectRelativeTreeLeafByDepth(List<C> collector, List<C> sourceNestedList, @NonNull I depth, @NonNull Function<? super C, ? extends List<C>> childrenFunction, @NonNull Function<? super C, ? extends I> idFunction, @NonNull Function<? super C, ? extends I> depthFunction) {
-        List<WrapTree<I, C>> treeElements = initTreeByChildren(sourceNestedList, childrenFunction, idFunction, depthFunction, null, null);
+        List<DeathTree<I, C>> treeElements = initTreeByChildren(sourceNestedList, childrenFunction, idFunction, depthFunction, null, null);
         collectRelativeTreeLeafByDepth(collector, treeElements, depth);
         if (CollectionUtil.isEmpty(collector)) {
             return;
@@ -214,31 +213,31 @@ public class DeathTreeUtil {
      * @param abandon          是否丢弃原始元素, 传true则丢弃, 其他情况保留
      * @return 树元素列表
      */
-    public static <I extends Comparable<I>, C extends Serializable> List<WrapTree<I, C>> initTreeByChildren(List<C> sourceNestedList, @NonNull Function<? super C, ? extends List<C>> childrenFunction, @NonNull Function<? super C, ? extends I> idFunction, Function<? super C, ? extends I> depthFunction, Function<? super C, String> nameFunction, Function<? super C, ? extends I> sortNoFunction, boolean... abandon) {
+    public static <I extends Comparable<I>, C extends Serializable> List<DeathTree<I, C>> initTreeByChildren(List<C> sourceNestedList, @NonNull Function<? super C, ? extends List<C>> childrenFunction, @NonNull Function<? super C, ? extends I> idFunction, Function<? super C, ? extends I> depthFunction, Function<? super C, String> nameFunction, Function<? super C, ? extends I> sortNoFunction, boolean... abandon) {
         if (CollectionUtil.isEmpty(sourceNestedList)) {
             return Lists.newArrayList();
         }
         boolean abandonOriginElement = Objects.nonNull(abandon) && abandon.length > 0 && abandon[0];
-        List<WrapTree<I, C>> resultTreeList = sourceNestedList.stream()
+        List<DeathTree<I, C>> resultTreeList = sourceNestedList.stream()
                 .filter(Objects::nonNull)
                 .map(currentElement -> {
-                    WrapTree<I, C> wrapTree = new WrapTree<I, C>().setId(idFunction.apply(currentElement));
+                    DeathTree<I, C> deathTree = new DeathTree<I, C>().setId(idFunction.apply(currentElement));
                     if (Objects.nonNull(depthFunction)) {
-                        wrapTree.setDepth(depthFunction.apply(currentElement));
+                        deathTree.setDepth(depthFunction.apply(currentElement));
                     }
                     if (Objects.nonNull(sortNoFunction)) {
-                        wrapTree.setSortNo(sortNoFunction.apply(currentElement));
+                        deathTree.setSortNo(sortNoFunction.apply(currentElement));
                     }
                     if (Objects.nonNull(nameFunction)) {
-                        wrapTree.setName(nameFunction.apply(currentElement));
+                        deathTree.setName(nameFunction.apply(currentElement));
                     }
                     if (!abandonOriginElement) {
-                        wrapTree.setElement(currentElement);
+                        deathTree.setElement(currentElement);
                     }
-                    wrapTree.setChildElements(initTreeByChildren(childrenFunction.apply(currentElement), childrenFunction, idFunction, depthFunction, nameFunction, sortNoFunction, abandon));
+                    deathTree.setChildElements(initTreeByChildren(childrenFunction.apply(currentElement), childrenFunction, idFunction, depthFunction, nameFunction, sortNoFunction, abandon));
                     // 内层排序
-                    sort(wrapTree.getChildElements(), sortNoFunction);
-                    return wrapTree;
+                    sort(deathTree.getChildElements(), sortNoFunction);
+                    return deathTree;
                 })
                 .collect(Collectors.toList());
         // 最外层排序
@@ -252,7 +251,7 @@ public class DeathTreeUtil {
      * @param treeElements 树元素列表
      * @param mapper       树元素操作函数
      */
-    public static <I extends Comparable<I>, C extends Serializable, T extends Serializable> void expandTree(List<T> collector, List<WrapTree<I, C>> treeElements, @NonNull Function<WrapTree<I, C>, T> mapper) {
+    public static <I extends Comparable<I>, C extends Serializable, T extends Serializable> void expandTree(List<T> collector, List<DeathTree<I, C>> treeElements, @NonNull Function<DeathTree<I, C>, T> mapper) {
         if (CollectionUtil.isEmpty(treeElements)) {
             return;
         }
@@ -276,8 +275,7 @@ public class DeathTreeUtil {
      * @param treeElements 树元素列表
      * @param depth        叶子节点深度限制
      */
-    @SuppressWarnings("unchecked")
-    private static <I extends Comparable<I>, C extends Serializable> void collectRelativeTreeLeafByDepth(List<C> collector, List<WrapTree<I, C>> treeElements, @NonNull I depth) {
+    private static <I extends Comparable<I>, C extends Serializable> void collectRelativeTreeLeafByDepth(List<C> collector, List<DeathTree<I, C>> treeElements, @NonNull I depth) {
         if (CollectionUtil.isEmpty(treeElements)) {
             return;
         }
@@ -308,31 +306,31 @@ public class DeathTreeUtil {
      * @param sortNoFunction       sortNo操作函数
      * @return 树元素列表
      */
-    private static <I extends Comparable<I>, C extends Serializable> List<WrapTree<I, C>> initTreeChildItems(Map<I, List<C>> pidMultiMap, @NonNull I pid, boolean abandonOriginElement, @NonNull Function<? super C, ? extends I> idFunction, Function<? super C, ? extends I> depthFunction, Function<? super C, String> nameFunction, Function<? super C, ? extends I> sortNoFunction) {
+    private static <I extends Comparable<I>, C extends Serializable> List<DeathTree<I, C>> initTreeChildItems(Map<I, List<C>> pidMultiMap, @NonNull I pid, boolean abandonOriginElement, @NonNull Function<? super C, ? extends I> idFunction, Function<? super C, ? extends I> depthFunction, Function<? super C, String> nameFunction, Function<? super C, ? extends I> sortNoFunction) {
         List<C> currentList = pidMultiMap.get(pid);
         if (CollectionUtil.isEmpty(currentList)) {
             return Lists.newArrayList();
         }
-        List<WrapTree<I, C>> resultTreeList = currentList.stream()
+        List<DeathTree<I, C>> resultTreeList = currentList.stream()
                 .filter(Objects::nonNull)
                 .map(cItem -> {
-                    WrapTree<I, C> wrapTree = new WrapTree<I, C>().setPid(pid).setId(idFunction.apply(cItem));
+                    DeathTree<I, C> deathTree = new DeathTree<I, C>().setPid(pid).setId(idFunction.apply(cItem));
                     if (Objects.nonNull(depthFunction)) {
-                        wrapTree.setDepth(depthFunction.apply(cItem));
+                        deathTree.setDepth(depthFunction.apply(cItem));
                     }
                     if (Objects.nonNull(sortNoFunction)) {
-                        wrapTree.setSortNo(sortNoFunction.apply(cItem));
+                        deathTree.setSortNo(sortNoFunction.apply(cItem));
                     }
                     if (Objects.nonNull(nameFunction)) {
-                        wrapTree.setName(nameFunction.apply(cItem));
+                        deathTree.setName(nameFunction.apply(cItem));
                     }
                     if (!abandonOriginElement) {
-                        wrapTree.setElement(cItem);
+                        deathTree.setElement(cItem);
                     }
-                    wrapTree.setChildElements(initTreeChildItems(pidMultiMap, idFunction.apply(cItem), abandonOriginElement, idFunction, depthFunction, nameFunction, sortNoFunction));
+                    deathTree.setChildElements(initTreeChildItems(pidMultiMap, idFunction.apply(cItem), abandonOriginElement, idFunction, depthFunction, nameFunction, sortNoFunction));
                     // 内层排序
-                    sort(wrapTree.getChildElements(), sortNoFunction);
-                    return wrapTree;
+                    sort(deathTree.getChildElements(), sortNoFunction);
+                    return deathTree;
                 })
                 .collect(Collectors.toList());
         // 最外层排序
@@ -345,12 +343,12 @@ public class DeathTreeUtil {
      * @param currentChildren 当前子节点列表
      * @param sortNoFunction  节点排序值函数
      */
-    private static <I extends Comparable<I>, C extends Serializable> List<WrapTree<I, C>> sort(List<WrapTree<I, C>> currentChildren, Function<? super C, ? extends I> sortNoFunction) {
+    private static <I extends Comparable<I>, C extends Serializable> List<DeathTree<I, C>> sort(List<DeathTree<I, C>> currentChildren, Function<? super C, ? extends I> sortNoFunction) {
         if (Objects.nonNull(sortNoFunction)) {
             // 子节点列表自然增序
-            List<I> currentChildrenSortNoList = CollectionUtil.filterAndTransList(currentChildren, Objects::isNull, WrapTree::getSortNo);
+            List<I> currentChildrenSortNoList = CollectionUtil.filterAndTransList(currentChildren, Objects::isNull, DeathTree::getSortNo);
             if (CollectionUtil.isEmpty(currentChildrenSortNoList) && CollectionUtil.isNotEmpty(currentChildren) && currentChildren.size() > 1) {
-                currentChildren.sort(Comparator.comparing(WrapTree::getSortNo));
+                currentChildren.sort(Comparator.comparing(DeathTree::getSortNo));
             }
         }
         return currentChildren;

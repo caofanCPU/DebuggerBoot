@@ -23,7 +23,7 @@ import java.util.List;
 @Accessors(chain = true)
 @ApiModel
 @Deprecated
-public class WrapTree<I extends Comparable<I>, E extends Serializable> implements Serializable {
+public class DeathTree<I extends Comparable<I>, E extends Serializable> implements Serializable {
     /**
      * 树元素ID, 一般为Integer/Long型
      */
@@ -66,7 +66,7 @@ public class WrapTree<I extends Comparable<I>, E extends Serializable> implement
      * 当树型元素是嵌套List, 推荐使用children转换
      */
     @ApiModelProperty(value = "子节点列表", position = 6)
-    private List<WrapTree<I, E>> childElements;
+    private List<DeathTree<I, E>> childElements;
 
     public boolean hasChildren() {
         return CollectionUtil.isNotEmpty(childElements);

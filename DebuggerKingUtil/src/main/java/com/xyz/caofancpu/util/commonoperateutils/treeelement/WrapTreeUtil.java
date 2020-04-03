@@ -34,7 +34,6 @@ public class WrapTreeUtil {
      * @param depthFunction    深度操作函数
      * @param <S>              S元素必须可序列化
      */
-    @SuppressWarnings("unchecked")
     public static <I extends Comparable<I>, S extends Serializable> List<S> cutTreeElementByDepth(
             List<S> sourceNestedList,
             @NonNull I depth,
@@ -189,8 +188,8 @@ public class WrapTreeUtil {
     /**
      * 对于树型列表, 寻找子树
      *
-     * @param nestedTreeElements
-     * @param targetRootId
+     * @param nestedTreeElements 嵌套树数据源
+     * @param targetRootId       目标子根节点
      * @return
      */
     public static <I extends Comparable<I>, C> C findSubTree(
@@ -214,7 +213,7 @@ public class WrapTreeUtil {
      * @param childrenFunction   子集操作函数
      * @param mapper             树元素操作函数
      */
-    public static <I extends Comparable<I>, C, T> void expandTree(
+    public static <C, T> void expandTree(
             List<T> collector,
             List<C> nestedTreeElements,
             @NonNull Function<? super C, ? extends List<C>> childrenFunction,
@@ -360,7 +359,6 @@ public class WrapTreeUtil {
      * @param depthFunction      深度操作函数
      * @param mapper             结果搜集操作函数
      */
-    @SuppressWarnings("unchecked")
     private static <I extends Comparable<I>, C, T> void collectRelativeTreeLeafByDepth(
             List<T> collector,
             List<C> nestedTreeElements,
