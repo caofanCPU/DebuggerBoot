@@ -20,7 +20,7 @@ import java.util.stream.Collectors;
  * 树形List操作工具类
  * 要求： E必须具备id, [pid/children]字段, 主键可比较
  *
- * @author ht-caofan
+ * @author caofanCPU
  */
 public class WrapTreeUtil {
 
