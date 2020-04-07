@@ -223,7 +223,7 @@
         WHERE `id` = #{id}
     </update>
 
-    <!-- 11.根据条件删除记录 -->
+    <!-- 11.根据ID删除记录 -->
     <delete id="deleteByPrimaryKey">
         DELETE
         FROM `user_info`

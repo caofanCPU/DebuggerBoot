@@ -16,9 +16,11 @@ import org.springframework.cloud.client.loadbalancer.LoadBalanced;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.client.HttpComponentsClientHttpRequestFactory;
+import org.springframework.http.converter.StringHttpMessageConverter;
 import org.springframework.web.client.RestTemplate;
 
 import javax.annotation.Resource;
+import java.nio.charset.StandardCharsets;
 import java.security.KeyManagementException;
 import java.security.KeyStoreException;
 import java.security.NoSuchAlgorithmException;
@@ -96,6 +98,8 @@ public class RestTemplateConfig {
                 .setConnectionManager(connectionManager).evictIdleConnections(commonConfigValueService.maxIdleTime, TimeUnit.SECONDS)
                 .setConnectionManagerShared(true)
                 .build();
-        return new RestTemplate(new HttpComponentsClientHttpRequestFactory(httpClient));
+        RestTemplate restTemplate = new RestTemplate(new HttpComponentsClientHttpRequestFactory(httpClient));
+        restTemplate.getMessageConverters().add(0, new StringHttpMessageConverter(StandardCharsets.UTF_8));
+        return restTemplate;
     }
 }

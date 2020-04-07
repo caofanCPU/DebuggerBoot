@@ -7,7 +7,6 @@ import com.xyz.caofancpu.util.result.GlobalErrorInfoEnum;
 import com.xyz.caofancpu.util.result.GlobalErrorInfoException;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpEntity;
@@ -20,6 +19,7 @@ import org.springframework.web.context.request.RequestAttributes;
 import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
 
+import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import java.util.HashMap;
 import java.util.List;
@@ -40,7 +40,7 @@ public class RestTemplateUtil2 {
      * 对于多个restTemplate的情形, 使用@Autowired + @Qualifier注解
      * 使用服务名访问
      */
-    @Autowired
+    @Resource
     @Qualifier(value = "restTemplate")
     private RestTemplate restTemplate;
 
@@ -48,7 +48,7 @@ public class RestTemplateUtil2 {
      * 对于多个restTemplate的情形, 使用@Autowired + @Qualifier注解
      * 使用IP:port访问
      */
-    @Autowired
+    @Resource
     @Qualifier(value = "zuulRestTemplate")
     private RestTemplate zuulRestTemplate;
 

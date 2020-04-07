@@ -14,7 +14,6 @@ import com.xyz.caofancpu.util.result.D8Response;
 import com.xyz.caofancpu.util.result.GlobalErrorInfoException;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.DependsOn;
 import org.springframework.stereotype.Service;
 import org.springframework.web.context.request.RequestAttributes;
@@ -45,10 +44,10 @@ public class CommonOperateServiceImpl implements CommonOperateService {
     @Resource
     private RestTemplateUtil restTemplateUtil;
 
-    @Autowired
+    @Resource
     private CommonConfigValueService commonConfigValueService;
 
-    @Autowired
+    @Resource
     private MSUrlConfigValueService msUrlConfigValueService;
 
     @Override

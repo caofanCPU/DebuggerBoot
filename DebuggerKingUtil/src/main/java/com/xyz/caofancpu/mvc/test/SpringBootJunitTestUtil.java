@@ -10,7 +10,6 @@ import com.xyz.caofancpu.util.dataoperateutils.JSONUtil;
 import lombok.NonNull;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.io.IOUtils;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.io.FileSystemResource;
 import org.springframework.http.HttpEntity;
@@ -33,6 +32,7 @@ import org.springframework.web.client.RestTemplate;
 import org.springframework.web.context.WebApplicationContext;
 
 import javax.annotation.PostConstruct;
+import javax.annotation.Resource;
 import javax.servlet.http.Cookie;
 import java.io.File;
 import java.io.FileOutputStream;
@@ -56,7 +56,7 @@ public class SpringBootJunitTestUtil {
 
     private MockMvc mvc;
 
-    @Autowired
+    @Resource
     private WebApplicationContext context;
 
     /**
@@ -64,13 +64,16 @@ public class SpringBootJunitTestUtil {
      */
     @Value("${ms.file.url}")
     public String fileAccessUrl;
-    @Autowired
+
+    @Resource
     private RestTemplate restTemplate;
+
     /**
      * SSO访问地址
      */
     @Value("${ms.sso.url}")
     private String ssoAccessUrl;
+
     /**
      * LOCAL磁盘下载文件夹, 根据自身环境修改开发环境配置文件
      */

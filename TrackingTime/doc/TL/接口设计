@@ -11,3 +11,23 @@
 - Encrypt Content
 - Decrypt Content
 - CodeUrl
+
+```
+(backup: autoCode -> {
+    var1: insertWithIdSelective
+          selectByExampleWithBLOBs
+          updateByExampleWithBLOBs
+          updateByPrimaryKeyWithBLOBs
+          selectByPrimaryKey
+          deleteByPrimaryKey
+          updateByPrimaryKey
+    var2: @ID, @SECOND_MAIN_KEY
+          @UNIQ(group, order), @INDEX, @UNIQ_INDEX(group, order),
+          @NOTNULL, @DEFAULT,
+          @BLOB
+    var3: CreateTime | UpdateTime(, bug?) 禁用配置
+    var4: caofanCPU-branch, private
+    var5: digital automatic
+    var6: bug fix, d8gerDir?
+})
+```
