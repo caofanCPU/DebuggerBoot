@@ -587,11 +587,13 @@ public class CollectionUtil extends CollectionUtils {
 
     /**
      * 转换为Map-Value
+     * {@link #transToMap}
      *
      * @param values
      * @param kFunction
      * @return
      */
+    @Deprecated
     public static <E, K> Map<K, E> transToMap(Iterable<E> values, Function<? super E, ? extends K> kFunction) {
         if (Objects.isNull(values)) {
             return Collections.emptyMap();
@@ -602,20 +604,32 @@ public class CollectionUtil extends CollectionUtils {
     }
 
     /**
-     * 转换为Map-Value, 重复KEY将抛出异常
+     * 转换为Map-Value
      *
-     * @param mapColl
-     * @param values
+     * @param source
      * @param kFunction
      * @return
      */
-    public static <E, K, M extends Map<K, E>> M transToMap(Supplier<M> mapColl, Iterable<E> values, Function<? super E, ? extends K> kFunction) {
-        if (Objects.isNull(values)) {
+    public static <E, K> Map<K, E> transToMap(Collection<E> source, Function<? super E, ? extends K> kFunction) {
+        if (isEmpty(source)) {
+            return Collections.emptyMap();
+        }
+        return source.stream().filter(Objects::nonNull).collect(Collectors.toMap(kFunction, Function.identity()));
+    }
+
+    /**
+     * 转换为Map-Value, 重复KEY将抛出异常
+     *
+     * @param mapColl
+     * @param source
+     * @param kFunction
+     * @return
+     */
+    public static <E, K, M extends Map<K, E>> M transToMap(Supplier<M> mapColl, Collection<E> source, Function<? super E, ? extends K> kFunction) {
+        if (isEmpty(source)) {
             return mapColl.get();
         }
-        return StreamSupport.stream(values.spliterator(), Boolean.FALSE)
-                .filter(Objects::nonNull)
-                .collect(Collectors.toMap(kFunction, Function.identity(), nonDuplicateKey(), mapColl));
+        return source.stream().filter(Objects::nonNull).collect(Collectors.toMap(kFunction, Function.identity(), nonDuplicateKey(), mapColl));
     }
 
 
@@ -623,35 +637,31 @@ public class CollectionUtil extends CollectionUtils {
      * 转换为Map-Value, 允许重复KEY
      *
      * @param mapColl
-     * @param values
+     * @param source
      * @param kFunction
      * @return
      */
-    public static <E, K, M extends Map<K, E>> M transToMapEnhance(Supplier<M> mapColl, Iterable<E> values, Function<? super E, ? extends K> kFunction) {
-        if (Objects.isNull(values)) {
+    public static <E, K, M extends Map<K, E>> M transToMapEnhance(Supplier<M> mapColl, Collection<E> source, Function<? super E, ? extends K> kFunction) {
+        if (isEmpty(source)) {
             return mapColl.get();
         }
-        return StreamSupport.stream(values.spliterator(), Boolean.FALSE)
-                .filter(Objects::nonNull)
-                .collect(Collectors.toMap(kFunction, Function.identity(), enableNewOnDuplicateKey(), mapColl));
+        return source.stream().filter(Objects::nonNull).collect(Collectors.toMap(kFunction, Function.identity(), enableNewOnDuplicateKey(), mapColl));
     }
 
 
     /**
      * 转换为Map-Value
      *
-     * @param values
+     * @param source
      * @param kFunction
      * @param vFunction
      * @return
      */
-    public static <E, K, V> Map<K, V> transToMap(Iterable<E> values, Function<? super E, ? extends K> kFunction, Function<? super E, ? extends V> vFunction) {
-        if (Objects.isNull(values)) {
+    public static <E, K, V> Map<K, V> transToMap(Collection<E> source, Function<? super E, ? extends K> kFunction, Function<? super E, ? extends V> vFunction) {
+        if (isEmpty(source)) {
             return Collections.emptyMap();
         }
-        return StreamSupport.stream(values.spliterator(), Boolean.FALSE)
-                .filter(Objects::nonNull)
-                .collect(Collectors.toMap(kFunction, vFunction));
+        return source.stream().filter(Objects::nonNull).collect(Collectors.toMap(kFunction, vFunction));
     }
 
 
@@ -659,34 +669,57 @@ public class CollectionUtil extends CollectionUtils {
      * 转换为Map-Value, 重复KEY将抛出异常
      *
      * @param mapColl
-     * @param values
+     * @param source
      * @param kFunction
      * @param vFunction
      * @return
      */
-    public static <E, K, V, M extends Map<K, V>> M transToMap(Supplier<M> mapColl, Iterable<E> values, Function<? super E, ? extends K> kFunction, Function<? super E, ? extends V> vFunction) {
-        if (Objects.isNull(values)) {
+    public static <E, K, V, M extends Map<K, V>> M transToMap(Supplier<M> mapColl, Collection<E> source, Function<? super E, ? extends K> kFunction, Function<? super E, ? extends V> vFunction) {
+        if (isEmpty(source)) {
             return mapColl.get();
         }
-        return StreamSupport.stream(values.spliterator(), Boolean.FALSE)
-                .filter(Objects::nonNull)
-                .collect(Collectors.toMap(kFunction, vFunction, nonDuplicateKey(), mapColl));
+        return source.stream().filter(Objects::nonNull).collect(Collectors.toMap(kFunction, vFunction, nonDuplicateKey(), mapColl));
+    }
+
+    /**
+     * 转换为Map-Value, 重复KEY将抛出异常
+     * 支持参考校准
+     * 示例: adjustmentReferKeys有5个id, 但是source中只有4个id对应的数据
+     * 返回Map.keys中仍然保持5个id, 缺少的id对应的value为空列表
+     *
+     * @param mapColl
+     * @param vColl
+     * @param source
+     * @param adjustmentReferKeys 校准参考key集合
+     * @param kFunction
+     * @param vFunction
+     * @return
+     */
+    public static <E, K, V, C extends Collection<V>, M extends Map<K, C>> M transToMap(Supplier<M> mapColl, Supplier<C> vColl, Collection<E> source, Set<K> adjustmentReferKeys, Function<? super E, ? extends K> kFunction, Function<? super E, ? extends C> vFunction) {
+        if (isEmpty(source)) {
+            return mapColl.get();
+        }
+        M resultMap = source.stream().filter(Objects::nonNull).collect(Collectors.toMap(kFunction, vFunction, nonDuplicateKey(), mapColl));
+        if (isNotEmpty(adjustmentReferKeys)) {
+            adjustmentReferKeys.forEach(k -> resultMap.putIfAbsent(k, vColl.get()));
+        }
+        return resultMap;
     }
 
     /**
      * 可以将两层嵌套List，转换为Map<K, List<V>>，按照K叠加List<V>
      *
      * @param mapColl
-     * @param values
+     * @param source
      * @param kFunction
      * @param vFunction
      * @return
      */
-    public static <E, K, V, M extends Map<K, List<V>>> M transToMapByMerge(Supplier<M> mapColl, Iterable<E> values, Function<? super E, K> kFunction, Function<? super E, List<V>> vFunction) {
-        if (Objects.isNull(values)) {
+    public static <E, K, V, M extends Map<K, List<V>>> M transToMapByMerge(Supplier<M> mapColl, Collection<E> source, Function<? super E, K> kFunction, Function<? super E, List<V>> vFunction) {
+        if (isEmpty(source)) {
             return mapColl.get();
         }
-        return StreamSupport.stream(values.spliterator(), Boolean.FALSE)
+        return source.stream()
                 .filter(Objects::nonNull)
                 .collect(Collectors.toMap(
                         kFunction,
@@ -697,7 +730,6 @@ public class CollectionUtil extends CollectionUtils {
                         },
                         mapColl)
                 );
-
     }
 
     /**
