@@ -1,7 +1,6 @@
 package com.xyz.caofancpu.util.streamoperateutils;
 
 
-import com.google.common.collect.Lists;
 import lombok.NonNull;
 import net.sourceforge.pinyin4j.PinyinHelper;
 import org.apache.commons.collections.CollectionUtils;
@@ -47,7 +46,7 @@ public class CollectionUtil extends CollectionUtils {
      * @return
      */
     @SuppressWarnings("unchecked")
-    public static <E, C extends Collection<E>> C union(Supplier<C> resultColl, Collection<E> a, Collection<E> b) {
+    public static <E, C extends Collection<E>> C union(Supplier<C> resultColl, @NonNull Collection<E> a, @NonNull Collection<E> b) {
         C result = resultColl.get();
         union(a, b).forEach(item -> result.add((E) item));
         return result;
@@ -64,7 +63,7 @@ public class CollectionUtil extends CollectionUtils {
      * @return
      */
     @SuppressWarnings("unchecked")
-    public static <E, C extends Collection<E>> C intersection(Supplier<C> resultColl, Collection<E> a, Collection<E> b) {
+    public static <E, C extends Collection<E>> C intersection(Supplier<C> resultColl, @NonNull Collection<E> a, @NonNull Collection<E> b) {
         C result = resultColl.get();
         intersection(a, b).forEach(item -> result.add((E) item));
         return result;
@@ -81,7 +80,7 @@ public class CollectionUtil extends CollectionUtils {
      * @return
      */
     @SuppressWarnings("unchecked")
-    public static <E, C extends Collection<E>> C disjunction(Supplier<C> resultColl, Collection<E> a, Collection<E> b) {
+    public static <E, C extends Collection<E>> C disjunction(Supplier<C> resultColl, @NonNull Collection<E> a, @NonNull Collection<E> b) {
         C result = resultColl.get();
         disjunction(a, b).forEach(item -> result.add((E) item));
         return result;
@@ -98,7 +97,7 @@ public class CollectionUtil extends CollectionUtils {
      * @return
      */
     @SuppressWarnings("unchecked")
-    public static <E, C extends Collection<E>> C subtract(Supplier<C> resultColl, Collection<E> a, Collection<E> b) {
+    public static <E, C extends Collection<E>> C subtract(Supplier<C> resultColl, @NonNull Collection<E> a, @NonNull Collection<E> b) {
         C result = resultColl.get();
         subtract(a, b).forEach(item -> result.add((E) item));
         return result;
@@ -113,7 +112,7 @@ public class CollectionUtil extends CollectionUtils {
      * @param <T>
      * @return
      */
-    public static <F extends Number, T> BigDecimal sum(Collection<T> coll, Function<? super T, ? extends F> numberValueFunction) {
+    public static <F extends Number, T> BigDecimal sum(@NonNull Collection<T> coll, Function<? super T, ? extends F> numberValueFunction) {
         double sum = coll.stream()
                 .filter(Objects::nonNull)
                 .map(numberValueFunction)
@@ -131,7 +130,7 @@ public class CollectionUtil extends CollectionUtils {
      * @param <T>
      * @return
      */
-    public static <F extends Number, T> BigDecimal average(Collection<T> coll, Function<? super T, ? extends F> numberValueFunction) {
+    public static <F extends Number, T> BigDecimal average(@NonNull Collection<T> coll, Function<? super T, ? extends F> numberValueFunction) {
         Double average = coll.stream()
                 .filter(Objects::nonNull)
                 .map(numberValueFunction)
@@ -148,7 +147,7 @@ public class CollectionUtil extends CollectionUtils {
      * @param <T>
      * @return
      */
-    public static <F extends Number, T> BigDecimal max(Collection<T> coll, Function<? super T, ? extends F> numberValueFunction) {
+    public static <F extends Number, T> BigDecimal max(@NonNull Collection<T> coll, Function<? super T, ? extends F> numberValueFunction) {
         double max = coll.stream()
                 .filter(Objects::nonNull)
                 .map(numberValueFunction)
@@ -167,7 +166,7 @@ public class CollectionUtil extends CollectionUtils {
      * @param <T>
      * @return
      */
-    public static <F extends Number, T> BigDecimal min(Collection<T> coll, Function<? super T, ? extends F> numberValueFunction) {
+    public static <F extends Number, T> BigDecimal min(@NonNull Collection<T> coll, Function<? super T, ? extends F> numberValueFunction) {
         double min = coll.stream()
                 .filter(Objects::nonNull)
                 .map(numberValueFunction)
@@ -187,6 +186,9 @@ public class CollectionUtil extends CollectionUtils {
      * @return
      */
     public static <T, F> Set<F> probeRepeatValueSet(Collection<T> coll, Function<? super T, F> mapper) {
+        if (isEmpty(coll)) {
+            return Collections.emptySet();
+        }
         List<F> elementList = transToList(coll, mapper);
         List<F> withoutNullElementList = transToList(elementList, Function.identity());
         Set<F> noRepeatElementSet = new HashSet<>(withoutNullElementList);
@@ -194,7 +196,7 @@ public class CollectionUtil extends CollectionUtils {
     }
 
     /**
-     * 将按照分隔符固定拼接的[数字]字符串转换为指定[数字或其他类型]类型的List
+     * 将按照分隔符固定拼接的字符串转换为指定[数字或其他类型]类型的List
      *
      * @param source
      * @param splitSymbol
@@ -228,6 +230,9 @@ public class CollectionUtil extends CollectionUtils {
      * @return HashSet
      */
     public static <E, R> Set<R> transToSet(Collection<E> source, Function<? super E, ? extends R> mapper) {
+        if (isEmpty(source)) {
+            return Collections.emptySet();
+        }
         return source.stream().filter(Objects::nonNull).map(mapper).collect(Collectors.toSet());
     }
 
@@ -239,6 +244,9 @@ public class CollectionUtil extends CollectionUtils {
      * @return ArrayList
      */
     public static <E, R> List<R> transToList(Collection<E> source, Function<? super E, ? extends R> mapper) {
+        if (isEmpty(source)) {
+            return Collections.emptyList();
+        }
         return source.stream().filter(Objects::nonNull).map(mapper).collect(Collectors.toList());
     }
 
@@ -251,6 +259,9 @@ public class CollectionUtil extends CollectionUtils {
      * @return C
      */
     public static <E, R, C extends Collection<R>> C transToCollection(Supplier<C> resultColl, Collection<E> source, Function<? super E, ? extends R> mapper) {
+        if (isEmpty(source)) {
+            return resultColl.get();
+        }
         return source.stream().filter(Objects::nonNull).map(mapper).collect(Collectors.toCollection(resultColl));
     }
 
@@ -263,6 +274,9 @@ public class CollectionUtil extends CollectionUtils {
      * @return 平铺后收集到的List
      */
     public static <E, R> List<R> transToListWithFlatMap(Collection<E> source, Function<? super E, ? extends List<R>> mapper) {
+        if (isEmpty(source)) {
+            return Collections.emptyList();
+        }
         return source.stream().filter(Objects::nonNull).map(mapper).flatMap(List::stream).collect(Collectors.toList());
     }
 
@@ -275,6 +289,9 @@ public class CollectionUtil extends CollectionUtils {
      * @return 平铺后收集到的List
      */
     public static <E, R> Set<R> transToSetWithFlatMap(Collection<E> source, Function<? super E, ? extends List<R>> mapper) {
+        if (isEmpty(source)) {
+            return Collections.emptySet();
+        }
         return source.stream().filter(Objects::nonNull).map(mapper).flatMap(List::stream).collect(Collectors.toSet());
     }
 
@@ -287,6 +304,9 @@ public class CollectionUtil extends CollectionUtils {
      * @return HashSet
      */
     public static <F, T> Set<F> filterAndTransSet(Collection<T> coll, Predicate<? super T> predicate, Function<? super T, ? extends F> mapper) {
+        if (isEmpty(coll)) {
+            return Collections.emptySet();
+        }
         return coll.stream().filter(Objects::nonNull).filter(predicate).map(mapper).collect(Collectors.toSet());
     }
 
@@ -300,6 +320,9 @@ public class CollectionUtil extends CollectionUtils {
      * @return HashSet
      */
     public static <F, T> Set<F> removeAndTransSet(Collection<T> coll, Predicate<? super T> removePredicate, Function<? super T, ? extends F> mapper) {
+        if (isEmpty(coll)) {
+            return Collections.emptySet();
+        }
         return coll.stream().filter(Objects::nonNull).filter(item -> !removePredicate.test(item)).map(mapper).collect(Collectors.toSet());
     }
 
@@ -312,6 +335,9 @@ public class CollectionUtil extends CollectionUtils {
      * @return ArrayList
      */
     public static <F, T> List<F> filterAndTransList(Collection<T> coll, Predicate<? super T> predicate, Function<? super T, ? extends F> mapper) {
+        if (isEmpty(coll)) {
+            return Collections.emptyList();
+        }
         return coll.stream().filter(Objects::nonNull).filter(predicate).map(mapper).collect(Collectors.toList());
     }
 
@@ -325,6 +351,9 @@ public class CollectionUtil extends CollectionUtils {
      * @return ArrayList
      */
     public static <F, T> List<F> removeAndTransList(Collection<T> coll, Predicate<? super T> removePredicate, Function<? super T, ? extends F> mapper) {
+        if (isEmpty(coll)) {
+            return Collections.emptyList();
+        }
         return coll.stream().filter(Objects::nonNull).filter(item -> !removePredicate.test(item)).map(mapper).collect(Collectors.toList());
     }
 
@@ -332,13 +361,16 @@ public class CollectionUtil extends CollectionUtils {
      * 根据元素字段满足一定条件执行过滤, 并转换为指定集合
      *
      * @param resultColl       结果收集容器
-     * @param sourceColl       原始数据源
+     * @param source           原始数据源
      * @param survivePredicate 保留条件
      * @param mapper           对筛选出元素进行计算的函数
      * @return R
      */
-    public static <T, F, R extends Collection<F>> R filterAndTransColl(Supplier<R> resultColl, Collection<T> sourceColl, Predicate<? super T> survivePredicate, Function<? super T, ? extends F> mapper) {
-        return sourceColl.stream().filter(Objects::nonNull).filter(survivePredicate).map(mapper).collect(Collectors.toCollection(resultColl));
+    public static <T, F, R extends Collection<F>> R filterAndTransColl(Supplier<R> resultColl, Collection<T> source, Predicate<? super T> survivePredicate, Function<? super T, ? extends F> mapper) {
+        if (isEmpty(source)) {
+            return resultColl.get();
+        }
+        return source.stream().filter(Objects::nonNull).filter(survivePredicate).map(mapper).collect(Collectors.toCollection(resultColl));
     }
 
     /**
@@ -346,13 +378,16 @@ public class CollectionUtil extends CollectionUtils {
      * 本方法与{@link #filterAndTransColl}筛选逻辑是相反的, 结果是互补的
      *
      * @param resultColl      结果收集容器
-     * @param sourceColl      原始数据源
+     * @param source          原始数据源
      * @param removePredicate 剔除条件
      * @param mapper          对筛选出元素进行计算的函数
      * @return R
      */
-    public static <T, F, R extends Collection<F>> R removeAndTransColl(Supplier<R> resultColl, Collection<T> sourceColl, Predicate<? super T> removePredicate, Function<? super T, ? extends F> mapper) {
-        return sourceColl.stream().filter(Objects::nonNull).filter(item -> !removePredicate.test(item)).map(mapper).collect(Collectors.toCollection(resultColl));
+    public static <T, F, R extends Collection<F>> R removeAndTransColl(Supplier<R> resultColl, Collection<T> source, Predicate<? super T> removePredicate, Function<? super T, ? extends F> mapper) {
+        if (isEmpty(source)) {
+            return resultColl.get();
+        }
+        return source.stream().filter(Objects::nonNull).filter(item -> !removePredicate.test(item)).map(mapper).collect(Collectors.toCollection(resultColl));
     }
 
 
@@ -364,6 +399,9 @@ public class CollectionUtil extends CollectionUtils {
      * @return
      */
     public static <E, R> List<R> distinctList(Collection<E> source, Function<? super E, ? extends R> mapper) {
+        if (isEmpty(source)) {
+            return Collections.emptyList();
+        }
         return source.stream().filter(Objects::nonNull).map(mapper).distinct().collect(Collectors.toList());
     }
 
@@ -400,6 +438,9 @@ public class CollectionUtil extends CollectionUtils {
      * @return
      */
     public static <E, K> Map<K, List<E>> groupIndexToMap(Collection<E> source, Function<? super E, ? extends K> kFunction) {
+        if (isEmpty(source)) {
+            return Collections.emptyMap();
+        }
         return source.stream().filter(Objects::nonNull).collect(Collectors.groupingBy(kFunction));
     }
 
@@ -415,7 +456,31 @@ public class CollectionUtil extends CollectionUtils {
      * @return
      */
     public static <E, K, V> Map<K, List<V>> groupIndexToMap(Collection<E> source, Function<? super E, ? extends K> kFunction, Function<? super E, ? extends V> vFunction) {
+        if (isEmpty(source)) {
+            return Collections.emptyMap();
+        }
         return source.stream().filter(Objects::nonNull).collect(Collectors.groupingBy(kFunction, HashMap::new, Collectors.mapping(vFunction, Collectors.toList())));
+    }
+
+    /**
+     * 分组转换为Map<K, List<V>>, 支持key函数, value函数, 底层默认HashMap<K, ArrayList<V>>
+     * Map中会包含所有的key, 对应的List<V>可能为空列表(非null)
+     *
+     * @param source
+     * @param kFunction
+     * @param vFunction
+     * @param <E>
+     * @param <K>
+     * @param <V>
+     * @return
+     */
+    public static <E, K, V> Map<K, List<V>> groupIndexToMapWithAllKey(Collection<E> source, Function<? super E, ? extends K> kFunction, Function<? super E, ? extends V> vFunction) {
+        if (isEmpty(source)) {
+            return Collections.emptyMap();
+        }
+        Map<K, List<V>> resultMap = source.stream().filter(Objects::nonNull).collect(Collectors.groupingBy(kFunction, HashMap::new, Collectors.mapping(vFunction, Collectors.toList())));
+        transToSet(source, kFunction).forEach(k -> resultMap.putIfAbsent(k, Collections.emptyList()));
+        return resultMap;
     }
 
     /**
@@ -427,6 +492,9 @@ public class CollectionUtil extends CollectionUtils {
      * @return
      */
     public static <E, K, M extends Map<K, List<E>>> M groupIndexToMap(Supplier<M> mapColl, Collection<E> source, Function<? super E, ? extends K> kFunction) {
+        if (isEmpty(source)) {
+            return mapColl.get();
+        }
         return source.stream().filter(Objects::nonNull).collect(Collectors.groupingBy(kFunction, mapColl, Collectors.toList()));
     }
 
@@ -439,6 +507,9 @@ public class CollectionUtil extends CollectionUtils {
      * @param kFunction
      */
     public static <E, K, M extends Map<K, C>, C extends Collection<E>> M groupIndexToMap(Supplier<M> mapColl, Supplier<C> vColl, Collection<E> source, Function<? super E, ? extends K> kFunction) {
+        if (isEmpty(source)) {
+            return mapColl.get();
+        }
         return source.stream().filter(Objects::nonNull).collect(Collectors.groupingBy(kFunction, mapColl, Collectors.toCollection(vColl)));
     }
 
@@ -454,8 +525,33 @@ public class CollectionUtil extends CollectionUtils {
      * @return
      */
     public static <E, K, V, M extends Map<K, C>, C extends Collection<V>> M groupIndexToMap(Supplier<M> mapColl, Supplier<C> vColl, Collection<E> source, Function<? super E, ? extends K> kGroupFunction, Function<? super E, ? extends V> vFunction) {
+        if (isEmpty(source)) {
+            return mapColl.get();
+        }
         return source.stream().filter(Objects::nonNull).collect(
                 Collectors.groupingBy(kGroupFunction, mapColl, Collectors.mapping(vFunction, Collectors.toCollection(vColl))));
+    }
+
+    /**
+     * 分组转换为指定Map<K, 指定的List<V>>，例如TreeMap<K, LinkedList<V>>/LinkedHashMap<K, LinkedList<V>>
+     * 并且可对原始数组元素进行计算(转化)为其他对象
+     * Map中会包含所有的key, 对应的List<V>可能为空列表(非null)
+     *
+     * @param mapColl
+     * @param vColl
+     * @param source
+     * @param kGroupFunction
+     * @param vFunction
+     * @return
+     */
+    public static <E, K, V, M extends Map<K, C>, C extends Collection<V>> M groupIndexToMapWithAllKey(Supplier<M> mapColl, Supplier<C> vColl, Collection<E> source, Function<? super E, ? extends K> kGroupFunction, Function<? super E, ? extends V> vFunction) {
+        if (isEmpty(source)) {
+            return mapColl.get();
+        }
+        M resultMap = source.stream().filter(Objects::nonNull).collect(
+                Collectors.groupingBy(kGroupFunction, mapColl, Collectors.mapping(vFunction, Collectors.toCollection(vColl))));
+        transToSet(source, kGroupFunction).forEach(k -> resultMap.putIfAbsent(k, vColl.get()));
+        return resultMap;
     }
 
     /**
@@ -465,7 +561,10 @@ public class CollectionUtil extends CollectionUtils {
      * @param kFunction
      * @return
      */
-    public static <E, K> Map<K, E> transToMap(@NonNull Iterable<E> values, Function<? super E, ? extends K> kFunction) {
+    public static <E, K> Map<K, E> transToMap(Iterable<E> values, Function<? super E, ? extends K> kFunction) {
+        if (Objects.isNull(values)) {
+            return Collections.emptyMap();
+        }
         return StreamSupport.stream(values.spliterator(), Boolean.FALSE)
                 .filter(Objects::nonNull)
                 .collect(Collectors.toMap(kFunction, Function.identity()));
@@ -479,7 +578,10 @@ public class CollectionUtil extends CollectionUtils {
      * @param kFunction
      * @return
      */
-    public static <E, K, M extends Map<K, E>> M transToMap(Supplier<M> mapColl, @NonNull Iterable<E> values, Function<? super E, ? extends K> kFunction) {
+    public static <E, K, M extends Map<K, E>> M transToMap(Supplier<M> mapColl, Iterable<E> values, Function<? super E, ? extends K> kFunction) {
+        if (Objects.isNull(values)) {
+            return mapColl.get();
+        }
         return StreamSupport.stream(values.spliterator(), Boolean.FALSE)
                 .filter(Objects::nonNull)
                 .collect(Collectors.toMap(kFunction, Function.identity(), nonDuplicateKey(), mapColl));
@@ -494,7 +596,10 @@ public class CollectionUtil extends CollectionUtils {
      * @param kFunction
      * @return
      */
-    public static <E, K, M extends Map<K, E>> M transToMapEnhance(Supplier<M> mapColl, @NonNull Iterable<E> values, Function<? super E, ? extends K> kFunction) {
+    public static <E, K, M extends Map<K, E>> M transToMapEnhance(Supplier<M> mapColl, Iterable<E> values, Function<? super E, ? extends K> kFunction) {
+        if (Objects.isNull(values)) {
+            return mapColl.get();
+        }
         return StreamSupport.stream(values.spliterator(), Boolean.FALSE)
                 .filter(Objects::nonNull)
                 .collect(Collectors.toMap(kFunction, Function.identity(), enableNewOnDuplicateKey(), mapColl));
@@ -509,7 +614,10 @@ public class CollectionUtil extends CollectionUtils {
      * @param vFunction
      * @return
      */
-    public static <E, K, V> Map<K, V> transToMap(@NonNull Iterable<E> values, Function<? super E, ? extends K> kFunction, Function<? super E, ? extends V> vFunction) {
+    public static <E, K, V> Map<K, V> transToMap(Iterable<E> values, Function<? super E, ? extends K> kFunction, Function<? super E, ? extends V> vFunction) {
+        if (Objects.isNull(values)) {
+            return Collections.emptyMap();
+        }
         return StreamSupport.stream(values.spliterator(), Boolean.FALSE)
                 .filter(Objects::nonNull)
                 .collect(Collectors.toMap(kFunction, vFunction));
@@ -525,7 +633,10 @@ public class CollectionUtil extends CollectionUtils {
      * @param vFunction
      * @return
      */
-    public static <E, K, V, M extends Map<K, V>> M transToMap(Supplier<M> mapColl, @NonNull Iterable<E> values, Function<? super E, ? extends K> kFunction, Function<? super E, ? extends V> vFunction) {
+    public static <E, K, V, M extends Map<K, V>> M transToMap(Supplier<M> mapColl, Iterable<E> values, Function<? super E, ? extends K> kFunction, Function<? super E, ? extends V> vFunction) {
+        if (Objects.isNull(values)) {
+            return mapColl.get();
+        }
         return StreamSupport.stream(values.spliterator(), Boolean.FALSE)
                 .filter(Objects::nonNull)
                 .collect(Collectors.toMap(kFunction, vFunction, nonDuplicateKey(), mapColl));
@@ -546,10 +657,15 @@ public class CollectionUtil extends CollectionUtils {
         }
         return StreamSupport.stream(values.spliterator(), Boolean.FALSE)
                 .filter(Objects::nonNull)
-                .collect(Collectors.toMap(kFunction, vFunction, (list1, list2) -> {
-                    list1.addAll(list2);
-                    return list1;
-                }, mapColl));
+                .collect(Collectors.toMap(
+                        kFunction,
+                        vFunction,
+                        (list1, list2) -> {
+                            list1.addAll(list2);
+                            return list1;
+                        },
+                        mapColl)
+                );
 
     }
 
@@ -575,7 +691,7 @@ public class CollectionUtil extends CollectionUtils {
      * @return
      */
     public static <T> String join(Collection<T> coll, String separator) {
-        if (CollectionUtil.isEmpty(coll)) {
+        if (isEmpty(coll)) {
             return StringUtils.EMPTY;
         }
         if (Objects.isNull(separator)) {
@@ -612,6 +728,9 @@ public class CollectionUtil extends CollectionUtils {
      * @return
      */
     public static <T, F> T findAnyInArrays(T[] source, Function<? super T, ? extends F> function, @NonNull F value) {
+        if (ArrayUtils.isEmpty(source)) {
+            return null;
+        }
         return findAny(Arrays.asList(source), function, value);
     }
 
@@ -624,6 +743,9 @@ public class CollectionUtil extends CollectionUtils {
      * @return
      */
     public static <T, F> T findAny(Collection<T> coll, Function<? super T, ? extends F> function, @NonNull F value) {
+        if (isEmpty(coll)) {
+            return null;
+        }
         return coll.stream().filter(item -> value.equals(function.apply(item))).findAny().orElse(null);
     }
 
@@ -636,18 +758,25 @@ public class CollectionUtil extends CollectionUtils {
      * @return
      */
     public static <T, F> T findFirst(Collection<T> coll, Function<? super T, ? extends F> function, @NonNull F value) {
+        if (isEmpty(coll)) {
+            return null;
+        }
         return coll.stream().filter(item -> value.equals(function.apply(item))).findFirst().orElse(null);
     }
 
     /**
-     * 根据指定条件查找元素，返回找到的第一个元素，找不到就返回null
+     * 根据指定条件查找元素，返回找到的第一个非null元素，找不到就返回null
+     * 不支持查找null元素
      *
      * @param coll
      * @param predicate
      * @return
      */
     public static <T> T findFirst(Collection<T> coll, Predicate<? super T> predicate) {
-        return coll.stream().filter(predicate).findFirst().orElse(null);
+        if (isEmpty(coll)) {
+            return null;
+        }
+        return coll.stream().filter(Objects::nonNull).filter(predicate).findFirst().orElse(null);
     }
 
     /**
@@ -660,7 +789,7 @@ public class CollectionUtil extends CollectionUtils {
      */
     public static <T, F> List<T> findAll(Collection<T> coll, Function<? super T, ? extends F> function, @NonNull F value) {
         if (isEmpty(coll)) {
-            return Lists.newArrayList();
+            return Collections.emptyList();
         }
         return coll.stream()
                 .filter(Objects::nonNull)
@@ -669,14 +798,17 @@ public class CollectionUtil extends CollectionUtils {
     }
 
     /**
-     * 判断元素在list中是否存在
+     * 从list里根据唯一字段值 查找所有满足条件不为Null的元素
      *
      * @param coll
      * @param predicate
      * @return
      */
     public static <T> List<T> findAll(Collection<T> coll, Predicate<? super T> predicate) {
-        return coll.stream().filter(predicate).collect(Collectors.toList());
+        if (isEmpty(coll)) {
+            return Collections.emptyList();
+        }
+        return coll.stream().filter(Objects::nonNull).filter(predicate).collect(Collectors.toList());
     }
 
     /**
@@ -688,6 +820,9 @@ public class CollectionUtil extends CollectionUtils {
      * @return
      */
     public static <T, F> boolean existAtLeastOne(Collection<T> coll, Function<? super T, ? extends F> function, @NonNull F value) {
+        if (isEmpty(coll)) {
+            return false;
+        }
         return coll.stream().anyMatch(item -> value.equals(function.apply(item)));
     }
 
@@ -700,17 +835,23 @@ public class CollectionUtil extends CollectionUtils {
      * @return
      */
     public static <T, F> boolean exist(Collection<T> coll, Function<? super T, ? extends F> function, @NonNull F value) {
+        if (isEmpty(coll)) {
+            return false;
+        }
         return coll.stream().allMatch(item -> value.equals(function.apply(item)));
     }
 
     /**
-     * 判断元素在list中是否存在
+     * 判断非null元素在list中是否存在
      *
      * @param coll
      * @param predicate
      * @return
      */
     public static <T> boolean exist(Collection<T> coll, Predicate<? super T> predicate) {
+        if (isEmpty(coll)) {
+            return false;
+        }
         T existFirstOne = coll.stream().filter(predicate).findFirst().orElse(null);
         return Objects.nonNull(existFirstOne);
     }
@@ -728,7 +869,7 @@ public class CollectionUtil extends CollectionUtils {
      * @return
      */
     public static <E1, E2, K1, K2> Map<K2, List<E2>> reverseKV(@NonNull Map<K1, List<E1>> sourceMap, Function<? super K1, ? extends E2> kFunction, Function<? super E1, ? extends K2> vFunction) {
-        Map<K2, List<E2>> aux = new HashMap<>();
+        Map<K2, List<E2>> aux = new HashMap<>(16, 0.75f);
         sourceMap.entrySet().stream()
                 .filter(Objects::nonNull)
                 .forEach(entry -> entry.getValue().stream()
