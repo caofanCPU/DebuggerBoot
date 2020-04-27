@@ -104,6 +104,31 @@ public class CollectionUtil extends CollectionUtils {
     }
 
     /**
+     * 对列表元素指定函数(字段为数字类型)按照comparator排列后, 求前k个元素的和
+     *
+     * @param coll
+     * @param numberValueFunction
+     * @param comparator          排序比较器
+     * @param k                   取前k个元素
+     * @param <F>
+     * @param <T>
+     * @return
+     */
+    public static <F extends Number, T> BigDecimal sumTopK(@NonNull Collection<T> coll, Function<? super T, ? extends F> numberValueFunction, Comparator<F> comparator, int k) {
+        if (k <= 0 || k > coll.size()) {
+            k = coll.size();
+        }
+        double sumTopK = coll.stream()
+                .filter(Objects::nonNull)
+                .map(numberValueFunction)
+                .sorted(comparator)
+                .mapToDouble(Number::doubleValue)
+                .limit(k)
+                .sum();
+        return BigDecimal.valueOf(sumTopK);
+    }
+
+    /**
      * 对列表元素指定函数(字段为数字类型)求和
      *
      * @param coll
@@ -466,20 +491,23 @@ public class CollectionUtil extends CollectionUtils {
      * 分组转换为Map<K, List<V>>, 支持key函数, value函数, 底层默认HashMap<K, ArrayList<V>>
      * Map中会包含所有的key, 对应的List<V>可能为空列表(非null)
      *
-     * @param source
-     * @param kFunction
-     * @param vFunction
+     * @param source              数据源
+     * @param adjustmentReferKeys 校准参考key集合
+     * @param kFunction           分组key执行函数
+     * @param vFunction           分组值执行函数
      * @param <E>
      * @param <K>
      * @param <V>
      * @return
      */
-    public static <E, K, V> Map<K, List<V>> groupIndexToMapWithAllKey(Collection<E> source, Function<? super E, ? extends K> kFunction, Function<? super E, ? extends V> vFunction) {
+    public static <E, K, V> Map<K, List<V>> groupIndexToMap(Collection<E> source, Set<K> adjustmentReferKeys, Function<? super E, ? extends K> kFunction, Function<? super E, ? extends V> vFunction) {
         if (isEmpty(source)) {
             return Collections.emptyMap();
         }
         Map<K, List<V>> resultMap = source.stream().filter(Objects::nonNull).collect(Collectors.groupingBy(kFunction, HashMap::new, Collectors.mapping(vFunction, Collectors.toList())));
-        transToSet(source, kFunction).forEach(k -> resultMap.putIfAbsent(k, Collections.emptyList()));
+        if (isNotEmpty(adjustmentReferKeys)) {
+            adjustmentReferKeys.forEach(k -> resultMap.putIfAbsent(k, Collections.emptyList()));
+        }
         return resultMap;
     }
 
@@ -535,22 +563,25 @@ public class CollectionUtil extends CollectionUtils {
     /**
      * 分组转换为指定Map<K, 指定的List<V>>，例如TreeMap<K, LinkedList<V>>/LinkedHashMap<K, LinkedList<V>>
      * 并且可对原始数组元素进行计算(转化)为其他对象
-     * Map中会包含所有的key, 对应的List<V>可能为空列表(非null)
+     * Map中会包含adjustmentReferKeys中所有的key, 对应的List<V>可能为空列表(非null)
      *
-     * @param mapColl
-     * @param vColl
-     * @param source
-     * @param kGroupFunction
-     * @param vFunction
+     * @param mapColl             map收集容器
+     * @param vColl               value收集容器
+     * @param source              数据源
+     * @param adjustmentReferKeys 校准参考key集合
+     * @param kGroupFunction      分组key执行函数
+     * @param vFunction           分组值执行函数
      * @return
      */
-    public static <E, K, V, M extends Map<K, C>, C extends Collection<V>> M groupIndexToMapWithAllKey(Supplier<M> mapColl, Supplier<C> vColl, Collection<E> source, Function<? super E, ? extends K> kGroupFunction, Function<? super E, ? extends V> vFunction) {
+    public static <E, K, V, M extends Map<K, C>, C extends Collection<V>> M groupIndexToMap(Supplier<M> mapColl, Supplier<C> vColl, Collection<E> source, Set<K> adjustmentReferKeys, Function<? super E, ? extends K> kGroupFunction, Function<? super E, ? extends V> vFunction) {
         if (isEmpty(source)) {
             return mapColl.get();
         }
         M resultMap = source.stream().filter(Objects::nonNull).collect(
                 Collectors.groupingBy(kGroupFunction, mapColl, Collectors.mapping(vFunction, Collectors.toCollection(vColl))));
-        transToSet(source, kGroupFunction).forEach(k -> resultMap.putIfAbsent(k, vColl.get()));
+        if (isNotEmpty(adjustmentReferKeys)) {
+            adjustmentReferKeys.forEach(k -> resultMap.putIfAbsent(k, vColl.get()));
+        }
         return resultMap;
     }
 
