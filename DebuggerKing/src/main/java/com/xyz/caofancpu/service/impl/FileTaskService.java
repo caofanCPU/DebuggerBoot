@@ -1,17 +1,15 @@
 package com.xyz.caofancpu.service.impl;
 
+import com.xyz.caofancpu.core.CollectionUtil;
+import com.xyz.caofancpu.core.FileUtil;
 import com.xyz.caofancpu.model.FileClassifiedResult;
 import com.xyz.caofancpu.model.MiniAttachment;
-import com.xyz.caofancpu.mvc.config.CommonConfigValueService;
-import com.xyz.caofancpu.util.commonoperateutils.FileUtil;
-import com.xyz.caofancpu.util.multithreadutils.RemoteInvokeHelper;
-import com.xyz.caofancpu.util.multithreadutils.RemoteRequestTask;
-import com.xyz.caofancpu.util.result.D8Response;
-import com.xyz.caofancpu.util.streamoperateutils.CollectionUtil;
+import com.xyz.caofancpu.multithreadutils.remote.RemoteInvokeHelper;
+import com.xyz.caofancpu.multithreadutils.remote.RemoteRequestTask;
+import com.xyz.caofancpu.result.D8Response;
 import io.swagger.annotations.Api;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
 import org.springframework.stereotype.Service;
 
@@ -26,21 +24,17 @@ import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Future;
 
 /**
- * FileName: FileTaskService
- * Author:   caofanCPU
- * Date:     2018/9/5 14:16
+ * 文件处理服务
+ *
+ * @author D8GER
  */
 @Service("fileTaskService")
 @Api(description = "文件任务服务")
 @Slf4j
 public class FileTaskService {
 
-    // 引入默认线程池
-    @Resource(name = "standardThreadPool")
+    @Resource(name = "businessThreadPool")
     private ThreadPoolTaskExecutor defaultThreadPool;
-
-    @Autowired
-    private CommonConfigValueService commonConfigValueService;
 
     public void copyFile(List<FileClassifiedResult> fileInfoList) {
         if (Objects.isNull(fileInfoList)) {
@@ -48,7 +42,7 @@ public class FileTaskService {
         }
         List<Future> futureList = new ArrayList<>();
         List<Future> completedTaskList = new ArrayList<>();
-        Integer average = (int) Math.ceil(fileInfoList.size() * 1.0 / commonConfigValueService.taskHandleAverage);
+        Integer average = (int) Math.ceil(fileInfoList.size() * 1.0 / 10);
         List<List<FileClassifiedResult>> groupedTaskList = balancedGroupingByTask(fileInfoList, average);
         if (CollectionUtil.isEmpty(groupedTaskList)) {
             return;
@@ -82,7 +76,7 @@ public class FileTaskService {
                 .filter(Objects::nonNull)
                 .forEach(item -> {
                     // 1.创建目录
-                    String destFileParentPath = commonConfigValueService.taskRootPath + commonConfigValueService.taskResultPath + item.getLocation();
+                    String destFileParentPath = "/work/www" + "/haha" + item.getLocation();
                     // 2.
                     List<MiniAttachment> attachmentList = item.getAttachmentList();
                     if (CollectionUtil.isNotEmpty(attachmentList)) {

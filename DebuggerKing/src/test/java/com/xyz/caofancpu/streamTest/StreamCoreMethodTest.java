@@ -1,8 +1,8 @@
 package com.xyz.caofancpu.streamTest;
 
 import com.alibaba.fastjson.JSONObject;
-import com.xyz.caofancpu.util.commonoperateutils.NormalUseUtil;
-import com.xyz.caofancpu.util.dataoperateutils.JSONUtil;
+import com.xyz.caofancpu.core.JSONUtil;
+import com.xyz.caofancpu.extra.NormalUseForTestUtil;
 import org.apache.commons.collections.CollectionUtils;
 
 import java.math.BigDecimal;
@@ -277,7 +277,7 @@ public class StreamCoreMethodTest {
 
 
     public static void viewData(String msg, Object data) {
-        NormalUseUtil.out(msg + "\n" + JSONUtil.formatStandardJSON(JSONObject.toJSONString(data)));
+        NormalUseForTestUtil.out(msg + "\n" + JSONUtil.formatStandardJSON(JSONObject.toJSONString(data)));
     }
 
 }

@@ -1,8 +1,8 @@
 package com.xyz.caofancpu.trackingtime.service;
 
 
+import com.xyz.caofancpu.result.GlobalErrorInfoException;
 import com.xyz.caofancpu.trackingtime.model.Attachment;
-import com.xyz.caofancpu.util.result.GlobalErrorInfoException;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.util.Map;

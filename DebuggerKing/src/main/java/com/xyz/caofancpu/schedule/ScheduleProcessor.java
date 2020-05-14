@@ -1,7 +1,7 @@
 package com.xyz.caofancpu.schedule;
 
-import com.xyz.caofancpu.util.commonoperateutils.NormalUseUtil;
-import com.xyz.caofancpu.util.dataoperateutils.DateUtil;
+import com.xyz.caofancpu.core.DateUtil;
+import com.xyz.caofancpu.extra.NormalUseForTestUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.scheduling.annotation.EnableScheduling;
@@ -35,7 +35,7 @@ public class ScheduleProcessor {
      * 常用Cron表达式
      */
     private void outNormalCronExpression() {
-        NormalUseUtil.out("Cron表达式范例：\n" +
+        NormalUseForTestUtil.out("Cron表达式范例：\n" +
                 "             每隔5秒执行一次：*/5 * * * * ?\n" +
                 "             每隔1分钟执行一次：0 */1 * * * ?\n" +
                 "             每天23点执行一次：0 0 23 * * ?\n" +

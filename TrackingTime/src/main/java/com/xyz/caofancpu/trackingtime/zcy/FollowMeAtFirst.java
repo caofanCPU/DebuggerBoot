@@ -1,6 +1,7 @@
 package com.xyz.caofancpu.trackingtime.zcy;
 
-import com.xyz.caofancpu.util.commonoperateutils.NormalUseUtil;
+
+import com.xyz.caofancpu.extra.NormalUseForTestUtil;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -16,11 +17,11 @@ public class FollowMeAtFirst {
         List<String> list = whatHasDoneInTheMorning();
         for (String note : list) {
             // 用工具类方法将结果打印在控制台
-            NormalUseUtil.out(note);
+            NormalUseForTestUtil.out(note);
         }
-        NormalUseUtil.out("\n\n");
+        NormalUseForTestUtil.out("\n\n");
         Map<Integer, String> dictionary = whatHasDoneWithOrder();
-        dictionary.forEach((key, value) -> NormalUseUtil.out(key + ". " + value));
+        dictionary.forEach((key, value) -> NormalUseForTestUtil.out(key + ". " + value));
     }
 
     /**

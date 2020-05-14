@@ -9,13 +9,12 @@ import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
 /**
- * Created by caofanCPU on 2018/8/3.
  * 从配置文件中读取配置
+ *
+ * @author D8GER
  */
 @Configuration
-//声明前缀
 @ConfigurationProperties(prefix = "kafka")
-// 声明文件访问路径
 @PropertySource(value = "classpath:kafka.properties")
 @Scope(value = "singleton")
 public class KafkaProperty {

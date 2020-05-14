@@ -2,16 +2,15 @@ package com.xyz.caofancpu.trackingtime.service.impl;
 
 
 import com.alibaba.fastjson.JSONObject;
-import com.xyz.caofancpu.mvc.config.CommonConfigValueService;
-import com.xyz.caofancpu.mvc.config.MSUrlConfigValueService;
+import com.xyz.caofancpu.core.DateUtil;
+import com.xyz.caofancpu.mvc.common.GlobalResultCheckUtil;
+import com.xyz.caofancpu.property.SpringConfigProperties;
+import com.xyz.caofancpu.result.CustomerErrorInfo;
+import com.xyz.caofancpu.result.D8Response;
+import com.xyz.caofancpu.result.GlobalErrorInfoException;
 import com.xyz.caofancpu.trackingtime.model.Attachment;
 import com.xyz.caofancpu.trackingtime.service.CommonOperateService;
 import com.xyz.caofancpu.trackingtime.utils.RestTemplateUtil;
-import com.xyz.caofancpu.util.commonoperateutils.GlobalResultCheckUtil;
-import com.xyz.caofancpu.util.dataoperateutils.DateUtil;
-import com.xyz.caofancpu.util.result.CustomerErrorInfo;
-import com.xyz.caofancpu.util.result.D8Response;
-import com.xyz.caofancpu.util.result.GlobalErrorInfoException;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.context.annotation.DependsOn;
@@ -45,10 +44,7 @@ public class CommonOperateServiceImpl implements CommonOperateService {
     private RestTemplateUtil restTemplateUtil;
 
     @Resource
-    private CommonConfigValueService commonConfigValueService;
-
-    @Resource
-    private MSUrlConfigValueService msUrlConfigValueService;
+    private SpringConfigProperties springConfigProperties;
 
     @Override
     public void uploadAttachment(Attachment attachment, MultipartFile file)
@@ -71,7 +67,7 @@ public class CommonOperateServiceImpl implements CommonOperateService {
         String fileBase64 = Base64.getEncoder().encodeToString(bytes);
         Map<String, Object> paramMap = new HashMap<String, Object>(8, 0.75f) {
             {
-                put("appname", commonConfigValueService.appName);
+                put("appname", springConfigProperties.applicationName);
                 put("filename", path);
                 put("contents", fileBase64);
                 put("open", false);
@@ -79,7 +75,7 @@ public class CommonOperateServiceImpl implements CommonOperateService {
         };
         // 禁用文件内容打印LOG
         closeFileOperateLogging(paramMap);
-        restTemplateUtil.postBody(msUrlConfigValueService.fileAccessUrl + "/file/upload", paramMap);
+        restTemplateUtil.postBody(springConfigProperties.fileAccessUrl + "/file/upload", paramMap);
 
         attachment.setType(type);
         attachment.setName(path);
@@ -96,13 +92,13 @@ public class CommonOperateServiceImpl implements CommonOperateService {
         }
         Map<String, Object> map = new HashMap<String, Object>(4, 0.5f) {
             {
-                put("appname", commonConfigValueService.appName);
+                put("appname", springConfigProperties.applicationName);
                 put("filename", attachmentName);
             }
         };
 
-        D8Response d8Response = restTemplateUtil.postBody(msUrlConfigValueService.fileAccessUrl + "/file/generateUrl", map);
-        GlobalResultCheckUtil.handleMSResultBody(d8Response);
+        D8Response d8Response = restTemplateUtil.postBody(springConfigProperties.fileAccessUrl + "/file/generateUrl", map);
+        GlobalResultCheckUtil.handleResult(d8Response);
         JSONObject jsonObject = JSONObject.parseObject(JSONObject.toJSONString(d8Response));
         String accessUrl = jsonObject.getString("data");
         log.info("查询文件访问Url:\n输入文件名[{}]\n输出Url[{}]", attachmentName, accessUrl);
@@ -124,10 +120,8 @@ public class CommonOperateServiceImpl implements CommonOperateService {
             log.info("[提示]无HttpServletRequest信息, 加载token为null");
             return null;
         }
-        if (Objects.isNull(request)) {
-            return null;
-        }
-        String token = request.getHeader(commonConfigValueService.authKey);
+        // TODO
+        String token = request.getHeader("TODO");
         return token;
     }
 
@@ -144,7 +138,7 @@ public class CommonOperateServiceImpl implements CommonOperateService {
         if (Objects.isNull(paramMap)) {
             return;
         }
-        paramMap.put(commonConfigValueService.fileOperateLoggingKey, commonConfigValueService.fileOperateLoggingValue);
+        // TODO
     }
 
 }

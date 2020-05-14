@@ -1,15 +1,15 @@
 package com.xyz.caofancpu.trackingtime.zcy;
 
 import com.google.common.collect.Lists;
+import com.xyz.caofancpu.core.CollectionUtil;
+import com.xyz.caofancpu.core.DateUtil;
+import com.xyz.caofancpu.core.NumberUtil;
+import com.xyz.caofancpu.extra.NormalUseForTestUtil;
 import com.xyz.caofancpu.trackingtime.zcy.datamodel.TransactionRecord;
 import com.xyz.caofancpu.trackingtime.zcy.datamodel.enums.CoinTypeEnum;
 import com.xyz.caofancpu.trackingtime.zcy.datamodel.enums.ExchangePlaceEnum;
 import com.xyz.caofancpu.trackingtime.zcy.datamodel.enums.OperateTypeEnum;
 import com.xyz.caofancpu.trackingtime.zcy.datamodel.enums.OperatorIdEnum;
-import com.xyz.caofancpu.util.commonoperateutils.NormalUseUtil;
-import com.xyz.caofancpu.util.dataoperateutils.DateUtil;
-import com.xyz.caofancpu.util.dataoperateutils.NumberUtil;
-import com.xyz.caofancpu.util.streamoperateutils.CollectionUtil;
 
 import java.util.List;
 
@@ -60,15 +60,14 @@ public class SolveProblem {
         // 2.收集记录
         List<TransactionRecord> recordList = Lists.newArrayList(first, second, last);
 
-        NormalUseUtil.out("\n\n");
+        NormalUseForTestUtil.out("\n\n");
         // 3.输出打印记录
-        recordList.forEach(record -> NormalUseUtil.out(record.toString()));
+        recordList.forEach(record -> NormalUseForTestUtil.out(record.toString()));
 
         List<String> recordContentList = CollectionUtil.transToList(recordList, Object::toString);
-        recordContentList.forEach(NormalUseUtil::out);
+        recordContentList.forEach(NormalUseForTestUtil::out);
 
-        CollectionUtil.transToList(recordList, Object::toString)
-                .forEach(NormalUseUtil::out);
+        CollectionUtil.transToList(recordList, Object::toString).forEach(NormalUseForTestUtil::out);
     }
 
 }

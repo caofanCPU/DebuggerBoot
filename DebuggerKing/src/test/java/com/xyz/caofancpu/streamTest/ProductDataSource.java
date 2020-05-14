@@ -1,7 +1,7 @@
 package com.xyz.caofancpu.streamTest;
 
 
-import com.xyz.caofancpu.util.dataoperateutils.NumberUtil;
+import com.xyz.caofancpu.core.NumberUtil;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;

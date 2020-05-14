@@ -1,7 +1,7 @@
 package com.xyz.caofancpu.utils;
 
-import com.xyz.caofancpu.util.multithreadutils.DebuggerKingRunnable;
-import com.xyz.caofancpu.util.multithreadutils.DemoRunnableTask;
+import com.xyz.caofancpu.multithreadutils.batch.DebuggerKingRunnable;
+import com.xyz.caofancpu.multithreadutils.batch.DemoRunnableTask;
 import io.swagger.annotations.Api;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.scheduling.annotation.Async;
@@ -21,7 +21,7 @@ import java.util.concurrent.CountDownLatch;
 @Api(description = "异步服务中心")
 @Slf4j
 public class AsyncServiceUtil {
-    @Resource(name = "standardThreadPool")
+    @Resource(name = "businessThreadPool")
     private ThreadPoolTaskExecutor pool;
 
     @Async

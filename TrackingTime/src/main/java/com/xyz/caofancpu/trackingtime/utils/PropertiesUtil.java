@@ -1,7 +1,7 @@
 package com.xyz.caofancpu.trackingtime.utils;
 
-import com.xyz.caofancpu.util.commonoperateutils.SymbolConstantUtil;
-import com.xyz.caofancpu.util.studywaitingutils.VerbalExpressionUtil;
+import com.xyz.caofancpu.constant.SymbolConstantUtil;
+import com.xyz.caofancpu.core.VerbalExpressionUtil;
 import org.apache.commons.lang3.StringUtils;
 
 import java.io.FileInputStream;

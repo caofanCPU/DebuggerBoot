@@ -1,7 +1,7 @@
 package com.xyz.caofancpu.trackingtime.init;
 
+import com.xyz.caofancpu.core.CollectionUtil;
 import com.xyz.caofancpu.trackingtime.mapper.SysDictMapper;
-import com.xyz.caofancpu.util.streamoperateutils.CollectionUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.env.YamlPropertySourceLoader;

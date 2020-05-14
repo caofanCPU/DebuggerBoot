@@ -1,11 +1,11 @@
 package com.xyz.caofancpu.trackingtime.controller;
 
+import com.xyz.caofancpu.result.D8Response;
+import com.xyz.caofancpu.result.GlobalErrorInfoException;
 import com.xyz.caofancpu.trackingtime.constant.apiurls.AccessUrl;
 import com.xyz.caofancpu.trackingtime.model.TimeBlock;
 import com.xyz.caofancpu.trackingtime.service.impl.TimeBlockService;
 import com.xyz.caofancpu.trackingtime.view.TimeBlockVO;
-import com.xyz.caofancpu.util.result.D8Response;
-import com.xyz.caofancpu.util.result.GlobalErrorInfoException;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import lombok.extern.slf4j.Slf4j;

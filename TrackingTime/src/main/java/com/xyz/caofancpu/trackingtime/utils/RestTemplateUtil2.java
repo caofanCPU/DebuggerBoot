@@ -1,10 +1,10 @@
 package com.xyz.caofancpu.trackingtime.utils;
 
 import com.alibaba.fastjson.JSONObject;
-import com.xyz.caofancpu.util.dataoperateutils.JSONUtil;
-import com.xyz.caofancpu.util.result.D8Response;
-import com.xyz.caofancpu.util.result.GlobalErrorInfoEnum;
-import com.xyz.caofancpu.util.result.GlobalErrorInfoException;
+import com.xyz.caofancpu.core.JSONUtil;
+import com.xyz.caofancpu.result.D8Response;
+import com.xyz.caofancpu.result.GlobalErrorInfoEnum;
+import com.xyz.caofancpu.result.GlobalErrorInfoException;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -13,7 +13,6 @@ import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.ResponseEntity;
-import org.springframework.stereotype.Component;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.context.request.RequestAttributes;
 import org.springframework.web.context.request.RequestContextHolder;
@@ -33,7 +32,7 @@ import java.util.stream.Stream;
 /**
  * Created by caofanCPU on 2018/8/6.
  */
-@Component
+//@Component
 @Slf4j
 public class RestTemplateUtil2 {
     /**
@@ -86,9 +85,9 @@ public class RestTemplateUtil2 {
         boolean msgFlag = Objects.isNull(responseJson.get("msg"));
         if (!GlobalErrorInfoEnum.SUCCESS.getCode().equals(String.valueOf(responseJson.get("code")))) {
             d8Response.setData(null);
-            d8Response.setCode(GlobalErrorInfoEnum.GLOBAL_MS_MSG.getCode());
+            d8Response.setCode(GlobalErrorInfoEnum.REMOTE_INVOKE_FAILED_MSG.getCode());
             if (msgFlag) {
-                d8Response.setMsg(GlobalErrorInfoEnum.GLOBAL_MS_MSG.getMsg());
+                d8Response.setMsg(GlobalErrorInfoEnum.REMOTE_INVOKE_FAILED_MSG.getMsg());
             } else {
                 d8Response.setMsg(responseJson.get("msg").toString() + "[MSR]");
             }
@@ -279,16 +278,16 @@ public class RestTemplateUtil2 {
     private void handleMSErrorMsg(String msErrorMsg)
             throws GlobalErrorInfoException {
         if (Objects.isNull(msErrorMsg)) {
-            msErrorMsg = GlobalErrorInfoEnum.GLOBAL_MS_MSG.getMsg();
+            msErrorMsg = GlobalErrorInfoEnum.REMOTE_INVOKE_FAILED_MSG.getMsg();
         }
         throw new GlobalErrorInfoException(msErrorMsg);
     }
 
     private D8Response<Object> handleMSErrorResult(String msErrorMsg) {
         if (Objects.isNull(msErrorMsg)) {
-            msErrorMsg = GlobalErrorInfoEnum.GLOBAL_MS_MSG.getMsg();
+            msErrorMsg = GlobalErrorInfoEnum.REMOTE_INVOKE_FAILED_MSG.getMsg();
         }
-        return D8Response.fail(GlobalErrorInfoEnum.GLOBAL_MS_MSG.getCode(), msErrorMsg);
+        return D8Response.fail(GlobalErrorInfoEnum.REMOTE_INVOKE_FAILED_MSG.getCode(), msErrorMsg);
     }
 
     /**

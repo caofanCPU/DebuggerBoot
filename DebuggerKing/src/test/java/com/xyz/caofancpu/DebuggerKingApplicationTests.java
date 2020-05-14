@@ -1,6 +1,6 @@
 package com.xyz.caofancpu;
 
-import com.xyz.caofancpu.mvc.test.SpringBootJunitTestUtil;
+import com.xyz.caofancpu.test.SpringBootJunitTestUtil;
 import org.junit.runner.RunWith;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;

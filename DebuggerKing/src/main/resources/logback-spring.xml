@@ -17,7 +17,7 @@
     <!--    <property name="CONSOLE_LOG_PATTERN" value="%clr(%d{yyyy-MM-dd HH:mm:ss.SSS}){faint} %clr(${LOG_LEVEL_PATTERN:-%5p}) %clr([%X{traceId}]){cyan} %clr(%ip:${port}){faint} %clr([%thread]){magenta} %clr(%-40.40logger{39}){cyan} - %msg%n${LOG_EXCEPTION_CONVERSION_WORD:-%wEx}"/>-->
 
 
-    <conversionRule conversionWord="ip" converterClass="com.xyz.caofancpu.util.logger.LogIpConfigUtil"/>
+    <conversionRule conversionWord="ip" converterClass="com.xyz.caofancpu.logger.LogIpConfigUtil"/>
     <springProperty scope="context" name="port" source="server.port"/>
     <property name="LOG_PATH" value="/work/cf"/>
     <property name="APP_DIR" value="debugger-king"/>

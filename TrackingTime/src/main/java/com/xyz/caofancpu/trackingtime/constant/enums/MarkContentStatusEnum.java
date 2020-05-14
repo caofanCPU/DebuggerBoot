@@ -1,6 +1,6 @@
 package com.xyz.caofancpu.trackingtime.constant.enums;
 
-import com.xyz.caofancpu.util.commonoperateutils.enumtype.IEnum;
+import com.xyz.caofancpu.constant.IEnum;
 import lombok.Getter;
 
 import java.util.Arrays;

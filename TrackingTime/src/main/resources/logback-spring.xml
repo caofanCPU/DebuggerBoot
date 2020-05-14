@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!-- Logback configuration. See http://logback.qos.ch/manual/index.html -->
 <configuration scan="true" scanPeriod="10 seconds">
-    <conversionRule conversionWord="ip" converterClass="com.xyz.caofancpu.util.logger.LogIpConfigUtil"/>
+    <conversionRule conversionWord="ip" converterClass="com.xyz.caofancpu.logger.LogIpConfigUtil"/>
     <include resource="org/springframework/boot/logging/logback/base.xml"/>
     <springProperty scope="context" name="port" source="server.port"/>
     <property name="LOG_PATH" value="/work/cf"/>

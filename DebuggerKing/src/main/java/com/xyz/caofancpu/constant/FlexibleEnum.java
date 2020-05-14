@@ -1,7 +1,6 @@
 package com.xyz.caofancpu.constant;
 
-import com.xyz.caofancpu.util.commonoperateutils.NormalUseUtil;
-import com.xyz.caofancpu.util.commonoperateutils.enumtype.IEnum;
+import com.xyz.caofancpu.extra.NormalUseForTestUtil;
 import lombok.Getter;
 
 /**
@@ -11,35 +10,35 @@ public enum FlexibleEnum implements IEnum {
     FIRST_LEVEL(1, "1级工程师") {
         @Override
         void process() {
-            NormalUseUtil.out("主导团队");
+            NormalUseForTestUtil.out("主导团队");
         }
     },
 
     SECOND_LEVEL(2, "2级工程师") {
         @Override
         void process() {
-            NormalUseUtil.out("专注全局设计");
+            NormalUseForTestUtil.out("专注全局设计");
         }
     },
 
     THIRD_LEVEL(3, "3级工程师") {
         @Override
         void process() {
-            NormalUseUtil.out("转入局部设计");
+            NormalUseForTestUtil.out("转入局部设计");
         }
     },
 
     FOURTH_LEVEL(4, "4级工程师") {
         @Override
         void process() {
-            NormalUseUtil.out("高效搬砖");
+            NormalUseForTestUtil.out("高效搬砖");
         }
     },
 
     FIFTH_LEVEL(5, "5级工程师") {
         @Override
         void process() {
-            NormalUseUtil.out("搬砖");
+            NormalUseForTestUtil.out("搬砖");
         }
     },
 

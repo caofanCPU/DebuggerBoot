@@ -2,16 +2,16 @@ package com.xyz.caofancpu.trackingtime.controller;
 
 import com.beust.jcommander.internal.Lists;
 import com.github.pagehelper.PageInfo;
-import com.xyz.caofancpu.mvc.config.CommonConfigValueService;
+import com.xyz.caofancpu.core.CollectionUtil;
+import com.xyz.caofancpu.core.JSONUtil;
+import com.xyz.caofancpu.mvc.common.HttpStaticHandleUtil;
+import com.xyz.caofancpu.property.SpringConfigProperties;
+import com.xyz.caofancpu.result.D8Response;
+import com.xyz.caofancpu.result.GlobalErrorInfoException;
 import com.xyz.caofancpu.trackingtime.model.Area;
 import com.xyz.caofancpu.trackingtime.model.Attachment;
 import com.xyz.caofancpu.trackingtime.service.CommonOperateService;
 import com.xyz.caofancpu.trackingtime.service.SysDictService;
-import com.xyz.caofancpu.util.commonoperateutils.HttpStaticHandleUtil;
-import com.xyz.caofancpu.util.dataoperateutils.JSONUtil;
-import com.xyz.caofancpu.util.result.D8Response;
-import com.xyz.caofancpu.util.result.GlobalErrorInfoException;
-import com.xyz.caofancpu.util.streamoperateutils.CollectionUtil;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import lombok.extern.slf4j.Slf4j;
@@ -42,13 +42,13 @@ import java.util.Map;
 @Slf4j
 public class CommonOperateController {
     @Resource
-    private transient CommonOperateService commonOperateService;
+    private CommonOperateService commonOperateService;
 
     @Resource(type = SysDictService.class)
-    private transient SysDictService sysDictService;
+    private SysDictService sysDictService;
 
     @Resource
-    private transient CommonConfigValueService commonConfigValueService;
+    private SpringConfigProperties springConfigProperties;
 
     @PostMapping("/sysDict/listByPage")
     @ApiOperation(value = "获取系统配置列表", notes = "传参：无")
@@ -84,7 +84,7 @@ public class CommonOperateController {
     @RequestMapping(value = "/download", method = {RequestMethod.POST, RequestMethod.GET})
     public ResponseEntity<byte[]> download(@RequestParam("fileName") String fileName)
             throws Exception {
-        File file = new File(commonConfigValueService.localOSSUploadRoot + File.separator + fileName);
+        File file = new File(springConfigProperties.localOSSDownloadRoot + File.separator + fileName);
         String downloadFile = new String(fileName.getBytes(StandardCharsets.UTF_8), StandardCharsets.ISO_8859_1);
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.APPLICATION_OCTET_STREAM);
@@ -131,7 +131,7 @@ public class CommonOperateController {
                 throw new RuntimeException("第" + (i + 1) + "个文件: [" + fileName + "]为空, 请检查!");
             }
             try {
-                uploadFile.transferTo(new File(commonConfigValueService.localOSSUploadRoot + File.separator + fileName));
+                uploadFile.transferTo(new File(springConfigProperties.localOSSUploadRoot + File.separator + fileName));
                 fileNameList.add(fileName);
             } catch (IOException e) {
                 log.error("上传文件出现异常", e);
