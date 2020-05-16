@@ -57,7 +57,17 @@
         </layout>
     </appender>
 
-    <root level="INFO">
+    <logger name="org.springframework" level="DEBUG"/>
+
+    <logger name="springfox.documentation" level="WARN"/>
+
+    <logger name="org.apache" level="WARN"/>
+
+    <logger name="springfox.documentation" level="WARN"/>
+
+    <logger name="org.mybatis" level="WARN"/>
+
+    <root level="DEBUG">
         <appender-ref ref="INFO_FILE"/>
         <appender-ref ref="ERROR_FILE"/>
     </root>
