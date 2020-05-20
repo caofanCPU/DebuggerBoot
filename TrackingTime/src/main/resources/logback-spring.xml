@@ -1,11 +1,38 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!-- Logback configuration. See http://logback.qos.ch/manual/index.html -->
 <configuration scan="true" scanPeriod="10 seconds">
-    <conversionRule conversionWord="ip" converterClass="com.xyz.caofancpu.logger.LogIpConfigUtil"/>
-    <include resource="org/springframework/boot/logging/logback/base.xml"/>
-    <springProperty scope="context" name="port" source="server.port"/>
+    <!--springboot 默认 logback 控制台日志格式, 如果自定义了控制台日志, 则默认的要注释掉, 否则日志会打印两份-->
+    <!--<include resource="org/springframework/boot/logging/logback/base.xml"/>-->
+
+
+    <!--日志文件路径, 文件-->
     <property name="LOG_PATH" value="/work/cf"/>
     <property name="APP_DIR" value="tracking-time"/>
+
+    <!-- 彩色日志依赖的渲染类 -->
+    <conversionRule conversionWord="clr" converterClass="org.springframework.boot.logging.logback.ColorConverter"/>
+    <conversionRule conversionWord="wex"
+                    converterClass="org.springframework.boot.logging.logback.WhitespaceThrowableProxyConverter"/>
+    <conversionRule conversionWord="wEx"
+                    converterClass="org.springframework.boot.logging.logback.ExtendedWhitespaceThrowableProxyConverter"/>
+
+    <!--
+        BLACK, BLUE, BRIGHT_BLACK, BRIGHT_BLUE, BRIGHT_CYAN, BRIGHT_GREEN, BRIGHT_MAGENTA, BRIGHT_RED,
+        BRIGHT_WHITE, BRIGHT_YELLOW, CYAN, DEFAULT, GREEN, MAGENTA, RED, WHITE, YELLOW
+        -->
+
+    <!--控制台彩色日志格式, 参见  org.springframework.boot.logging.logback包下的defaults.xml -->
+    <property name="CONSOLE_LOG_PATTERN"
+              value="%clr(%d{yyyy-MM-dd HH:mm:ss.SSS}){faint} %clr(${LOG_LEVEL_PATTERN:-%5p}) %clr([%X{traceId}]){cyan} %clr([%thread]){magenta} %clr(%-40.40logger{39}){cyan} - %msg%n${LOG_EXCEPTION_CONVERSION_WORD:-%wEx}"/>
+    <!--文件日志格式-->
+    <property name="FILE_LOG_PATTERN"
+              value="%d{yyyy-MM-dd HH:mm:ss.SSS} [%X{traceId}] [${HOSTNAME}] [%thread] %-5level %logger{36} - %msg%n"/>
+
+    <appender name="STDOUT" class="ch.qos.logback.core.ConsoleAppender">
+        <encoder charset="UTF-8">
+            <pattern>${CONSOLE_LOG_PATTERN}</pattern>
+        </encoder>
+    </appender>
 
     <appender name="INFO_FILE" class="ch.qos.logback.core.rolling.RollingFileAppender">
         <File>${LOG_PATH}/${APP_DIR}/info.log</File>
@@ -17,14 +44,15 @@
             <maxHistory>5</maxHistory>
         </rollingPolicy>
         <layout class="ch.qos.logback.classic.PatternLayout">
-            <Pattern>[%d{yyyy-MM-dd HH:mm:ss.SSS} %-5level] %ip:${port} [%thread] %logger{36} -%msg%n
-            </Pattern>
+            <Pattern>${FILE_LOG_PATTERN}</Pattern>
         </layout>
     </appender>
 
     <appender name="ERROR_FILE" class="ch.qos.logback.core.rolling.RollingFileAppender">
-        <filter class="ch.qos.logback.classic.filter.ThresholdFilter">
+        <filter class="ch.qos.logback.classic.filter.LevelFilter">
             <level>ERROR</level>
+            <onMatch>ACCEPT</onMatch>
+            <onMismatch>DENY</onMismatch>
         </filter>
         <File>${LOG_PATH}/${APP_DIR}/error.log</File>
         <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
@@ -36,10 +64,47 @@
             <maxHistory>5</maxHistory>
         </rollingPolicy>
         <layout class="ch.qos.logback.classic.PatternLayout">
-            <Pattern>[%d{yyyy-MM-dd HH:mm:ss.SSS} %-5level] %ip:${port} [%thread] %logger{36} -%msg%n
-
-            </Pattern>
+            <Pattern>${FILE_LOG_PATTERN}</Pattern>
         </layout>
+    </appender>
+
+    <appender name="DUBBO_TIME_LOG" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <file>${FILE_PATH}/interface_time.log</file>
+        <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+            <!-- daily rollover -->
+            <fileNamePattern>${FILE_PATH}/interface_time.%d{yyyy-MM-dd}.log</fileNamePattern>
+            <!-- keep 2 days' worth of history -->
+            <maxHistory>2</maxHistory>
+        </rollingPolicy>
+        <encoder charset="UTF-8">
+            <pattern>${FILE_LOG_PATTERN}</pattern>
+        </encoder>
+    </appender>
+
+    <appender name="HTTP_TIME_LOG" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <file>${FILE_PATH}/http_time.log</file>
+        <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+            <!-- daily rollover -->
+            <fileNamePattern>${FILE_PATH}/http_time.%d{yyyy-MM-dd}.log</fileNamePattern>
+            <!-- keep 2 days' worth of history -->
+            <maxHistory>2</maxHistory>
+        </rollingPolicy>
+        <encoder charset="UTF-8">
+            <pattern>${FILE_LOG_PATTERN}</pattern>
+        </encoder>
+    </appender>
+
+    <appender name="MQ_LOG" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <file>${FILE_PATH}/mq.log</file>
+        <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+            <!-- daily rollover -->
+            <fileNamePattern>${FILE_PATH}/mq.%d{yyyy-MM-dd}.log</fileNamePattern>
+            <!-- keep 2 days' worth of history -->
+            <maxHistory>7</maxHistory>
+        </rollingPolicy>
+        <encoder charset="UTF-8">
+            <pattern>${FILE_LOG_PATTERN}</pattern>
+        </encoder>
     </appender>
 
     <logger name="org.springframework" level="DEBUG"/>
@@ -52,7 +117,20 @@
 
     <logger name="org.mybatis" level="WARN"/>
 
+    <logger name="DUBBO_TIME_LOG" level="DEBUG" additivity="false">
+        <appender-ref ref="DUBBO_TIME_LOG"/>
+    </logger>
+
+    <logger name="HTTP_TIME_LOG" level="DEBUG" additivity="false">
+        <appender-ref ref="HTTP_TIME_LOG"/>
+    </logger>
+
+    <logger name="MQ_LOG" level="DEBUG" additivity="false">
+        <appender-ref ref="MQ_LOG"/>
+    </logger>
+
     <root level="DEBUG">
+        <appender-ref ref="STDOUT"/>
         <appender-ref ref="INFO_FILE"/>
         <appender-ref ref="ERROR_FILE"/>
     </root>
