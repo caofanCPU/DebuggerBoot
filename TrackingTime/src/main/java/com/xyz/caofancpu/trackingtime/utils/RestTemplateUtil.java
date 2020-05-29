@@ -71,9 +71,9 @@ public class RestTemplateUtil {
         boolean msgFlag = responseJson.get("msg") == null;
         if (!GlobalErrorInfoEnum.SUCCESS.getCode().equals(String.valueOf(responseJson.get("code")))) {
             d8Response.setData(null);
-            d8Response.setCode(GlobalErrorInfoEnum.REMOTE_INVOKE_FAILED_MSG.getCode());
+            d8Response.setCode(GlobalErrorInfoEnum.REMOTE_INVOKE_FAILED.getCode());
             if (msgFlag) {
-                d8Response.setMsg(GlobalErrorInfoEnum.REMOTE_INVOKE_FAILED_MSG.getMsg());
+                d8Response.setMsg(GlobalErrorInfoEnum.REMOTE_INVOKE_FAILED.getMsg());
             } else {
                 d8Response.setMsg(responseJson.get("msg").toString());
             }
@@ -108,13 +108,13 @@ public class RestTemplateUtil {
             responseEntity = restTemplate.exchange(requestUrl, HttpMethod.GET, httpEntity, JSONObject.class);
         } catch (RestClientException e) {
             log.error("调用微服务接口失败! 接口: {} \n原因: {}", url, e.getMessage());
-            throw new GlobalErrorInfoException(GlobalErrorInfoEnum.REMOTE_INVOKE_FAILED_MSG);
+            throw new GlobalErrorInfoException(GlobalErrorInfoEnum.REMOTE_INVOKE_FAILED);
         }
 
         JSONObject responseJson = responseEntity.getBody();
         if (Objects.isNull(responseJson)) {
             log.error("调用微服务接口失败! 接口: {} \n原因: {}", url, "响应为null");
-            return D8Response.fail(GlobalErrorInfoEnum.REMOTE_INVOKE_FAILED_MSG);
+            return D8Response.fail(GlobalErrorInfoEnum.REMOTE_INVOKE_FAILED);
         }
         showResponseLog(url, responseJson.toJSONString());
         return convertResponse(responseJson);
@@ -172,11 +172,11 @@ public class RestTemplateUtil {
             responseJson = restTemplate.postForObject(url, httpEntity, JSONObject.class);
         } catch (RestClientException e) {
             log.error("调用微服务接口失败! 接口: {} \n原因: {}", url, e.getMessage());
-            throw new GlobalErrorInfoException(GlobalErrorInfoEnum.REMOTE_INVOKE_FAILED_MSG);
+            throw new GlobalErrorInfoException(GlobalErrorInfoEnum.REMOTE_INVOKE_FAILED);
         }
         if (Objects.isNull(responseJson)) {
             log.error("调用微服务接口失败! 接口: {} \n原因: {}", url, "响应为null");
-            return D8Response.fail(GlobalErrorInfoEnum.REMOTE_INVOKE_FAILED_MSG);
+            return D8Response.fail(GlobalErrorInfoEnum.REMOTE_INVOKE_FAILED);
         }
         showResponseLog(url, responseJson.toJSONString());
         return convertResponse(responseJson);
@@ -205,11 +205,11 @@ public class RestTemplateUtil {
             responseJson = restTemplate.postForObject(url, httpEntity, JSONObject.class);
         } catch (RestClientException e) {
             log.error("调用微服务接口失败! 接口: {} \n原因: {}", url, e.getMessage());
-            throw new GlobalErrorInfoException(GlobalErrorInfoEnum.REMOTE_INVOKE_FAILED_MSG);
+            throw new GlobalErrorInfoException(GlobalErrorInfoEnum.REMOTE_INVOKE_FAILED);
         }
         if (Objects.isNull(responseJson)) {
             log.error("调用微服务接口失败! 接口: {} \n原因: {}", url, "响应为null");
-            return D8Response.fail(GlobalErrorInfoEnum.REMOTE_INVOKE_FAILED_MSG);
+            return D8Response.fail(GlobalErrorInfoEnum.REMOTE_INVOKE_FAILED);
         }
         showResponseLog(url, responseJson.toJSONString());
         return convertResponse(responseJson);

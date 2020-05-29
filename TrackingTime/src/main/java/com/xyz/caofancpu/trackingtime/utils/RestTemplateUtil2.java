@@ -85,9 +85,9 @@ public class RestTemplateUtil2 {
         boolean msgFlag = Objects.isNull(responseJson.get("msg"));
         if (!GlobalErrorInfoEnum.SUCCESS.getCode().equals(String.valueOf(responseJson.get("code")))) {
             d8Response.setData(null);
-            d8Response.setCode(GlobalErrorInfoEnum.REMOTE_INVOKE_FAILED_MSG.getCode());
+            d8Response.setCode(GlobalErrorInfoEnum.REMOTE_INVOKE_FAILED.getCode());
             if (msgFlag) {
-                d8Response.setMsg(GlobalErrorInfoEnum.REMOTE_INVOKE_FAILED_MSG.getMsg());
+                d8Response.setMsg(GlobalErrorInfoEnum.REMOTE_INVOKE_FAILED.getMsg());
             } else {
                 d8Response.setMsg(responseJson.get("msg").toString() + "[MSR]");
             }
@@ -278,16 +278,16 @@ public class RestTemplateUtil2 {
     private void handleMSErrorMsg(String msErrorMsg)
             throws GlobalErrorInfoException {
         if (Objects.isNull(msErrorMsg)) {
-            msErrorMsg = GlobalErrorInfoEnum.REMOTE_INVOKE_FAILED_MSG.getMsg();
+            msErrorMsg = GlobalErrorInfoEnum.REMOTE_INVOKE_FAILED.getMsg();
         }
         throw new GlobalErrorInfoException(msErrorMsg);
     }
 
     private D8Response<Object> handleMSErrorResult(String msErrorMsg) {
         if (Objects.isNull(msErrorMsg)) {
-            msErrorMsg = GlobalErrorInfoEnum.REMOTE_INVOKE_FAILED_MSG.getMsg();
+            msErrorMsg = GlobalErrorInfoEnum.REMOTE_INVOKE_FAILED.getMsg();
         }
-        return D8Response.fail(GlobalErrorInfoEnum.REMOTE_INVOKE_FAILED_MSG.getCode(), msErrorMsg);
+        return D8Response.fail(GlobalErrorInfoEnum.REMOTE_INVOKE_FAILED.getCode(), msErrorMsg);
     }
 
     /**
