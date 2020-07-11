@@ -49,6 +49,7 @@ ribbon:
 server:
   port: 5200
 #排除部分装配, 加速启动
+showPublicIp: true
 management:
   add-application-context-header: false
 #Spring配置

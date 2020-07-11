@@ -20,15 +20,27 @@
         <spring.version>5.2.4.RELEASE</spring.version>
         <springboot.version>2.2.5.RELEASE</springboot.version>
 
-        <d8ger-web-util.version>1.0.1</d8ger-web-util.version>
+        <d8ger.version>1.1.0</d8ger.version>
         <lomok.version>1.18.8</lomok.version>
     </properties>
+
+    <dependencyManagement>
+        <dependencies>
+            <dependency>
+                <artifactId>spring-cloud-d8ger-starters</artifactId>
+                <groupId>com.xyz.caofanCPU</groupId>
+                <version>${d8ger.version}</version>
+                <type>pom</type>
+                <scope>import</scope>
+            </dependency>
+        </dependencies>
+    </dependencyManagement>
 
     <dependencies>
         <dependency>
             <artifactId>spring-cloud-starter-d8ger-web-util</artifactId>
             <groupId>com.xyz.caofanCPU</groupId>
-            <version>${d8ger-web-util.version}</version>
+            <version>${d8ger.version}</version>
         </dependency>
 
         <!--lombok-->

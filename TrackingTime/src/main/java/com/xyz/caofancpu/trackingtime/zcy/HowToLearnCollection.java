@@ -126,7 +126,7 @@ public class HowToLearnCollection {
      * @return
      */
     private static Integer randomNumBetweenZeroAndNine() {
-        return NumberUtil.getInteger(1);
+        return NumberUtil.getRandomInteger(1);
     }
 
 }
