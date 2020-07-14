@@ -25,9 +25,9 @@ public class ProductDataSource {
     public static void initDataSource() {
         IntStream.range(1, size)
                 .forEach(i -> {
-                    BigDecimal price = BigDecimal.valueOf(NumberUtil.getInteger(1) + i + 0.0f);
-                    String color = Color.getElementById((NumberUtil.getInteger(1) + i) % 4).getName();
-                    int salesNum = NumberUtil.getInteger(1) + i * NumberUtil.getInteger(1);
+                    BigDecimal price = BigDecimal.valueOf(NumberUtil.getRandomInteger(1) + i + 0.0f);
+                    String color = Color.getElementById((NumberUtil.getRandomInteger(1) + i) % 4).getName();
+                    int salesNum = NumberUtil.getRandomInteger(1) + i * NumberUtil.getRandomInteger(1);
                     productItemList.add(new ProductItem(i, price, color, salesNum));
                 });
     }
