@@ -103,4 +103,21 @@ public interface UserInfoMapper {
      * @return
      */
     <T extends Number> int deleteByPrimaryKey(T id);
+
+    /**
+     * 根据条件查询单个对象
+     *
+     * @param userInfoExample
+     * @return
+     */
+    UserInfoMo selectOneByExample(UserInfoExample userInfoExample);
+
+    /**
+     * 增加单条非空字段记录, 并为入参设置ID
+     *
+     * @param userInfoMo
+     * @return
+     */
+    int insertSelectiveWithId(UserInfoMo userInfoMo);
+
 }

@@ -5,7 +5,7 @@
     <!-- 查询操作时条件 -->
     <sql id="Example_Where_Clause">
         <where>
-            <foreach collection="oredCriteria" item="criteria" separator="or">
+            <foreach collection="conditionCriteria" item="criteria" separator="or">
                 <if test="criteria.valid">
                     <trim prefix="(" prefixOverrides="and" suffix=")">
                         <foreach collection="criteria.criteria" item="criterion">
@@ -36,7 +36,7 @@
     <!-- 更新操作时条件 -->
     <sql id="Update_By_Example_Where_Clause">
         <where>
-            <foreach collection="example.oredCriteria" item="criteria" separator="or">
+            <foreach collection="example.conditionCriteria" item="criteria" separator="or">
                 <if test="criteria.valid">
                     <trim prefix="(" prefixOverrides="and" suffix=")">
                         <foreach collection="criteria.criteria" item="criterion">
@@ -80,6 +80,9 @@
         </if>
         <if test="orderByClause != null">
             ORDER BY ${orderByClause}
+        </if>
+        <if test="limit != null">
+            LIMIT ${limit}
         </if>
     </select>
 
@@ -144,20 +147,21 @@
 
     <!-- 6.增加单条记录, 返回主键 -->
     <insert id="insertWithId" parameterType="com.xyz.caofancpu.trackingtime.model.UserInfoMo" useGeneratedKeys="true" keyProperty="id">
-        INSERT INTO `user_info` (`id`,
-                                 `name`,
-                                 `age`,
-                                 `job`)
-        values (#{id},
-                #{name},
-                #{age},
-                #{job})
+        INSERT INTO `user_info` (
+            `name`,
+            `age`,
+            `job`
+        )
+        values (
+            #{name},
+            #{age},
+            #{job}
+        )
     </insert>
 
     <!-- 7.批量增加记录, 返回主键 -->
     <insert id="insertBatchWithId" parameterType="java.util.List" useGeneratedKeys="true" keyProperty="id">
         INSERT INTO `user_info` (
-        `id`,
         `name`,
         `age`,
         `job`
@@ -165,7 +169,6 @@
         VALUES
         <foreach collection="list" item="item" separator=",">
             (
-            #{item.id},
             #{item.name},
             #{item.age},
             #{item.job}
@@ -198,10 +201,11 @@
 
     <!-- 9.根据ID查询对象 -->
     <select id="selectByPrimaryKey" resultType="com.xyz.caofancpu.trackingtime.model.UserInfoMo">
-        SELECT `id`   AS id,
-               `name` AS name,
-               `age`  AS age,
-               `job`  AS job
+        SELECT
+            `id` AS id,
+            `name` AS name,
+            `age` AS age,
+            `job` AS job
         FROM `user_info`
         WHERE `id` = #{id}
     </select>
@@ -225,9 +229,53 @@
 
     <!-- 11.根据ID删除记录 -->
     <delete id="deleteByPrimaryKey">
-        DELETE
-        FROM `user_info`
-        WHERE `id` = #{id}
+        DELETE FROM `user_info` WHERE `id` = #{id}
     </delete>
 
+    <!-- 12.根据条件查询单个对象 -->
+    <select id="selectOneByExample" parameterType="com.xyz.caofancpu.trackingtime.mapper.example.UserInfoExample" resultType="com.xyz.caofancpu.trackingtime.model.UserInfoMo">
+        SELECT
+        <if test="distinct">
+            DISTINCT
+        </if>
+        `id` AS id,
+        `name` AS name,
+        `age` AS age,
+        `job` AS job
+        FROM `user_info`
+        <if test="_parameter != null">
+            <include refid="Example_Where_Clause"/>
+        </if>
+        <if test="orderByClause != null">
+            ORDER BY ${orderByClause}
+        </if>
+        LIMIT 1
+    </select>
+
+    <!-- 13.增加单条非空字段记录, 返回主键 -->
+    <insert id="insertSelectiveWithId" parameterType="com.xyz.caofancpu.trackingtime.model.UserInfoMo" useGeneratedKeys="true" keyProperty="id">
+        INSERT INTO `user_info`
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="name != null">
+                `name`,
+            </if>
+            <if test="age != null">
+                `age`,
+            </if>
+            <if test="job != null">
+                `job`,
+            </if>
+        </trim>
+        <trim prefix="VALUES (" suffix=")" suffixOverrides=",">
+            <if test="name != null">
+                #{name},
+            </if>
+            <if test="age != null">
+                #{age},
+            </if>
+            <if test="job != null">
+                #{job},
+            </if>
+        </trim>
+    </insert>
 </mapper>

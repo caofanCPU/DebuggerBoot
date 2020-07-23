@@ -12,48 +12,63 @@ public class UserInfoExample {
 
     protected String orderByClause;
 
+    protected Integer limit;
+
     protected boolean distinct;
 
-    protected List<Criteria> oredCriteria;
+    protected List<Criteria> conditionCriteria;
 
     public UserInfoExample() {
-        oredCriteria = new ArrayList<>();
+        conditionCriteria = new ArrayList<>();
     }
 
-    public void setOrderByClause(String orderByClause) {
+    public UserInfoExample andOrderByClause(String orderByClause) {
         this.orderByClause = orderByClause;
+        return this;
     }
 
     public String getOrderByClause() {
         return orderByClause;
     }
 
-    public void setDistinct(boolean distinct) {
+    public UserInfoExample andLimit(Integer limit) {
+        if (limit != null && limit > 0) {
+            this.limit = limit;
+        }
+        return this;
+    }
+
+    public Integer getLimit() {
+        return limit;
+    }
+
+    public UserInfoExample andDistinct(boolean distinct) {
         this.distinct = distinct;
+        return this;
     }
 
     public boolean isDistinct() {
         return distinct;
     }
 
-    public List<Criteria> getOredCriteria() {
-        return oredCriteria;
+    public List<Criteria> getConditionCriteria() {
+        return conditionCriteria;
     }
 
     public void or(Criteria criteria) {
-        oredCriteria.add(criteria);
+        conditionCriteria.add(criteria);
     }
 
     public Criteria or() {
         Criteria criteria = createCriteriaInternal();
-        oredCriteria.add(criteria);
+        conditionCriteria.add(criteria);
         return criteria;
     }
 
     public Criteria createCriteria() {
         Criteria criteria = createCriteriaInternal();
-        if (oredCriteria.size() == 0) {
-            oredCriteria.add(criteria);
+        if (conditionCriteria.size() == 0) {
+            conditionCriteria.add(criteria);
         }
         return criteria;
     }
@@ -63,7 +78,7 @@ public class UserInfoExample {
     }
 
     public void clear() {
-        oredCriteria.clear();
+        conditionCriteria.clear();
         orderByClause = null;
         distinct = false;
     }

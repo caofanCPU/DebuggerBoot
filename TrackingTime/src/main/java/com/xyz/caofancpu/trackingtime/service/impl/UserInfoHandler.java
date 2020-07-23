@@ -2,6 +2,7 @@ package com.xyz.caofancpu.trackingtime.service.impl;
 
 import com.github.pagehelper.PageHelper;
 import com.xyz.caofancpu.trackingtime.mapper.UserInfoMapper;
+import com.xyz.caofancpu.trackingtime.mapper.example.UserInfoExample;
 import com.xyz.caofancpu.trackingtime.model.UserInfoMo;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -11,13 +12,13 @@ import java.util.List;
 import java.util.Objects;
 
 /**
- * UserInfoMo对应的ServiceImpl
+ * UserInfoMo对应的Handler
  *
  * @author Power+
  */
 @Service
 @Slf4j
-public class UserInfoService {
+public class UserInfoHandler {
 
     @Resource
     private UserInfoMapper userInfoMapper;
@@ -29,8 +30,7 @@ public class UserInfoService {
      * @return
      */
     public int add(UserInfoMo userInfoMo) {
-        userInfoMo.setId(null);
-        return userInfoMapper.insertWithId(userInfoMo);
+        return userInfoMapper.insertSelectiveWithId(userInfoMo);
     }
 
     /**
@@ -88,6 +88,26 @@ public class UserInfoService {
      */
     public <T extends Number> int delete(T id) {
         return userInfoMapper.deleteByPrimaryKey(id);
+    }
+
+    /**
+     * 根据id查询单条记录
+     *
+     * @param id
+     * @return
+     */
+    public <T extends Number> UserInfoMo selectByPrimaryKey(T id) {
+        return userInfoMapper.selectByPrimaryKey(id);
+    }
+
+    public UserInfoMo select() {
+        UserInfoExample example = new UserInfoExample();
+        example.createCriteria().andIdGreaterThan(0L);
+        example.andDistinct(true).andOrderByClause("id DESC").andLimit(3);
+        List<UserInfoMo> userInfoMos = userInfoMapper.selectByExample(example);
+        example.andLimit(null);
+        UserInfoMo userInfoMo = userInfoMapper.selectOneByExample(example);
+        return userInfoMo;
     }
 
 }

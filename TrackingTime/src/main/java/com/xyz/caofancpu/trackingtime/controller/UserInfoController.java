@@ -5,7 +5,7 @@ import com.github.pagehelper.PageInfo;
 import com.github.xiaoymin.knife4j.annotations.ApiOperationSupport;
 import com.github.xiaoymin.knife4j.annotations.ApiSort;
 import com.xyz.caofancpu.trackingtime.model.UserInfoMo;
-import com.xyz.caofancpu.trackingtime.service.impl.UserInfoService;
+import com.xyz.caofancpu.trackingtime.service.impl.UserInfoHandler;
 import com.xyz.caofancpu.trackingtime.view.UserInfoVo;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -32,7 +32,7 @@ import java.util.List;
 public class UserInfoController {
 
     @Resource
-    private UserInfoService userInfoService;
+    private UserInfoHandler userInfoHandler;
 
     @PostMapping(value = "/virtualCoin/userInfoMo/add")
     @ApiOperationSupport(order = 1)
@@ -40,7 +40,7 @@ public class UserInfoController {
     public Object add(@Valid @RequestBody UserInfoVo userInfoVo) {
         // 转换数据
         UserInfoMo userInfoMo = JSONObject.parseObject(JSONObject.toJSONString(userInfoVo), UserInfoMo.class);
-        userInfoService.add(userInfoMo);
+        userInfoHandler.add(userInfoMo);
         return userInfoMo.getId();
     }
 
@@ -52,7 +52,7 @@ public class UserInfoController {
         for (UserInfoVo userInfoVo : userInfoVoList) {
             userInfoMoList.add(JSONObject.parseObject(JSONObject.toJSONString(userInfoVo), UserInfoMo.class));
         }
-        return userInfoService.batchAdd(userInfoMoList);
+        return userInfoHandler.batchAdd(userInfoMoList);
     }
 
     @PostMapping(value = "/virtualCoin/userInfoMo/queryUserInfoMoList")
@@ -61,7 +61,7 @@ public class UserInfoController {
     public Object queryUserInfoMoList(@Valid @RequestBody UserInfoVo userInfoVo) {
         // 转换数据
         UserInfoMo userInfoMo = JSONObject.parseObject(JSONObject.toJSONString(userInfoVo), UserInfoMo.class);
-        return userInfoService.queryUserInfoMoList(userInfoMo);
+        return userInfoHandler.queryUserInfoMoList(userInfoMo);
     }
 
     @PostMapping(value = "/virtualCoin/userInfoMo/queryUserInfoMoPage")
@@ -70,7 +70,7 @@ public class UserInfoController {
     public Object queryUserInfoMoPage(@Valid @RequestBody UserInfoVo userInfoVo) {
         // 转换数据
         UserInfoMo userInfoMo = JSONObject.parseObject(JSONObject.toJSONString(userInfoVo), UserInfoMo.class);
-        List<UserInfoMo> resultUserInfoMoList = userInfoService.queryUserInfoMoList(userInfoMo, userInfoVo.getPageNum(), userInfoVo.getPageSize());
+        List<UserInfoMo> resultUserInfoMoList = userInfoHandler.queryUserInfoMoList(userInfoMo, userInfoVo.getPageNum(), userInfoVo.getPageSize());
         return PageInfo.of(resultUserInfoMoList);
     }
 
@@ -80,7 +80,7 @@ public class UserInfoController {
     public Object update(@Valid @RequestBody UserInfoVo userInfoVo) {
         // 转换数据
         UserInfoMo userInfoMo = JSONObject.parseObject(JSONObject.toJSONString(userInfoVo), UserInfoMo.class);
-        return userInfoService.updateSelectiveById(userInfoMo);
+        return userInfoHandler.updateSelectiveById(userInfoMo);
     }
 
     @PostMapping(value = "/virtualCoin/userInfoMo/batchUpdate")
@@ -90,15 +90,21 @@ public class UserInfoController {
         // 转换数据
         List<UserInfoMo> userInfoList = new ArrayList<>(userInfoVoList.size());
         userInfoVoList.forEach(item -> userInfoList.add(JSONObject.parseObject(JSONObject.toJSONString(item), UserInfoMo.class)));
-        return userInfoService.batchUpdateSelectiveById(userInfoList);
+        return userInfoHandler.batchUpdateSelectiveById(userInfoList);
     }
 
     @PostMapping(value = "/virtualCoin/userInfoMo/delete")
     @ApiOperationSupport(order = 6)
     @ApiOperation(value = "UserInfoMo删除记录")
     public Object delete(@Valid @RequestBody UserInfoVo userInfoVo) {
-        return userInfoService.delete(userInfoVo.getId());
+        return userInfoHandler.delete(userInfoVo.getId());
     }
 
+    @PostMapping(value = "/virtualCoin/userInfoMo/d8gerTest")
+    @ApiOperationSupport(order = 7)
+    @ApiOperation(value = "UserInfoMo插件测试")
+    public Object d8gerTest() {
+        return userInfoHandler.select();
+    }
 
 }
