@@ -6,6 +6,8 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.experimental.Accessors;
 
+import java.time.LocalDateTime;
+
 /**
  * D8gerMo
  *
@@ -18,22 +20,22 @@ import lombok.experimental.Accessors;
 public class D8gerMo {
 
     /**
-     * ID 用户唯一编码
+     * ID
      */
     private Long id;
 
     /**
-     * name 姓名
+     * 姓名
      */
     private String name;
 
     /**
-     * age 年龄
+     * 年龄
      */
     private Integer age;
 
     /**
-     * job 工作
+     * 工作
      */
     private String job;
 
@@ -41,5 +43,15 @@ public class D8gerMo {
      * 激活状态
      */
     private ActiveStatusEnum activeStatus;
+
+    /**
+     * 创建时间
+     */
+    private LocalDateTime createTime;
+
+    /**
+     * 更新时间
+     */
+    private LocalDateTime updateTime;
 
 }
