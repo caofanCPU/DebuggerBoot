@@ -4,6 +4,8 @@ import com.alibaba.fastjson.JSONObject;
 import com.github.pagehelper.PageInfo;
 import com.github.xiaoymin.knife4j.annotations.ApiOperationSupport;
 import com.github.xiaoymin.knife4j.annotations.ApiSort;
+import com.xyz.caofancpu.logger.D8Track;
+import com.xyz.caofancpu.logger.LoggerUtil;
 import com.xyz.caofancpu.trackingtime.model.D8gerMo;
 import com.xyz.caofancpu.trackingtime.service.impl.D8gerHandler;
 import com.xyz.caofancpu.trackingtime.view.D8gerVo;
@@ -98,6 +100,15 @@ public class D8gerController {
     @ApiOperation(value = "D8gerMo删除记录")
     public Object delete(@Valid @RequestBody D8gerVo d8gerVo) {
         return d8gerHandler.delete(d8gerVo.getId());
+    }
+
+    @PostMapping(value = "/d8gerAutoCode/testAlarmEmail")
+    @ApiOperationSupport(order = 7)
+    @D8Track(methodName = "德玛西亚", recordReq = true, recordResp = true, timeOutThreshold = 300)
+    @ApiOperation(value = "测试报警邮件")
+    public Object testAlarmEmail() {
+        LoggerUtil.error(log, "打印错误日志");
+        throw new RuntimeException("测试运行时异常");
     }
 
 

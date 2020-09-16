@@ -24,7 +24,7 @@ import org.springframework.stereotype.Component;
 public class WebLogAspect extends D8WebLogAspectSupport {
 
     public WebLogAspect() {
-        super(LoggerFactory.getLogger("INFO_FILE"), LoggerFactory.getLogger("ERROR_FILE"));
+        super(LoggerFactory.getLogger("INFO_FILE"), LoggerFactory.getLogger("INFO_FILE"), LoggerFactory.getLogger("ERROR_FILE"));
     }
 
     /**

@@ -34,6 +34,37 @@
         </encoder>
     </appender>
 
+    <!--  告警邮件配置  -->
+    <springProperty scope="context" name="host" source="email.host"/>
+    <springProperty scope="context" name="port" source="email.port"/>
+    <springProperty scope="context" name="username" source="email.username"/>
+    <springProperty scope="context" name="password" source="email.password"/>
+    <springProperty scope="context" name="alarms" source="email.alarms"/>
+    <springProperty scope="context" name="subject" source="email.subject"/>
+    <appender name="ALARM" class="ch.qos.logback.classic.net.SMTPAppender">
+        <smtpHost>${host}</smtpHost>
+        <smtpPort>${port}</smtpPort>
+        <SSL>false</SSL>
+        <asynchronousSending>true</asynchronousSending>
+        <username>${username}</username>
+        <password>${password}</password>
+        <from>${username}</from>
+        <to>${alarms}</to>
+        <subject>${subject}[${HOSTNAME}]</subject>
+        <layout class="ch.qos.logback.classic.PatternLayout">
+            <pattern>%d{yyyy-MM-dd HH:mm:ss.SSS} [%thread] %logger{36}[%L] - %msg%n</pattern>
+        </layout>
+        <!-- 只打印异常日志 -->
+        <filter class="ch.qos.logback.classic.filter.ThresholdFilter">
+            <!--错误级别(只会提示大于该级别的错误)-->
+            <level>ERROR</level>
+        </filter>
+        <cyclicBufferTracker class="ch.qos.logback.core.spi.CyclicBufferTracker">
+            <!-- 只保留最近的一个缓存邮件 -->
+            <bufferSize>1</bufferSize>
+        </cyclicBufferTracker>
+    </appender>
+
     <appender name="INFO_FILE" class="ch.qos.logback.core.rolling.RollingFileAppender">
         <File>${LOG_PATH}/${APP_DIR}/info.log</File>
         <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
@@ -69,7 +100,7 @@
     </appender>
 
     <appender name="DUBBO_TIME_LOG" class="ch.qos.logback.core.rolling.RollingFileAppender">
-        <file>${FILE_PATH}/interface_time.log</file>
+        <file>${LOG_PATH}/${APP_DIR}/dubbo_time.log</file>
         <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
             <!-- daily rollover -->
             <fileNamePattern>${FILE_PATH}/interface_time.%d{yyyy-MM-dd}.log</fileNamePattern>
@@ -82,7 +113,7 @@
     </appender>
 
     <appender name="HTTP_TIME_LOG" class="ch.qos.logback.core.rolling.RollingFileAppender">
-        <file>${FILE_PATH}/http_time.log</file>
+        <file>${LOG_PATH}/${APP_DIR}/http_time.log</file>
         <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
             <!-- daily rollover -->
             <fileNamePattern>${FILE_PATH}/http_time.%d{yyyy-MM-dd}.log</fileNamePattern>
@@ -94,8 +125,21 @@
         </encoder>
     </appender>
 
+    <appender name="HTTP_TIME_OUT_LOG" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <file>${LOG_PATH}/${APP_DIR}/http_time_out.log</file>
+        <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+            <!-- daily rollover -->
+            <fileNamePattern>${FILE_PATH}/http_time_out.%d{yyyy-MM-dd}.log</fileNamePattern>
+            <!-- keep 2 days' worth of history -->
+            <maxHistory>2</maxHistory>
+        </rollingPolicy>
+        <encoder charset="UTF-8">
+            <pattern>${FILE_LOG_PATTERN}</pattern>
+        </encoder>
+    </appender>
+
     <appender name="MQ_LOG" class="ch.qos.logback.core.rolling.RollingFileAppender">
-        <file>${FILE_PATH}/mq.log</file>
+        <file>${LOG_PATH}/${APP_DIR}/mq.log</file>
         <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
             <!-- daily rollover -->
             <fileNamePattern>${FILE_PATH}/mq.%d{yyyy-MM-dd}.log</fileNamePattern>
@@ -113,6 +157,8 @@
 
     <logger name="org.apache" level="WARN"/>
 
+    <logger name="ch.qos.logback" level="DEBUG"/>
+
     <logger name="springfox.documentation" level="WARN"/>
 
     <logger name="org.mybatis" level="WARN"/>
@@ -121,18 +167,34 @@
         <appender-ref ref="DUBBO_TIME_LOG"/>
     </logger>
 
-    <logger name="HTTP_TIME_LOG" level="DEBUG" additivity="false">
-        <appender-ref ref="HTTP_TIME_LOG"/>
-    </logger>
-
     <logger name="MQ_LOG" level="DEBUG" additivity="false">
         <appender-ref ref="MQ_LOG"/>
     </logger>
 
-    <root level="DEBUG">
-        <appender-ref ref="STDOUT"/>
-        <appender-ref ref="INFO_FILE"/>
-        <appender-ref ref="ERROR_FILE"/>
-    </root>
+    <springProfile name="dev">
+        <root level="DEBUG">
+            <appender-ref ref="STDOUT"/>
+            <appender-ref ref="INFO_FILE"/>
+            <appender-ref ref="ERROR_FILE"/>
+            <appender-ref ref="ALARM"/>
+        </root>
+    </springProfile>
+
+    <springProfile name="test,online">
+        <root level="DEBUG">
+            <appender-ref ref="STDOUT"/>
+            <appender-ref ref="INFO_FILE"/>
+            <appender-ref ref="ERROR_FILE"/>
+            <appender-ref ref="ALARM"/>
+        </root>
+
+        <logger name="HTTP_TIME_LOG" level="DEBUG" additivity="false">
+            <appender-ref ref="HTTP_TIME_LOG"/>
+        </logger>
+
+        <logger name="HTTP_TIME_OUT_LOG" level="DEBUG" additivity="false">
+            <appender-ref ref="HTTP_TIME_OUT_LOG"/>
+        </logger>
+    </springProfile>
 
 </configuration>

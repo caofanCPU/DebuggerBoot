@@ -85,7 +85,7 @@ spring:
   #    time-zone: GMT+8
   profiles:
     #当前环境
-    active: dev
+    active: online
 #自定义卡夫卡主题
 test:
   spring:
@@ -111,6 +111,16 @@ fileOperate:
   logging:
     key: openFileOperateLogging
     value: false
+
+# 邮件配置
+email:
+  host: smtp.exmail.qq.com
+  port: 25
+  username: report@huitongjy.com
+  password: Re1234
+  # 系统错误报警信息收件箱地址, 多个邮箱之间用英文逗号分割(不要有空格)
+  alarms: caofan@huitongjy.com,xyb5to0zcy@gmail.com
+  subject: 测试系统异常报警
 
 # 部署运行命令
 # nohup java -server -Xmx512M -Xms512M -multipliers:NewRatio=2 -Xdebug -Xrunjdwp:transport=dt_socket,server=y,suspend=n,address=58200 -jar TrackingTime-1.0.0-SNAPSHOT.jar --host=0.0.0.0 &
