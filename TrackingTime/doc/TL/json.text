@@ -4,7 +4,7 @@
 |  | |  ||  |\  \    |  |   |  |  |  ||  | |  |.-'    |
 `--' `--'`--' '--'   `--'   `--'  `--'`--' `--'`-----'
 
-
+sudo arthas IP PID
 # 观察方法返回值
 watch com.xyz.caofancpu.trackingtime.controller.D8gerController queryD8gerMoPage "{params,returnObj}" -x 2
 watch com.xyz.caofancpu.trackingtime.controller.D8gerController queryD8gerMoPage "{params,returnObj}"

@@ -20,7 +20,7 @@
         <spring.version>5.2.4.RELEASE</spring.version>
         <springboot.version>2.2.5.RELEASE</springboot.version>
 
-        <d8ger.version>1.1.1</d8ger.version>
+        <d8ger.version>1.2.0</d8ger.version>
         <lomok.version>1.18.8</lomok.version>
     </properties>
 
