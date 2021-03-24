@@ -13,24 +13,26 @@ public class HowToSuccess {
     public static void test3() {
         ReentrantReadWriteLock rtLock = new ReentrantReadWriteLock();
         new Thread(() -> {
-            rtLock.writeLock().lock();
+            rtLock.readLock().lock();
+            System.out.println("读嘟嘟AAAAA");
             try {
                 Thread.sleep(5000);
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }
-            System.out.println("WriteLockAAAAA");
-            rtLock.writeLock().unlock();
+            System.out.println("读嘟嘟AAAAA");
+            rtLock.readLock().unlock();
         }).start();
 
         new Thread(() -> {
             rtLock.readLock().lock();
+            System.out.println("123");
             try {
                 Thread.sleep(1000);
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }
-            System.out.println("ReadLockBBBBBBB");
+            System.out.println("456");
             rtLock.readLock().unlock();
         }).start();
     }
