@@ -20,7 +20,7 @@ public class HowToSuccess {
                 e.printStackTrace();
             }
             System.out.println("WriteLockAAAAA");
-//            rtLock.writeLock().unlock();
+            rtLock.writeLock().unlock();
         }).start();
 
         new Thread(() -> {
