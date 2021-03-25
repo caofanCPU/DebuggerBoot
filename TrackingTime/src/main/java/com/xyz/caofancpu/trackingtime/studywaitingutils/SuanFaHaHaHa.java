@@ -15,7 +15,8 @@ public class SuanFaHaHaHa {
 //        new 最长公共子串("gc", "ab").test();
 //        new 最长公共子串("abc", "abcd").test();
 //        new 最长公共子串("acdf", "fdca").test();
-//        new 公共最长子数组().test();
+        new 最长公共子串("acaddd", new StringBuilder("acaddd").reverse().toString()).test();
+//        new 最长公共子数组().test();
 //        for (int i = 0; i < 5; i++) {
 //            new 环球旅行(5, i).test();
 //        }
@@ -25,6 +26,9 @@ public class SuanFaHaHaHa {
         abstract void test();
     }
 
+    /**
+     * @see com.xyz.caofancpu.trackingtime.studywaitingutils.SuanFaHaHaHa.最长公共子串
+     */
     @Data
     @EqualsAndHashCode(callSuper = true)
     @AllArgsConstructor
@@ -36,23 +40,75 @@ public class SuanFaHaHaHa {
 
         @Override
         void test() {
-            int maxLength = findLength(this.arrA, this.arrB);
-            System.out.println(maxLength);
+            int[] lcs = lcs(arrA, arrB);
+            for (int e : lcs) {
+                System.out.print(e + "  ");
+            }
         }
 
-        public int findLength(int[] A, int[] B) {
-            int[] dp = new int[B.length + 1];
-            if (A == null || B == null) {
-                return 0;
+        public int[] lcs(int[] shortA, int[] longB) {
+            int[] none = {};
+            if (shortA == null || shortA.length == 0 || longB == null || longB.length == 0) {
+                return none;
             }
-            int max = 0;
-            for (int i = 0; i < A.length; i++) {
-                for (int j = B.length - 1; j >= 0; j--) {
-                    dp[j + 1] = A[i] == B[j] ? dp[j] + 1 : 0;
-                    max = Math.max(max, dp[j + 1]);
+            if (shortA.length > longB.length) {
+                return lcs(longB, shortA);
+            }
+            int repeatNum = 0;
+            int lastIndex = 0;
+            int[][] table = new int[shortA.length][longB.length];
+            for (int i = 0; i < shortA.length; i++) {
+                for (int j = 0; j < longB.length; j++) {
+                    if (shortA[i] != longB[j]) {
+                        table[i][j] = 0;
+                    } else {
+                        if (i == 0 || j == 0) {
+                            table[i][j] = 1;
+                        } else {
+                            table[i][j] = table[i - 1][j - 1] + 1;
+                        }
+                    }
+                    if (repeatNum < table[i][j]) {
+                        repeatNum = table[i][j];
+                        lastIndex = i;
+                    }
                 }
             }
-            return max;
+            viewTable(shortA, longB, table);
+            if (repeatNum == 0 || lastIndex + 1 < repeatNum) {
+                return none;
+            }
+            int[] result = new int[repeatNum];
+            for (int i = 0; i < repeatNum; i++) {
+                result[i] = shortA[lastIndex + 1 - repeatNum + i];
+            }
+            return result;
+        }
+
+        /**
+         * 打印二维匹配矩阵表
+         */
+        private void viewTable(int[] shortA, int[] longB, int[][] table) {
+            //    s h o r t A
+            // l  row1
+            // o  row2
+            // n  row3
+            // g  row4
+            // B  row5
+            String separator = "  ";
+            System.out.print(" " + separator);
+            for (int i : longB) {
+                System.out.print(i + separator);
+            }
+            System.out.println();
+            int[] arrA = shortA;
+            for (int i = 0; i < table.length; i++) {
+                System.out.print(arrA[i] + separator);
+                for (int j = 0; j < table[i].length; j++) {
+                    System.out.print(table[i][j] + separator);
+                }
+                System.out.println();
+            }
         }
     }
 
@@ -208,7 +264,7 @@ public class SuanFaHaHaHa {
     @Accessors(chain = true)
     public static class 两数求和 extends Base {
         private String numberA = "9";
-        private String numberB = "1";
+        private String numberB = "10";
 
         @Override
         void test() {
@@ -225,9 +281,12 @@ public class SuanFaHaHaHa {
             System.out.println();
         }
 
-        public int[] add(String numberA, String numberB) {
-            int maxLength = Math.max(numberA.length(), numberB.length());
-            String source = numberA + numberB;
+        public int[] add(String longA, String shortB) {
+            if (longA.length() < shortB.length()) {
+                return add(shortB, longA);
+            }
+            int maxLength = longA.length();
+            String source = longA + shortB;
             char[] charArray = source.toCharArray();
             // 结果, 两数相加结果最多比最大数多一位
             int[] result = new int[maxLength + 1];
@@ -236,7 +295,7 @@ public class SuanFaHaHaHa {
             int indexB, a, b, sum;
             for (int indexA = maxLength - 1; indexA >= 0; indexA--) {
                 // 确定数据B的索引
-                indexB = indexA + numberB.length();
+                indexB = indexA + shortB.length();
                 // 数据A的数值
                 a = charArray[indexA] - 48;
                 // 数据B的数值
