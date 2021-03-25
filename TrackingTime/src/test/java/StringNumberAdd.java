@@ -31,16 +31,17 @@ public class StringNumberAdd {
     }
 
     public static void main(String[] args) {
-        String numberA = "9999";
-        String numberB = "9999";
+        String numberA = "9";
+        String numberB = "1";
         int[] result = add(numberA, numberB);
         System.out.println("输入A: " + numberA);
         System.out.println("输入B: " + numberB);
         System.out.print("两数和: ");
-        for (int i : result) {
-            if (i != 0) {
-                System.out.print(i);
+        for (int i = 0; i < result.length; i++) {
+            if (i == 0 && result[i] == 0) {
+                continue;
             }
+            System.out.print(result[i]);
         }
         System.out.println();
     }
