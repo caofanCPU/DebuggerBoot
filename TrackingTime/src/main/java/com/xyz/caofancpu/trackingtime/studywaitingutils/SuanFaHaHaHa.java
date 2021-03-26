@@ -15,11 +15,19 @@ public class SuanFaHaHaHa {
 //        new 最长公共子串("gc", "ab").test();
 //        new 最长公共子串("abc", "abcd").test();
 //        new 最长公共子串("acdf", "fdca").test();
-        new 最长公共子串("acaddd", new StringBuilder("acaddd").reverse().toString()).test();
+//        new 最长公共子串("acaddd", new StringBuilder("acaddd").reverse().toString()).test();
 //        new 最长公共子数组().test();
-//        for (int i = 0; i < 5; i++) {
-//            new 环球旅行(5, i).test();
-//        }
+//        new 跳台阶(30).test();
+
+        new 环球旅行(3, 3).test();
+        System.out.println();
+//
+//        new 环球旅行(2, 2).test();
+//        System.out.println();
+//
+//        new 环球旅行(2, 1).test();
+//        System.out.println();
+
     }
 
     public static abstract class Base {
@@ -210,59 +218,95 @@ public class SuanFaHaHaHa {
         }
     }
 
+    /**
+     * 基本思路: 边界条件, n=0, k=0
+     * .  k步代表0~k, 所以构建二维矩阵表时table[k+1][n]
+     * .  行为步数step, 列为节点索引index
+     * .  初始条件: table[0][0]=1
+     * .  动态规划函数式: table[step][i]=左斜上角+右斜上角
+     * .  考虑到索引边界问题: table[step][i]也需要=左上角+右上角
+     * .  公式: table[step][i] = table[step-1][(i-1+n)%n] + table[step-1][(i+1+n)%n]
+     * .  得到的二维表能代表从【0】出发经过【k】步到达节点【n】的所有情况
+     * 优化: 处理特殊情况, 尽早返回
+     */
     @Data
     @EqualsAndHashCode(callSuper = true)
     @AllArgsConstructor
     @NoArgsConstructor
     @Accessors(chain = true)
     public static class 环球旅行 extends Base {
+        /**
+         * 点的个数
+         */
         private int circleN = 10;
+        /**
+         * 允许使用步数
+         */
         private int stepK = 3;
 
         @Override
         void test() {
-            int caseNum = calculateSteps(this.circleN, this.stepK);
-            System.out.println(caseNum);
+            int[][] dp = calculateSteps(this.stepK, this.circleN);
+            viewTable(dp);
         }
 
-        //n为环数，k为步数
-        public int calculateSteps(int n, int k) {
-            if (n == 0) {
-                return 1;
-            }
-            //如果只有2个环，则偶数有1个方法，奇数不能到达
-            if (n == 2) {
-                if (k % 2 == 0) {
-                    return 1;
-                } else {
-                    return 0;
-                }
-            }
+        public int[][] calculateSteps(int k, int n) {
             int[][] dp = new int[k + 1][n];
-            //0步到达0点有1种方法
+            // 特殊情况可快速处理
+//            if (n == 0) {
+//                return dp;
+//            }
+//            if (n == 2) {
+//                if ((k & 1) == 0) {
+//                    dp[k-1][0] = 1;
+//                }
+//                return dp;
+//            }
+            // 初始值
             dp[0][0] = 1;
-            //0步到达任意点有0种方法,可java自赋0值，可省略
-            //for(int i=0;i<n;i++){
-            //    dp[0][i]=0
-            //}
-            for (int j = 1; j <= k; j++) {
-                for (int i = 0; i < n; i++) {
-                    //j步达到i点的问题，转化为j-1步从相邻的两个节点到达目标节点的方法数之和。
-                    //需要保证在0~n-1范围，故需要防止越界进行处理
-                    dp[j][i] = dp[j - 1][(i - 1 + n) % n] + dp[j - 1][(i + 1) % n];
+            for (int step = 1; step <= k; step++) {
+                for (int index = 0; index < n; index++) {
+                    dp[step][index] = dp[step - 1][(index - 1 + n) % n] + dp[step - 1][(index + 1) % n];
+                    System.out.println("(" + step + ", " + index + ")=(" + (step - 1) + ", " + ((index - 1 + n) % n) + ") + (" + (step - 1) + ", " + ((index + 1 + n) % n) + ")");
                 }
             }
-            //这里的0对应的是回到0点，达到任意点可以通过将0改为目标点即可
-            return dp[k][0];
+            return dp;
+        }
+
+        /**
+         * 打印二维匹配矩阵表
+         * k步作为Row, 节点n作为列
+         */
+        private void viewTable(int[][] table) {
+            String separator = "  ";
+            System.out.print("Match[x]" + separator);
+            for (int i = 0; i < table[0].length; i++) {
+                System.out.print("Index[" + i + "]" + separator);
+            }
+            System.out.println();
+            for (int step = 0; step < table.length; step++) {
+                System.out.print(".Step[" + step + "]" + separator);
+                for (int index = 0; index < table[step].length; index++) {
+                    System.out.print(separator + separator + separator + table[step][index] + " " + separator);
+                }
+                System.out.println();
+            }
         }
     }
 
+    /**
+     * 基本思路: 区分短串和长串, 以长串为标准进行一次循环, 循环中与短串求和并确定进位、结果值
+     * 优化: 将短串拼接到长串后面, 长串长度即为分界点, 循环长串时可以计算到短串索引, 不存在的则为0
+     * 要点: 两数相加结果比长串可能多一位
+     * .    indexA = maxLength - 1, 长串倒着遍历
+     * .    indexB = indexA + shortB.length(), 短串也倒着遍历, 索引推导
+     */
     @Data
     @EqualsAndHashCode(callSuper = true)
     @AllArgsConstructor
     @NoArgsConstructor
     @Accessors(chain = true)
-    public static class 两数求和 extends Base {
+    public static class 两数求和数组 extends Base {
         private String numberA = "9";
         private String numberB = "10";
 
@@ -315,6 +359,10 @@ public class SuanFaHaHaHa {
         }
     }
 
+    /**
+     * 基本思路: 将原字符串翻转, 利用最长公共子串解决
+     * TODO: 优化: Manacher算法, 时间复杂度缩减到n, 减少不必要的判断和计算
+     */
     @Data
     @EqualsAndHashCode(callSuper = true)
     @AllArgsConstructor
@@ -372,5 +420,95 @@ public class SuanFaHaHaHa {
         }
     }
 
+    /**
+     * 基本思路: 边界值, n=0, n=1时, 进而发现是递归调用, 再使用迭代改进递归
+     * .  相当于应用数学归纳法
+     */
+    @Data
+    @EqualsAndHashCode(callSuper = true)
+    @AllArgsConstructor
+    @NoArgsConstructor
+    @Accessors(chain = true)
+    public static class 跳台阶 extends Base {
+        private int n = 3;
+
+        @Override
+        void test() {
+            System.out.println(_jump1Or2(this.n));
+            System.out.println(jump1Or2(this.n));
+            System.out.println(_jumpN(this.n));
+            System.out.println(_jumpNOptimized(this.n));
+        }
+
+        /**
+         * 递归
+         * 1.边界条件确定可举例的初始值
+         * 2.递归函数式
+         * 3.首尾思考, n
+         *
+         * @param value
+         */
+        @Deprecated
+        public int _jump1Or2(int value) {
+            if (value <= 2) {
+                return value;
+            }
+            return _jump1Or2(value - 1) + _jump1Or2(value - 2);
+        }
+
+        public int jump1Or2(int value) {
+            if (value <= 2) {
+                return value;
+            }
+            int a1 = 1;
+            int a2 = 2;
+            int result = 0;
+            for (int i = 3; i <= value; i++) {
+                result = a1 + a2;
+                // 迭代推进
+                a1 = a2;
+                a2 = result;
+            }
+            return result;
+        }
+
+        @Deprecated
+        public int _jumpN(int value) {
+//            System.out.println(value + ", ");
+            if (value <= 1) {
+                return 1;
+            }
+            int result = 0;
+            for (int i = value; i >= 1; i--) {
+                result += _jumpN(i - 1);
+            }
+            return result;
+        }
+
+        @Deprecated
+        public int _jumpNOptimized(int value) {
+            // f(n)=f(n-1)+f(n-2)+...+f(2)+f(1)
+            // f(n-1)=     f(n-2)+...+f(2)+f(1)
+            // f(n) - f(n-1) = f(n-1)
+            // f(n) = 2 * f(n-1)
+            // cause: f(1)=1=2^0, f(2)=2=2^1
+            // so: f(n)=2^(n-1)
+            return (int) Math.pow(2, value - 1);
+        }
+
+    }
+
+    @Data
+    @EqualsAndHashCode(callSuper = true)
+    @AllArgsConstructor
+    @NoArgsConstructor
+    @Accessors(chain = true)
+    public static class 二叉树最大路径和 extends Base {
+
+        @Override
+        void test() {
+
+        }
+    }
 
 }
