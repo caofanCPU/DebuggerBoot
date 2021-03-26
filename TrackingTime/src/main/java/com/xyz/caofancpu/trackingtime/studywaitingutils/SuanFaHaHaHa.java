@@ -19,8 +19,9 @@ public class SuanFaHaHaHa {
 //        new 最长公共子数组().test();
 //        new 跳台阶(30).test();
 
-        new 环球旅行(3, 3).test();
-        System.out.println();
+//        new 环球旅行(3, 3).test();
+//        System.out.println();
+        new 平衡二叉树().test();
 //
 //        new 环球旅行(2, 2).test();
 //        System.out.println();
@@ -504,10 +505,76 @@ public class SuanFaHaHaHa {
     @NoArgsConstructor
     @Accessors(chain = true)
     public static class 二叉树最大路径和 extends Base {
+        private int a = 1;
 
         @Override
         void test() {
 
+        }
+    }
+
+    @Data
+    @EqualsAndHashCode(callSuper = true)
+    @AllArgsConstructor
+    @NoArgsConstructor
+    @Accessors(chain = true)
+    public static class 平衡二叉树 extends Base {
+        private boolean result;
+        private TreeNode<Integer> root;
+        private int height = 1;
+
+        public int getDepth(TreeNode<Integer> root) {
+            if (root == null) {
+                result = true;
+                return 0;
+            }
+            // 左子树
+            int left = getDepth(root.left);
+            // 右子树
+            int right = getDepth(root.right);
+            int depth = (Math.max(left, right)) + 1;
+            result = Math.abs(left - right) <= 1;
+            // 下层的深度, 上层可以接着用免得再遍历
+            return depth;
+        }
+
+        @Override
+        void test() {
+            buildTree(true);
+            height = getDepth(root);
+            System.out.println("高度: " + height + ", 平衡: " + result);
+            buildTree(false);
+            height = getDepth(root);
+            System.out.println("高度: " + height + ", 平衡: " + result);
+        }
+
+        private void buildTree(boolean balance) {
+            root = new TreeNode<>(1);
+            TreeNode<Integer> node2 = new TreeNode<>(2);
+            TreeNode<Integer> node3 = new TreeNode<>(3);
+            TreeNode<Integer> node4 = new TreeNode<>(4);
+            if (balance) {
+                root.setLeft(node2).setRight(node3);
+                node3.setRight(node4);
+            } else {
+                root.setLeft(node2);
+                node2.setLeft(node3);
+                node3.setRight(node4);
+            }
+        }
+    }
+
+    @Data
+    @AllArgsConstructor
+    @NoArgsConstructor
+    @Accessors(chain = true)
+    public static class TreeNode<T> {
+        private T value;
+        private TreeNode<T> left;
+        private TreeNode<T> right;
+
+        public TreeNode(T value) {
+            this.value = value;
         }
     }
 
