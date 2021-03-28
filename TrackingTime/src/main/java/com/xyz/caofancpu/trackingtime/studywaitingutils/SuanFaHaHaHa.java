@@ -10,7 +10,6 @@ public class SuanFaHaHaHa {
 
     public static void main(String[] args) {
 //        new 最长回文子串().test();
-//        new 两数求和().test();
 //        new 最长公共子串("ac", "ab").test();
 //        new 最长公共子串("gc", "ab").test();
 //        new 最长公共子串("abc", "abcd").test();
@@ -307,7 +306,7 @@ public class SuanFaHaHaHa {
     @AllArgsConstructor
     @NoArgsConstructor
     @Accessors(chain = true)
-    public static class 两数求和数组 extends Base {
+    public static class 两数求和 extends Base {
         private String numberA = "9";
         private String numberB = "10";
 
