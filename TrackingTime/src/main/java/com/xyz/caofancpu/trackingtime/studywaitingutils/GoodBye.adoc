@@ -123,7 +123,7 @@
 ***** 可重复读(Repeatable Read), 事务A第一次读取时才生成快照, 此后事务A内所有读取都是共用该快照, 因而每次读取都是一样的, 解决了可重复读取, 这个时候再理解幻读和间隙锁就好理解了: 在没有间隙锁的情况下, 事务A内只会对第一次查询到的数据行的索引加行锁, 在索引间的和索引之外的, 没有上锁, 因而可能事务B插入新数据, 事务A插入相同数据发生主键冲突; 或者是事务B插入了数据100但是没提交, 事务A再过来读取一个范围[99, 101]看到了数据100, 此后一顿操作猛如虎, 但是事务B撤销事务, 事务A就出现幻读了。有了间隙锁的机制, 因为间隙锁能锁定范围区间, 保证两个事务不会同时操作同一个区间的数据, 那么事务在整个过程中数据就一致了。
 ***** 可串行化(Serializable), 串行加锁, 单线程操作数据, 数据不会不一致, 但是性能不敢直视。
 
-image::./pic/MySQL-BufferPool.png[一图胜千言]
+image::https://mmbiz.qpic.cn/mmbiz_png/NtO5sialJZGqhs0Q3Hjx8fATEiaQOqSsib8Rfh1Xv4be9k7pFqzaLAyJKEeY5FNraFWl6S9licAqc8icFPSPpNyCH0g/640?wx_fmt=png&tp=webp&wxfrom=5&wx_lazy=1&wx_co=1[一图胜千言]
 
 ** https://mp.weixin.qq.com/s/YXH47C4P2Sc1OQblyZlZzg[7种日志]
 *** MySQL数据写入流程(以update为例)
