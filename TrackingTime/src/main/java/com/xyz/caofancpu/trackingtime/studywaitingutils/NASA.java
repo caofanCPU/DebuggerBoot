@@ -8,7 +8,7 @@ import java.util.Random;
 public class NASA {
     public static void main(String[] args) {
         edgeValueTest();
-        randomValueTest();
+//        randomValueTest();
     }
 
     /**
@@ -38,9 +38,15 @@ public class NASA {
         for (int i = 0; i < chars.length; i++) {
             if (i == 0) {
                 if (chars[0] == '-') {
+                    if (chars.length == 1) {
+                        return ILLEGAL_RESULT;
+                    }
                     isPositive = false;
                     continue;
                 } else if (chars[0] == '+') {
+                    if (chars.length == 1) {
+                        return ILLEGAL_RESULT;
+                    }
                     continue;
                 } else if (chars[0] < '0' || chars[0] > '9') {
                     return ILLEGAL_RESULT;
@@ -51,7 +57,11 @@ public class NASA {
                 result = result + (chars[i] - '0') * (long) Math.pow(10, chars.length - 1 - i);
                 continue;
             }
-            // 皆为非法字符
+            if (chars[i] == '0') {
+                // 字符'0'不参与计算, 但是是合法字符
+                continue;
+            }
+            // 其他皆为非法字符
             return ILLEGAL_RESULT;
         }
         if (isPositive) {
@@ -85,6 +95,12 @@ public class NASA {
                 "-" + Integer.MIN_VALUE,
                 // 非法值2
                 "-" + ((long) (Integer.MIN_VALUE) - 1),
+                "+",
+                "-",
+                "0",
+                "9",
+                "000",
+                "001"
         };
         for (String s : edgeValueTest) {
             System.out.println("输入: " + s + ",\t输出: " + doConvert(s));

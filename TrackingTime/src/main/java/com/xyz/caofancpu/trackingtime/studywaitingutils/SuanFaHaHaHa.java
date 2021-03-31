@@ -376,7 +376,6 @@ public class SuanFaHaHaHa {
     @Data
     @EqualsAndHashCode(callSuper = true)
     @AllArgsConstructor
-    @NoArgsConstructor
     @Accessors(chain = true)
     public static class 整数解析 extends Base {
 
@@ -386,7 +385,12 @@ public class SuanFaHaHaHa {
             randomValueTest();
         }
 
-        public String doConvert(String source) {
+        /**
+         * @param source
+         * @return
+         * @see Integer#valueOf(String)
+         */
+        public String integerValueOf(String source) {
             final String ILLEGAL_RESULT = "-1";
             if (source == null || source.isEmpty()) {
                 return ILLEGAL_RESULT;
@@ -398,9 +402,15 @@ public class SuanFaHaHaHa {
             for (int i = 0; i < chars.length; i++) {
                 if (i == 0) {
                     if (chars[0] == '-') {
+                        if (chars.length == 1) {
+                            return ILLEGAL_RESULT;
+                        }
                         isPositive = false;
                         continue;
                     } else if (chars[0] == '+') {
+                        if (chars.length == 1) {
+                            return ILLEGAL_RESULT;
+                        }
                         continue;
                     } else if (chars[0] < '0' || chars[0] > '9') {
                         return ILLEGAL_RESULT;
@@ -411,7 +421,11 @@ public class SuanFaHaHaHa {
                     result = result + (chars[i] - '0') * (long) Math.pow(10, chars.length - 1 - i);
                     continue;
                 }
-                // 皆为非法字符
+                if (chars[i] == '0') {
+                    // 字符'0'不参与计算, 但是是合法字符
+                    continue;
+                }
+                // 其他皆为非法字符
                 return ILLEGAL_RESULT;
             }
             if (isPositive) {
@@ -426,7 +440,7 @@ public class SuanFaHaHaHa {
         private void randomValueTest() {
             for (int i = 0; i < 1000; i++) {
                 String s = random(i);
-                System.out.println("输入: " + s + ",\t输出: " + doConvert(s));
+                System.out.println("输入: " + s + ",\t输出: " + integerValueOf(s));
             }
         }
 
@@ -445,9 +459,15 @@ public class SuanFaHaHaHa {
                     "-" + Integer.MIN_VALUE,
                     // 非法值2
                     "-" + ((long) (Integer.MIN_VALUE) - 1),
+                    "+",
+                    "-",
+                    "0",
+                    "9",
+                    "000",
+                    "001"
             };
             for (String s : edgeValueTest) {
-                System.out.println("输入: " + s + ",\t输出: " + doConvert(s));
+                System.out.println("输入: " + s + ",\t输出: " + integerValueOf(s));
             }
         }
 
