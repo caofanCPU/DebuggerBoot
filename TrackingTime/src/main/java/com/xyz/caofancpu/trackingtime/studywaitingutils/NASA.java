@@ -7,9 +7,8 @@ import java.util.Random;
  */
 public class NASA {
     public static void main(String[] args) {
-//        edgeValueTest();
-//        randomValueTest();
-        System.out.println(Integer.MIN_VALUE);
+        edgeValueTest();
+        randomValueTest();
     }
 
     /**
