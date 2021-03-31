@@ -22,14 +22,22 @@ public class SuanFaHaHaHa {
 
 //        new 环球旅行(3, 3).test();
 //        System.out.println();
-        new 平衡二叉树().test();
+//        new 平衡二叉树().test();
 //
 //        new 环球旅行(2, 2).test();
 //        System.out.println();
 //
 //        new 环球旅行(2, 1).test();
 //        System.out.println();
+        bitSkill();
+    }
 
+    public static void bitSkill() {
+        System.out.println("1.异或^         : a^b = b^a");
+        System.out.println("2.异或^         : a^a = 0; a^0 = a; a^1 = a的反码 ==> 应用: 将一个变量快速清零: a = a^a");
+        System.out.println("3.异或^         : a^b^b = a; a^b^a = b ==> 应用: 快速交换两个整数: int x = x^y; int y = x^y; int x = x^y;");
+        System.out.println("4.与&           : ==> 应用: 快速判断奇数偶数: a&1 == 0 ? \"偶数\" : \"奇数\"");
+        System.out.println("5.异或^和右移>>  : ==> 应用: 快速求绝对值: int i = a >> 31; int abs = (a^i) - i; 注意小于或等于Integer.MIN_VALUE求绝对值会溢出得到错误结果");
     }
 
     public static abstract class Base {
